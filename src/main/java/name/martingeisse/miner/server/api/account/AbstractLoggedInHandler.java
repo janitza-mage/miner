@@ -12,7 +12,7 @@ import name.martingeisse.api.handler.jsonapi.JsonApiException;
 import name.martingeisse.api.request.ApiRequestCycle;
 import name.martingeisse.common.javascript.analyze.JsonAnalyzer;
 import name.martingeisse.common.javascript.jsonbuilder.JsonValueBuilder;
-import name.martingeisse.common.security.SecurityTokenUtil;
+import name.martingeisse.common.SecurityTokenUtil;
 import name.martingeisse.miner.server.MinerServerSecurityConstants;
 import name.martingeisse.sql.EntityConnectionManager;
 import name.martingeisse.webide.entity.QUserAccount;

@@ -15,7 +15,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import name.martingeisse.common.security.SecurityTokenUtil;
+import name.martingeisse.common.SecurityTokenUtil;
 import name.martingeisse.miner.common.MinerCommonConstants;
 import name.martingeisse.miner.common.MinerCubeTypes;
 import name.martingeisse.miner.common.MinerPacketConstants;

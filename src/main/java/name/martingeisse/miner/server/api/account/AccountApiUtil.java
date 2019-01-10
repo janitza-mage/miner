@@ -8,7 +8,7 @@ package name.martingeisse.miner.server.api.account;
 
 import name.martingeisse.api.handler.jsonapi.JsonApiException;
 import name.martingeisse.common.javascript.analyze.JsonAnalyzer;
-import name.martingeisse.common.security.SecurityTokenUtil;
+import name.martingeisse.common.SecurityTokenUtil;
 import name.martingeisse.miner.server.MinerServerSecurityConstants;
 import name.martingeisse.sql.EntityConnectionManager;
 import name.martingeisse.webide.entity.Player;

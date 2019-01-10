@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.common.security;
+package name.martingeisse.common;
 
 import java.util.Locale;
 import name.martingeisse.common.util.HmacUtil;
