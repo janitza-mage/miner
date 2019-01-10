@@ -3,3 +3,4 @@
 /.idea
 /out
 /client.log
+/hs_err_pid*.log
