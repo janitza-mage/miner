@@ -6,16 +6,14 @@
 
 package name.martingeisse.miner.server.game;
 
-import com.mysema.query.sql.SQLQuery;
-import com.mysema.query.sql.dml.SQLDeleteClause;
-import com.mysema.query.sql.dml.SQLUpdateClause;
+import com.querydsl.sql.dml.SQLDeleteClause;
 import com.querydsl.sql.dml.SQLInsertClause;
+import com.querydsl.sql.dml.SQLUpdateClause;
 import com.querydsl.sql.postgresql.PostgreSQLQuery;
 import name.martingeisse.miner.server.Databases;
 import name.martingeisse.miner.server.entities.PlayerInventorySlot;
 import name.martingeisse.miner.server.entities.QPlayerInventorySlot;
 import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
-import name.martingeisse.sql.EntityConnectionManager;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -34,6 +32,7 @@ public final class InventoryAccess {
 
 	/**
 	 * Constructor.
+	 *
 	 * @param playerId the ID of the player whose inventory shall be accessed
 	 */
 	public InventoryAccess(long playerId) {
@@ -42,6 +41,7 @@ public final class InventoryAccess {
 
 	/**
 	 * Getter method for the playerId.
+	 *
 	 * @return the playerId
 	 */
 	public long getPlayerId() {
@@ -50,6 +50,7 @@ public final class InventoryAccess {
 
 	/**
 	 * Adds an item to the player's inventory. This is equivalent to add(type, 1).
+	 *
 	 * @param type the item type
 	 */
 	public void add(ItemType type) {
@@ -58,23 +59,22 @@ public final class InventoryAccess {
 
 	/**
 	 * Adds an item to the player's inventory.
-	 * @param type the item type
+	 *
+	 * @param type     the item type
 	 * @param quantity the quantity of the item stack
 	 */
 	public void add(ItemType type, int quantity) {
 		QPlayerInventorySlot qpis = QPlayerInventorySlot.PlayerInventorySlot;
-
-		final SQLQuery query = EntityConnectionManager.getConnection().createQuery().from(qpis);
-		int previousInventoryLength = (int) query.where(qpis.playerId.eq(playerId), qpis.equipped.isFalse()).count();
-
-		SQLInsertClause insert = EntityConnectionManager.getConnection().createInsert(qpis);
-		insert.set(qpis.playerId, playerId);
-		insert.set(qpis.equipped, false);
-		insert.set(qpis.index, previousInventoryLength);
-		insert.set(qpis.type, type.ordinal());
-		insert.set(qpis.quantity, quantity);
-		insert.execute();
-
+		try (PostgresConnection connection = Databases.main.newConnection()) {
+			int previousInventoryLength = (int) connection.query().select(qpis).from(qpis).where(qpis.playerId.eq(playerId), qpis.equipped.isFalse()).fetchCount();
+			SQLInsertClause insert = connection.insert(qpis);
+			insert.set(qpis.playerId, playerId);
+			insert.set(qpis.equipped, false);
+			insert.set(qpis.index, previousInventoryLength);
+			insert.set(qpis.type, type.ordinal());
+			insert.set(qpis.quantity, quantity);
+			insert.execute();
+		}
 	}
 
 	/**
@@ -86,9 +86,9 @@ public final class InventoryAccess {
 	 */
 	public List<PlayerInventorySlot> listAll() {
 		final QPlayerInventorySlot qpis = QPlayerInventorySlot.PlayerInventorySlot;
-		final SQLQuery q = EntityConnectionManager.getConnection().createQuery().from(qpis);
-		q.where(qpis.playerId.eq(playerId)).orderBy(qpis.equipped.asc(), qpis.index.asc());
-		return q.list(qpis);
+		try (PostgresConnection connection = Databases.main.newConnection()) {
+			return connection.query().select(qpis).from(qpis).where(qpis.playerId.eq(playerId)).orderBy(qpis.equipped.asc(), qpis.index.asc()).fetch();
+		}
 	}
 
 	/**
@@ -98,9 +98,9 @@ public final class InventoryAccess {
 	 */
 	public List<PlayerInventorySlot> listBackback() {
 		final QPlayerInventorySlot qpis = QPlayerInventorySlot.PlayerInventorySlot;
-		final SQLQuery q = EntityConnectionManager.getConnection().createQuery().from(qpis);
-		q.where(qpis.playerId.eq(playerId), qpis.equipped.isFalse()).orderBy(qpis.index.asc());
-		return q.list(qpis);
+		try (PostgresConnection connection = Databases.main.newConnection()) {
+			return connection.query().select(qpis).from(qpis).where(qpis.playerId.eq(playerId), qpis.equipped.isFalse()).orderBy(qpis.index.asc()).fetch();
+		}
 	}
 
 	/**
@@ -110,61 +110,73 @@ public final class InventoryAccess {
 	 */
 	public List<PlayerInventorySlot> listEquipped() {
 		final QPlayerInventorySlot qpis = QPlayerInventorySlot.PlayerInventorySlot;
-		final SQLQuery q = EntityConnectionManager.getConnection().createQuery().from(qpis);
-		q.where(qpis.playerId.eq(playerId), qpis.equipped.isTrue()).orderBy(qpis.index.asc());
-		return q.list(qpis);
+		try (PostgresConnection connection = Databases.main.newConnection()) {
+			return connection.query().select(qpis).from(qpis).where(qpis.playerId.eq(playerId), qpis.equipped.isTrue()).orderBy(qpis.index.asc()).fetch();
+		}
 	}
 
 	/**
 	 * Deletes a backpack item, specified by index.
+	 *
 	 * @param index the item's index.
 	 */
 	public void deleteBackpackItemByIndex(int index) {
 		final QPlayerInventorySlot qpis = QPlayerInventorySlot.PlayerInventorySlot;
-		SQLDeleteClause delete = EntityConnectionManager.getConnection().createDelete(qpis);
-		delete.where(qpis.playerId.eq(playerId), qpis.equipped.isFalse(), qpis.index.eq(index));
-		delete.execute();
-		renumber(false);
+		try (PostgresConnection connection = Databases.main.newConnection()) {
+			SQLDeleteClause delete = connection.delete(qpis);
+			delete.where(qpis.playerId.eq(playerId), qpis.equipped.isFalse(), qpis.index.eq(index));
+			delete.execute();
+			renumber(false);
+		}
 	}
 
 	/**
 	 * Deletes an equipped item, specified by index.
+	 *
 	 * @param index the item's index.
 	 */
 	public void deleteEquippedItemByIndex(int index) {
 		final QPlayerInventorySlot qpis = QPlayerInventorySlot.PlayerInventorySlot;
-		SQLDeleteClause delete = EntityConnectionManager.getConnection().createDelete(qpis);
-		delete.where(qpis.playerId.eq(playerId), qpis.equipped.isTrue(), qpis.index.eq(index));
-		delete.execute();
-		renumber(true);
+		try (PostgresConnection connection = Databases.main.newConnection()) {
+			SQLDeleteClause delete = connection.delete(qpis);
+			delete.where(qpis.playerId.eq(playerId), qpis.equipped.isTrue(), qpis.index.eq(index));
+			delete.execute();
+			renumber(true);
+		}
 	}
 
 	/**
 	 * Equips the backpack item with the specified index.
+	 *
 	 * @param index the item's index
 	 */
 	public void equip(int index) {
 		final QPlayerInventorySlot qpis = QPlayerInventorySlot.PlayerInventorySlot;
-		SQLUpdateClause update = EntityConnectionManager.getConnection().createUpdate(qpis);
-		update.where(qpis.playerId.eq(playerId), qpis.equipped.isFalse(), qpis.index.eq(index));
-		update.set(qpis.equipped, true);
-		update.execute();
-		renumber(false);
-		renumber(true);
+		try (PostgresConnection connection = Databases.main.newConnection()) {
+			SQLUpdateClause update = connection.update(qpis);
+			update.where(qpis.playerId.eq(playerId), qpis.equipped.isFalse(), qpis.index.eq(index));
+			update.set(qpis.equipped, true);
+			update.execute();
+			renumber(false);
+			renumber(true);
+		}
 	}
 
 	/**
 	 * Unequips the equipped item with the specified index.
+	 *
 	 * @param index the item's index
 	 */
 	public void unequip(int index) {
 		final QPlayerInventorySlot qpis = QPlayerInventorySlot.PlayerInventorySlot;
-		SQLUpdateClause update = EntityConnectionManager.getConnection().createUpdate(qpis);
-		update.where(qpis.playerId.eq(playerId), qpis.equipped.isTrue(), qpis.index.eq(index));
-		update.set(qpis.equipped, false);
-		update.execute();
-		renumber(false);
-		renumber(true);
+		try (PostgresConnection connection = Databases.main.newConnection()) {
+			SQLUpdateClause update = connection.update(qpis);
+			update.where(qpis.playerId.eq(playerId), qpis.equipped.isTrue(), qpis.index.eq(index));
+			update.set(qpis.equipped, false);
+			update.execute();
+			renumber(false);
+			renumber(true);
+		}
 	}
 
 	/**
@@ -182,7 +194,8 @@ public final class InventoryAccess {
 
 	/**
 	 * Finds an item in the player's inventory by item type.
-	 * @param type the item type
+	 *
+	 * @param type     the item type
 	 * @param equipped whether to look for equipped items or backpack items
 	 * @return the index, or -1 if not found
 	 */
