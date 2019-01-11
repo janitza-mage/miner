@@ -6,7 +6,6 @@
 
 package name.martingeisse.miner.server;
 
-import com.mysema.query.sql.SQLQuery;
 import name.martingeisse.common.SecurityTokenUtil;
 import name.martingeisse.miner.common.MinerCommonConstants;
 import name.martingeisse.miner.common.MinerCubeTypes;
@@ -16,14 +15,14 @@ import name.martingeisse.miner.common.geometry.SectionId;
 import name.martingeisse.miner.common.network.SectionDataId;
 import name.martingeisse.miner.common.network.SectionDataType;
 import name.martingeisse.miner.common.network.StackdPacket;
+import name.martingeisse.miner.server.entities.Player;
+import name.martingeisse.miner.server.entities.QPlayer;
 import name.martingeisse.miner.server.game.DigUtil;
 import name.martingeisse.miner.server.network.StackdServer;
 import name.martingeisse.miner.server.section.entry.SectionCubesCacheEntry;
 import name.martingeisse.miner.server.section.storage.CassandraSectionStorage;
 import name.martingeisse.miner.server.terrain.TerrainGenerator;
-import name.martingeisse.sql.EntityConnectionManager;
-import name.martingeisse.webide.entity.Player;
-import name.martingeisse.webide.entity.QPlayer;
+import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -38,7 +37,7 @@ import java.util.*;
 
 /**
  * High-level server code.
- *
+ * <p>
  * Applications can subclass this class to implement their own functionality,
  * mainly by implementing
  * {@link #handleApplicationRequest(HttpServletRequest, HttpServletResponse)}.
@@ -86,7 +85,7 @@ public class MinerServer extends StackdServer<MinerSession> {
 	/**
 	 * Handles an "initialize world" request.
 	 *
-	 * @throws Exception on errors 
+	 * @throws Exception on errors
 	 */
 	public void initializeWorld() throws Exception {
 		logger.info("initializing world...");
@@ -115,9 +114,9 @@ public class MinerServer extends StackdServer<MinerSession> {
 	/**
 	 * Handles an application-specific request.
 	 *
-	 * @param request the HTTP request
+	 * @param request  the HTTP request
 	 * @param response the HTTP response
-	 * @throws Exception on errors 
+	 * @throws Exception on errors
 	 */
 	public void handleApplicationRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
 	}
@@ -155,13 +154,15 @@ public class MinerServer extends StackdServer<MinerSession> {
 				String tokenSubject = SecurityTokenUtil.validateToken(token, new Instant(), MinerServerSecurityConstants.SECURITY_TOKEN_SECRET);
 				long playerId = Long.parseLong(tokenSubject);
 
-				final SQLQuery query = EntityConnectionManager.getConnection().createQuery();
-				query.from(QPlayer.player);
-				query.where(QPlayer.player.id.eq(playerId));
-				Player player = query.singleResult(QPlayer.player);
-				if (player == null) {
-					throw new RuntimeException("player not found, id: " + playerId);
+				Player player;
+				try (PostgresConnection connection = Databases.main.newConnection()) {
+					QPlayer qp = QPlayer.Player;
+					player = connection.query().select(qp).from(qp).where(qp.id.eq(playerId)).fetchOne();
+					if (player == null) {
+						throw new RuntimeException("player not found, id: " + playerId);
+					}
 				}
+
 				session.setPlayerId(player.getId());
 				session.setName(player.getName());
 				session.setX(player.getX().doubleValue());
@@ -237,6 +238,7 @@ public class MinerServer extends StackdServer<MinerSession> {
 
 	/**
 	 * Sends a "section modified" event packet to all clients.
+	 *
 	 * @param sectionIds the modified section IDs
 	 */
 	public void notifyClientsAboutModifiedSections(SectionId... sectionIds) {

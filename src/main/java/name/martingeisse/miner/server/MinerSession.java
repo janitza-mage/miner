@@ -1,22 +1,21 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.miner.server;
 
-import java.math.BigDecimal;
+import com.querydsl.sql.dml.SQLUpdateClause;
 import name.martingeisse.miner.common.MinerPacketConstants;
-import name.martingeisse.sql.EntityConnectionManager;
 import name.martingeisse.miner.common.network.StackdPacket;
+import name.martingeisse.miner.server.entities.QPlayer;
 import name.martingeisse.miner.server.network.StackdSession;
-import name.martingeisse.webide.entity.Player;
-import name.martingeisse.webide.entity.QPlayer;
+import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
 import org.apache.log4j.Logger;
 import org.jboss.netty.channel.Channel;
-import com.mysema.query.sql.SQLQuery;
-import com.mysema.query.sql.dml.SQLUpdateClause;
+
+import java.math.BigDecimal;
 
 /**
  * Stores the data for one user session (currently associated with the connection,
@@ -28,7 +27,7 @@ public class MinerSession extends StackdSession {
 	 * the logger
 	 */
 	private static Logger logger = Logger.getLogger(MinerSession.class);
-	
+
 	/**
 	 * the playerId
 	 */
@@ -191,17 +190,16 @@ public class MinerSession extends StackdSession {
 	 */
 	public void handleDisconnect() {
 		if (playerId != null) {
-			final SQLUpdateClause update = EntityConnectionManager.getConnection().createUpdate(QPlayer.player);
-			update.where(QPlayer.player.id.eq(playerId));
-			update.set(QPlayer.player.x, new BigDecimal(x));
-			update.set(QPlayer.player.y, new BigDecimal(y));
-			update.set(QPlayer.player.z, new BigDecimal(z));
-			update.set(QPlayer.player.leftAngle, new BigDecimal(leftAngle));
-			update.set(QPlayer.player.upAngle, new BigDecimal(upAngle));
-			try {
+			try (PostgresConnection connection = Databases.main.newConnection()) {
+				QPlayer qp = QPlayer.Player;
+				final SQLUpdateClause update = connection.update(qp);
+				update.where(qp.id.eq(playerId));
+				update.set(qp.x, new BigDecimal(x));
+				update.set(qp.y, new BigDecimal(y));
+				update.set(qp.z, new BigDecimal(z));
+				update.set(qp.leftAngle, new BigDecimal(leftAngle));
+				update.set(qp.upAngle, new BigDecimal(upAngle));
 				update.execute();
-			} catch (Exception e) {
-				logger.error("could not update player position. id: " + playerId + "; values = " + x + ", " + y + ", " + z + ", " + leftAngle + ", " + upAngle);
 			}
 		}
 	}
@@ -214,10 +212,11 @@ public class MinerSession extends StackdSession {
 		if (playerId == null) {
 			sendCoinsUpdate(0);
 		} else {
-			final SQLQuery query = EntityConnectionManager.getConnection().createQuery();
-			query.from(QPlayer.player).where(QPlayer.player.id.eq(playerId));
-			final Player player = query.singleResult(QPlayer.player);
-			sendCoinsUpdate(player == null ? 0 : player.getCoins());
+			try (PostgresConnection connection = Databases.main.newConnection()) {
+				QPlayer qp = QPlayer.Player;
+				Long coins = connection.query().select(qp.coins).from(qp).where(qp.id.eq(playerId)).fetchFirst();
+				sendCoinsUpdate(coins == null ? 0 : coins);
+			}
 		}
 	}
 

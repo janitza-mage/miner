@@ -229,15 +229,15 @@ public class StackdProtocolClient {
 	 * This method gets invoked when receiving a JSON-API packet from the server.
 	 * This class has already decoded the JSON payload.
 	 * The default implementation does nothing.
-	 * 
+	 *
 	 * NOTE: This method gets invoked by the Netty thread, asynchronous
 	 * to the main game thread!
-	 * 
+	 *
 	 * @param data the decoded JSON data
 	 */
 	protected void onJsonPacketReceived(Object data) {
 	}
-	
+
 	/**
 	 * This method gets invoked when receiving a flash message packet from the server.
 	 * The default implementation adds the message to the flash message handler
