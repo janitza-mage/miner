@@ -8,8 +8,8 @@ package name.martingeisse.miner.server;
 
 import name.martingeisse.common.SecurityTokenUtil;
 import name.martingeisse.miner.common.MinerCommonConstants;
-import name.martingeisse.miner.common.MinerCubeTypes;
-import name.martingeisse.miner.common.MinerPacketConstants;
+import name.martingeisse.miner.common.cubetype.CubeTypes;
+import name.martingeisse.miner.common.network.MinerPacketConstants;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.SectionId;
 import name.martingeisse.miner.common.network.SectionDataId;
@@ -55,7 +55,7 @@ public class MinerServer extends StackdServer<MinerSession> {
 	public MinerServer() {
 		super(new CassandraSectionStorage(MinerCommonConstants.CLUSTER_SIZE, Databases.world, "section_data"));
 		// super(new MemorySectionStorage(MinerCommonConstants.CLUSTER_SIZE));
-		setCubeTypes(MinerCubeTypes.CUBE_TYPES);
+		setCubeTypes(CubeTypes.CUBE_TYPES);
 
 		Timer timer = new Timer(true);
 		timer.schedule(new PlayerListUpdateSender(), 0, 200);

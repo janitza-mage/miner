@@ -7,7 +7,7 @@
 package name.martingeisse.miner.server;
 
 import com.querydsl.sql.dml.SQLUpdateClause;
-import name.martingeisse.miner.common.MinerPacketConstants;
+import name.martingeisse.miner.common.network.MinerPacketConstants;
 import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.server.entities.QPlayer;
 import name.martingeisse.miner.server.network.StackdSession;

@@ -59,7 +59,7 @@ import java.util.Map;
 
 import name.martingeisse.common.util.ThreadUtil;
 import name.martingeisse.miner.common.MinerCommonConstants;
-import name.martingeisse.miner.common.MinerCubeTypes;
+import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.client.ingame.player.Player;
 import name.martingeisse.miner.client.ingame.player.PlayerProxy;
 import name.martingeisse.miner.client.ingame.visual.OtherPlayerVisualTemplate;
@@ -257,7 +257,7 @@ public class CubeWorldHandler {
 		// the world
 		final DefaultSectionRenderer sectionRenderer = new DefaultSectionRenderer();
 		sectionRenderer.prepareForTextures(resources.getCubeTextures());
-		final EngineParameters engineParameters = new EngineParameters(sectionRenderer, resources.getCubeTextures(), MinerCubeTypes.CUBE_TYPES);
+		final EngineParameters engineParameters = new EngineParameters(sectionRenderer, resources.getCubeTextures(), CubeTypes.CUBE_TYPES);
 		workingSet = new WorldWorkingSet(engineParameters, MinerCommonConstants.CLUSTER_SIZE);
 
 		// the player

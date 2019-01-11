@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import name.martingeisse.miner.common.MinerCommonConstants;
-import name.martingeisse.miner.common.MinerPacketConstants;
+import name.martingeisse.miner.common.network.MinerPacketConstants;
 import name.martingeisse.miner.client.ingame.IngameHandler;
 import name.martingeisse.miner.client.ingame.player.PlayerProxy;
 import name.martingeisse.miner.client.startmenu.AccountApiClient;

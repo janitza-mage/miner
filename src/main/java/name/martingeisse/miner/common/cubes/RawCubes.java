@@ -6,11 +6,11 @@
 
 package name.martingeisse.miner.common.cubes;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 import name.martingeisse.common.util.CompressionUtil;
-import name.martingeisse.miner.common.StackdConstants;
 import name.martingeisse.miner.common.geometry.ClusterSize;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -19,6 +19,25 @@ import org.apache.commons.lang3.ArrayUtils;
  * fallback data type if no other type works well.
  */
 public class RawCubes extends Cubes {
+
+	/**
+	 * The DEFLATE dictionary used for compressing raw cubes.
+	 */
+	public static final byte[] COMPRESSION_DICTIONARY;
+	static {
+		ByteArrayOutputStream s = new ByteArrayOutputStream();
+		// TODO reverse order (0xff first) might shorten the pointers and improve compression!
+		for (int i=0; i<30; i++) {
+			s.write(0x00);
+		}
+		for (int i=0; i<10; i++) {
+			s.write(0x09);
+		}
+		for (int i=0; i<1000; i++) {
+			s.write(0xff);
+		}
+		COMPRESSION_DICTIONARY = s.toByteArray();
+	}
 
 	/**
 	 * the cubes
@@ -49,7 +68,7 @@ public class RawCubes extends Cubes {
 		// TODO try uniform
 		// write cubes
 		stream.write(1);
-		stream.write(CompressionUtil.deflate(cubes, StackdConstants.INTERACTIVE_SECTION_DATA_COMPRESSION_DICTIONARY));
+		stream.write(CompressionUtil.deflate(cubes, COMPRESSION_DICTIONARY));
 		 
 	}
 
@@ -63,7 +82,7 @@ public class RawCubes extends Cubes {
 	 */
 	public static RawCubes decompress(final ClusterSize clusterSize, final byte[] compressedData) {
 		final byte[] deflatedCubes = ArrayUtils.subarray(compressedData, 1, compressedData.length);
-		final byte[] cubes = CompressionUtil.inflate(deflatedCubes, StackdConstants.INTERACTIVE_SECTION_DATA_COMPRESSION_DICTIONARY);
+		final byte[] cubes = CompressionUtil.inflate(deflatedCubes, COMPRESSION_DICTIONARY);
 		return new RawCubes(cubes);
 	}
 

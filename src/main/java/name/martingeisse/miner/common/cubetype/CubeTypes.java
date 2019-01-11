@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.common;
+package name.martingeisse.miner.common.cubetype;
 
 import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.cubetype.EmptyCubeType;
@@ -16,7 +16,7 @@ import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 /**
  * Defines the cube types.
  */
-public final class MinerCubeTypes {
+public final class CubeTypes {
 
 	/**
 	 * names of the texture files for cubes
@@ -326,7 +326,7 @@ public final class MinerCubeTypes {
 	/**
 	 * Prevent instantiation.
 	 */
-	private MinerCubeTypes() {
+	private CubeTypes() {
 	}
 
 }

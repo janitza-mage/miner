@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
 import name.martingeisse.launcher.assets.LauncherAssets;
-import name.martingeisse.miner.common.MinerCubeTypes;
+import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.client.system.FixedWidthFont;
 import name.martingeisse.miner.client.system.Font;
 import name.martingeisse.miner.client.system.StackdTexture;
@@ -91,7 +91,7 @@ public class MinerResources {
 	private MinerResources() throws IOException {
 
 		// load cube textures
-		final String[] cubeTextureNames = MinerCubeTypes.CUBE_TEXTURE_FILENAMES;
+		final String[] cubeTextureNames = CubeTypes.CUBE_TEXTURE_FILENAMES;
 		cubeTextures = new StackdTexture[cubeTextureNames.length];
 		for (int i = 0; i < cubeTextures.length; i++) {
 			cubeTextures[i] = new StackdTexture(LauncherAssets.class, cubeTextureNames[i], false);
