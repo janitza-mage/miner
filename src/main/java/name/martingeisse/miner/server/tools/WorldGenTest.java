@@ -13,7 +13,7 @@ import java.io.FileOutputStream;
 
 import javax.imageio.ImageIO;
 
-import name.martingeisse.stackd.common.util.PerlinNoise;
+import name.martingeisse.miner.common.util.PerlinNoise;
 
 /**
  *

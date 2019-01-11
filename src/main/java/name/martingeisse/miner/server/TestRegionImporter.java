@@ -11,13 +11,13 @@ import java.io.File;
 import name.martingeisse.miner.common.MinerCommonConstants;
 import name.martingeisse.miner.server.util.NbtParser;
 import name.martingeisse.miner.server.util.RegionParser;
-import name.martingeisse.stackd.common.cubes.Cubes;
-import name.martingeisse.stackd.common.cubes.RawCubes;
-import name.martingeisse.stackd.common.cubes.UniformCubes;
-import name.martingeisse.stackd.common.geometry.SectionId;
-import name.martingeisse.stackd.common.network.SectionDataId;
-import name.martingeisse.stackd.common.network.SectionDataType;
-import name.martingeisse.stackd.server.section.storage.AbstractSectionStorage;
+import name.martingeisse.miner.common.cubes.Cubes;
+import name.martingeisse.miner.common.cubes.RawCubes;
+import name.martingeisse.miner.common.cubes.UniformCubes;
+import name.martingeisse.miner.common.geometry.SectionId;
+import name.martingeisse.miner.common.network.SectionDataId;
+import name.martingeisse.miner.common.network.SectionDataType;
+import name.martingeisse.miner.server.section.storage.AbstractSectionStorage;
 
 import org.apache.commons.lang3.StringUtils;
 

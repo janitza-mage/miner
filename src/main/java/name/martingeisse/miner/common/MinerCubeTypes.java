@@ -6,12 +6,12 @@
 
 package name.martingeisse.miner.common;
 
-import name.martingeisse.stackd.common.cubetype.CubeType;
-import name.martingeisse.stackd.common.cubetype.EmptyCubeType;
-import name.martingeisse.stackd.common.cubetype.SlabCubeType;
-import name.martingeisse.stackd.common.cubetype.SolidOpaqueCubeType;
-import name.martingeisse.stackd.common.cubetype.StairsCubeType;
-import name.martingeisse.stackd.common.geometry.AxisAlignedDirection;
+import name.martingeisse.miner.common.cubetype.CubeType;
+import name.martingeisse.miner.common.cubetype.EmptyCubeType;
+import name.martingeisse.miner.common.cubetype.SlabCubeType;
+import name.martingeisse.miner.common.cubetype.SolidOpaqueCubeType;
+import name.martingeisse.miner.common.cubetype.StairsCubeType;
+import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 
 /**
  * Defines the cube types.

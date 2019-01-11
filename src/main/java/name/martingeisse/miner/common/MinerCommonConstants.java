@@ -6,7 +6,7 @@
 
 package name.martingeisse.miner.common;
 
-import name.martingeisse.stackd.common.geometry.ClusterSize;
+import name.martingeisse.miner.common.geometry.ClusterSize;
 
 /**
  * Common constants for client-side and server-side code.

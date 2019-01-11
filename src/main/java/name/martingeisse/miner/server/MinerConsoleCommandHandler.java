@@ -9,7 +9,7 @@ package name.martingeisse.miner.server;
 import name.martingeisse.miner.server.game.InventoryAccess;
 import name.martingeisse.miner.server.game.ItemType;
 import name.martingeisse.sql.EntityConnectionManager;
-import name.martingeisse.stackd.server.console.IConsoleCommandHandler;
+import name.martingeisse.miner.server.console.IConsoleCommandHandler;
 import name.martingeisse.webide.entity.PlayerInventorySlot;
 
 /**

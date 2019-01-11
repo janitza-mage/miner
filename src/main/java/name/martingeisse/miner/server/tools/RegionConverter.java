@@ -10,7 +10,7 @@ import java.io.File;
 
 import name.martingeisse.miner.server.util.NbtParser;
 import name.martingeisse.miner.server.util.RegionParser;
-import name.martingeisse.stackd.common.geometry.SectionId;
+import name.martingeisse.miner.common.geometry.SectionId;
 
 import org.apache.commons.lang3.StringUtils;
 

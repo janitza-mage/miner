@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.stackd.server.section.storage;
+package name.martingeisse.miner.server.section.storage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

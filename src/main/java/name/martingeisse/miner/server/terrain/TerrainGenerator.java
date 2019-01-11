@@ -8,16 +8,16 @@ package name.martingeisse.miner.server.terrain;
 
 import java.util.Random;
 import name.martingeisse.miner.common.MinerCommonConstants;
-import name.martingeisse.stackd.common.cubes.Cubes;
-import name.martingeisse.stackd.common.edit.ByteArrayEditAccessHost;
-import name.martingeisse.stackd.common.edit.EditAccess;
-import name.martingeisse.stackd.common.geometry.RectangularRegion;
-import name.martingeisse.stackd.common.geometry.SectionId;
-import name.martingeisse.stackd.common.network.SectionDataId;
-import name.martingeisse.stackd.common.network.SectionDataType;
-import name.martingeisse.stackd.common.task.ParallelGoal;
-import name.martingeisse.stackd.common.util.PerlinNoise;
-import name.martingeisse.stackd.server.section.storage.AbstractSectionStorage;
+import name.martingeisse.miner.common.cubes.Cubes;
+import name.martingeisse.miner.common.edit.ByteArrayEditAccessHost;
+import name.martingeisse.miner.common.edit.EditAccess;
+import name.martingeisse.miner.common.geometry.RectangularRegion;
+import name.martingeisse.miner.common.geometry.SectionId;
+import name.martingeisse.miner.common.network.SectionDataId;
+import name.martingeisse.miner.common.network.SectionDataType;
+import name.martingeisse.miner.common.task.ParallelGoal;
+import name.martingeisse.miner.common.util.PerlinNoise;
+import name.martingeisse.miner.server.section.storage.AbstractSectionStorage;
 import org.apache.log4j.Logger;
 
 /**

@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.stackd.server.section.rendermodel;
+package name.martingeisse.miner.server.section.rendermodel;
 
 /**
  * Represents modifications to the underlying section that have not

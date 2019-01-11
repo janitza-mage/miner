@@ -6,17 +6,17 @@
 
 package name.martingeisse.miner;
 
-import name.martingeisse.miner.ingame.IngameHandler;
-import name.martingeisse.miner.ingame.MinerResources;
-import name.martingeisse.miner.startmenu.AccountApiClient;
-import name.martingeisse.miner.startmenu.StartmenuHandler;
-import name.martingeisse.stackd.client.frame.FrameLoop;
-import name.martingeisse.stackd.client.glworker.SimpleWorkerScheme;
-import name.martingeisse.stackd.client.util.LwjglNativeLibraryHelper;
-import name.martingeisse.stackd.client.util.MouseUtil;
-import name.martingeisse.stackd.common.task.Task;
-import name.martingeisse.stackd.common.task.TaskBarrier;
-import name.martingeisse.stackd.common.task.TaskSystem;
+import name.martingeisse.miner.client.ingame.IngameHandler;
+import name.martingeisse.miner.client.ingame.MinerResources;
+import name.martingeisse.miner.client.startmenu.AccountApiClient;
+import name.martingeisse.miner.client.startmenu.StartmenuHandler;
+import name.martingeisse.miner.client.frame.FrameLoop;
+import name.martingeisse.miner.client.glworker.SimpleWorkerScheme;
+import name.martingeisse.miner.client.util.LwjglNativeLibraryHelper;
+import name.martingeisse.miner.client.util.MouseUtil;
+import name.martingeisse.miner.common.task.Task;
+import name.martingeisse.miner.common.task.TaskBarrier;
+import name.martingeisse.miner.common.task.TaskSystem;
 import org.apache.log4j.Logger;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
