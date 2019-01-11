@@ -6,7 +6,7 @@
 
 package name.martingeisse.miner.common.collision;
 
-import name.martingeisse.miner.common.StackdConstants;
+import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.miner.common.geometry.RectangularRegion;
@@ -73,7 +73,7 @@ public final class CubeArrayClusterCollider implements IAxisAlignedCollider {
 	public boolean collides(final RectangularRegion detailCoordinateRegion) {
 		
 		// map the region to a cube coordinate unit region
-		final RectangularRegion cubeCoordinateRegion = detailCoordinateRegion.divideAndRoundToOuter(StackdConstants.GEOMETRY_DETAIL_CLUSTER_SIZE);
+		final RectangularRegion cubeCoordinateRegion = detailCoordinateRegion.divideAndRoundToOuter(Constants.GEOMETRY_DETAIL_CLUSTER_SIZE);
 
 		// Compute the intersection of the argument region and this collider's region (in cube units).
 		// Only that intersection must actually be checked. We quickly reject regions that do not
@@ -84,7 +84,7 @@ public final class CubeArrayClusterCollider implements IAxisAlignedCollider {
 		}
 
 		// loop over the cubes
-		final int detailShift = StackdConstants.GEOMETRY_DETAIL_SHIFT;
+		final int detailShift = Constants.GEOMETRY_DETAIL_SHIFT;
 		final int x0 = region.getStartX();
 		final int y0 = region.getStartY();
 		final int z0 = region.getStartZ();

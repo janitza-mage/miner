@@ -13,7 +13,7 @@ import name.martingeisse.api.request.ApiRequestCycle;
 import name.martingeisse.api.servlet.ApiConfiguration;
 import name.martingeisse.api.servlet.ApiLauncher;
 import name.martingeisse.common.javascript.JavascriptAssembler;
-import name.martingeisse.miner.common.MinerCommonConstants;
+import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.task.TaskSystem;
 import name.martingeisse.miner.server.api.account.AccountApiHandler;
 import name.martingeisse.miner.server.network.StackdNettyPipelineFactory;
@@ -57,7 +57,7 @@ public class Main {
 				bootstrap.setPipelineFactory(new StackdNettyPipelineFactory<MinerSession>(minerServer));
 				bootstrap.setOption("child.tcpNoDelay", true);
 				bootstrap.setOption("child.keepAlive", true);
-				bootstrap.bind(new InetSocketAddress(MinerCommonConstants.NETWORK_PORT));
+				bootstrap.bind(new InetSocketAddress(Constants.NETWORK_PORT));
 			}
 		}.start();
 

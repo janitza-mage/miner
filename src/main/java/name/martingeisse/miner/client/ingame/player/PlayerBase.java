@@ -7,7 +7,7 @@
 package name.martingeisse.miner.client.ingame.player;
 
 import name.martingeisse.miner.client.engine.WorldWorkingSet;
-import name.martingeisse.miner.common.StackdConstants;
+import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.stackd.common.geometry.MutableEulerAngles;
 import name.martingeisse.stackd.common.geometry.MutableVector3d;
@@ -174,7 +174,7 @@ public abstract class PlayerBase {
 	 * @return a new {@link RectangularRegion} that describes the occupied region.
 	 */
 	public final RectangularRegion createCollisionRegion() {
-		return createDetailCollisionRegion().divideAndRoundToOuter(new ClusterSize(StackdConstants.GEOMETRY_DETAIL_SHIFT));
+		return createDetailCollisionRegion().divideAndRoundToOuter(new ClusterSize(Constants.GEOMETRY_DETAIL_SHIFT));
 	}
 
 	/**
@@ -197,9 +197,9 @@ public abstract class PlayerBase {
 		int depth = 13;
 		
 		// scale the player's position to detail coordinates
-		int detailX = (int)(x * StackdConstants.GEOMETRY_DETAIL_FACTOR);
-		int detailY = (int)(y * StackdConstants.GEOMETRY_DETAIL_FACTOR);
-		int detailZ = (int)(z * StackdConstants.GEOMETRY_DETAIL_FACTOR);
+		int detailX = (int)(x * Constants.GEOMETRY_DETAIL_FACTOR);
+		int detailY = (int)(y * Constants.GEOMETRY_DETAIL_FACTOR);
+		int detailZ = (int)(z * Constants.GEOMETRY_DETAIL_FACTOR);
 		
 		// create the occupied region. note: +1 because "end" is exclusive
 		return new RectangularRegion(detailX - width, detailY - depth, detailZ - width, detailX + width + 1, detailY + height + 1, detailZ + width + 1);

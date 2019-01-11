@@ -8,7 +8,7 @@ package name.martingeisse.miner.server;
 
 import java.io.File;
 
-import name.martingeisse.miner.common.MinerCommonConstants;
+import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.server.util.NbtParser;
 import name.martingeisse.miner.server.util.RegionParser;
 import name.martingeisse.miner.common.cubes.Cubes;
@@ -208,7 +208,7 @@ public final class TestRegionImporter {
 				int originalSectionX = currentChunkX + translateX;
 				int originalSectionY = currentSectionY + translateY;
 				int originalSectionZ = currentChunkZ + translateZ;
-				int modifiedShift = MinerCommonConstants.CLUSTER_SIZE.getShiftBits();
+				int modifiedShift = Constants.CLUSTER_SIZE.getShiftBits();
 				int deltaShift = (modifiedShift - 4);
 				int modifiedSectionX = originalSectionX >> deltaShift;
 				int modifiedSectionY = originalSectionY >> deltaShift;
@@ -219,7 +219,7 @@ public final class TestRegionImporter {
 				SectionId modifiedSectionId = new SectionId(modifiedSectionX, modifiedSectionY, modifiedSectionZ);
 				SectionDataId sectionDataId = new SectionDataId(modifiedSectionId, SectionDataType.DEFINITIVE);
 				byte[] loadedData = storage.loadSectionRelatedObject(sectionDataId);
-				RawCubes data = (loadedData == null ? new UniformCubes((byte)0) : Cubes.createFromCompressedData(MinerCommonConstants.CLUSTER_SIZE, loadedData)).convertToRawCubes(MinerCommonConstants.CLUSTER_SIZE);
+				RawCubes data = (loadedData == null ? new UniformCubes((byte)0) : Cubes.createFromCompressedData(Constants.CLUSTER_SIZE, loadedData)).convertToRawCubes(Constants.CLUSTER_SIZE);
 				byte[] cubes = data.getCubes();
 				for (int y = 0; y < 16; y++) {
 					int sourceBaseY = y * 16 * 16;
@@ -235,7 +235,7 @@ public final class TestRegionImporter {
 				}
 				
 				// compress section data and send it to storage
-				byte[] compressedCubes = Cubes.createFromCubes(MinerCommonConstants.CLUSTER_SIZE, cubes).compressToByteArray(MinerCommonConstants.CLUSTER_SIZE);
+				byte[] compressedCubes = Cubes.createFromCubes(Constants.CLUSTER_SIZE, cubes).compressToByteArray(Constants.CLUSTER_SIZE);
 				storage.saveSectionRelatedObject(sectionDataId, compressedCubes);
 				
 			}

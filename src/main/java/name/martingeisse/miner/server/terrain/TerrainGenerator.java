@@ -7,7 +7,7 @@
 package name.martingeisse.miner.server.terrain;
 
 import java.util.Random;
-import name.martingeisse.miner.common.MinerCommonConstants;
+import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.cubes.Cubes;
 import name.martingeisse.miner.common.edit.ByteArrayEditAccessHost;
 import name.martingeisse.miner.common.edit.EditAccess;
@@ -358,7 +358,7 @@ public final class TerrainGenerator {
 			}
 			
 			// compress section data and send it to storage
-			final byte[] compressedCubes = Cubes.createFromCubes(MinerCommonConstants.CLUSTER_SIZE, cubes).compressToByteArray(MinerCommonConstants.CLUSTER_SIZE);
+			final byte[] compressedCubes = Cubes.createFromCubes(Constants.CLUSTER_SIZE, cubes).compressToByteArray(Constants.CLUSTER_SIZE);
 			storage.saveSectionRelatedObject(new SectionDataId(sectionId, SectionDataType.DEFINITIVE), compressedCubes);
 		}
 		logger.debug("random terrain generated for section column at " + sectionX + ", " + sectionZ);

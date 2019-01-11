@@ -8,7 +8,7 @@ package name.martingeisse.miner.common.cubetype;
 
 import java.util.ArrayList;
 import java.util.List;
-import name.martingeisse.miner.common.StackdConstants;
+
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.RectangularRegion;
 

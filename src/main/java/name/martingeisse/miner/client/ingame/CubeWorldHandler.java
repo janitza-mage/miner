@@ -58,7 +58,7 @@ import java.util.List;
 import java.util.Map;
 
 import name.martingeisse.common.util.ThreadUtil;
-import name.martingeisse.miner.common.MinerCommonConstants;
+import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.client.ingame.player.Player;
 import name.martingeisse.miner.client.ingame.player.PlayerProxy;
@@ -78,7 +78,6 @@ import name.martingeisse.miner.client.system.Font;
 import name.martingeisse.miner.client.util.MouseUtil;
 import name.martingeisse.miner.client.util.RayAction;
 import name.martingeisse.miner.client.util.RayActionSupport;
-import name.martingeisse.miner.common.StackdConstants;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.RectangularRegion;
 import name.martingeisse.miner.common.util.ProfilingHelper;
@@ -258,7 +257,7 @@ public class CubeWorldHandler {
 		final DefaultSectionRenderer sectionRenderer = new DefaultSectionRenderer();
 		sectionRenderer.prepareForTextures(resources.getCubeTextures());
 		final EngineParameters engineParameters = new EngineParameters(sectionRenderer, resources.getCubeTextures(), CubeTypes.CUBE_TYPES);
-		workingSet = new WorldWorkingSet(engineParameters, MinerCommonConstants.CLUSTER_SIZE);
+		workingSet = new WorldWorkingSet(engineParameters, Constants.CLUSTER_SIZE);
 
 		// the player
 		player = new Player(workingSet);
@@ -615,7 +614,7 @@ public class CubeWorldHandler {
 
 				// scale by the inverse detail factor for drawing the cubes, but prepare for scaling back
 				glPushMatrix();
-				float inverseFactor = 1.0f / StackdConstants.GEOMETRY_DETAIL_FACTOR;
+				float inverseFactor = 1.0f / Constants.GEOMETRY_DETAIL_FACTOR;
 				glScalef(inverseFactor, inverseFactor, inverseFactor);
 				
 			}
@@ -668,9 +667,9 @@ public class CubeWorldHandler {
 				if (grid) {
 					glDisable(GL_TEXTURE_2D);
 					glColor3f(1.0f, 1.0f, 1.0f);
-					final int sectionX = playerX >> MinerCommonConstants.CLUSTER_SIZE.getShiftBits();
-					final int sectionY = playerY >> MinerCommonConstants.CLUSTER_SIZE.getShiftBits();
-					final int sectionZ = playerZ >> MinerCommonConstants.CLUSTER_SIZE.getShiftBits();
+					final int sectionX = playerX >> Constants.CLUSTER_SIZE.getShiftBits();
+					final int sectionY = playerY >> Constants.CLUSTER_SIZE.getShiftBits();
+					final int sectionZ = playerZ >> Constants.CLUSTER_SIZE.getShiftBits();
 					final int distance = 48;
 					glLineWidth(2.0f);
 					glBegin(GL_LINES);
@@ -680,11 +679,11 @@ public class CubeWorldHandler {
 								if (direction.isNegative()) {
 									continue;
 								}
-								final int x = MinerCommonConstants.CLUSTER_SIZE.getSize() * (sectionX + direction.selectByAxis(0, u, v));
+								final int x = Constants.CLUSTER_SIZE.getSize() * (sectionX + direction.selectByAxis(0, u, v));
 								final int dx = direction.selectByAxis(distance, 0, 0);
-								final int y = MinerCommonConstants.CLUSTER_SIZE.getSize() * (sectionY + direction.selectByAxis(v, 0, u));
+								final int y = Constants.CLUSTER_SIZE.getSize() * (sectionY + direction.selectByAxis(v, 0, u));
 								final int dy = direction.selectByAxis(0, distance, 0);
-								final int z = MinerCommonConstants.CLUSTER_SIZE.getSize() * (sectionZ + direction.selectByAxis(u, v, 0));
+								final int z = Constants.CLUSTER_SIZE.getSize() * (sectionZ + direction.selectByAxis(u, v, 0));
 								final int dz = direction.selectByAxis(0, 0, distance);
 								glVertex3f(x + dx, y + dy, z + dz);
 								glVertex3f(x - dx, y - dy, z - dz);

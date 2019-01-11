@@ -6,7 +6,6 @@
 
 package name.martingeisse.miner.common.cubetype;
 
-import name.martingeisse.miner.common.StackdConstants;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.RectangularRegion;
 

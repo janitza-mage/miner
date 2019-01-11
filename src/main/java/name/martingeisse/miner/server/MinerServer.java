@@ -7,7 +7,7 @@
 package name.martingeisse.miner.server;
 
 import name.martingeisse.common.SecurityTokenUtil;
-import name.martingeisse.miner.common.MinerCommonConstants;
+import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.common.network.MinerPacketConstants;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
@@ -53,8 +53,7 @@ public class MinerServer extends StackdServer<MinerSession> {
 	 * Constructor.
 	 */
 	public MinerServer() {
-		super(new CassandraSectionStorage(MinerCommonConstants.CLUSTER_SIZE, Databases.world, "section_data"));
-		// super(new MemorySectionStorage(MinerCommonConstants.CLUSTER_SIZE));
+		super(new CassandraSectionStorage(Constants.CLUSTER_SIZE, Databases.world, "section_data"));
 		setCubeTypes(CubeTypes.CUBE_TYPES);
 
 		Timer timer = new Timer(true);

@@ -6,7 +6,7 @@
 
 package name.martingeisse.miner.server.tools;
 
-import name.martingeisse.miner.common.MinerCommonConstants;
+import name.martingeisse.miner.common.Constants;
 import external.BCrypt;
 
 /**
@@ -25,7 +25,7 @@ public class NewUserAccountMain {
 		String password = "test";
 		
 		// prepare data
-		String salt = BCrypt.gensalt(MinerCommonConstants.BCRYPT_COST);
+		String salt = BCrypt.gensalt(Constants.BCRYPT_COST);
 		System.out.println("salt: " + salt);
 		String hash = BCrypt.hashpw(password, salt);
 		System.out.println("hash: " + hash);
