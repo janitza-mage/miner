@@ -1,16 +1,15 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.miner.server;
 
+import name.martingeisse.miner.server.console.IConsoleCommandHandler;
+import name.martingeisse.miner.server.entities.PlayerInventorySlot;
 import name.martingeisse.miner.server.game.InventoryAccess;
 import name.martingeisse.miner.server.game.ItemType;
-import name.martingeisse.sql.EntityConnectionManager;
-import name.martingeisse.miner.server.console.IConsoleCommandHandler;
-import name.martingeisse.webide.entity.PlayerInventorySlot;
 
 /**
  * Console command handler.
@@ -24,6 +23,7 @@ public class MinerConsoleCommandHandler implements IConsoleCommandHandler<MinerS
 
 	/**
 	 * Constructor.
+	 *
 	 * @param server the server
 	 */
 	public MinerConsoleCommandHandler(final MinerServer server) {
@@ -39,7 +39,7 @@ public class MinerConsoleCommandHandler implements IConsoleCommandHandler<MinerS
 		final InventoryAccess inventoryAccess = new InventoryAccess(session.getPlayerId());
 		final ItemType[] itemTypes = ItemType.values();
 		try {
-		
+
 			if (command.equals("help")) {
 				session.sendConsoleOutput("Available commands:");
 				session.sendConsoleOutput("  help");
@@ -64,7 +64,7 @@ public class MinerConsoleCommandHandler implements IConsoleCommandHandler<MinerS
 				for (ItemType itemType : itemTypes) {
 					session.sendConsoleOutput("  " + itemType.getDisplayName());
 				}
-				
+
 			} else if (command.equals("inventory")) {
 				session.sendConsoleOutput("backpack: ");
 				for (PlayerInventorySlot slot : inventoryAccess.listBackback()) {
@@ -81,40 +81,38 @@ public class MinerConsoleCommandHandler implements IConsoleCommandHandler<MinerS
 					new InventoryAccess(session.getPlayerId()).add(type);
 					session.sendConsoleOutput("wish granted");
 				}
-				
+
 			} else if (command.equals("equip")) {
 				int index = parser.fetchInventorySlot(inventoryAccess, false, false);
 				if (index >= 0) {
 					inventoryAccess.equip(index);
 					session.sendConsoleOutput("equipped");
 				}
-				
+
 			} else if (command.equals("unequip")) {
 				int index = parser.fetchInventorySlot(inventoryAccess, true, false);
 				if (index >= 0) {
 					inventoryAccess.unequip(index);
 					session.sendConsoleOutput("unequipped");
 				}
-				
+
 			} else if (command.equals("trash")) {
 				int index = parser.fetchInventorySlot(inventoryAccess, false, false);
 				if (index >= 0) {
 					inventoryAccess.deleteBackpackItemByIndex(index);
 					session.sendConsoleOutput("trashed");
 				}
-				
+
 			} else if (command.equals("give")) {
 				int index = parser.fetchInventorySlot(inventoryAccess, false, false);
 				if (index >= 0) {
 					// TODO give item to another player
 				}
 				session.sendConsoleOutput("this command is not implemented yet");
-	
+
 			}
 		} catch (final Exception e) {
 			throw new RuntimeException(e);
-		} finally {
-			EntityConnectionManager.disposeConnections();
 		}
 	}
 

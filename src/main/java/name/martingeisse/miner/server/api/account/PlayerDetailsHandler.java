@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -10,8 +10,8 @@ import name.martingeisse.api.request.ApiRequestCycle;
 import name.martingeisse.common.javascript.analyze.JsonAnalyzer;
 import name.martingeisse.common.javascript.jsonbuilder.JsonObjectBuilder;
 import name.martingeisse.common.javascript.jsonbuilder.JsonValueBuilder;
-import name.martingeisse.webide.entity.Player;
-import name.martingeisse.webide.entity.UserAccount;
+import name.martingeisse.miner.server.entities.Player;
+import name.martingeisse.miner.server.entities.UserAccount;
 
 /**
  * This handler returns detailed data for one of the logged-in user's player characters.
@@ -31,5 +31,5 @@ public final class PlayerDetailsHandler extends AbstractLoggedInHandler {
 		objectBuilder.property("coins").number(player.getCoins());
 		objectBuilder.end();
 	}
-	
+
 }

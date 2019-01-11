@@ -1,16 +1,12 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.miner.server;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.util.Locale;
-import java.util.concurrent.Executors;
+import com.datastax.driver.core.Cluster;
 import name.martingeisse.api.handler.DefaultMasterHandler;
 import name.martingeisse.api.handler.misc.NotFoundHandler;
 import name.martingeisse.api.request.ApiRequestCycle;
@@ -18,17 +14,21 @@ import name.martingeisse.api.servlet.ApiConfiguration;
 import name.martingeisse.api.servlet.ApiLauncher;
 import name.martingeisse.common.javascript.JavascriptAssembler;
 import name.martingeisse.miner.common.MinerCommonConstants;
-import name.martingeisse.miner.server.api.account.AccountApiHandler;
-import name.martingeisse.sql.EntityConnectionManager;
-import name.martingeisse.sql.MysqlDatabaseDescriptor;
 import name.martingeisse.miner.common.task.TaskSystem;
+import name.martingeisse.miner.server.api.account.AccountApiHandler;
 import name.martingeisse.miner.server.network.StackdNettyPipelineFactory;
+import name.martingeisse.miner.server.util.database.postgres.PostgresService;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.ChannelFactory;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
-import com.datastax.driver.core.Cluster;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.util.Locale;
+import java.util.concurrent.Executors;
 
 /**
  * The main class for the game server.
@@ -37,16 +37,16 @@ public class Main {
 
 	/**
 	 * The main method.
-	 * 
+	 *
 	 * @param args command-line arguments (ignored)
 	 * @throws Exception on errors
 	 */
 	public static void main(final String[] args) throws Exception {
-		
+
 		// core initialization
 		parseCommandLine(args);
 		initializeBase();
-		
+
 		// game server
 		new Thread() {
 			@Override
@@ -60,7 +60,7 @@ public class Main {
 				bootstrap.bind(new InetSocketAddress(MinerCommonConstants.NETWORK_PORT));
 			}
 		}.start();
-		
+
 		// account API
 		new Thread() {
 			@Override
@@ -79,7 +79,7 @@ public class Main {
 				}
 			}
 		}.start();
-		
+
 	}
 
 	/**
@@ -109,22 +109,18 @@ public class Main {
 
 		// initialize task system
 		TaskSystem.initialize();
-		
+
 		// initialize SQL database
-		final MysqlDatabaseDescriptor mainDatabase = new MysqlDatabaseDescriptor();
-		mainDatabase.setDisplayName("Main Database");
-		mainDatabase.setUrl(Configuration.getMainDatabaseUrl());
-		mainDatabase.setUsername(Configuration.getMainDatabaseUsername());
-		mainDatabase.setPassword(Configuration.getMainDatabasePassword());
-		mainDatabase.setDefaultTimeZone(timeZone);
-		mainDatabase.initialize();
-		Databases.main = mainDatabase;
-		EntityConnectionManager.initializeDatabaseDescriptors(mainDatabase);
+		Databases.main = new PostgresService();
+		Databases.main.setPostgresHost("localhost");
+		Databases.main.setPostgresDatabaseName("miner");
+		Databases.main.setPostgresUser("postgres");
+		Databases.main.setPostgresPassword("postgres");
 
 		// initialize Cassandra database
 		Databases.cassandraCluster = Cluster.builder().addContactPoint("localhost").build();
 		Databases.world = Databases.cassandraCluster.connect("miner");
-		
+
 	}
 
 }

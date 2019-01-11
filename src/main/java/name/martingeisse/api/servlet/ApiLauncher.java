@@ -1,29 +1,23 @@
 /**
  * Copyright (c) 2011 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.api.servlet;
 
-import java.util.EnumSet;
-
-import javax.servlet.DispatcherType;
-
-import name.martingeisse.database.EntityConnectionServletFilter;
 import name.martingeisse.jetty.AntiJsessionidUrlFilter;
 import name.martingeisse.jetty.GlobalServletContext;
-
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
-import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlets.GzipFilter;
-import org.eclipse.jetty.util.ssl.SslContextFactory;
+
+import javax.servlet.DispatcherType;
+import java.util.EnumSet;
 
 /**
  * This class starts the API system and is typically invoked by the
@@ -32,7 +26,7 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
  * if the same port is also used for a regular web GUI.
  */
 public class ApiLauncher {
-	
+
 	/**
 	 * the logger
 	 */
@@ -40,7 +34,7 @@ public class ApiLauncher {
 
 	/**
 	 * Launches the server.
-	 * 
+	 *
 	 * @param configuration the configuration for the API
 	 * @throws Exception on errors
 	 */
@@ -60,9 +54,6 @@ public class ApiLauncher {
 		// add GZIP support
 		context.addFilter(GzipFilter.class, "/*", allDispatcherTypes);
 
-		// JDBC connection-closing filter
-		context.addFilter(EntityConnectionServletFilter.class, "/*", allDispatcherTypes);
-
 		// add the API Servlet
 		ApiConfiguration.setInstance(configuration);
 		context.addServlet(RestfulApiServlet.class, "/*");
@@ -70,21 +61,21 @@ public class ApiLauncher {
 		// build SSL configuration
 //		SslContextFactory sslContextFactory = new SslContextFactory("/Users/geisse/.keystore");
 //		sslContextFactory.setKeyStorePassword("changeit");
-		
+
 		// build the server object
 		final Server server = new Server();
-		
+
 		// build HTTP(S) configurations
 		HttpConfiguration httpConfiguration = new HttpConfiguration();
 //		httpConfiguration.setSecurePort(8443);
 //		HttpConfiguration httpsConfiguration = new HttpConfiguration(httpConfiguration);
 //		httpsConfiguration.addCustomizer(new SecureRequestCustomizer());
-		
+
 		// build connection factories
 		HttpConnectionFactory httpConnectionFactory = new HttpConnectionFactory(httpConfiguration);
 //		HttpConnectionFactory httpsConnectionFactory = new HttpConnectionFactory(httpsConfiguration);
 //		SslConnectionFactory sslConnectionFactory = new SslConnectionFactory(sslContextFactory, "http/1.1");
-		
+
 		// build connectors and add them to the server
 		ServerConnector httpConnector = new ServerConnector(server, httpConnectionFactory);
 		httpConnector.setPort(8080);
@@ -92,7 +83,7 @@ public class ApiLauncher {
 //		ServerConnector httpsConnector = new ServerConnector(server, sslConnectionFactory, httpsConnectionFactory);
 //		httpsConnector.setPort(8443);
 //		server.addConnector(httpsConnector);
-		
+
 		// start the server
 		server.setHandler(context);
 		try {
