@@ -1,17 +1,11 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.miner.server.network;
 
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
 import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.geometry.SectionId;
 import name.martingeisse.miner.common.network.SectionDataId;
@@ -27,13 +21,18 @@ import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBufferInputStream;
 import org.jboss.netty.channel.Channel;
-import org.json.simple.JSONValue;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The main server class. Typically, a single instance of this class
  * is used on the server side, and it is actually an application-specific
  * subclass of this class.
- * 
+ *
  * @param <S> the session type
  */
 public abstract class StackdServer<S extends StackdSession> {
@@ -42,7 +41,7 @@ public abstract class StackdServer<S extends StackdSession> {
 	 * the logger
 	 */
 	private static Logger logger = Logger.getLogger(StackdServer.class);
-	
+
 	/**
 	 * the sessions
 	 */
@@ -52,7 +51,7 @@ public abstract class StackdServer<S extends StackdSession> {
 	 * the sectionWorkingSet
 	 */
 	private final SectionWorkingSet sectionWorkingSet;
-	
+
 	/**
 	 * the sectionToClientShipper
 	 */
@@ -62,7 +61,7 @@ public abstract class StackdServer<S extends StackdSession> {
 	 * the cubeTypes
 	 */
 	private CubeType[] cubeTypes;
-	
+
 	/**
 	 * the consoleCommandHandler
 	 */
@@ -111,7 +110,7 @@ public abstract class StackdServer<S extends StackdSession> {
 	public IConsoleCommandHandler<S> getConsoleCommandHandler() {
 		return consoleCommandHandler;
 	}
-	
+
 	/**
 	 * Setter method for the consoleCommandHandler.
 	 * @param consoleCommandHandler the consoleCommandHandler to set
@@ -119,16 +118,16 @@ public abstract class StackdServer<S extends StackdSession> {
 	public void setConsoleCommandHandler(IConsoleCommandHandler<S> consoleCommandHandler) {
 		this.consoleCommandHandler = (consoleCommandHandler == null ? new NullConsoleCommandHandler<S>() : consoleCommandHandler);
 	}
-	
+
 	/**
 	 * Creates a new session.
-	 * 
+	 *
 	 * Note that a race condition might cause this method to be invoked twice to
 	 * create a session for the same ID. In such a case, the race condition will be
 	 * detected later on and one of the sessions will be thrown away. This method must
 	 * be able to handle such a case. Use {@link #onClientConnected(StackdSession)}
 	 * for code that should only run once per created session.
-	 * 
+	 *
 	 * @param id the session ID
 	 * @param channel the channel to the client
 	 * @return the session
@@ -137,7 +136,7 @@ public abstract class StackdServer<S extends StackdSession> {
 
 	/**
 	 * Returns the session with the specified ID, or null if no such session exists.
-	 * 
+	 *
 	 * @param id the session ID
 	 * @return the session or null
 	 */
@@ -147,7 +146,7 @@ public abstract class StackdServer<S extends StackdSession> {
 
 	/**
 	 * Returns the session with the specified ID, creating it if it does not yet exist.
-	 * 
+	 *
 	 * @param id the session ID
 	 * @param channel the channel to use when creating a session
 	 * @return the session
@@ -170,7 +169,7 @@ public abstract class StackdServer<S extends StackdSession> {
 
 	/**
 	 * Creates a new session with a random unused ID and returns it.
-	 * 
+	 *
 	 * @param channel the channel that connects to the client
 	 * @return the session
 	 */
@@ -188,7 +187,7 @@ public abstract class StackdServer<S extends StackdSession> {
 	 * Returns a collection that contains all sessions. This collection is
 	 * a live view on the session map in this server and will be changed
 	 * concurrently by other threads.
-	 * 
+	 *
 	 * @return the sessions
 	 */
 	public final Collection<S> getSessions() {
@@ -197,19 +196,19 @@ public abstract class StackdServer<S extends StackdSession> {
 
 	/**
 	 * Broadcasts a packet to all clients.
-	 * 
+	 *
 	 * This method takes the list of clients as it exists when calling this
 	 * method. Calling code must make sure that the packet does not
 	 * contain information that can become invalid when the list of clients
 	 * has changed since the packet was built.
-	 * 
+	 *
 	 * Header fields of the packet will be assembled by this method. This
 	 * will actually happen for each channel, but since the header fields
 	 * are the same for all channel (they only depend on the packet), this
 	 * should not be a problem. (Implementation note: This method still
 	 * must ensure that each channel gets its own buffer object with
 	 * separate reader/writer index).
-	 * 
+	 *
 	 * @param packet the packet to broadcast to all clients
 	 */
 	public final void broadcast(final StackdPacket packet) {
@@ -218,95 +217,85 @@ public abstract class StackdServer<S extends StackdSession> {
 			session.sendPacketDestructive(duplicatePacket);
 		}
 	}
-	
+
 	/**
 	 * Internal packet dispatch that gets called in the receiving thread.
 	 * TODO should not dispatch directly but through a queue.
 	 */
 	final void onRawPacketReceived(final S session, final StackdPacket packet) throws Exception {
-		
+
 		// analyze the packet
 		ChannelBuffer buffer = packet.getBuffer();
 		switch (packet.getType()) {
-		
-		case StackdPacket.TYPE_JSON_API: {
-			byte[] binary = new byte[buffer.readableBytes()];
-			buffer.readBytes(binary);
-			String json = new String(binary, StandardCharsets.UTF_8);
-			Object data = JSONValue.parse(json);
-			onJsonPacketReceived(session, data);
-			break;
-		}
-		
-		case StackdPacket.TYPE_CUBE_MODIFICATION: {
-			
-			// process modifications
-			SectionWorkingSet sectionWorkingSet = getSectionWorkingSet();
-			int shiftBits = sectionWorkingSet.getClusterSize().getShiftBits();
-			List<SectionId> affectedSectionIds = new ArrayList<SectionId>();
-			while (buffer.readable()) {
-				int x  = buffer.readInt(), sectionX = (x >> shiftBits);
-				int y  = buffer.readInt(), sectionY = (y >> shiftBits);
-				int z  = buffer.readInt(), sectionZ = (z >> shiftBits);
-				byte newCubeType = (byte)buffer.readUnsignedByte();
-				SectionId sectionId = new SectionId(sectionX, sectionY, sectionZ);
-				SectionDataId sectionDataId = new SectionDataId(sectionId, SectionDataType.DEFINITIVE);
-				SectionCubesCacheEntry sectionDataCacheEntry = (SectionCubesCacheEntry)sectionWorkingSet.get(sectionDataId);
-				sectionDataCacheEntry.setCubeAbsolute(x, y, z, newCubeType);
-				affectedSectionIds.add(sectionId);
-			}
-			
-			// notify clients to update their render models
-			SectionId[] affectedSectionIdArray = affectedSectionIds.toArray(new SectionId[affectedSectionIds.size()]);
-			onSectionsModified(affectedSectionIdArray);
-			
-			break;
-		}
-		
-		// TYPE_SINGLE_SECTION_DATA_DEFINITIVE is not valid because the client must not get that information,
-		// to prevent information cheating.
-		case StackdPacket.TYPE_SINGLE_SECTION_DATA_INTERACTIVE:
-		case StackdPacket.TYPE_SINGLE_SECTION_DATA_VIEW_LOD_0:
-		{
-			SectionId sectionId = new SectionId(buffer.readInt(), buffer.readInt(), buffer.readInt());
-			SectionDataType type = SectionDataType.values()[packet.getType() - StackdPacket.TYPE_SINGLE_SECTION_DATA_BASE];
-			final SectionDataId dataId = new SectionDataId(sectionId, type);
-			logger.debug("SERVER received section data request: " + dataId);
-			sectionToClientShipper.addJob(dataId, session);
-			break;
-		}
-		
-		case StackdPacket.TYPE_CONSOLE: {
-			List<String> segments = new ArrayList<String>();
-			try (ChannelBufferInputStream s = new ChannelBufferInputStream(buffer)) {
+
+			case StackdPacket.TYPE_CUBE_MODIFICATION: {
+
+				// process modifications
+				SectionWorkingSet sectionWorkingSet = getSectionWorkingSet();
+				int shiftBits = sectionWorkingSet.getClusterSize().getShiftBits();
+				List<SectionId> affectedSectionIds = new ArrayList<SectionId>();
 				while (buffer.readable()) {
-					segments.add(s.readUTF());
+					int x = buffer.readInt(), sectionX = (x >> shiftBits);
+					int y = buffer.readInt(), sectionY = (y >> shiftBits);
+					int z = buffer.readInt(), sectionZ = (z >> shiftBits);
+					byte newCubeType = (byte) buffer.readUnsignedByte();
+					SectionId sectionId = new SectionId(sectionX, sectionY, sectionZ);
+					SectionDataId sectionDataId = new SectionDataId(sectionId, SectionDataType.DEFINITIVE);
+					SectionCubesCacheEntry sectionDataCacheEntry = (SectionCubesCacheEntry) sectionWorkingSet.get(sectionDataId);
+					sectionDataCacheEntry.setCubeAbsolute(x, y, z, newCubeType);
+					affectedSectionIds.add(sectionId);
 				}
-			}
-			if (segments.size() < 1) {
+
+				// notify clients to update their render models
+				SectionId[] affectedSectionIdArray = affectedSectionIds.toArray(new SectionId[affectedSectionIds.size()]);
+				onSectionsModified(affectedSectionIdArray);
+
 				break;
 			}
-			String command = segments.remove(0);
-			String[] args = segments.toArray(new String[segments.size()]);
-			handleConsoleCommand(session, command, args);
-			break;
-		}
-		
-		default:
-			if (packet.getType() < 0xff00) {
-				onApplicationPacketReceived(session, packet);
-			} else {
-				logger.warn("client sent invalid protocol packet type: " + packet.getType());
+
+			// TYPE_SINGLE_SECTION_DATA_DEFINITIVE is not valid because the client must not get that information,
+			// to prevent information cheating.
+			case StackdPacket.TYPE_SINGLE_SECTION_DATA_INTERACTIVE:
+			case StackdPacket.TYPE_SINGLE_SECTION_DATA_VIEW_LOD_0: {
+				SectionId sectionId = new SectionId(buffer.readInt(), buffer.readInt(), buffer.readInt());
+				SectionDataType type = SectionDataType.values()[packet.getType() - StackdPacket.TYPE_SINGLE_SECTION_DATA_BASE];
+				final SectionDataId dataId = new SectionDataId(sectionId, type);
+				logger.debug("SERVER received section data request: " + dataId);
+				sectionToClientShipper.addJob(dataId, session);
+				break;
 			}
-			break;
-		
+
+			case StackdPacket.TYPE_CONSOLE: {
+				List<String> segments = new ArrayList<String>();
+				try (ChannelBufferInputStream s = new ChannelBufferInputStream(buffer)) {
+					while (buffer.readable()) {
+						segments.add(s.readUTF());
+					}
+				}
+				if (segments.size() < 1) {
+					break;
+				}
+				String command = segments.remove(0);
+				String[] args = segments.toArray(new String[segments.size()]);
+				handleConsoleCommand(session, command, args);
+				break;
+			}
+
+			default:
+				if (packet.getType() < 0xff00) {
+					onApplicationPacketReceived(session, packet);
+				} else {
+					logger.warn("client sent invalid protocol packet type: " + packet.getType());
+				}
+				break;
+
 		}
-		
+
 	}
 
 	/**
 	 * This method is called when a client has been connected.
-	 * 
+	 *
 	 * @param session the client's session
 	 */
 	protected void onClientConnected(final S session) {
@@ -315,21 +304,11 @@ public abstract class StackdServer<S extends StackdSession> {
 	/**
 	 * This method is called when a client has sent an application-specific
 	 * binary packet.
-	 * 
+	 *
 	 * @param session the client's session
 	 * @param packet the packet
 	 */
 	protected void onApplicationPacketReceived(final S session, final StackdPacket packet) {
-	}
-
-	/**
-	 * This method is called when a client has sent an application-specific
-	 * JSON packet.
-	 * 
-	 * @param session the client's session
-	 * @param data the decoded JSON data
-	 */
-	protected void onJsonPacketReceived(final S session, final Object data) {
 	}
 
 	/**
@@ -355,10 +334,10 @@ public abstract class StackdServer<S extends StackdSession> {
 
 	/**
 	 * This method is called when a client has been disconnected.
-	 * 
+	 *
 	 * Special case: Clients that have not been allocated a session
 	 * yet are handled without calling this method.
-	 * 
+	 *
 	 * @param session the client's session
 	 */
 	protected void onClientDisconnected(final S session) {
@@ -368,10 +347,10 @@ public abstract class StackdServer<S extends StackdSession> {
 	 * Handles a console command. Such a command is typically sent by a client. Even if
 	 * not, the command must at least be associated with a client, and is handled as if
 	 * that client sent it.
-	 * 
+	 *
 	 * The default implementation delegates to the current console command handler set
 	 * for this server.
-	 *  
+	 *
 	 * @param session the client's session
 	 * @param command the command
 	 * @param args the arguments

@@ -1,15 +1,11 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.miner.client.network;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.nio.charset.StandardCharsets;
-import java.util.concurrent.Executors;
 import name.martingeisse.miner.client.console.Console;
 import name.martingeisse.miner.client.frame.handlers.FlashMessageHandler;
 import name.martingeisse.miner.common.network.StackdPacket;
@@ -20,19 +16,15 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBufferInputStream;
 import org.jboss.netty.buffer.ChannelBufferOutputStream;
 import org.jboss.netty.buffer.ChannelBuffers;
-import org.jboss.netty.channel.ChannelFactory;
-import org.jboss.netty.channel.ChannelFuture;
-import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.channel.ChannelPipeline;
-import org.jboss.netty.channel.ChannelPipelineFactory;
-import org.jboss.netty.channel.Channels;
-import org.jboss.netty.channel.ExceptionEvent;
-import org.jboss.netty.channel.MessageEvent;
-import org.jboss.netty.channel.SimpleChannelHandler;
+import org.jboss.netty.channel.*;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.util.ThreadNameDeterminer;
 import org.jboss.netty.util.ThreadRenamingRunnable;
-import org.json.simple.JSONValue;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.Executors;
 
 /**
  * This class handles the connection to the server. Applications are
@@ -45,32 +37,32 @@ public class StackdProtocolClient {
 	 * the logger
 	 */
 	private static Logger logger = Logger.getLogger(StackdProtocolClient.class);
-	
+
 	/**
 	 * the connectFuture
 	 */
 	private final ChannelFuture connectFuture;
-	
+
 	/**
 	 * the syncObject
 	 */
 	private final Object syncObject = new Object();
-	
+
 	/**
 	 * the sessionId
 	 */
 	private int sessionId = -1;
-	
+
 	/**
 	 * the flashMessageHandler
 	 */
 	private FlashMessageHandler flashMessageHandler;
-	
+
 	/**
 	 * the sectionGridLoader
 	 */
 	private SectionGridLoader sectionGridLoader;
-	
+
 	/**
 	 * the console
 	 */
@@ -111,7 +103,7 @@ public class StackdProtocolClient {
 			return (sessionId != -1);
 		}
 	}
-	
+
 	/**
 	 * Waits until this client is ready.
 	 * @throws InterruptedException if interrupted while waiting
@@ -123,7 +115,7 @@ public class StackdProtocolClient {
 			}
 		}
 	}
-	
+
 	/**
 	 * Getter method for the sessionId.
 	 * @return the sessionId
@@ -131,7 +123,7 @@ public class StackdProtocolClient {
 	public final int getSessionId() {
 		return sessionId;
 	}
-	
+
 	/**
 	 * Getter method for the flashMessageHandler.
 	 * @return the flashMessageHandler
@@ -139,7 +131,7 @@ public class StackdProtocolClient {
 	public FlashMessageHandler getFlashMessageHandler() {
 		return flashMessageHandler;
 	}
-	
+
 	/**
 	 * Setter method for the flashMessageHandler.
 	 * @param flashMessageHandler the flashMessageHandler to set
@@ -147,7 +139,7 @@ public class StackdProtocolClient {
 	public void setFlashMessageHandler(FlashMessageHandler flashMessageHandler) {
 		this.flashMessageHandler = flashMessageHandler;
 	}
-	
+
 	/**
 	 * Getter method for the sectionGridLoader.
 	 * @return the sectionGridLoader
@@ -155,7 +147,7 @@ public class StackdProtocolClient {
 	public SectionGridLoader getSectionGridLoader() {
 		return sectionGridLoader;
 	}
-	
+
 	/**
 	 * Setter method for the sectionGridLoader.
 	 * @param sectionGridLoader the sectionGridLoader to set
@@ -163,7 +155,7 @@ public class StackdProtocolClient {
 	public void setSectionGridLoader(SectionGridLoader sectionGridLoader) {
 		this.sectionGridLoader = sectionGridLoader;
 	}
-	
+
 	/**
 	 * Getter method for the console.
 	 * @return the console
@@ -171,7 +163,7 @@ public class StackdProtocolClient {
 	public Console getConsole() {
 		return console;
 	}
-	
+
 	/**
 	 * Setter method for the console.
 	 * @param console the console to set
@@ -179,23 +171,23 @@ public class StackdProtocolClient {
 	public void setConsole(Console console) {
 		this.console = console;
 	}
-	
+
 	/**
 	 * Sends a packet to the server.
-	 * 
+	 *
 	 * The packet object should be considered invalid afterwards
 	 * (hence "destructive") since this method will assemble header
 	 * fields in the packet and alter its reader/writer index,
 	 * possibly asynchronous to the calling thread.
-	 * 
+	 *
 	 * TODO: call this method sendDestructive().
-	 * 
+	 *
 	 * @param packet the packet to send
 	 */
 	public final void send(StackdPacket packet) {
 		connectFuture.getChannel().write(packet);
 	}
-	
+
 	/**
 	 * Disconnects from the server.
 	 */
@@ -206,7 +198,7 @@ public class StackdProtocolClient {
 	/**
 	 * This method gets invoked after receiving the "hello" packet from the server.
 	 * The default implementation does nothing.
-	 * 
+	 *
 	 * NOTE: This method gets invoked by the Netty thread, asynchronous
 	 * to the main game thread!
 	 */
@@ -216,33 +208,20 @@ public class StackdProtocolClient {
 	/**
 	 * This method gets invoked when receiving an application packet from the server.
 	 * The default implementation does nothing.
-	 * 
+	 *
 	 * NOTE: This method gets invoked by the Netty thread, asynchronous
 	 * to the main game thread!
-	 * 
+	 *
 	 * @param packet the received packet
 	 */
 	protected void onApplicationPacketReceived(StackdPacket packet) {
 	}
 
 	/**
-	 * This method gets invoked when receiving a JSON-API packet from the server.
-	 * This class has already decoded the JSON payload.
-	 * The default implementation does nothing.
-	 *
-	 * NOTE: This method gets invoked by the Netty thread, asynchronous
-	 * to the main game thread!
-	 *
-	 * @param data the decoded JSON data
-	 */
-	protected void onJsonPacketReceived(Object data) {
-	}
-
-	/**
 	 * This method gets invoked when receiving a flash message packet from the server.
 	 * The default implementation adds the message to the flash message handler
 	 * that was previously set via {@link #setFlashMessageHandler(FlashMessageHandler)}.
-	 * 
+	 *
 	 * @param message the message
 	 */
 	protected void onFlashMessageReceived(String message) {
@@ -255,10 +234,10 @@ public class StackdProtocolClient {
 
 	/**
 	 * Invoked when the networking code throws an exception.
-	 * 
+	 *
 	 * NOTE: This method gets invoked by the Netty thread, asynchronous
 	 * to the main game thread!
-	 * 
+	 *
 	 * @param e the exception
 	 */
 	protected void onException(Throwable e) {
@@ -281,12 +260,6 @@ public class StackdProtocolClient {
 			}
 			onReady();
 			logger.debug("protocol client ready");
-		} else if (packet.getType() == StackdPacket.TYPE_JSON_API) {
-			byte[] binary = new byte[buffer.readableBytes()];
-			buffer.readBytes(binary);
-			String json = new String(binary, StandardCharsets.UTF_8);
-			Object data = JSONValue.parse(json);
-			onJsonPacketReceived(data);
 		} else if (packet.getType() == StackdPacket.TYPE_FLASH_MESSAGE) {
 			byte[] binary = new byte[buffer.readableBytes()];
 			buffer.readBytes(binary);
@@ -318,7 +291,7 @@ public class StackdProtocolClient {
 			}
 		}
 	}
-	
+
 	/**
 	 * Sends a server-side console command to the server.
 	 * @param command the command
@@ -337,18 +310,18 @@ public class StackdProtocolClient {
 		}
 		send(new StackdPacket(StackdPacket.TYPE_CONSOLE, buffer, false));
 	}
-	
+
 	/**
 	 * The netty handler class.
 	 */
 	final class ApplicationHandler extends SimpleChannelHandler {
-		
+
 		/* (non-Javadoc)
 		 * @see org.jboss.netty.channel.SimpleChannelHandler#messageReceived(org.jboss.netty.channel.ChannelHandlerContext, org.jboss.netty.channel.MessageEvent)
 		 */
 		@Override
 		public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-			StackdPacket packet = (StackdPacket)e.getMessage();
+			StackdPacket packet = (StackdPacket) e.getMessage();
 			if (packet.getType() < 0xff00) {
 				if (sessionId != -1) {
 					onApplicationPacketReceived(packet);
@@ -357,7 +330,7 @@ public class StackdProtocolClient {
 				onProtocolPacketReceived(packet);
 			}
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see org.jboss.netty.channel.SimpleChannelHandler#exceptionCaught(org.jboss.netty.channel.ChannelHandlerContext, org.jboss.netty.channel.ExceptionEvent)
 		 */
@@ -365,6 +338,6 @@ public class StackdProtocolClient {
 		public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 			onException(e.getCause());
 		}
-		
+
 	}
 }

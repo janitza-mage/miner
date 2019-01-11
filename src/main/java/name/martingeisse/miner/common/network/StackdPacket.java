@@ -15,31 +15,31 @@ import java.io.DataOutput;
  * Represents packets that are sent between client and server.
  * The packet consists of header data (including the packet
  * type) and a body that is treated as a buffer by this class.
- *
+ * <p>
  * Conceptually, header and body are separate. Implementation-wise
  * this class uses a single buffer that contains the body and
  * leaves room for header fields. For received packets, the
  * header data is stored redundantly in the buffer and the fields
  * of this class. For sent packets, this class encodes the header
  * fields into the buffer when sending.
- *
+ * <p>
  * The packet type tells which kind of packet this is. Packet
  * types are 16-bit unsigned integers (0x0000 through 0xFFFF),
  * with packet types in the range 0xFF00 through 0xFFFF being
  * reserved for special protocol packets.
- *
+ * <p>
  * The total packet size (and thus buffer size) must not
  * exceed 255 bytes.
- *
+ * <p>
  * Wire format for a packet:
  * - body size (unsigned byte)
  * - type (unsigned short)
  * - body (bytes)
- *
+ * <p>
  * When sending a packet, the readable bytes determine the
  * packet's contents (header and body), with the header being
  * assembled in the buffer on-the-fly.
- *
+ * <p>
  * When receiving a packet, the header is consumed by the
  * receiver logic and the readable bytes are set up to contain
  * the packet body.
@@ -65,11 +65,6 @@ public final class StackdPacket {
 	 * The type constant for "hello" packets.
 	 */
 	public static final int TYPE_HELLO = 0xff00;
-
-	/**
-	 * The type constant for "JSON API" packets.
-	 */
-	public static final int TYPE_JSON_API = 0xff01;
 
 	/**
 	 * The type constant for flash message packets (server to client only).
@@ -139,7 +134,8 @@ public final class StackdPacket {
 
 	/**
 	 * Constructor for a new packet with an empty buffer.
-	 * @param type the packet type
+	 *
+	 * @param type     the packet type
 	 * @param bodySize the size of the packet body
 	 */
 	public StackdPacket(int type, int bodySize) {
@@ -148,15 +144,15 @@ public final class StackdPacket {
 
 	/**
 	 * Constructor that specifies the type and buffer explicitly.
-	 *
+	 * <p>
 	 * This constructor allows to optionally write a header full of
 	 * zero-bytes. Callers *must* make sure that the buffer contains
 	 * space for the header in the finished buffer; they can either
 	 * do that by telling this constructor to do it or do it
 	 * themselves.
 	 *
-	 * @param type the packet type
-	 * @param buffer the buffer for header and body
+	 * @param type            the packet type
+	 * @param buffer          the buffer for header and body
 	 * @param writeZeroHeader whether this class shall write zeroes for the header
 	 */
 	public StackdPacket(int type, ChannelBuffer buffer, boolean writeZeroHeader) {
@@ -169,6 +165,7 @@ public final class StackdPacket {
 
 	/**
 	 * Getter method for the type.
+	 *
 	 * @return the type
 	 */
 	public int getType() {
@@ -177,6 +174,7 @@ public final class StackdPacket {
 
 	/**
 	 * Setter method for the type.
+	 *
 	 * @param type the type to set
 	 */
 	public void setType(int type) {
@@ -185,6 +183,7 @@ public final class StackdPacket {
 
 	/**
 	 * Getter method for the buffer.
+	 *
 	 * @return the buffer
 	 */
 	public ChannelBuffer getBuffer() {
