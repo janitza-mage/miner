@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.common.network;
+package name.martingeisse.miner.common.section;
 
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.SectionId;

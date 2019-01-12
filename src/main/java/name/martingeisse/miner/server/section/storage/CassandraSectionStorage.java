@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import name.martingeisse.miner.common.geometry.ClusterSize;
-import name.martingeisse.miner.common.network.SectionDataId;
+import name.martingeisse.miner.common.section.SectionDataId;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import com.datastax.driver.core.ResultSet;

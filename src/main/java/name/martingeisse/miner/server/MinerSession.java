@@ -7,7 +7,7 @@
 package name.martingeisse.miner.server;
 
 import com.querydsl.sql.dml.SQLUpdateClause;
-import name.martingeisse.miner.common.network.PacketTypes;
+import name.martingeisse.miner.common.network.message.MessageCodes;
 import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.server.entities.QPlayer;
 import name.martingeisse.miner.server.network.StackdSession;
@@ -225,7 +225,7 @@ public class MinerSession extends StackdSession {
 	 * @param coins the number of coins to send
 	 */
 	public void sendCoinsUpdate(final long coins) {
-		final StackdPacket packet = new StackdPacket(PacketTypes.S2C_UPDATE_COINS, 8);
+		final StackdPacket packet = new StackdPacket(MessageCodes.S2C_UPDATE_COINS, 8);
 		packet.getBuffer().writeLong(coins);
 		sendPacketDestructive(packet);
 	}

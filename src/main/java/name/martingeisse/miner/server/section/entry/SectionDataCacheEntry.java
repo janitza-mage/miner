@@ -6,7 +6,7 @@
 
 package name.martingeisse.miner.server.section.entry;
 
-import name.martingeisse.miner.common.network.SectionDataId;
+import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.task.Task;
 import name.martingeisse.miner.server.section.SectionWorkingSet;
 

@@ -4,14 +4,16 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.common.network;
+package name.martingeisse.miner.common.network.message;
+
+import name.martingeisse.miner.common.section.SectionDataType;
 
 import java.io.DataOutput;
 
 /**
- * Constants for Miner application-specific packets.
+ * Codes that indicate the {@link Message} subclass encoded in a packet.
  */
-public final class PacketTypes {
+public final class MessageCodes {
 
 	public static final int C2S_UPDATE_POSITION = 0x0001;
 	public static final int C2S_RESUME_PLAYER = 0x0005;
@@ -76,7 +78,7 @@ public final class PacketTypes {
 	/**
 	 * Prevent instantiation.
 	 */
-	private PacketTypes() {
+	private MessageCodes() {
 	}
 	
 }

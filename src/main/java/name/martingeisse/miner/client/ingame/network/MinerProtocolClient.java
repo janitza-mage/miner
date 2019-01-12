@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import name.martingeisse.miner.common.Constants;
-import name.martingeisse.miner.common.network.PacketTypes;
+import name.martingeisse.miner.common.network.message.MessageCodes;
 import name.martingeisse.miner.client.ingame.IngameHandler;
 import name.martingeisse.miner.client.ingame.player.PlayerProxy;
 import name.martingeisse.miner.client.startmenu.AccountApiClient;
@@ -69,7 +69,7 @@ public class MinerProtocolClient extends StackdProtocolClient {
 	 * @param orientation the player's orientation
 	 */
 	public void sendPositionUpdate(ReadableVector3d position, ReadableEulerAngles orientation) {
-		StackdPacket packet = new StackdPacket(PacketTypes.C2S_UPDATE_POSITION, 40);
+		StackdPacket packet = new StackdPacket(MessageCodes.C2S_UPDATE_POSITION, 40);
 		ChannelBuffer buffer = packet.getBuffer();
 		buffer.writeDouble(position.getX());
 		buffer.writeDouble(position.getY());
@@ -91,7 +91,7 @@ public class MinerProtocolClient extends StackdProtocolClient {
 		byte[] tokenBytes = AccountApiClient.getInstance().getPlayerAccessToken().getBytes(StandardCharsets.UTF_8);
 		buffer.writeInt(tokenBytes.length);
 		buffer.writeBytes(tokenBytes);
-		send(new StackdPacket(PacketTypes.C2S_RESUME_PLAYER, buffer, false));
+		send(new StackdPacket(MessageCodes.C2S_RESUME_PLAYER, buffer, false));
 		
 	}
 	
@@ -103,7 +103,7 @@ public class MinerProtocolClient extends StackdProtocolClient {
 		ChannelBuffer buffer = packet.getBuffer();
 		switch (packet.getType()) {
 		
-		case PacketTypes.S2C_PLAYER_LIST_UPDATE: {
+		case MessageCodes.S2C_PLAYER_LIST_UPDATE: {
 			List<PlayerProxy> playerProxiesFromMessage = new ArrayList<PlayerProxy>();
 			while (buffer.readableBytes() >= 28) {
 				int id = buffer.readInt();
@@ -126,7 +126,7 @@ public class MinerProtocolClient extends StackdProtocolClient {
 			break;
 		}
 			
-		case PacketTypes.S2C_PLAYER_NAMES_UPDATE: {
+		case MessageCodes.S2C_PLAYER_NAMES_UPDATE: {
 			Map<Integer, String> updatedPlayerNames = new HashMap<Integer, String>();
 			while (buffer.readableBytes() > 0) {
 				int id = buffer.readInt();
@@ -145,7 +145,7 @@ public class MinerProtocolClient extends StackdProtocolClient {
 			break;
 		}
 		
-		case PacketTypes.S2C_PLAYER_RESUMED: {
+		case MessageCodes.S2C_PLAYER_RESUMED: {
 			synchronized(this) {
 				double x = buffer.readDouble();
 				double y = buffer.readDouble();
@@ -158,7 +158,7 @@ public class MinerProtocolClient extends StackdProtocolClient {
 			break;
 		}
 
-		case PacketTypes.S2C_UPDATE_COINS: {
+		case MessageCodes.S2C_UPDATE_COINS: {
 			this.coins = buffer.readLong();
 			logger.info("update coins: " + coins);
 			break;
@@ -212,7 +212,7 @@ public class MinerProtocolClient extends StackdProtocolClient {
 	 * @param z the z position of the cube
 	 */
 	public void sendDigNotification(int x, int y, int z) {
-		StackdPacket packet = new StackdPacket(PacketTypes.C2S_DIG_NOTIFICATION, 13);
+		StackdPacket packet = new StackdPacket(MessageCodes.C2S_DIG_NOTIFICATION, 13);
 		ChannelBuffer buffer = packet.getBuffer();
 		buffer.writeInt(x);
 		buffer.writeInt(y);

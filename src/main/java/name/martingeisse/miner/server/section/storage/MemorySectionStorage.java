@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import name.martingeisse.miner.common.geometry.ClusterSize;
-import name.martingeisse.miner.common.network.SectionDataId;
+import name.martingeisse.miner.common.section.SectionDataId;
 
 /**
  * Pure in-memory section storage.

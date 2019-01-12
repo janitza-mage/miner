@@ -8,7 +8,7 @@ package name.martingeisse.miner.client.network;
 
 import name.martingeisse.miner.client.console.Console;
 import name.martingeisse.miner.client.frame.handlers.FlashMessageHandler;
-import name.martingeisse.miner.common.network.PacketTypes;
+import name.martingeisse.miner.common.network.message.MessageCodes;
 import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.network.StackdPacketCodec;
 import org.apache.log4j.Logger;
@@ -250,7 +250,7 @@ public class StackdProtocolClient {
 	 */
 	private final void onProtocolPacketReceived(StackdPacket packet) {
 		ChannelBuffer buffer = packet.getBuffer();
-		if (packet.getType() == PacketTypes.S2C_HELLO) {
+		if (packet.getType() == MessageCodes.S2C_HELLO) {
 			logger.debug("hello packet received");
 			synchronized (syncObject) {
 				sessionId = buffer.readInt();
@@ -261,24 +261,24 @@ public class StackdProtocolClient {
 			}
 			onReady();
 			logger.debug("protocol client ready");
-		} else if (packet.getType() == PacketTypes.S2C_FLASH_MESSAGE) {
+		} else if (packet.getType() == MessageCodes.S2C_FLASH_MESSAGE) {
 			byte[] binary = new byte[buffer.readableBytes()];
 			buffer.readBytes(binary);
 			String message = new String(binary, StandardCharsets.UTF_8);
 			onFlashMessageReceived(message);
-		} else if (packet.getType() == PacketTypes.SINGLE_SECTION_DATA_INTERACTIVE) {
+		} else if (packet.getType() == MessageCodes.SINGLE_SECTION_DATA_INTERACTIVE) {
 			if (sectionGridLoader != null) {
 				sectionGridLoader.handleInteractiveSectionImagePacket(packet);
 			} else {
 				logger.error("received interactive section image but no sectionGridLoader is set in the StackdProtoclClient!");
 			}
-		} else if (packet.getType() == PacketTypes.S2C_SINGLE_SECTION_MODIFICATION_EVENT) {
+		} else if (packet.getType() == MessageCodes.S2C_SINGLE_SECTION_MODIFICATION_EVENT) {
 			if (sectionGridLoader != null) {
 				sectionGridLoader.handleModificationEventPacket(packet);
 			} else {
 				logger.error("received section modification event but no sectionGridLoader is set in the StackdProtoclClient!");
 			}
-		} else if (packet.getType() == PacketTypes.CONSOLE) {
+		} else if (packet.getType() == MessageCodes.CONSOLE) {
 			if (console != null) {
 				try (ChannelBufferInputStream in = new ChannelBufferInputStream(buffer)) {
 					while (buffer.readable()) {
@@ -309,7 +309,7 @@ public class StackdProtocolClient {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		send(new StackdPacket(PacketTypes.CONSOLE, buffer, false));
+		send(new StackdPacket(MessageCodes.CONSOLE, buffer, false));
 	}
 
 	/**

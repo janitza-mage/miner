@@ -6,7 +6,7 @@
 
 package name.martingeisse.miner.server.network;
 
-import name.martingeisse.miner.common.network.PacketTypes;
+import name.martingeisse.miner.common.network.message.MessageCodes;
 import name.martingeisse.miner.common.network.StackdPacket;
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -64,7 +64,7 @@ final class StackdApplicationHandler<S extends StackdSession> extends SimpleChan
 	 * @return the "hello" packet
 	 */
 	private static StackdPacket createHelloPacket(int sessionId) {
-		StackdPacket packet = new StackdPacket(PacketTypes.S2C_HELLO, 4);
+		StackdPacket packet = new StackdPacket(MessageCodes.S2C_HELLO, 4);
 		ChannelBuffer buffer = packet.getBuffer();
 		buffer.writeInt(sessionId);
 		return packet;

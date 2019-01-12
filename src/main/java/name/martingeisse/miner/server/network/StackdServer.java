@@ -8,9 +8,9 @@ package name.martingeisse.miner.server.network;
 
 import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.geometry.SectionId;
-import name.martingeisse.miner.common.network.PacketTypes;
-import name.martingeisse.miner.common.network.SectionDataId;
-import name.martingeisse.miner.common.network.SectionDataType;
+import name.martingeisse.miner.common.network.message.MessageCodes;
+import name.martingeisse.miner.common.section.SectionDataId;
+import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.server.console.IConsoleCommandHandler;
 import name.martingeisse.miner.server.console.NullConsoleCommandHandler;
@@ -229,7 +229,7 @@ public abstract class StackdServer<S extends StackdSession> {
 		ChannelBuffer buffer = packet.getBuffer();
 		switch (packet.getType()) {
 
-			case PacketTypes.C2S_CUBE_MODIFICATION: {
+			case MessageCodes.C2S_CUBE_MODIFICATION: {
 
 				// process modifications
 				SectionWorkingSet sectionWorkingSet = getSectionWorkingSet();
@@ -256,17 +256,17 @@ public abstract class StackdServer<S extends StackdSession> {
 
 			// SINGLE_SECTION_DATA_DEFINITIVE is not valid because the client must not get that information,
 			// to prevent information cheating.
-			case PacketTypes.SINGLE_SECTION_DATA_INTERACTIVE:
-			case PacketTypes.SINGLE_SECTION_DATA_VIEW_LOD_0: {
+			case MessageCodes.SINGLE_SECTION_DATA_INTERACTIVE:
+			case MessageCodes.SINGLE_SECTION_DATA_VIEW_LOD_0: {
 				SectionId sectionId = new SectionId(buffer.readInt(), buffer.readInt(), buffer.readInt());
-				SectionDataType type = SectionDataType.values()[packet.getType() - PacketTypes.SINGLE_SECTION_DATA_BASE];
+				SectionDataType type = SectionDataType.values()[packet.getType() - MessageCodes.SINGLE_SECTION_DATA_BASE];
 				final SectionDataId dataId = new SectionDataId(sectionId, type);
 				logger.debug("SERVER received section data request: " + dataId);
 				sectionToClientShipper.addJob(dataId, session);
 				break;
 			}
 
-			case PacketTypes.CONSOLE: {
+			case MessageCodes.CONSOLE: {
 				List<String> segments = new ArrayList<String>();
 				try (ChannelBufferInputStream s = new ChannelBufferInputStream(buffer)) {
 					while (buffer.readable()) {

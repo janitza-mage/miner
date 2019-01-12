@@ -9,11 +9,11 @@ package name.martingeisse.miner.server;
 import name.martingeisse.common.SecurityTokenUtil;
 import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.cubetype.CubeTypes;
-import name.martingeisse.miner.common.network.PacketTypes;
+import name.martingeisse.miner.common.network.message.MessageCodes;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.SectionId;
-import name.martingeisse.miner.common.network.SectionDataId;
-import name.martingeisse.miner.common.network.SectionDataType;
+import name.martingeisse.miner.common.section.SectionDataId;
+import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.server.entities.Player;
 import name.martingeisse.miner.server.entities.QPlayer;
@@ -137,7 +137,7 @@ public class MinerServer extends StackdServer<MinerSession> {
 		ChannelBuffer buffer = packet.getBuffer();
 		switch (packet.getType()) {
 
-			case PacketTypes.C2S_UPDATE_POSITION: {
+			case MessageCodes.C2S_UPDATE_POSITION: {
 				session.setX(buffer.readDouble());
 				session.setY(buffer.readDouble());
 				session.setZ(buffer.readDouble());
@@ -146,7 +146,7 @@ public class MinerServer extends StackdServer<MinerSession> {
 				break;
 			}
 
-			case PacketTypes.C2S_RESUME_PLAYER: {
+			case MessageCodes.C2S_RESUME_PLAYER: {
 				byte[] tokenBytes = new byte[buffer.readInt()];
 				buffer.readBytes(tokenBytes);
 				String token = new String(tokenBytes, StandardCharsets.UTF_8);
@@ -171,7 +171,7 @@ public class MinerServer extends StackdServer<MinerSession> {
 				session.setUpAngle(player.getUpAngle().doubleValue());
 				session.sendCoinsUpdate();
 
-				StackdPacket responsePacket = new StackdPacket(PacketTypes.S2C_PLAYER_RESUMED, 40);
+				StackdPacket responsePacket = new StackdPacket(MessageCodes.S2C_PLAYER_RESUMED, 40);
 				ChannelBuffer responseBuffer = responsePacket.getBuffer();
 				responseBuffer.writeDouble(session.getX());
 				responseBuffer.writeDouble(session.getY());
@@ -182,7 +182,7 @@ public class MinerServer extends StackdServer<MinerSession> {
 				break;
 			}
 
-			case PacketTypes.C2S_DIG_NOTIFICATION: {
+			case MessageCodes.C2S_DIG_NOTIFICATION: {
 
 				// determine the cube being dug away
 				int shiftBits = getSectionWorkingSet().getClusterSize().getShiftBits();
@@ -242,7 +242,7 @@ public class MinerServer extends StackdServer<MinerSession> {
 	 */
 	public void notifyClientsAboutModifiedSections(SectionId... sectionIds) {
 		for (SectionId sectionId : sectionIds) {
-			StackdPacket packet = new StackdPacket(PacketTypes.S2C_SINGLE_SECTION_MODIFICATION_EVENT, 12);
+			StackdPacket packet = new StackdPacket(MessageCodes.S2C_SINGLE_SECTION_MODIFICATION_EVENT, 12);
 			ChannelBuffer buffer = packet.getBuffer();
 			buffer.writeInt(sectionId.getX());
 			buffer.writeInt(sectionId.getY());
@@ -282,7 +282,7 @@ public class MinerServer extends StackdServer<MinerSession> {
 			}
 
 			// assemble the packet
-			StackdPacket packet = new StackdPacket(PacketTypes.S2C_PLAYER_LIST_UPDATE, 44 * sessionList.size());
+			StackdPacket packet = new StackdPacket(MessageCodes.S2C_PLAYER_LIST_UPDATE, 44 * sessionList.size());
 			ChannelBuffer buffer = packet.getBuffer();
 			for (MinerSession session : sessionList) {
 				buffer.writeInt(session.getId());
@@ -324,7 +324,7 @@ public class MinerServer extends StackdServer<MinerSession> {
 			}
 
 			// wrap it in a packet and send it
-			StackdPacket packet = new StackdPacket(PacketTypes.S2C_PLAYER_NAMES_UPDATE, buffer, false);
+			StackdPacket packet = new StackdPacket(MessageCodes.S2C_PLAYER_NAMES_UPDATE, buffer, false);
 			broadcast(packet);
 
 		}

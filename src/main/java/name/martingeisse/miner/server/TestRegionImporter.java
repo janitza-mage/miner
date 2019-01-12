@@ -15,8 +15,8 @@ import name.martingeisse.miner.common.cubes.Cubes;
 import name.martingeisse.miner.common.cubes.RawCubes;
 import name.martingeisse.miner.common.cubes.UniformCubes;
 import name.martingeisse.miner.common.geometry.SectionId;
-import name.martingeisse.miner.common.network.SectionDataId;
-import name.martingeisse.miner.common.network.SectionDataType;
+import name.martingeisse.miner.common.section.SectionDataId;
+import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.server.section.storage.AbstractSectionStorage;
 
 import org.apache.commons.lang3.StringUtils;

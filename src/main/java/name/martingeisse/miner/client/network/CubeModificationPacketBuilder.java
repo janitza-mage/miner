@@ -6,7 +6,7 @@
 
 package name.martingeisse.miner.client.network;
 
-import name.martingeisse.miner.common.network.PacketTypes;
+import name.martingeisse.miner.common.network.message.MessageCodes;
 import name.martingeisse.miner.common.network.StackdPacket;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -52,7 +52,7 @@ public final class CubeModificationPacketBuilder {
 	 */
 	public CubeModificationPacketBuilder(final ChannelBuffer buffer) {
 		this.buffer = buffer;
-		this.packet = new StackdPacket(PacketTypes.C2S_CUBE_MODIFICATION, buffer, true);
+		this.packet = new StackdPacket(MessageCodes.C2S_CUBE_MODIFICATION, buffer, true);
 	}
 	
 	/**

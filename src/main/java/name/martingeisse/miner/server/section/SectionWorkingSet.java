@@ -15,7 +15,7 @@ import java.util.concurrent.ExecutionException;
 import name.martingeisse.miner.common.cubes.Cubes;
 import name.martingeisse.miner.common.cubes.UniformCubes;
 import name.martingeisse.miner.common.geometry.ClusterSize;
-import name.martingeisse.miner.common.network.SectionDataId;
+import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.server.network.StackdServer;
 import name.martingeisse.miner.server.section.entry.InteractiveSectionImageCacheEntry;
 import name.martingeisse.miner.server.section.entry.SectionCubesCacheEntry;

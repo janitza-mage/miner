@@ -10,8 +10,8 @@ import name.martingeisse.miner.common.cubes.Cubes;
 import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.ClusterSize;
-import name.martingeisse.miner.common.network.SectionDataId;
-import name.martingeisse.miner.common.network.SectionDataType;
+import name.martingeisse.miner.common.section.SectionDataId;
+import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.server.section.SectionWorkingSet;
 
 /**

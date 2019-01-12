@@ -19,7 +19,7 @@ import name.martingeisse.miner.common.cubes.Cubes;
 import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.miner.common.geometry.SectionId;
-import name.martingeisse.miner.common.network.PacketTypes;
+import name.martingeisse.miner.common.network.message.MessageCodes;
 import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.task.Task;
 import org.apache.log4j.Logger;
@@ -146,7 +146,7 @@ public final class SectionGridLoader {
 			if (missingSectionIds != null && !missingSectionIds.isEmpty()) {
 				final SectionId[] sectionIds = missingSectionIds.toArray(new SectionId[missingSectionIds.size()]);
 				for (SectionId sectionId : sectionIds) {
-					StackdPacket packet = new StackdPacket(PacketTypes.SINGLE_SECTION_DATA_INTERACTIVE, 12);
+					StackdPacket packet = new StackdPacket(MessageCodes.SINGLE_SECTION_DATA_INTERACTIVE, 12);
 					ChannelBuffer buffer = packet.getBuffer();
 					buffer.writeInt(sectionId.getX());
 					buffer.writeInt(sectionId.getY());
@@ -167,7 +167,7 @@ public final class SectionGridLoader {
 			if (missingSectionIds != null && !missingSectionIds.isEmpty()) {
 				final SectionId[] sectionIds = missingSectionIds.toArray(new SectionId[missingSectionIds.size()]);
 				for (SectionId sectionId : sectionIds) {
-					StackdPacket packet = new StackdPacket(PacketTypes.SINGLE_SECTION_DATA_INTERACTIVE, 12);
+					StackdPacket packet = new StackdPacket(MessageCodes.SINGLE_SECTION_DATA_INTERACTIVE, 12);
 					ChannelBuffer buffer = packet.getBuffer();
 					buffer.writeInt(sectionId.getX());
 					buffer.writeInt(sectionId.getY());
@@ -191,7 +191,7 @@ public final class SectionGridLoader {
 	public void reloadSection(SectionId sectionId) {
 		
 		// TODO check distance; adjust data type; fetch at all?
-		StackdPacket packet = new StackdPacket(PacketTypes.SINGLE_SECTION_DATA_INTERACTIVE, 12);
+		StackdPacket packet = new StackdPacket(MessageCodes.SINGLE_SECTION_DATA_INTERACTIVE, 12);
 		ChannelBuffer buffer = packet.getBuffer();
 		buffer.writeInt(sectionId.getX());
 		buffer.writeInt(sectionId.getY());

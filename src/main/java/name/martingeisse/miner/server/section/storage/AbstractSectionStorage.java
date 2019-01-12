@@ -9,7 +9,7 @@ package name.martingeisse.miner.server.section.storage;
 import java.util.Collection;
 import java.util.Map;
 import name.martingeisse.miner.common.geometry.ClusterSize;
-import name.martingeisse.miner.common.network.SectionDataId;
+import name.martingeisse.miner.common.section.SectionDataId;
 
 /**
  * Base class for section storage implementations that are responsible
