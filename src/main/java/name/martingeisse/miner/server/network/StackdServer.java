@@ -8,6 +8,7 @@ package name.martingeisse.miner.server.network;
 
 import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.geometry.SectionId;
+import name.martingeisse.miner.common.network.PacketTypes;
 import name.martingeisse.miner.common.network.SectionDataId;
 import name.martingeisse.miner.common.network.SectionDataType;
 import name.martingeisse.miner.common.network.StackdPacket;
@@ -228,7 +229,7 @@ public abstract class StackdServer<S extends StackdSession> {
 		ChannelBuffer buffer = packet.getBuffer();
 		switch (packet.getType()) {
 
-			case StackdPacket.TYPE_CUBE_MODIFICATION: {
+			case PacketTypes.C2S_CUBE_MODIFICATION: {
 
 				// process modifications
 				SectionWorkingSet sectionWorkingSet = getSectionWorkingSet();
@@ -253,19 +254,19 @@ public abstract class StackdServer<S extends StackdSession> {
 				break;
 			}
 
-			// TYPE_SINGLE_SECTION_DATA_DEFINITIVE is not valid because the client must not get that information,
+			// SINGLE_SECTION_DATA_DEFINITIVE is not valid because the client must not get that information,
 			// to prevent information cheating.
-			case StackdPacket.TYPE_SINGLE_SECTION_DATA_INTERACTIVE:
-			case StackdPacket.TYPE_SINGLE_SECTION_DATA_VIEW_LOD_0: {
+			case PacketTypes.SINGLE_SECTION_DATA_INTERACTIVE:
+			case PacketTypes.SINGLE_SECTION_DATA_VIEW_LOD_0: {
 				SectionId sectionId = new SectionId(buffer.readInt(), buffer.readInt(), buffer.readInt());
-				SectionDataType type = SectionDataType.values()[packet.getType() - StackdPacket.TYPE_SINGLE_SECTION_DATA_BASE];
+				SectionDataType type = SectionDataType.values()[packet.getType() - PacketTypes.SINGLE_SECTION_DATA_BASE];
 				final SectionDataId dataId = new SectionDataId(sectionId, type);
 				logger.debug("SERVER received section data request: " + dataId);
 				sectionToClientShipper.addJob(dataId, session);
 				break;
 			}
 
-			case StackdPacket.TYPE_CONSOLE: {
+			case PacketTypes.CONSOLE: {
 				List<String> segments = new ArrayList<String>();
 				try (ChannelBufferInputStream s = new ChannelBufferInputStream(buffer)) {
 					while (buffer.readable()) {

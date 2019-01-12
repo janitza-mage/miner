@@ -9,6 +9,8 @@ package name.martingeisse.miner.server.network;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+
+import name.martingeisse.miner.common.network.PacketTypes;
 import name.martingeisse.miner.common.network.StackdPacket;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBufferOutputStream;
@@ -79,7 +81,7 @@ public class StackdSession {
 	 */
 	public final void sendFlashMessage(String message) {
 		byte[] messageBytes = message.getBytes(StandardCharsets.UTF_8);
-		StackdPacket packet = new StackdPacket(StackdPacket.TYPE_FLASH_MESSAGE, messageBytes.length);
+		StackdPacket packet = new StackdPacket(PacketTypes.S2C_FLASH_MESSAGE, messageBytes.length);
 		packet.getBuffer().writeBytes(messageBytes);
 		sendPacketDestructive(packet);
 	}
@@ -111,7 +113,7 @@ public class StackdSession {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		sendPacketDestructive(new StackdPacket(StackdPacket.TYPE_CONSOLE, buffer, false));
+		sendPacketDestructive(new StackdPacket(PacketTypes.CONSOLE, buffer, false));
 	}
 	
 }

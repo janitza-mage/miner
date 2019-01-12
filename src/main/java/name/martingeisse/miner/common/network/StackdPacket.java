@@ -62,67 +62,6 @@ public final class StackdPacket {
 	public static final int MAX_PACKET_SIZE = HEADER_SIZE + MAX_BODY_SIZE;
 
 	/**
-	 * The type constant for "hello" packets.
-	 */
-	public static final int TYPE_HELLO = 0xff00;
-
-	/**
-	 * The type constant for flash message packets (server to client only).
-	 */
-	public static final int TYPE_FLASH_MESSAGE = 0xff02;
-
-	/**
-	 * The type constant for single-section modification events.
-	 * Sent by the server when a section gets modified. Clients that
-	 * are close enough to be interested in the update would typically
-	 * request the new section render model and collider in turn. Clients
-	 * that are too far away would ignore these events. TODO: store the
-	 * client's rough position on the server, filter mod events
-	 * server-side, then just send the updated objects. This slightly
-	 * increases network traffic (sending unnecessary data) but reduces
-	 * latency and simplifies the code.
-	 */
-	public static final int TYPE_SINGLE_SECTION_MODIFICATION_EVENT = 0xff05;
-
-	/**
-	 * When sent from the client to the server, this packet contains a console
-	 * command to be executed by the server, encoded as a sequence of strings
-	 * (see {@link DataOutput#writeUTF(String)}). When sent from the server
-	 * to the client, this packet contains output lines to print on the console.
-	 * Only complete lines can be output this way.
-	 */
-	public static final int TYPE_CONSOLE = 0xff06;
-
-	/**
-	 * Base request/response code for all section data objects.
-	 */
-	public static final int TYPE_SINGLE_SECTION_DATA_BASE = 0xff10;
-
-	/**
-	 * Request/response code to fetch section data objects of type
-	 * {@link SectionDataType#DEFINITIVE}.
-	 */
-	public static final int TYPE_SINGLE_SECTION_DATA_DEFINITIVE = 0xff10;
-
-	/**
-	 * Request/response code to fetch section data objects of type
-	 * {@link SectionDataType#INTERACTIVE}.
-	 */
-	public static final int TYPE_SINGLE_SECTION_DATA_INTERACTIVE = 0xff11;
-
-	/**
-	 * Request/response code to fetch section data objects of type
-	 * {@link SectionDataType#VIEW_LOD_0}.
-	 */
-	public static final int TYPE_SINGLE_SECTION_DATA_VIEW_LOD_0 = 0xff12;
-
-	/**
-	 * The type constant for cube modification packets (client to server only).
-	 * TODO this is not a protocol packet, move this to application code
-	 */
-	public static final int TYPE_CUBE_MODIFICATION = 0xfe00;
-
-	/**
 	 * the type
 	 */
 	private int type;

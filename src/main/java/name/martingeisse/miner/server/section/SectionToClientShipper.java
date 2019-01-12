@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import name.martingeisse.miner.common.geometry.SectionId;
+import name.martingeisse.miner.common.network.PacketTypes;
 import name.martingeisse.miner.common.network.SectionDataId;
 import name.martingeisse.miner.common.network.SectionDataType;
 import name.martingeisse.miner.common.network.StackdPacket;
@@ -121,7 +122,7 @@ public final class SectionToClientShipper {
 		final SectionId sectionId = sectionDataId.getSectionId();
 		final SectionDataType type = sectionDataId.getType();
 		final byte[] data = cacheEntry.getDataForClient();
-		final StackdPacket response = new StackdPacket(StackdPacket.TYPE_SINGLE_SECTION_DATA_BASE + type.ordinal(), data.length + 12);
+		final StackdPacket response = new StackdPacket(PacketTypes.SINGLE_SECTION_DATA_BASE + type.ordinal(), data.length + 12);
 		ChannelBuffer buffer = response.getBuffer();
 		buffer.writeInt(sectionId.getX());
 		buffer.writeInt(sectionId.getY());
