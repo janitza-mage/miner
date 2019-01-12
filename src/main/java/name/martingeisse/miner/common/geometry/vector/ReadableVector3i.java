@@ -25,4 +25,6 @@ public abstract class ReadableVector3i {
 		buffer.writeInt(getZ());
 	}
 
+	public static final int ENCODED_SIZE = 12;
+
 }

@@ -11,6 +11,7 @@ import name.martingeisse.miner.common.geometry.vector.Vector3d;
 import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.network.message.Message;
 import name.martingeisse.miner.common.network.message.MessageCodes;
+import name.martingeisse.miner.common.network.message.MessageDecodingException;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -43,7 +44,8 @@ public final class UpdatePosition extends Message {
 		return packet;
 	}
 
-	public static UpdatePosition decodeBody(ChannelBuffer buffer) {
+	public static UpdatePosition decodeBody(ChannelBuffer buffer) throws MessageDecodingException {
+		validateSize(buffer, Vector3d.ENCODED_SIZE + EulerAngles.ENCODED_SIZE);
 		return new UpdatePosition(Vector3d.decode(buffer), EulerAngles.decode(buffer));
 	}
 

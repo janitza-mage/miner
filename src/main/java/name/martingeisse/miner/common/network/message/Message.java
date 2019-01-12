@@ -6,7 +6,9 @@ package name.martingeisse.miner.common.network.message;
 
 import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.network.message.c2s.UpdatePosition;
+import name.martingeisse.miner.common.network.message.s2c.FlashMessage;
 import name.martingeisse.miner.common.network.message.s2c.Hello;
+import name.martingeisse.miner.common.network.message.s2c.UpdateCoins;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -38,9 +40,23 @@ public abstract class Message {
 			case MessageCodes.S2C_HELLO:
 				return Hello.decodeBody(buffer);
 
+			case MessageCodes.S2C_UPDATE_COINS:
+				return UpdateCoins.decodeBody(buffer);
+
+			case MessageCodes.S2C_FLASH_MESSAGE:
+				return FlashMessage.decodeBody(buffer);
+
 			default:
 				throw new MessageDecodingException("unknown packet type: " + packet.getType());
 		}
 	}
 
+	/**
+	 * Validates that the remaining bytes in the specified buffer are equal to a certain expected size.
+	 */
+	protected static void validateSize(ChannelBuffer buffer, int expectedSizeInBytes) throws MessageDecodingException {
+		if (buffer.readableBytes() != expectedSizeInBytes) {
+			throw new MessageDecodingException("wrong packet size; expected " + expectedSizeInBytes + " but got " + buffer.readableBytes());
+		}
+	}
 }

@@ -13,29 +13,29 @@ import org.jboss.netty.buffer.ChannelBuffer;
 /**
  *
  */
-public final class Hello extends Message {
+public final class UpdateCoins extends Message {
 
-	private final int sessionId;
+	private final long coins;
 
-	public Hello(int sessionId) {
-		this.sessionId = sessionId;
+	public UpdateCoins(long coins) {
+		this.coins = coins;
 	}
 
-	public int getSessionId() {
-		return sessionId;
+	public long getCoins() {
+		return coins;
 	}
 
 	@Override
 	public StackdPacket encodePacket() {
-		StackdPacket packet = new StackdPacket(MessageCodes.S2C_HELLO, 4);
+		StackdPacket packet = new StackdPacket(MessageCodes.S2C_UPDATE_COINS, 8);
 		ChannelBuffer buffer = packet.getBuffer();
-		buffer.writeInt(sessionId);
+		buffer.writeLong(coins);
 		return packet;
 	}
 
-	public static Hello decodeBody(ChannelBuffer buffer) throws MessageDecodingException {
-		validateSize(buffer, 4);
-		return new Hello(buffer.readInt());
+	public static UpdateCoins decodeBody(ChannelBuffer buffer) throws MessageDecodingException {
+		validateSize(buffer, 8);
+		return new UpdateCoins(buffer.readLong());
 	}
 
 }

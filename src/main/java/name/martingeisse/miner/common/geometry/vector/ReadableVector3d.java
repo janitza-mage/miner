@@ -25,4 +25,6 @@ public abstract class ReadableVector3d {
 		buffer.writeDouble(getZ());
 	}
 
+	public static final int ENCODED_SIZE = 24;
+
 }

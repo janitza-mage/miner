@@ -29,4 +29,6 @@ public abstract class ReadableEulerAngles {
 		buffer.writeDouble(getRollAngle());
 	}
 
+	public static final int ENCODED_SIZE = 24;
+
 }

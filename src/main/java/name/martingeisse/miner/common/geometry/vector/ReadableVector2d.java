@@ -23,4 +23,6 @@ public abstract class ReadableVector2d {
 		buffer.writeDouble(getY());
 	}
 
+	public static final int ENCODED_SIZE = 16;
+
 }
