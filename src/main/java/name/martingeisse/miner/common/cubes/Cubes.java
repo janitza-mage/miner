@@ -10,7 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import name.martingeisse.miner.common.geometry.ClusterSize;
-import name.martingeisse.stackd.common.geometry.ReadableVector3i;
+import name.martingeisse.miner.common.geometry.vector.ReadableVector3i;
 
 /**
  * Base class for cube matrix implementations. This class also provides

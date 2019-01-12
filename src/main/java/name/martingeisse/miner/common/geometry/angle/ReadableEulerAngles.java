@@ -1,11 +1,12 @@
-/**
+/*
  * Copyright (c) 2014 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.stackd.common.geometry;
+package name.martingeisse.miner.common.geometry.angle;
 
+import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
  * Euler angles (actually, nautical angles), expressed as a horizontal angle (yaw),
@@ -13,25 +14,19 @@ package name.martingeisse.stackd.common.geometry;
  */
 public abstract class ReadableEulerAngles {
 
-
-
-	/**
-	 * Getter method for the horizontalAngle.
-	 * @return the horizontalAngle
-	 */
 	public abstract double getHorizontalAngle();
-
-	/**
-	 * Getter method for the verticalAngle.
-	 * @return the verticalAngle
-	 */
 	public abstract double getVerticalAngle();
-
-	/**
-	 * Getter method for the rollAngle.
-	 * @return the rollAngle
-	 */
 	public abstract double getRollAngle();
 
+	/**
+	 * Returns an immutable copy of this object.
+	 */
+	public abstract EulerAngles freeze();
+
+	public final void encode(ChannelBuffer buffer) {
+		buffer.writeDouble(getHorizontalAngle());
+		buffer.writeDouble(getVerticalAngle());
+		buffer.writeDouble(getRollAngle());
+	}
 
 }

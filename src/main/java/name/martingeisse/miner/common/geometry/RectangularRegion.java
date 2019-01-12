@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2012 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.miner.common.geometry;
 
-import name.martingeisse.stackd.common.geometry.Vector3i;
+import name.martingeisse.miner.common.geometry.vector.Vector3i;
 
 import static java.lang.Integer.MAX_VALUE;
 import static java.lang.Integer.MIN_VALUE;
@@ -71,16 +71,16 @@ public final class RectangularRegion {
 		this.endY = y + 1;
 		this.endZ = z + 1;
 	}
-	
+
 	/**
 	 * Constructor for a single cube at the specified position.
-	 * 
+	 *
 	 * @param position the position
 	 */
 	public RectangularRegion(final Vector3i position) {
 		this(position.getX(), position.getY(), position.getZ());
 	}
-	
+
 	/**
 	 * Constructor.
 	 * @param startX the starting x coordinate of the region
@@ -146,7 +146,7 @@ public final class RectangularRegion {
 	public int getEndZ() {
 		return endZ;
 	}
-	
+
 	/**
 	 * Getter method for the sizeX.
 	 * @return the sizeX
@@ -154,7 +154,7 @@ public final class RectangularRegion {
 	public int getSizeX() {
 		return endX - startX;
 	}
-	
+
 	/**
 	 * Getter method for the sizeY.
 	 * @return the sizeY
@@ -162,7 +162,7 @@ public final class RectangularRegion {
 	public int getSizeY() {
 		return endY - startY;
 	}
-	
+
 	/**
 	 * Getter method for the sizeZ.
 	 * @return the sizeZ
@@ -170,19 +170,19 @@ public final class RectangularRegion {
 	public int getSizeZ() {
 		return endZ - startZ;
 	}
-	
+
 	/**
 	 * Extends this region by enlarging it until the dimensions of the specified anchor are reached.
 	 * For each one of the six axial directions, a flag specifies whether to extend into that direction
 	 * or to leave that side alone. Specifically, for each direction specified, the new
 	 * coordinate value is the min (for lower-coordinate sides) or max (for higher-coordinate sides)
 	 * of the coordinate value of this region and the anchor region.
-	 * 
+	 *
 	 * Returns the extended region as a new {@link RectangularRegion} instance.
-	 * 
+	 *
 	 * Note: Calling this method with all flags set to true is equivalent
 	 * to {@link #getUnion(RectangularRegion)}.
-	 * 
+	 *
 	 * @param anchor the anchor to extend to
 	 * @param negativeX whether to extend towards the negative X direction
 	 * @param positiveX whether to extend towards the positive X direction
@@ -217,7 +217,7 @@ public final class RectangularRegion {
 		int resultEndZ = (endZ > other.endZ ? endZ : other.endZ);
 		return new RectangularRegion(resultStartX, resultStartY, resultStartZ, resultEndX, resultEndY, resultEndZ);
 	}
-	
+
 	/**
 	 * Sets this region to the intersection of this region and the specified other region.
 	 * @param other the region to intersect with
@@ -241,7 +241,7 @@ public final class RectangularRegion {
 	public boolean isEmpty() {
 		return (startX >= endX) || (startY >= endY) || (startZ >= endZ);
 	}
-	
+
 	/**
 	 * Checks whether the specified cell is within this region.
 	 * @param x the x position of the cell
@@ -264,7 +264,7 @@ public final class RectangularRegion {
 
 	/**
 	 * Multiplies the coordinates of this region by the specified cluster size.
-	 * 
+	 *
 	 * @param clusterSize the cluster size
 	 * @return the resulting region
 	 */
@@ -282,7 +282,7 @@ public final class RectangularRegion {
 	/**
 	 * Divides the coordinates of this region by the specified cluster size,
 	 * rounding towards a larger result in all directions.
-	 * 
+	 *
 	 * @param clusterSize the cluster size
 	 * @return the resulting region
 	 */
@@ -302,7 +302,7 @@ public final class RectangularRegion {
 	 * Divides the coordinates of this region by the specified cluster size,
 	 * rounding towards a smaller result in all directions. This may result
 	 * in an empty region.
-	 * 
+	 *
 	 * @param clusterSize the cluster size
 	 * @return the resulting region
 	 */
@@ -325,5 +325,5 @@ public final class RectangularRegion {
 	public String toString() {
 		return "subregion(" + startX + ", " + startY + ", " + startZ + " -- " + endX + ", " + endY + ", " + endZ + ")";
 	}
-	
+
 }

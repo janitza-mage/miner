@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2012 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.miner.common.geometry;
 
-import name.martingeisse.stackd.common.geometry.Vector3i;
+import name.martingeisse.miner.common.geometry.vector.Vector3i;
 
 /**
  * Specifies the size of a cluster. Clusters must have a
@@ -46,7 +46,7 @@ public final class ClusterSize implements Comparable<ClusterSize> {
 	public int getSize() {
 		return (1 << shiftBits);
 	}
-	
+
 	/**
 	 * Getter method for the squared size.
 	 * @return the squared size
@@ -69,7 +69,7 @@ public final class ClusterSize implements Comparable<ClusterSize> {
 	@Override
 	public boolean equals(final Object o) {
 		if (o instanceof ClusterSize) {
-			final ClusterSize other = (ClusterSize)o;
+			final ClusterSize other = (ClusterSize) o;
 			return shiftBits == other.shiftBits;
 		}
 		return false;
@@ -122,7 +122,7 @@ public final class ClusterSize implements Comparable<ClusterSize> {
 	 * Returns the quotient of this size and the specified other size.
 	 * It is an error if the result is fractional, i.e. if the other
 	 * size is greater than this size.
-	 * 
+	 *
 	 * @param other the other size
 	 * @return the quotient
 	 */
@@ -142,7 +142,7 @@ public final class ClusterSize implements Comparable<ClusterSize> {
 	/**
 	 * Returns the largest cluster size that is contained by the specified
 	 * number of units.
-	 * 
+	 *
 	 * @param units the number of units
 	 * @return the inner cluster size
 	 */
@@ -161,7 +161,7 @@ public final class ClusterSize implements Comparable<ClusterSize> {
 	/**
 	 * Returns the smallest cluster size that contains the specified
 	 * size (number of units).
-	 * 
+	 *
 	 * @param size the number of units
 	 * @return the outer cluster size
 	 */
@@ -175,7 +175,7 @@ public final class ClusterSize implements Comparable<ClusterSize> {
 	 * clusters. The returned array will contain zero directions for inner cells,
 	 * one direction for "face" cells, two directions for "edge" cells and three
 	 * directions for "corner" cells.
-	 * 
+	 *
 	 * @param x the x coordinate of the cell
 	 * @param y the y coordinate of the cell
 	 * @param z the z coordinate of the cell
@@ -185,7 +185,7 @@ public final class ClusterSize implements Comparable<ClusterSize> {
 
 		// special case
 		if (shiftBits == 0) {
-			return new AxisAlignedDirection[] {
+			return new AxisAlignedDirection[]{
 				AxisAlignedDirection.NEGATIVE_X, AxisAlignedDirection.POSITIVE_X, AxisAlignedDirection.NEGATIVE_Y, AxisAlignedDirection.POSITIVE_Y, AxisAlignedDirection.NEGATIVE_Z,
 				AxisAlignedDirection.POSITIVE_Z,
 			};
@@ -217,7 +217,7 @@ public final class ClusterSize implements Comparable<ClusterSize> {
 
 	/**
 	 * See {@link #getBorderDirections(int, int, int)}.
-	 * 
+	 *
 	 * @param v the vector that contains the (x, y, z) coordinates.
 	 * @return the directions toward neighbor clusters
 	 */

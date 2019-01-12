@@ -6,8 +6,8 @@
 
 package name.martingeisse.miner.client.ingame.network;
 
-import name.martingeisse.stackd.common.geometry.EulerAngles;
-import name.martingeisse.stackd.common.geometry.Vector3d;
+import name.martingeisse.miner.common.geometry.angle.EulerAngles;
+import name.martingeisse.miner.common.geometry.vector.Vector3d;
 
 /**
  * Represents a message from the server indicating that the

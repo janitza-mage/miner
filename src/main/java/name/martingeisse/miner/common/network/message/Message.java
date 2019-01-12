@@ -5,6 +5,9 @@
 package name.martingeisse.miner.common.network.message;
 
 import name.martingeisse.miner.common.network.StackdPacket;
+import name.martingeisse.miner.common.network.message.c2s.UpdatePosition;
+import name.martingeisse.miner.common.network.message.s2c.Hello;
+import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
  * Base class for all network messages. These messages carry data between client and server. They can be encoded and
@@ -26,7 +29,18 @@ public abstract class Message {
 	 * equal to the packet body size.
 	 */
 	public static Message decodePacket(StackdPacket packet) throws MessageDecodingException {
-		throw new MessageDecodingException("unknown packet type: " + packet.getType());
+		ChannelBuffer buffer = packet.getBuffer();
+		switch (packet.getType()) {
+
+			case MessageCodes.C2S_UPDATE_POSITION:
+				return UpdatePosition.decodeBody(buffer);
+
+			case MessageCodes.S2C_HELLO:
+				return Hello.decodeBody(buffer);
+
+			default:
+				throw new MessageDecodingException("unknown packet type: " + packet.getType());
+		}
 	}
 
 }

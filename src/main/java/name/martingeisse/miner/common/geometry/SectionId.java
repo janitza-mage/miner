@@ -1,14 +1,14 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.miner.common.geometry;
 
-import name.martingeisse.stackd.common.geometry.BaseVector3i;
-import name.martingeisse.stackd.common.geometry.ReadableVector3d;
-import name.martingeisse.stackd.common.geometry.ReadableVector3i;
+import name.martingeisse.miner.common.geometry.vector.ReadableVector3d;
+import name.martingeisse.miner.common.geometry.vector.ReadableVector3i;
+import name.martingeisse.miner.common.geometry.vector.Vector3i;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -16,10 +16,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * A section ID is used as the identifying key for a section, and also
  * stores the location of the section in the grid. The location is measured
  * in cluster-size units.
- * 
- * Although possible in general, this class is not derived from {@link BaseVector3i}
+ * <p>
+ * Although possible in general, this class does not use {@link Vector3i}
  * since section IDs use coordinates in cluster-size units, not cube units, so
- * extending a vector class would encourage mistakes that could be caught by the
+ * using a vector class would encourage mistakes that cannot be caught by the
  * type system.
  */
 public final class SectionId {
@@ -28,12 +28,12 @@ public final class SectionId {
 	 * the x
 	 */
 	private final int x;
-	
+
 	/**
 	 * the y
 	 */
 	private final int y;
-	
+
 	/**
 	 * the z
 	 */
@@ -41,6 +41,7 @@ public final class SectionId {
 
 	/**
 	 * Constructor for known (x, y, z) coordinates of the section in cluster-size units.
+	 *
 	 * @param x the x coordinate of the location in the grid, measured in cluster-size units
 	 * @param y the y coordinate of the location in the grid, measured in cluster-size units
 	 * @param z the z coordinate of the location in the grid, measured in cluster-size units
@@ -53,9 +54,10 @@ public final class SectionId {
 
 	/**
 	 * Constructor for scaling a cube-unit (x, y, z) position to cluster-size units.
-	 * @param x the x coordinate of the cube position
-	 * @param y the y coordinate of the cube position
-	 * @param z the z coordinate of the cube position
+	 *
+	 * @param x           the x coordinate of the cube position
+	 * @param y           the y coordinate of the cube position
+	 * @param z           the z coordinate of the cube position
 	 * @param clusterSize the cluster size
 	 */
 	public SectionId(int x, int y, int z, ClusterSize clusterSize) {
@@ -63,12 +65,13 @@ public final class SectionId {
 		this.x = x >> shift;
 		this.y = y >> shift;
 		this.z = z >> shift;
-		
+
 	}
-	
+
 	/**
 	 * Constructor for scaling a cube-unit (x, y, z) position to cluster-size units.
-	 * @param position the cube position
+	 *
+	 * @param position    the cube position
 	 * @param clusterSize the cluster size
 	 */
 	public SectionId(ReadableVector3i position, ClusterSize clusterSize) {
@@ -80,18 +83,20 @@ public final class SectionId {
 
 	/**
 	 * Constructor for scaling a cube-unit (x, y, z) position to cluster-size units.
-	 * @param position the cube position
+	 *
+	 * @param position    the cube position
 	 * @param clusterSize the cluster size
 	 */
 	public SectionId(ReadableVector3d position, ClusterSize clusterSize) {
 		int shift = clusterSize.getShiftBits();
-		this.x = (int)Math.floor(position.getX()) >> shift;
-		this.y = (int)Math.floor(position.getY()) >> shift;
-		this.z = (int)Math.floor(position.getZ()) >> shift;
+		this.x = (int) Math.floor(position.getX()) >> shift;
+		this.y = (int) Math.floor(position.getY()) >> shift;
+		this.z = (int) Math.floor(position.getZ()) >> shift;
 	}
 
 	/**
 	 * Constructor.
+	 *
 	 * @param identifierText the text returned by {@link #getIdentifierText()}.
 	 * @throws IllegalArgumentException if the identifier text is malformed
 	 */
@@ -111,31 +116,35 @@ public final class SectionId {
 
 	/**
 	 * Getter method for the x.
+	 *
 	 * @return the x
 	 */
 	public int getX() {
 		return x;
 	}
-	
+
 	/**
 	 * Getter method for the y.
+	 *
 	 * @return the y
 	 */
 	public int getY() {
 		return y;
 	}
-	
+
 	/**
 	 * Getter method for the z.
+	 *
 	 * @return the z
 	 */
 	public int getZ() {
 		return z;
 	}
-	
+
 	/**
 	 * Converts this ID to a string that is unique among all IDs, i.e. that can be
 	 * converted back to an ID equal to this one.
+	 *
 	 * @return the identifier text
 	 */
 	public String getIdentifierText() {
@@ -147,19 +156,19 @@ public final class SectionId {
 		builder.append(z);
 		return builder.toString();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof SectionId) {
-			SectionId other = (SectionId)obj;
+			SectionId other = (SectionId) obj;
 			return (x == other.x && y == other.y && z == other.z);
 		}
 		return false;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -167,7 +176,7 @@ public final class SectionId {
 	public int hashCode() {
 		return new HashCodeBuilder().append(x).append(y).append(z).toHashCode();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -175,15 +184,16 @@ public final class SectionId {
 	public String toString() {
 		return "(" + x + ", " + y + ", " + z + ")";
 	}
-	
+
 	/**
 	 * Returns the ID of the neighboring section by stepping in the specified
 	 * direction.
+	 *
 	 * @param direction the direction
 	 * @return the neighbor's ID
 	 */
 	public SectionId getNeighbor(AxisAlignedDirection direction) {
 		return new SectionId(x + direction.getSignX(), y + direction.getSignY(), z + direction.getSignZ());
 	}
-	
+
 }
