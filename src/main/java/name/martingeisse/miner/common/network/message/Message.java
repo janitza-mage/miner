@@ -5,6 +5,7 @@
 package name.martingeisse.miner.common.network.message;
 
 import name.martingeisse.miner.common.network.StackdPacket;
+import name.martingeisse.miner.common.network.message.c2s.ResumePlayer;
 import name.martingeisse.miner.common.network.message.c2s.UpdatePosition;
 import name.martingeisse.miner.common.network.message.s2c.FlashMessage;
 import name.martingeisse.miner.common.network.message.s2c.Hello;
@@ -46,6 +47,9 @@ public abstract class Message {
 			case MessageCodes.S2C_FLASH_MESSAGE:
 				return FlashMessage.decodeBody(buffer);
 
+			case MessageCodes.C2S_RESUME_PLAYER:
+				return ResumePlayer.decodeBody(buffer);
+
 			default:
 				throw new MessageDecodingException("unknown packet type: " + packet.getType());
 		}
@@ -59,4 +63,14 @@ public abstract class Message {
 			throw new MessageDecodingException("wrong packet size; expected " + expectedSizeInBytes + " but got " + buffer.readableBytes());
 		}
 	}
+
+	/**
+	 * Validates that the remaining bytes in the specified buffer are greater or equal to a certain expected size.
+	 */
+	protected static void validateMinimumSize(ChannelBuffer buffer, int expectedMinimumSizeInBytes) throws MessageDecodingException {
+		if (buffer.readableBytes() < expectedMinimumSizeInBytes) {
+			throw new MessageDecodingException("wrong packet size; expected at least " + expectedMinimumSizeInBytes + " but got " + buffer.readableBytes());
+		}
+	}
+
 }
