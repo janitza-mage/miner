@@ -32,7 +32,7 @@ public class NewUserAccountMain {
 		
 		// Insert data. Trolololo injection vulnerability, but I'm going to execute the query manually anyway.
 		System.out.println();
-		System.out.println("INSERT INTO `user_account` (`id`, `username`, `password_hash`) VALUES (NULL, '" + username + "', '" + hash + "');");
+		System.out.println("INSERT INTO \"miner\".\"UserAccount\" (\"username\", \"passwordHash\") VALUES ('" + username + "', '" + hash + "');");
 
 	}
 	

@@ -7,7 +7,7 @@
 package name.martingeisse.miner.client.startmenu;
 
 import name.martingeisse.common.javascript.analyze.JsonAnalyzer;
-import name.martingeisse.miner.Main;
+import name.martingeisse.miner.client.Main;
 import name.martingeisse.miner.common.Faction;
 import name.martingeisse.miner.client.ingame.IngameHandler;
 import name.martingeisse.miner.client.gui.Gui;

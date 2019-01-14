@@ -8,7 +8,7 @@ package name.martingeisse.miner.client.ingame;
 
 import java.util.List;
 import java.util.Map;
-import name.martingeisse.miner.Main;
+import name.martingeisse.miner.client.Main;
 import name.martingeisse.miner.client.gamegui.GameMenuHandler;
 import name.martingeisse.miner.client.ingame.network.MinerProtocolClient;
 import name.martingeisse.miner.client.ingame.network.PlayerResumedMessage;
