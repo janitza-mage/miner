@@ -15,15 +15,16 @@ import java.io.DataOutput;
  */
 public final class MessageCodes {
 
-	public static final int C2S_UPDATE_POSITION = 0x0001;
-	public static final int C2S_RESUME_PLAYER = 0x0005;
-	public static final int C2S_DIG_NOTIFICATION = 0x0006;
-	public static final int S2C_PLAYER_LIST_UPDATE = 0x0000;
-	public static final int S2C_PLAYER_NAMES_UPDATE = 0x0002;
-	public static final int S2C_PLAYER_RESUMED = 0x0005;
-	public static final int S2C_UPDATE_COINS = 0x0006;
-	public static final int S2C_HELLO = 0xff00;
-	public static final int S2C_FLASH_MESSAGE = 0xff02;
+	public static final int C2S_UPDATE_POSITION = 0;
+	public static final int C2S_RESUME_PLAYER = 1;
+	public static final int C2S_DIG_NOTIFICATION = 2;
+
+	public static final int S2C_PLAYER_LIST_UPDATE = 3;
+	public static final int S2C_PLAYER_NAMES_UPDATE = 4;
+	public static final int S2C_PLAYER_RESUMED = 5;
+	public static final int S2C_UPDATE_COINS = 6;
+	public static final int S2C_HELLO = 7;
+	public static final int S2C_FLASH_MESSAGE = 8;
 
 	/**
 	 * The type constant for single-section modification events.
@@ -36,7 +37,7 @@ public final class MessageCodes {
 	 * increases network traffic (sending unnecessary data) but reduces
 	 * latency and simplifies the code.
 	 */
-	public static final int S2C_SINGLE_SECTION_MODIFICATION_EVENT = 0xff05;
+	public static final int S2C_SINGLE_SECTION_MODIFICATION_EVENT = 9;
 
 	/**
 	 * When sent from the client to the server, this packet contains a console
@@ -45,7 +46,7 @@ public final class MessageCodes {
 	 * to the client, this packet contains output lines to print on the console.
 	 * Only complete lines can be output this way.
 	 */
-	public static final int CONSOLE = 0xff06;
+	public static final int CONSOLE = 10;
 
 	/**
 	 * Base request/response code for all section data objects.
@@ -73,7 +74,7 @@ public final class MessageCodes {
 	/**
 	 * The type constant for cube modification packets (client to server only).
 	 */
-	public static final int C2S_CUBE_MODIFICATION = 0xfe00;
+	public static final int C2S_CUBE_MODIFICATION = 11;
 
 	/**
 	 * Prevent instantiation.
