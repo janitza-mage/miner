@@ -88,7 +88,6 @@ public class ApiLauncher {
 		server.setHandler(context);
 		try {
 			server.start();
-			server.join();
 		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}

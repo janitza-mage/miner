@@ -28,12 +28,15 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Locale;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 
 /**
  * The main class for the game server.
  */
 public class Main {
+
+	public static final CountDownLatch startupFinishedLatch = new CountDownLatch(2);
 
 	/**
 	 * The main method.
@@ -58,6 +61,7 @@ public class Main {
 				bootstrap.setOption("child.tcpNoDelay", true);
 				bootstrap.setOption("child.keepAlive", true);
 				bootstrap.bind(new InetSocketAddress(Constants.NETWORK_PORT));
+				startupFinishedLatch.countDown();
 			}
 		}.start();
 
@@ -77,6 +81,7 @@ public class Main {
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}
+				startupFinishedLatch.countDown();
 			}
 		}.start();
 
