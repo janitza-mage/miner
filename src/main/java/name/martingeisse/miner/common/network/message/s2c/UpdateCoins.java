@@ -34,7 +34,6 @@ public final class UpdateCoins extends Message {
 	}
 
 	public static UpdateCoins decodeBody(ChannelBuffer buffer) throws MessageDecodingException {
-		validateSize(buffer, 8);
 		return new UpdateCoins(buffer.readLong());
 	}
 

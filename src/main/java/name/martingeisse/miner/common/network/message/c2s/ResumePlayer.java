@@ -48,7 +48,6 @@ public final class ResumePlayer extends Message {
 	}
 
 	public static ResumePlayer decodeBody(ChannelBuffer buffer) throws MessageDecodingException {
-		validateMinimumSize(buffer, 2);
 		int length = buffer.readShort();
 		if (length < 0) {
 			throw new MessageDecodingException("negative token length");
@@ -56,7 +55,6 @@ public final class ResumePlayer extends Message {
 		if (length > MAX_TOKEN_LENGTH) {
 			throw new MessageDecodingException("token too long");
 		}
-		validateSize(buffer, length);
 		byte[] token = new byte[length];
 		buffer.readBytes(token);
 		return new ResumePlayer(token, false);

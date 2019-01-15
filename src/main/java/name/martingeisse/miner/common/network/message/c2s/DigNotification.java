@@ -34,7 +34,6 @@ public final class DigNotification extends Message {
 	}
 
 	public static DigNotification decodeBody(ChannelBuffer buffer) throws MessageDecodingException {
-		validateSize(buffer, Vector3i.ENCODED_SIZE);
 		return new DigNotification(Vector3i.decode(buffer));
 	}
 

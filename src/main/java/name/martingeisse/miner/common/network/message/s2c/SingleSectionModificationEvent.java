@@ -31,7 +31,6 @@ public final class SingleSectionModificationEvent extends Message {
 	}
 
 	public static SingleSectionModificationEvent decodeBody(ChannelBuffer buffer) throws MessageDecodingException {
-		validateSize(buffer, SectionId.ENCODED_SIZE);
 		return new SingleSectionModificationEvent(SectionId.decode(buffer));
 	}
 

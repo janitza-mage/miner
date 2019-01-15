@@ -34,7 +34,6 @@ public final class Hello extends Message {
 	}
 
 	public static Hello decodeBody(ChannelBuffer buffer) throws MessageDecodingException {
-		validateSize(buffer, 4);
 		return new Hello(buffer.readInt());
 	}
 

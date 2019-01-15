@@ -33,7 +33,7 @@ public final class PlayerResumed extends Message {
 
 	@Override
 	public StackdPacket encodePacket() {
-		StackdPacket packet = new StackdPacket(MessageCodes.S2C_PLAYER_RESUMED, 40);
+		StackdPacket packet = new StackdPacket(MessageCodes.S2C_PLAYER_RESUMED, Vector3d.ENCODED_SIZE + EulerAngles.ENCODED_SIZE);
 		ChannelBuffer buffer = packet.getBuffer();
 		position.encode(buffer);
 		orientation.encode(buffer);
@@ -41,7 +41,6 @@ public final class PlayerResumed extends Message {
 	}
 
 	public static PlayerResumed decodeBody(ChannelBuffer buffer) throws MessageDecodingException {
-		validateSize(buffer, Vector3d.ENCODED_SIZE + EulerAngles.ENCODED_SIZE);
 		return new PlayerResumed(Vector3d.decode(buffer), EulerAngles.decode(buffer));
 	}
 }

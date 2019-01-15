@@ -37,7 +37,7 @@ public final class UpdatePosition extends Message {
 
 	@Override
 	public StackdPacket encodePacket() {
-		StackdPacket packet = new StackdPacket(MessageCodes.C2S_UPDATE_POSITION, 40);
+		StackdPacket packet = new StackdPacket(MessageCodes.C2S_UPDATE_POSITION, Vector3d.ENCODED_SIZE + EulerAngles.ENCODED_SIZE);
 		ChannelBuffer buffer = packet.getBuffer();
 		position.encode(buffer);
 		orientation.encode(buffer);
@@ -45,7 +45,6 @@ public final class UpdatePosition extends Message {
 	}
 
 	public static UpdatePosition decodeBody(ChannelBuffer buffer) throws MessageDecodingException {
-		validateSize(buffer, Vector3d.ENCODED_SIZE + EulerAngles.ENCODED_SIZE);
 		return new UpdatePosition(Vector3d.decode(buffer), EulerAngles.decode(buffer));
 	}
 

@@ -5,13 +5,11 @@
 package name.martingeisse.miner.common.network.message;
 
 import name.martingeisse.miner.common.network.StackdPacket;
+import name.martingeisse.miner.common.network.message.c2s.ConsoleInput;
 import name.martingeisse.miner.common.network.message.c2s.DigNotification;
 import name.martingeisse.miner.common.network.message.c2s.ResumePlayer;
 import name.martingeisse.miner.common.network.message.c2s.UpdatePosition;
-import name.martingeisse.miner.common.network.message.s2c.FlashMessage;
-import name.martingeisse.miner.common.network.message.s2c.Hello;
-import name.martingeisse.miner.common.network.message.s2c.PlayerListUpdate;
-import name.martingeisse.miner.common.network.message.s2c.UpdateCoins;
+import name.martingeisse.miner.common.network.message.s2c.*;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -34,6 +32,18 @@ public abstract class Message {
 	 * equal to the packet body size.
 	 */
 	public static Message decodePacket(StackdPacket packet) throws MessageDecodingException {
+		try {
+			Message message = decodePacketInternal(packet);
+			if (packet.getBuffer().readableBytes() != 0) {
+				throw new MessageDecodingException("unexpected extra bytes at end of packet");
+			}
+			return message;
+		} catch (IndexOutOfBoundsException e) {
+			throw new MessageDecodingException("index out of bounds, probably unexpected end of packet", e);
+		}
+	}
+
+	private static Message decodePacketInternal(StackdPacket packet) throws MessageDecodingException {
 		ChannelBuffer buffer = packet.getBuffer();
 		switch (packet.getType()) {
 
@@ -58,26 +68,23 @@ public abstract class Message {
 			case MessageCodes.S2C_PLAYER_LIST_UPDATE:
 				return PlayerListUpdate.decodeBody(buffer);
 
+			case MessageCodes.S2C_PLAYER_NAMES_UPDATE:
+				return PlayerNamesUpdate.decodeBody(buffer);
+
+			case MessageCodes.S2C_PLAYER_RESUMED:
+				return PlayerResumed.decodeBody(buffer);
+
+			case MessageCodes.S2C_SINGLE_SECTION_MODIFICATION_EVENT:
+				return SingleSectionModificationEvent.decodeBody(buffer);
+
+			case MessageCodes.C2S_CONSOLE_INPUT:
+				return ConsoleInput.decodeBody(buffer);
+
+			case MessageCodes.S2C_CONSOLE_OUTPUT:
+				return ConsoleOutput.decodeBody(buffer);
+
 			default:
 				throw new MessageDecodingException("unknown packet type: " + packet.getType());
-		}
-	}
-
-	/**
-	 * Validates that the remaining bytes in the specified buffer are equal to a certain expected size.
-	 */
-	protected static void validateSize(ChannelBuffer buffer, int expectedSizeInBytes) throws MessageDecodingException {
-		if (buffer.readableBytes() != expectedSizeInBytes) {
-			throw new MessageDecodingException("wrong packet size; expected " + expectedSizeInBytes + " but got " + buffer.readableBytes());
-		}
-	}
-
-	/**
-	 * Validates that the remaining bytes in the specified buffer are greater or equal to a certain expected size.
-	 */
-	protected static void validateMinimumSize(ChannelBuffer buffer, int expectedMinimumSizeInBytes) throws MessageDecodingException {
-		if (buffer.readableBytes() < expectedMinimumSizeInBytes) {
-			throw new MessageDecodingException("wrong packet size; expected at least " + expectedMinimumSizeInBytes + " but got " + buffer.readableBytes());
 		}
 	}
 
