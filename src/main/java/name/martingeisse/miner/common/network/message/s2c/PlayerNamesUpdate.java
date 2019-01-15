@@ -5,13 +5,13 @@
 package name.martingeisse.miner.common.network.message.s2c;
 
 import com.google.common.collect.ImmutableList;
-import name.martingeisse.miner.common.geometry.angle.EulerAngles;
-import name.martingeisse.miner.common.geometry.vector.Vector3d;
 import name.martingeisse.miner.common.network.StackdPacket;
+import name.martingeisse.miner.common.network.message.BufferUtil;
 import name.martingeisse.miner.common.network.message.Message;
 import name.martingeisse.miner.common.network.message.MessageCodes;
 import name.martingeisse.miner.common.network.message.MessageDecodingException;
 import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,37 +33,15 @@ public final class PlayerNamesUpdate extends Message {
 
 	@Override
 	public StackdPacket encodePacket() {
-		StackdPacket packet = new StackdPacket(MessageCodes.S2C_PLAYER_NAMES_UPDATE, elements.size() * Element.ENCODED_SIZE);
-		for (Element element : elements) {
-			element.encode(packet.getBuffer());
-		}
-		return packet;
+		ChannelBuffer buffer = ChannelBuffers.dynamicBuffer();
+		buffer.writeZero(StackdPacket.HEADER_SIZE);
+		BufferUtil.encodeList(elements, Element::encode, buffer);
+		return new StackdPacket(MessageCodes.S2C_PLAYER_NAMES_UPDATE, buffer, false);
 	}
 
 	public static PlayerNamesUpdate decodeBody(ChannelBuffer buffer) throws MessageDecodingException {
-		List<Element> elements = new ArrayList<>();
-		while (buffer.readableBytes() >= Element.ENCODED_SIZE) {
-			elements.add(Element.decode(buffer));
-		}
-		return new PlayerNamesUpdate(ImmutableList.copyOf(elements));
+		return new PlayerNamesUpdate(BufferUtil.decodeList(Element::decode, buffer));
 	}
-
-
-	/*
-				Map<Integer, String> updatedPlayerNames = new HashMap<Integer, String>();
-			while (buffer.readableBytes() > 0) {
-				int id = buffer.readInt();
-				int length = buffer.readInt();
-				byte[] data = new byte[2 * length];
-				buffer.readBytes(data);
-				try {
-					updatedPlayerNames.put(id, new String(data, "UTF-16"));
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
-			}
-
-	 */
 
 	private static final class Element {
 
@@ -85,12 +63,11 @@ public final class PlayerNamesUpdate extends Message {
 
 		public void encode(ChannelBuffer buffer) {
 			buffer.writeInt(id);
-			position.encode(buffer);
-			angles.encode(buffer);
+			BufferUtil.encodeString(name, buffer);
 		}
 
-		public static Element decode(ChannelBuffer buffer) {
-			return new Element(buffer.readInt(), foo);
+		public static Element decode(ChannelBuffer buffer) throws MessageDecodingException {
+			return new Element(buffer.readInt(), BufferUtil.decodeString(buffer));
 		}
 
 	}

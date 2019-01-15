@@ -7,15 +7,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 /**
  *
  */
 public class BufferUtil {
 
-	public static void encodeString(ChannelBuffer buffer, String s) {
+	public static void encodeString(String s, ChannelBuffer buffer) {
 		buffer.writeInt(s.length());
 		for (int i = 0; i < s.length(); i++) {
 			buffer.writeChar(s.charAt(i));
@@ -29,18 +27,18 @@ public class BufferUtil {
 		return new String(data, StandardCharsets.UTF_16);
 	}
 
-	public static <T> void encodeList(ChannelBuffer buffer, Collection<T> list, BiConsumer<ChannelBuffer, T> elementEncoder) {
+	public static <T> void encodeList(Collection<T> list, Encoder<T> elementEncoder, ChannelBuffer buffer) {
 		buffer.writeInt(list.size());
 		for (T element : list) {
-			elementEncoder.accept(buffer, element);
+			elementEncoder.encode(element, buffer);
 		}
 	}
 
-	public static <T> ImmutableList<T> decodeList(ChannelBuffer buffer, Function<ChannelBuffer, T> elementDecoder) {
+	public static <T> ImmutableList<T> decodeList(Decoder<T> elementDecoder, ChannelBuffer buffer) throws MessageDecodingException {
 		List<T> list = new ArrayList<>();
 		int count = buffer.readInt();
 		for (int i = 0; i < count; i++) {
-			list.add(elementDecoder.apply(buffer));
+			list.add(elementDecoder.decode(buffer));
 		}
 		return ImmutableList.copyOf(list);
 	}
@@ -49,22 +47,16 @@ public class BufferUtil {
 		return 4 + elementCount * elementSize;
 	}
 
-	/**
-	 * Validates that the remaining bytes in the specified buffer are equal to a certain expected size.
-	 */
-	public static void validateSize(ChannelBuffer buffer, int expectedSizeInBytes) throws MessageDecodingException {
-		if (buffer.readableBytes() != expectedSizeInBytes) {
-			throw new MessageDecodingException("wrong packet size; expected " + expectedSizeInBytes + " but got " + buffer.readableBytes());
-		}
+	public static int computeEncodedListSize(Collection<?> list, int elementCount) {
+		return computeEncodedListSize(list.size(), elementCount);
 	}
 
-	/**
-	 * Validates that the remaining bytes in the specified buffer are greater or equal to a certain expected size.
-	 */
-	public static void validateMinimumSize(ChannelBuffer buffer, int expectedMinimumSizeInBytes) throws MessageDecodingException {
-		if (buffer.readableBytes() < expectedMinimumSizeInBytes) {
-			throw new MessageDecodingException("wrong packet size; expected at least " + expectedMinimumSizeInBytes + " but got " + buffer.readableBytes());
-		}
+	public interface Encoder<T> {
+		void encode(T object, ChannelBuffer buffer);
+	}
+
+	public interface Decoder<T> {
+		T decode(ChannelBuffer buffer) throws MessageDecodingException;
 	}
 
 }
