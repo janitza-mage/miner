@@ -113,7 +113,7 @@ public class StackdSession {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		sendPacketDestructive(new StackdPacket(MessageCodes.CONSOLE, buffer, false));
+		sendPacketDestructive(new StackdPacket(MessageCodes.S2C_CONSOLE_OUTPUT, buffer, false));
 	}
 	
 }

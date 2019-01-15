@@ -266,7 +266,7 @@ public abstract class StackdServer<S extends StackdSession> {
 				break;
 			}
 
-			case MessageCodes.CONSOLE: {
+			case MessageCodes.C2S_CONSOLE_INPUT: {
 				List<String> segments = new ArrayList<String>();
 				try (ChannelBufferInputStream s = new ChannelBufferInputStream(buffer)) {
 					while (buffer.readable()) {

@@ -40,13 +40,16 @@ public final class MessageCodes {
 	public static final int S2C_SINGLE_SECTION_MODIFICATION_EVENT = 9;
 
 	/**
-	 * When sent from the client to the server, this packet contains a console
-	 * command to be executed by the server, encoded as a sequence of strings
-	 * (see {@link DataOutput#writeUTF(String)}). When sent from the server
-	 * to the client, this packet contains output lines to print on the console.
+	 * This packet contains a console command to be executed by the server,
+	 * encoded as a sequence of strings (see {@link DataOutput#writeUTF(String)}).
+	 */
+	public static final int C2S_CONSOLE_INPUT = 10;
+
+	/**
+	 * This packet contains output lines to print on the console.
 	 * Only complete lines can be output this way.
 	 */
-	public static final int CONSOLE = 10;
+	public static final int S2C_CONSOLE_OUTPUT = 11;
 
 	/**
 	 * Base request/response code for all section data objects.
@@ -74,7 +77,7 @@ public final class MessageCodes {
 	/**
 	 * The type constant for cube modification packets (client to server only).
 	 */
-	public static final int C2S_CUBE_MODIFICATION = 11;
+	public static final int C2S_CUBE_MODIFICATION = 99;
 
 	/**
 	 * Prevent instantiation.

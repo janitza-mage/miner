@@ -11,6 +11,7 @@ import name.martingeisse.miner.common.geometry.vector.ReadableVector3i;
 import name.martingeisse.miner.common.geometry.vector.Vector3i;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
  * A section ID is used as the identifying key for a section, and also
@@ -23,6 +24,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * type system.
  */
 public final class SectionId {
+
+	public static final int ENCODED_SIZE = 12;
 
 	/**
 	 * the x
@@ -194,6 +197,16 @@ public final class SectionId {
 	 */
 	public SectionId getNeighbor(AxisAlignedDirection direction) {
 		return new SectionId(x + direction.getSignX(), y + direction.getSignY(), z + direction.getSignZ());
+	}
+
+	public final void encode(ChannelBuffer buffer) {
+		buffer.writeInt(getX());
+		buffer.writeInt(getY());
+		buffer.writeInt(getZ());
+	}
+
+	public static SectionId decode(ChannelBuffer buffer) {
+		return new SectionId(buffer.readInt(), buffer.readInt(), buffer.readInt());
 	}
 
 }

@@ -278,7 +278,7 @@ public class StackdProtocolClient {
 			} else {
 				logger.error("received section modification event but no sectionGridLoader is set in the StackdProtoclClient!");
 			}
-		} else if (packet.getType() == MessageCodes.CONSOLE) {
+		} else if (packet.getType() == MessageCodes.S2C_CONSOLE_OUTPUT) {
 			if (console != null) {
 				try (ChannelBufferInputStream in = new ChannelBufferInputStream(buffer)) {
 					while (buffer.readable()) {
@@ -309,7 +309,7 @@ public class StackdProtocolClient {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		send(new StackdPacket(MessageCodes.CONSOLE, buffer, false));
+		send(new StackdPacket(MessageCodes.C2S_CONSOLE_INPUT, buffer, false));
 	}
 
 	/**
