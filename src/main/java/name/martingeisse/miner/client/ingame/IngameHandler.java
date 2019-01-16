@@ -1,27 +1,24 @@
 /**
  * Copyright (c) 2012 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.miner.client.ingame;
 
-import java.util.List;
-import java.util.Map;
 import name.martingeisse.miner.client.Main;
+import name.martingeisse.miner.client.frame.AbstractFrameHandler;
+import name.martingeisse.miner.client.frame.BreakFrameLoopException;
+import name.martingeisse.miner.client.frame.handlers.*;
 import name.martingeisse.miner.client.gamegui.GameMenuHandler;
-import name.martingeisse.miner.client.ingame.network.MinerProtocolClient;
+import name.martingeisse.miner.client.glworker.GlWorkerLoop;
 import name.martingeisse.miner.client.ingame.network.PlayerResumedMessage;
 import name.martingeisse.miner.client.ingame.network.SendPositionToServerHandler;
 import name.martingeisse.miner.client.ingame.player.PlayerProxy;
-import name.martingeisse.miner.client.frame.AbstractFrameHandler;
-import name.martingeisse.miner.client.frame.BreakFrameLoopException;
-import name.martingeisse.miner.client.frame.handlers.FlashMessageHandler;
-import name.martingeisse.miner.client.frame.handlers.FpsPanel;
-import name.martingeisse.miner.client.frame.handlers.HandlerList;
-import name.martingeisse.miner.client.frame.handlers.SelectedCubeHud;
-import name.martingeisse.miner.client.frame.handlers.SwappableHandler;
-import name.martingeisse.miner.client.glworker.GlWorkerLoop;
+import name.martingeisse.miner.client.network.StackdProtocolClient;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * The in-game frame handler
@@ -56,18 +53,18 @@ public class IngameHandler extends HandlerList {
 	/**
 	 * the protocolClient
 	 */
-	public static MinerProtocolClient protocolClient;
+	public static StackdProtocolClient protocolClient;
 
 	/**
 	 * the flashMessageHandler
 	 */
 	public static FlashMessageHandler flashMessageHandler;
-	
+
 	/**
 	 * the gameMenuHandler
 	 */
 	public static GameMenuHandler gameMenuHandler;
-	
+
 	/**
 	 * the ingameMenuHandlerWrapper
 	 */
@@ -98,7 +95,7 @@ public class IngameHandler extends HandlerList {
 		// connect to the server
 		MinerResources resources = MinerResources.getInstance();
 		flashMessageHandler = new FlashMessageHandler(resources.getFont());
-		protocolClient = new MinerProtocolClient();
+		protocolClient = new StackdProtocolClient();
 		protocolClient.setFlashMessageHandler(flashMessageHandler);
 
 		// build the cube world handler
@@ -111,13 +108,13 @@ public class IngameHandler extends HandlerList {
 			@Override
 			public void handleStep() throws BreakFrameLoopException {
 				cubeWorldHandler.step();
-				
+
 				// TODO avoid filling up the render queue, should detect when the logic thread is running too fast
 				try {
 					Thread.sleep(5);
 				} catch (InterruptedException e) {
 				}
-				
+
 			}
 
 			/* (non-Javadoc)
@@ -151,10 +148,10 @@ public class IngameHandler extends HandlerList {
 		add(new AbstractFrameHandler() {
 			@Override
 			public void handleStep() throws BreakFrameLoopException {
-				
+
 				// TODO race condition: should not start the game until the player has been resumed,
 				// would be wrong and also load wrong sections
-				
+
 				final List<PlayerProxy> updatedPlayerProxies = protocolClient.fetchUpdatedPlayerProxies();
 				if (updatedPlayerProxies != null) {
 					cubeWorldHandler.setPlayerProxies(updatedPlayerProxies);
@@ -192,7 +189,7 @@ public class IngameHandler extends HandlerList {
 			}
 		});
 		*/
-		
+
 		// the in-game menu
 		gameMenuHandler = new GameMenuHandler();
 		gameMenuHandlerWrapper = new SwappableHandler();
@@ -201,7 +198,7 @@ public class IngameHandler extends HandlerList {
 		// prepare running the game
 		protocolClient.setFlashMessageHandler(flashMessageHandler);
 		protocolClient.waitUntilReady();
-		
+
 	}
 
 }

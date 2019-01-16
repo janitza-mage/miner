@@ -12,6 +12,7 @@ import java.util.Collection;
 
 import name.martingeisse.miner.common.network.message.MessageCodes;
 import name.martingeisse.miner.common.network.StackdPacket;
+import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBufferOutputStream;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -25,6 +26,8 @@ import org.jboss.netty.channel.Channel;
  * per-session data.
  */
 public class StackdSession {
+
+	private static Logger logger = Logger.getLogger(StackdSession.class);
 
 	/**
 	 * the id
@@ -72,6 +75,8 @@ public class StackdSession {
 	 * @param packet the packet to send
 	 */
 	public final void sendPacketDestructive(StackdPacket packet) {
+		logger.debug("server sent packet " + packet.getType());
+
 		channel.write(packet);
 	}
 	
