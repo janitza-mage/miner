@@ -223,6 +223,11 @@ public class MinerServer extends StackdServer<MinerSession> {
 				break;
 			}
 
+			default: {
+				logger.error("unknown packet type: " + packet.getType());
+				break;
+			}
+
 		}
 
 	}

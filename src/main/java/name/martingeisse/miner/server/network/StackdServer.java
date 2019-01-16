@@ -283,11 +283,7 @@ public abstract class StackdServer<S extends StackdSession> {
 			}
 
 			default:
-				if (packet.getType() < 0xff00) {
-					onApplicationPacketReceived(session, packet);
-				} else {
-					logger.warn("client sent invalid protocol packet type: " + packet.getType());
-				}
+				onApplicationPacketReceived(session, packet);
 				break;
 
 		}
