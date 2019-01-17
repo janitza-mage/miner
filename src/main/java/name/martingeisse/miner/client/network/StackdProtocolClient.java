@@ -382,7 +382,7 @@ public class StackdProtocolClient {
 				break;
 			}
 
-			case MessageCodes.SINGLE_SECTION_DATA_INTERACTIVE: {
+			case MessageCodes.S2C_INTERACTIVE_SECTION_DATA_RESPONSE: {
 				if (sectionGridLoader != null) {
 					sectionGridLoader.handleInteractiveSectionImagePacket(packet);
 				} else {

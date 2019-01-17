@@ -85,6 +85,9 @@ public abstract class Message {
 			case MessageCodes.C2S_CUBE_MODIFICATION:
 				return CubeModification.decodeBody(buffer);
 
+			case MessageCodes.C2S_INTERACTIVE_SECTION_DATA_REQUEST:
+				return InteractiveSectionDataRequest.decodeBody(buffer);
+
 			default:
 				throw new MessageDecodingException("unknown packet type: " + packet.getType());
 		}

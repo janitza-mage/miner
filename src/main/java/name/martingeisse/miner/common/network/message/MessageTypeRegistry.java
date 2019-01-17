@@ -26,6 +26,7 @@ public final class MessageTypeRegistry {
 		register(DigNotification.class, DigNotification::decodeBody);
 		register(ResumePlayer.class, ResumePlayer::decodeBody);
 		register(UpdatePosition.class, UpdatePosition::decodeBody);
+		register(InteractiveSectionDataRequest.class, InteractiveSectionDataRequest::decodeBody);
 
 		register(ConsoleOutput.class, ConsoleOutput::decodeBody);
 		register(FlashMessage.class, FlashMessage::decodeBody);
@@ -35,6 +36,7 @@ public final class MessageTypeRegistry {
 		register(PlayerResumed.class, PlayerResumed::decodeBody);
 		register(SingleSectionModificationEvent.class, SingleSectionModificationEvent::decodeBody);
 		register(UpdateCoins.class, UpdateCoins::decodeBody);
+		register(InteractiveSectionDatares.class, InteractiveSectionDatares::decodeBody);
 
 	}
 

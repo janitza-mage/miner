@@ -127,7 +127,7 @@ public final class SectionToClientShipper {
 			throw new RuntimeException(getClass() + " only supports INTERACTIVE section data");
 		}
 		final byte[] data = cacheEntry.getDataForClient();
-		final StackdPacket response = new StackdPacket(MessageCodes.SINGLE_SECTION_DATA_INTERACTIVE, data.length + 12);
+		final StackdPacket response = new StackdPacket(MessageCodes.S2C_INTERACTIVE_SECTION_DATA_RESPONSE, data.length + 12);
 		ChannelBuffer buffer = response.getBuffer();
 		buffer.writeInt(sectionId.getX());
 		buffer.writeInt(sectionId.getY());

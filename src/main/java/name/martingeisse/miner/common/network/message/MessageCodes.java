@@ -36,9 +36,10 @@ public final class MessageCodes {
 	 * Request/response code to fetch section data objects of type
 	 * {@link SectionDataType#INTERACTIVE}. TODO move to message class
 	 */
-	public static final int SINGLE_SECTION_DATA_INTERACTIVE = 0xff11;
+	public static final int C2S_INTERACTIVE_SECTION_DATA_REQUEST = 12;
+	public static final int S2C_INTERACTIVE_SECTION_DATA_RESPONSE = 13;
 
-	public static final int C2S_CUBE_MODIFICATION = 99;
+	public static final int C2S_CUBE_MODIFICATION = 14;
 
 	/**
 	 * Prevent instantiation.

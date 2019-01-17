@@ -260,7 +260,7 @@ public abstract class StackdServer<S extends StackdSession> {
 				break;
 			}
 
-			case MessageCodes.SINGLE_SECTION_DATA_INTERACTIVE: {
+			case MessageCodes.C2S_INTERACTIVE_SECTION_DATA_REQUEST: {
 				SectionId sectionId = new SectionId(buffer.readInt(), buffer.readInt(), buffer.readInt());
 				SectionDataType type = SectionDataType.INTERACTIVE;
 				final SectionDataId dataId = new SectionDataId(sectionId, type);
