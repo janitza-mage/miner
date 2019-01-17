@@ -8,10 +8,10 @@ package name.martingeisse.miner.server.network;
 
 import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.geometry.SectionId;
+import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.network.message.MessageCodes;
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
-import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.server.console.IConsoleCommandHandler;
 import name.martingeisse.miner.server.console.NullConsoleCommandHandler;
 import name.martingeisse.miner.server.section.SectionToClientShipper;
@@ -70,6 +70,7 @@ public abstract class StackdServer<S extends StackdSession> {
 
 	/**
 	 * Constructor.
+	 *
 	 * @param sectionStorage the section storage implementation
 	 */
 	public StackdServer(final AbstractSectionStorage sectionStorage) {
@@ -82,6 +83,7 @@ public abstract class StackdServer<S extends StackdSession> {
 
 	/**
 	 * Getter method for the sectionWorkingSet.
+	 *
 	 * @return the sectionWorkingSet
 	 */
 	public SectionWorkingSet getSectionWorkingSet() {
@@ -90,6 +92,7 @@ public abstract class StackdServer<S extends StackdSession> {
 
 	/**
 	 * Getter method for the cubeTypes.
+	 *
 	 * @return the cubeTypes
 	 */
 	public final CubeType[] getCubeTypes() {
@@ -98,6 +101,7 @@ public abstract class StackdServer<S extends StackdSession> {
 
 	/**
 	 * Setter method for the cubeTypes.
+	 *
 	 * @param cubeTypes the cubeTypes to set
 	 */
 	public final void setCubeTypes(final CubeType[] cubeTypes) {
@@ -106,6 +110,7 @@ public abstract class StackdServer<S extends StackdSession> {
 
 	/**
 	 * Getter method for the consoleCommandHandler.
+	 *
 	 * @return the consoleCommandHandler
 	 */
 	public IConsoleCommandHandler<S> getConsoleCommandHandler() {
@@ -114,6 +119,7 @@ public abstract class StackdServer<S extends StackdSession> {
 
 	/**
 	 * Setter method for the consoleCommandHandler.
+	 *
 	 * @param consoleCommandHandler the consoleCommandHandler to set
 	 */
 	public void setConsoleCommandHandler(IConsoleCommandHandler<S> consoleCommandHandler) {
@@ -122,14 +128,14 @@ public abstract class StackdServer<S extends StackdSession> {
 
 	/**
 	 * Creates a new session.
-	 *
+	 * <p>
 	 * Note that a race condition might cause this method to be invoked twice to
 	 * create a session for the same ID. In such a case, the race condition will be
 	 * detected later on and one of the sessions will be thrown away. This method must
 	 * be able to handle such a case. Use {@link #onClientConnected(StackdSession)}
 	 * for code that should only run once per created session.
 	 *
-	 * @param id the session ID
+	 * @param id      the session ID
 	 * @param channel the channel to the client
 	 * @return the session
 	 */
@@ -148,7 +154,7 @@ public abstract class StackdServer<S extends StackdSession> {
 	/**
 	 * Returns the session with the specified ID, creating it if it does not yet exist.
 	 *
-	 * @param id the session ID
+	 * @param id      the session ID
 	 * @param channel the channel to use when creating a session
 	 * @return the session
 	 */
@@ -197,12 +203,12 @@ public abstract class StackdServer<S extends StackdSession> {
 
 	/**
 	 * Broadcasts a packet to all clients.
-	 *
+	 * <p>
 	 * This method takes the list of clients as it exists when calling this
 	 * method. Calling code must make sure that the packet does not
 	 * contain information that can become invalid when the list of clients
 	 * has changed since the packet was built.
-	 *
+	 * <p>
 	 * Header fields of the packet will be assembled by this method. This
 	 * will actually happen for each channel, but since the header fields
 	 * are the same for all channel (they only depend on the packet), this
@@ -254,12 +260,9 @@ public abstract class StackdServer<S extends StackdSession> {
 				break;
 			}
 
-			// SINGLE_SECTION_DATA_DEFINITIVE is not valid because the client must not get that information,
-			// to prevent information cheating.
-			case MessageCodes.SINGLE_SECTION_DATA_INTERACTIVE:
-			case MessageCodes.SINGLE_SECTION_DATA_VIEW_LOD_0: {
+			case MessageCodes.SINGLE_SECTION_DATA_INTERACTIVE: {
 				SectionId sectionId = new SectionId(buffer.readInt(), buffer.readInt(), buffer.readInt());
-				SectionDataType type = SectionDataType.values()[packet.getType() - MessageCodes.SINGLE_SECTION_DATA_BASE];
+				SectionDataType type = SectionDataType.INTERACTIVE;
 				final SectionDataId dataId = new SectionDataId(sectionId, type);
 				logger.debug("SERVER received section data request: " + dataId);
 				sectionToClientShipper.addJob(dataId, session);
@@ -303,13 +306,14 @@ public abstract class StackdServer<S extends StackdSession> {
 	 * binary packet.
 	 *
 	 * @param session the client's session
-	 * @param packet the packet
+	 * @param packet  the packet
 	 */
 	protected void onApplicationPacketReceived(final S session, final StackdPacket packet) {
 	}
 
 	/**
 	 * This method is called when one or more sections have been modified.
+	 *
 	 * @param sections the modified sections
 	 */
 	protected void onSectionsModified(final SectionId[] sections) {
@@ -331,7 +335,7 @@ public abstract class StackdServer<S extends StackdSession> {
 
 	/**
 	 * This method is called when a client has been disconnected.
-	 *
+	 * <p>
 	 * Special case: Clients that have not been allocated a session
 	 * yet are handled without calling this method.
 	 *
@@ -344,13 +348,13 @@ public abstract class StackdServer<S extends StackdSession> {
 	 * Handles a console command. Such a command is typically sent by a client. Even if
 	 * not, the command must at least be associated with a client, and is handled as if
 	 * that client sent it.
-	 *
+	 * <p>
 	 * The default implementation delegates to the current console command handler set
 	 * for this server.
 	 *
 	 * @param session the client's session
 	 * @param command the command
-	 * @param args the arguments
+	 * @param args    the arguments
 	 */
 	public void handleConsoleCommand(final S session, String command, String[] args) {
 		consoleCommandHandler.handleCommand(session, command, args);

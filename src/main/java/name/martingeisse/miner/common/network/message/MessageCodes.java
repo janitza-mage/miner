@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -52,27 +52,10 @@ public final class MessageCodes {
 	public static final int S2C_CONSOLE_OUTPUT = 11;
 
 	/**
-	 * Base request/response code for all section data objects.
-	 */
-	public static final int SINGLE_SECTION_DATA_BASE = 0xff10;
-
-	/**
-	 * Request/response code to fetch section data objects of type
-	 * {@link SectionDataType#DEFINITIVE}.
-	 */
-	public static final int SINGLE_SECTION_DATA_DEFINITIVE = 0xff10;
-
-	/**
 	 * Request/response code to fetch section data objects of type
 	 * {@link SectionDataType#INTERACTIVE}.
 	 */
 	public static final int SINGLE_SECTION_DATA_INTERACTIVE = 0xff11;
-
-	/**
-	 * Request/response code to fetch section data objects of type
-	 * {@link SectionDataType#VIEW_LOD_0}.
-	 */
-	public static final int SINGLE_SECTION_DATA_VIEW_LOD_0 = 0xff12;
 
 	/**
 	 * The type constant for cube modification packets (client to server only).
@@ -84,5 +67,5 @@ public final class MessageCodes {
 	 */
 	private MessageCodes() {
 	}
-	
+
 }

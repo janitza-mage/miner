@@ -1,28 +1,29 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.miner.server.section;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import com.google.common.collect.ImmutableMap;
 import name.martingeisse.miner.common.geometry.SectionId;
+import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.network.message.MessageCodes;
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
-import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.task.Task;
 import name.martingeisse.miner.server.network.StackdServer;
 import name.martingeisse.miner.server.network.StackdSession;
 import name.martingeisse.miner.server.section.entry.SectionDataCacheEntry;
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
-import com.google.common.collect.ImmutableMap;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * This is a helper class used by the {@link StackdServer} to fetch
@@ -36,17 +37,17 @@ public final class SectionToClientShipper {
 	 * the logger
 	 */
 	private static Logger logger = Logger.getLogger(SectionToClientShipper.class);
-	
+
 	/**
 	 * the workingSet
 	 */
 	private final SectionWorkingSet workingSet;
-	
+
 	/**
 	 * the jobQueue
 	 */
 	private final BlockingQueue<ShippingJob> jobQueue;
-	
+
 	/**
 	 * the handleAllJobsTask
 	 */
@@ -61,10 +62,10 @@ public final class SectionToClientShipper {
 		this.jobQueue = new LinkedBlockingQueue<>();
 		this.handleAllJobsTask = new HandleAllJobsTask();
 	}
-	
+
 	/**
 	 * Adds a shipping job.
-	 * 
+	 *
 	 * @param sectionDataId the ID of the section data to ship
 	 * @param session the session to ship to
 	 */
@@ -80,12 +81,12 @@ public final class SectionToClientShipper {
 			sendResult(presentEntry, session);
 		}
 	}
-	
+
 	/**
 	 * Fetches all jobs from the job queue and handles them.
 	 */
 	public void handleJobs() {
-		
+
 		// Fetch pending jobs, returning if there is nothing to do. This happens quite often because
 		// the job handling task gets scheduled for every added job, but the task handles *all*
 		// pending jobs, so the remaining task executions only find an empty job queue.
@@ -97,32 +98,36 @@ public final class SectionToClientShipper {
 		if (jobs.isEmpty()) {
 			return;
 		}
-		
+
 		// collect section data IDs
 		Set<SectionDataId> sectionDataIds = new HashSet<>();
 		for (ShippingJob job : jobs) {
 			sectionDataIds.add(job.sectionDataId);
 		}
-		
+
 		// fetch the objects from the cache
 		ImmutableMap<SectionDataId, SectionDataCacheEntry> cacheEntries = workingSet.getAll(sectionDataIds);
-		
+
 		// complete the jobs by sending data to the clients
 		for (ShippingJob job : jobs) {
 			sendResult(cacheEntries.get(job.sectionDataId), job.session);
 		}
-		
+
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private void sendResult(SectionDataCacheEntry cacheEntry, StackdSession session) {
 		final SectionDataId sectionDataId = cacheEntry.getSectionDataId();
 		final SectionId sectionId = sectionDataId.getSectionId();
 		final SectionDataType type = sectionDataId.getType();
+		// LOD currently not supported
+		if (type != SectionDataType.INTERACTIVE) {
+			throw new RuntimeException(getClass() + " only supports INTERACTIVE section data");
+		}
 		final byte[] data = cacheEntry.getDataForClient();
-		final StackdPacket response = new StackdPacket(MessageCodes.SINGLE_SECTION_DATA_BASE + type.ordinal(), data.length + 12);
+		final StackdPacket response = new StackdPacket(MessageCodes.SINGLE_SECTION_DATA_INTERACTIVE, data.length + 12);
 		ChannelBuffer buffer = response.getBuffer();
 		buffer.writeInt(sectionId.getX());
 		buffer.writeInt(sectionId.getY());
@@ -134,9 +139,9 @@ public final class SectionToClientShipper {
 		total += data.length;
 		logger.debug("SERVER total section data sent: " + total);
 	}
-	
+
 	static volatile long total = 0;
-	
+
 	/**
 	 * Contains the data for a single shipping job.
 	 */
@@ -144,7 +149,7 @@ public final class SectionToClientShipper {
 		SectionDataId sectionDataId;
 		StackdSession session;
 	}
-	
+
 	/**
 	 * A task that gets scheduled repeatedly to finish the jobs.
 	 */
@@ -158,5 +163,5 @@ public final class SectionToClientShipper {
 			}
 		}
 	}
-	
+
 }
