@@ -43,6 +43,20 @@ public class BufferUtil {
 		return ImmutableList.copyOf(list);
 	}
 
+	public static <T> void encodeImplicitSizeList(Collection<T> list, Encoder<T> elementEncoder, ChannelBuffer buffer) {
+		for (T element : list) {
+			elementEncoder.encode(element, buffer);
+		}
+	}
+
+	public static <T> ImmutableList<T> decodeImplicitSizeList(Decoder<T> elementDecoder, ChannelBuffer buffer) throws MessageDecodingException {
+		List<T> list = new ArrayList<>();
+		while (buffer.readableBytes() > 0) {
+			list.add(elementDecoder.decode(buffer));
+		}
+		return ImmutableList.copyOf(list);
+	}
+
 	public static int computeEncodedListSize(int elementSize, int elementCount) {
 		return 4 + elementCount * elementSize;
 	}

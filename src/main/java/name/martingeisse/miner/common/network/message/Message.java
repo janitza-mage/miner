@@ -5,10 +5,7 @@
 package name.martingeisse.miner.common.network.message;
 
 import name.martingeisse.miner.common.network.StackdPacket;
-import name.martingeisse.miner.common.network.message.c2s.ConsoleInput;
-import name.martingeisse.miner.common.network.message.c2s.DigNotification;
-import name.martingeisse.miner.common.network.message.c2s.ResumePlayer;
-import name.martingeisse.miner.common.network.message.c2s.UpdatePosition;
+import name.martingeisse.miner.common.network.message.c2s.*;
 import name.martingeisse.miner.common.network.message.s2c.*;
 import org.jboss.netty.buffer.ChannelBuffer;
 
@@ -82,6 +79,9 @@ public abstract class Message {
 
 			case MessageCodes.S2C_CONSOLE_OUTPUT:
 				return ConsoleOutput.decodeBody(buffer);
+
+			case MessageCodes.C2S_CUBE_MODIFICATION:
+				return CubeModification.decodeBody(buffer);
 
 			default:
 				throw new MessageDecodingException("unknown packet type: " + packet.getType());
