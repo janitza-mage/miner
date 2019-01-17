@@ -10,7 +10,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
 /**
- *
+ * This packet contains a console command to be executed by the server, encoded as a sequence of strings.
  */
 public final class ConsoleInput extends Message {
 

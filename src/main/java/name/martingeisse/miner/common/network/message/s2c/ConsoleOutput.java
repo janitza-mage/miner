@@ -10,7 +10,8 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
 /**
- *
+ * This packet contains output lines to print on the console.
+ * Only complete lines can be output this way.
  */
 public final class ConsoleOutput extends Message {
 

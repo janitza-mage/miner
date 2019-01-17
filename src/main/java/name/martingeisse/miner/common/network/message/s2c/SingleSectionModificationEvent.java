@@ -8,7 +8,11 @@ import name.martingeisse.miner.common.network.message.MessageDecodingException;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
- *
+ * Sent by the server when a section gets modified. Clients that are close enough to be interested in the update would
+ * typically request the new section render model and collider in turn. Clients that are too far away would ignore
+ * these events. TODO: store the client's rough position on the server, filter mod events server-side, then just send
+ * the updated objects. This slightly increases network traffic (sending additional data) but reduces latency and
+ * simplifies the code.
  */
 public final class SingleSectionModificationEvent extends Message {
 

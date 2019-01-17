@@ -15,6 +15,8 @@ import org.jboss.netty.buffer.ChannelBuffer;
  * <p>
  * Messages are immutable by design to simplify handling them. They are not value objects though; especially, equals /
  * hashCode support is based on identity.
+ * <p>
+ * TODO: Refactor using MessageTypeRegistry
  */
 public abstract class Message {
 
