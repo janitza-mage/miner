@@ -89,7 +89,7 @@ public abstract class Message {
 				return InteractiveSectionDataRequest.decodeBody(buffer);
 
 			case MessageCodes.S2C_INTERACTIVE_SECTION_DATA_RESPONSE:
-				return InteractiveSectionDataRes.decodeBody(buffer);
+				return InteractiveSectionDataResponse.decodeBody(buffer);
 
 			default:
 				throw new MessageDecodingException("unknown packet type: " + packet.getType());

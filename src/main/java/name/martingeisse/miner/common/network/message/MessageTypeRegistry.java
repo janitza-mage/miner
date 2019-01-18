@@ -36,7 +36,7 @@ public final class MessageTypeRegistry {
 		register(PlayerResumed.class, PlayerResumed::decodeBody);
 		register(SingleSectionModificationEvent.class, SingleSectionModificationEvent::decodeBody);
 		register(UpdateCoins.class, UpdateCoins::decodeBody);
-		register(InteractiveSectionDatares.class, InteractiveSectionDatares::decodeBody);
+		register(InteractiveSectionDataResponse.class, InteractiveSectionDataResponse::decodeBody);
 
 	}
 

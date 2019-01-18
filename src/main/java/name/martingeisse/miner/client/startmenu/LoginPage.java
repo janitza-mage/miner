@@ -67,21 +67,21 @@ public class LoginPage extends AbstractStartmenuPage {
 		menu.addElement(new Spacer(2 * Gui.GRID));
 		menu.addElement(EXIT_BUTTON);
 		
-		menu.addElement(new Spacer(Gui.GRID));
-		menu.addElement(new Grid(10, 5) {
-			@Override
-			protected GuiElement newChild(final int x, final int y) {
-				Button button = new Button() {
-					@Override
-					protected void onClick() {
-						System.out.println("* " + x + ", " + y);
-						
-					}
-				};
-				button.getTextLine().setText("foo");
-				return button;
-			}
-		}.initialize());
+//		menu.addElement(new Spacer(Gui.GRID));
+//		menu.addElement(new Grid(10, 5) {
+//			@Override
+//			protected GuiElement newChild(final int x, final int y) {
+//				Button button = new Button() {
+//					@Override
+//					protected void onClick() {
+//						System.out.println("* " + x + ", " + y);
+//
+//					}
+//				};
+//				button.getTextLine().setText("foo");
+//				return button;
+//			}
+//		}.initialize());
 		
 		initializeStartmenuPage(menu);
 		
