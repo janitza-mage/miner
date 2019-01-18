@@ -9,7 +9,9 @@ package name.martingeisse.miner.server.network;
 import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.geometry.SectionId;
 import name.martingeisse.miner.common.network.StackdPacket;
+import name.martingeisse.miner.common.network.message.Message;
 import name.martingeisse.miner.common.network.message.MessageCodes;
+import name.martingeisse.miner.common.network.message.c2s.InteractiveSectionDataRequest;
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.server.console.IConsoleCommandHandler;
@@ -261,7 +263,8 @@ public abstract class StackdServer<S extends StackdSession> {
 			}
 
 			case MessageCodes.C2S_INTERACTIVE_SECTION_DATA_REQUEST: {
-				SectionId sectionId = new SectionId(buffer.readInt(), buffer.readInt(), buffer.readInt());
+				InteractiveSectionDataRequest request = (InteractiveSectionDataRequest) Message.decodePacket(packet);
+				SectionId sectionId = request.getSectionId();
 				SectionDataType type = SectionDataType.INTERACTIVE;
 				final SectionDataId dataId = new SectionDataId(sectionId, type);
 				logger.debug("SERVER received section data request: " + dataId);
