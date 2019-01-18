@@ -6,63 +6,7 @@
 
 package name.martingeisse.miner.client.ingame;
 
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_LESS;
-import static org.lwjgl.opengl.GL11.GL_LINEAR;
-import static org.lwjgl.opengl.GL11.GL_LINES;
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_PROJECTION;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_GEN_Q;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_GEN_R;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_GEN_S;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_GEN_T;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glBlendFunc;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glDepthFunc;
-import static org.lwjgl.opengl.GL11.glDepthMask;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glLineWidth;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glRotatef;
-import static org.lwjgl.opengl.GL11.glScalef;
-import static org.lwjgl.opengl.GL11.glTexCoord2f;
-import static org.lwjgl.opengl.GL11.glTexParameteri;
-import static org.lwjgl.opengl.GL11.glTranslated;
-import static org.lwjgl.opengl.GL11.glVertex2f;
-import static org.lwjgl.opengl.GL11.glVertex3f;
-import static org.lwjgl.opengl.GL11.glVertex3i;
-import static org.lwjgl.opengl.GL14.glWindowPos2i;
-import static org.lwjgl.util.glu.GLU.gluPerspective;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import name.martingeisse.common.util.ThreadUtil;
-import name.martingeisse.miner.common.Constants;
-import name.martingeisse.miner.common.cubetype.CubeTypes;
-import name.martingeisse.miner.client.ingame.player.Player;
-import name.martingeisse.miner.client.ingame.player.PlayerProxy;
-import name.martingeisse.miner.client.ingame.visual.OtherPlayerVisualTemplate;
 import name.martingeisse.miner.client.engine.EngineParameters;
 import name.martingeisse.miner.client.engine.FrameRenderParameters;
 import name.martingeisse.miner.client.engine.WorldWorkingSet;
@@ -71,17 +15,21 @@ import name.martingeisse.miner.client.frame.AbstractIntervalFrameHandler;
 import name.martingeisse.miner.client.frame.FrameDurationSensor;
 import name.martingeisse.miner.client.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.glworker.GlWorkerLoop;
-import name.martingeisse.miner.client.network.CubeModificationPacketBuilder;
+import name.martingeisse.miner.client.ingame.player.Player;
+import name.martingeisse.miner.client.ingame.player.PlayerProxy;
+import name.martingeisse.miner.client.ingame.visual.OtherPlayerVisualTemplate;
 import name.martingeisse.miner.client.network.SectionGridLoader;
 import name.martingeisse.miner.client.sound.RegularSound;
 import name.martingeisse.miner.client.system.Font;
 import name.martingeisse.miner.client.util.MouseUtil;
 import name.martingeisse.miner.client.util.RayAction;
 import name.martingeisse.miner.client.util.RayActionSupport;
+import name.martingeisse.miner.common.Constants;
+import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.RectangularRegion;
+import name.martingeisse.miner.common.network.message.c2s.CubeModification;
 import name.martingeisse.miner.common.util.ProfilingHelper;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.joda.time.Duration;
@@ -89,6 +37,16 @@ import org.joda.time.Instant;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL14.glWindowPos2i;
+import static org.lwjgl.util.glu.GLU.gluPerspective;
 
 /**
  * TODO: document me
@@ -500,10 +458,11 @@ public class CubeWorldHandler {
 							 * bounding box. Solution 1: Remove breakFree(), don't place a cube if the player then
 							 * collides. Solution 2: Make breakFree() more accurate.
 							 */
-							final CubeModificationPacketBuilder builder = new CubeModificationPacketBuilder();
-							builder.addModification(x, y, z, effectiveCubeType);
+							CubeModification.Builder builder = new CubeModification.Builder();
+							builder.add(x, y, z, effectiveCubeType);
 							breakFree(builder);
-							IngameHandler.protocolClient.send(builder.getPacket());
+							IngameHandler.protocolClient.send(builder.build().encodePacket());
+
 							// cooldownFinishTime = now + 1000;
 							cooldownFinishTime = now + 200;
 						}
@@ -527,9 +486,9 @@ public class CubeWorldHandler {
 
 		// special actions
 		if (keysEnabled && Keyboard.isKeyDown(Keyboard.KEY_B)) {
-			final CubeModificationPacketBuilder builder = new CubeModificationPacketBuilder();
+			final CubeModification.Builder builder = new CubeModification.Builder();
 			breakFree(builder);
-			IngameHandler.protocolClient.send(builder.getPacket());
+			IngameHandler.protocolClient.send(builder.build().encodePacket());
 		}
 
 		// handle player logic
@@ -550,12 +509,12 @@ public class CubeWorldHandler {
 	/**
 	 * 
 	 */
-	private void breakFree(final CubeModificationPacketBuilder builder) {
+	private void breakFree(final CubeModification.Builder builder) {
 		final RectangularRegion region = player.createCollisionRegion();
 		for (int x = region.getStartX(); x < region.getEndX(); x++) {
 			for (int y = region.getStartY(); y < region.getEndY(); y++) {
 				for (int z = region.getStartZ(); z < region.getEndZ(); z++) {
-					builder.addModification(x, y, z, (byte)0);
+					builder.add(x, y, z, (byte)0);
 				}
 			}
 		}

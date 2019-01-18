@@ -10,6 +10,9 @@ import name.martingeisse.miner.common.network.message.MessageDecodingException;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  */
@@ -30,7 +33,7 @@ public final class CubeModification extends Message {
 		ChannelBuffer buffer = ChannelBuffers.dynamicBuffer();
 		buffer.writeZero(StackdPacket.HEADER_SIZE);
 		BufferUtil.encodeImplicitSizeList(elements, Element::encode, buffer);
-		return new StackdPacket(MessageCodes.S2C_PLAYER_NAMES_UPDATE, buffer, false);
+		return new StackdPacket(MessageCodes.C2S_CUBE_MODIFICATION, buffer, false);
 	}
 
 	public static CubeModification decodeBody(ChannelBuffer buffer) throws MessageDecodingException {
@@ -65,4 +68,27 @@ public final class CubeModification extends Message {
 		}
 
 	}
+
+	public static class Builder {
+
+		private final List<Element> elements = new ArrayList<>();
+
+		public void add(int x, int y, int z, byte cubeType) {
+			add(new Vector3i(x, y, z), cubeType);
+		}
+
+		public void add(Vector3i position, byte cubeType) {
+			add(new Element(position, cubeType));
+		}
+
+		public void add(Element element) {
+			elements.add(element);
+		}
+
+		public CubeModification build() {
+			return new CubeModification(ImmutableList.copyOf(elements));
+		}
+
+	}
+
 }
