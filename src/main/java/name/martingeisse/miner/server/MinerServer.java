@@ -6,12 +6,16 @@
 
 package name.martingeisse.miner.server;
 
+import com.google.common.collect.ImmutableList;
 import name.martingeisse.common.SecurityTokenUtil;
 import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.cubetype.CubeTypes;
+import name.martingeisse.miner.common.geometry.angle.EulerAngles;
+import name.martingeisse.miner.common.geometry.vector.Vector3d;
 import name.martingeisse.miner.common.network.message.MessageCodes;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.SectionId;
+import name.martingeisse.miner.common.network.message.s2c.PlayerListUpdate;
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.common.network.StackdPacket;
@@ -286,20 +290,17 @@ public class MinerServer extends StackdServer<MinerSession> {
 				}
 			}
 
-			// assemble the packet
-			StackdPacket packet = new StackdPacket(MessageCodes.S2C_PLAYER_LIST_UPDATE, 44 * sessionList.size());
-			ChannelBuffer buffer = packet.getBuffer();
+			// assemble the message
+			List<PlayerListUpdate.Element> elements = new ArrayList<>();
 			for (MinerSession session : sessionList) {
-				buffer.writeInt(session.getId());
-				buffer.writeDouble(session.getX());
-				buffer.writeDouble(session.getY());
-				buffer.writeDouble(session.getZ());
-				buffer.writeDouble(session.getLeftAngle());
-				buffer.writeDouble(session.getUpAngle());
+				Vector3d position = new Vector3d(session.getX(), session.getY(), session.getZ());
+				EulerAngles eulerAngles = new EulerAngles(session.getLeftAngle(), session.getUpAngle(), 0);
+				elements.add(new PlayerListUpdate.Element(session.getId(), position, eulerAngles));
 			}
 
 			// send the packet
-			broadcast(packet);
+			// broadcast(packet);
+			broadcast(new PlayerListUpdate(ImmutableList.copyOf(elements)));
 
 		}
 

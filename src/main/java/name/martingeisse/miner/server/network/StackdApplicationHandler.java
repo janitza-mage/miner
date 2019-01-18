@@ -8,6 +8,7 @@ package name.martingeisse.miner.server.network;
 
 import name.martingeisse.miner.common.network.message.MessageCodes;
 import name.martingeisse.miner.common.network.StackdPacket;
+import name.martingeisse.miner.common.network.message.s2c.Hello;
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -55,19 +56,9 @@ final class StackdApplicationHandler<S extends StackdSession> extends SimpleChan
 	public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
 		super.channelConnected(ctx, e);
 		session = server.createSession(e.getChannel());
-		e.getChannel().write(createHelloPacket(session.getId()));
+		session.send(new Hello(session.getId()));
 		logger.info("client connected: " + session.getId());
 		server.onClientConnected(session);
-	}
-	
-	/**
-	 * @return the "hello" packet
-	 */
-	private static StackdPacket createHelloPacket(int sessionId) {
-		StackdPacket packet = new StackdPacket(MessageCodes.S2C_HELLO, 4);
-		ChannelBuffer buffer = packet.getBuffer();
-		buffer.writeInt(sessionId);
-		return packet;
 	}
 	
 	/* (non-Javadoc)

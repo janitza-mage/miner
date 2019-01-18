@@ -6,10 +6,6 @@
 
 package name.martingeisse.miner.client.network;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import name.martingeisse.miner.client.engine.CollidingSection;
 import name.martingeisse.miner.client.engine.RenderableSection;
 import name.martingeisse.miner.client.engine.WorldWorkingSet;
@@ -19,12 +15,16 @@ import name.martingeisse.miner.common.cubes.Cubes;
 import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.miner.common.geometry.SectionId;
-import name.martingeisse.miner.common.network.message.MessageCodes;
 import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.network.message.c2s.InteractiveSectionDataRequest;
 import name.martingeisse.miner.common.task.Task;
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * This class updates the set of sections in the {@link WorldWorkingSet} based

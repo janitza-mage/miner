@@ -227,6 +227,12 @@ public abstract class StackdServer<S extends StackdSession> {
 		}
 	}
 
+	public final void broadcast(final Message message) {
+		for (final S session : sessions.values()) {
+			session.send(message);
+		}
+	}
+
 	/**
 	 * Internal packet dispatch that gets called in the receiving thread.
 	 * TODO should not dispatch directly but through a queue.

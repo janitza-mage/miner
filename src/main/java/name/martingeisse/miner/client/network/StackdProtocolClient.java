@@ -6,6 +6,7 @@
 
 package name.martingeisse.miner.client.network;
 
+import com.google.common.collect.ImmutableList;
 import name.martingeisse.miner.client.console.Console;
 import name.martingeisse.miner.client.frame.handlers.FlashMessageHandler;
 import name.martingeisse.miner.client.ingame.IngameHandler;
@@ -17,15 +18,19 @@ import name.martingeisse.miner.common.geometry.angle.EulerAngles;
 import name.martingeisse.miner.common.geometry.angle.ReadableEulerAngles;
 import name.martingeisse.miner.common.geometry.vector.ReadableVector3d;
 import name.martingeisse.miner.common.geometry.vector.Vector3d;
+import name.martingeisse.miner.common.geometry.vector.Vector3i;
 import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.network.StackdPacketCodec;
+import name.martingeisse.miner.common.network.message.Message;
 import name.martingeisse.miner.common.network.message.MessageCodes;
+import name.martingeisse.miner.common.network.message.c2s.ConsoleInput;
+import name.martingeisse.miner.common.network.message.c2s.DigNotification;
+import name.martingeisse.miner.common.network.message.c2s.ResumePlayer;
+import name.martingeisse.miner.common.network.message.c2s.UpdatePosition;
 import org.apache.log4j.Logger;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBufferInputStream;
-import org.jboss.netty.buffer.ChannelBufferOutputStream;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.*;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.util.ThreadNameDeterminer;
@@ -232,6 +237,10 @@ public class StackdProtocolClient {
 		connectFuture.getChannel().write(packet);
 	}
 
+	public final void send(Message message) {
+		send(message.encodePacket());
+	}
+
 	/**
 	 * Disconnects from the server.
 	 */
@@ -273,17 +282,12 @@ public class StackdProtocolClient {
 	 * @param args    the arguments
 	 */
 	public void sendConsoleCommand(String command, String[] args) {
-		ChannelBuffer buffer = ChannelBuffers.dynamicBuffer();
-		buffer.writeZero(StackdPacket.HEADER_SIZE);
-		try (ChannelBufferOutputStream out = new ChannelBufferOutputStream(buffer)) {
-			out.writeUTF(command);
-			for (String arg : args) {
-				out.writeUTF(arg);
-			}
-		} catch (IOException e) {
-			throw new RuntimeException(e);
+		List<String> segments = new ArrayList<>();
+		segments.add(command);
+		for (String arg : args) {
+			segments.add(arg);
 		}
-		send(new StackdPacket(MessageCodes.C2S_CONSOLE_INPUT, buffer, false));
+		send(new ConsoleInput(ImmutableList.copyOf(segments)));
 	}
 
 	/**
@@ -318,14 +322,7 @@ public class StackdProtocolClient {
 	 * @param orientation the player's orientation
 	 */
 	public void sendPositionUpdate(ReadableVector3d position, ReadableEulerAngles orientation) {
-		StackdPacket packet = new StackdPacket(MessageCodes.C2S_UPDATE_POSITION, 40);
-		ChannelBuffer buffer = packet.getBuffer();
-		buffer.writeDouble(position.getX());
-		buffer.writeDouble(position.getY());
-		buffer.writeDouble(position.getZ());
-		buffer.writeDouble(orientation.getHorizontalAngle());
-		buffer.writeDouble(orientation.getVerticalAngle());
-		send(packet);
+		send(new UpdatePosition(position, orientation));
 	}
 
 	/**
@@ -336,15 +333,7 @@ public class StackdProtocolClient {
 	 * to the main game thread!
 	 */
 	protected void onReady() {
-
-		// send the "resume player" packet
-		ChannelBuffer buffer = ChannelBuffers.dynamicBuffer();
-		buffer.writeZero(StackdPacket.HEADER_SIZE);
-		byte[] tokenBytes = AccountApiClient.getInstance().getPlayerAccessToken().getBytes(StandardCharsets.UTF_8);
-		buffer.writeInt(tokenBytes.length);
-		buffer.writeBytes(tokenBytes);
-		send(new StackdPacket(MessageCodes.C2S_RESUME_PLAYER, buffer, false));
-
+		send(new ResumePlayer(AccountApiClient.getInstance().getPlayerAccessToken().getBytes(StandardCharsets.UTF_8)));
 	}
 
 	/**
@@ -529,12 +518,7 @@ public class StackdProtocolClient {
 	 * @param z the z position of the cube
 	 */
 	public void sendDigNotification(int x, int y, int z) {
-		StackdPacket packet = new StackdPacket(MessageCodes.C2S_DIG_NOTIFICATION, 13);
-		ChannelBuffer buffer = packet.getBuffer();
-		buffer.writeInt(x);
-		buffer.writeInt(y);
-		buffer.writeInt(z);
-		send(packet);
+		send(new DigNotification(new Vector3i(x, y, z)));
 	}
 
 	/**

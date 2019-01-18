@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 
+import name.martingeisse.miner.common.network.message.Message;
 import name.martingeisse.miner.common.network.message.MessageCodes;
 import name.martingeisse.miner.common.network.StackdPacket;
 import org.apache.log4j.Logger;
@@ -76,10 +77,13 @@ public class StackdSession {
 	 */
 	public final void sendPacketDestructive(StackdPacket packet) {
 		logger.debug("server sent packet " + packet.getType());
-
 		channel.write(packet);
 	}
-	
+
+	public final void send(Message message) {
+		sendPacketDestructive(message.encodePacket());
+	}
+
 	/**
 	 * Sends a flash message to the client that owns this session.
 	 * @param message the message
