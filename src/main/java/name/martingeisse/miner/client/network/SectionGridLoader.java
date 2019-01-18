@@ -21,6 +21,7 @@ import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.miner.common.geometry.SectionId;
 import name.martingeisse.miner.common.network.message.MessageCodes;
 import name.martingeisse.miner.common.network.StackdPacket;
+import name.martingeisse.miner.common.network.message.c2s.InteractiveSectionDataRequest;
 import name.martingeisse.miner.common.task.Task;
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -146,13 +147,8 @@ public final class SectionGridLoader {
 			if (missingSectionIds != null && !missingSectionIds.isEmpty()) {
 				final SectionId[] sectionIds = missingSectionIds.toArray(new SectionId[missingSectionIds.size()]);
 				for (SectionId sectionId : sectionIds) {
-					StackdPacket packet = new StackdPacket(MessageCodes.C2S_INTERACTIVE_SECTION_DATA_REQUEST, 12);
-					ChannelBuffer buffer = packet.getBuffer();
-					buffer.writeInt(sectionId.getX());
-					buffer.writeInt(sectionId.getY());
-					buffer.writeInt(sectionId.getZ());
 					logger.debug("requested render model update for section " + sectionId);
-					protocolClient.send(packet);
+					protocolClient.send(new InteractiveSectionDataRequest(sectionId).encodePacket());
 					anythingUpdated = true;
 				}
 			}
@@ -167,13 +163,8 @@ public final class SectionGridLoader {
 			if (missingSectionIds != null && !missingSectionIds.isEmpty()) {
 				final SectionId[] sectionIds = missingSectionIds.toArray(new SectionId[missingSectionIds.size()]);
 				for (SectionId sectionId : sectionIds) {
-					StackdPacket packet = new StackdPacket(MessageCodes.C2S_INTERACTIVE_SECTION_DATA_REQUEST, 12);
-					ChannelBuffer buffer = packet.getBuffer();
-					buffer.writeInt(sectionId.getX());
-					buffer.writeInt(sectionId.getY());
-					buffer.writeInt(sectionId.getZ());
 					logger.debug("requested collider update for section " + sectionId);
-					protocolClient.send(packet);
+					protocolClient.send(new InteractiveSectionDataRequest(sectionId).encodePacket());
 					anythingUpdated = true;
 				}
 			}
@@ -189,14 +180,8 @@ public final class SectionGridLoader {
 	 * @param sectionId the ID of the section to reload
 	 */
 	public void reloadSection(SectionId sectionId) {
-		
 		// TODO check distance; adjust data type; fetch at all?
-		StackdPacket packet = new StackdPacket(MessageCodes.C2S_INTERACTIVE_SECTION_DATA_REQUEST, 12);
-		ChannelBuffer buffer = packet.getBuffer();
-		buffer.writeInt(sectionId.getX());
-		buffer.writeInt(sectionId.getY());
-		buffer.writeInt(sectionId.getZ());
-		protocolClient.send(packet);
+		protocolClient.send(new InteractiveSectionDataRequest(sectionId).encodePacket());
 	}
 	
 	/**
