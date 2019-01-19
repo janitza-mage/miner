@@ -8,6 +8,7 @@ package name.martingeisse.miner.server;
 
 import name.martingeisse.miner.server.game.InventoryAccess;
 import name.martingeisse.miner.server.game.ItemType;
+import name.martingeisse.miner.server.network.StackdSession;
 
 /**
  * Helper class to process the command line.
@@ -17,7 +18,7 @@ public final class MinerConsoleCommandLineParser {
 	/**
 	 * the session
 	 */
-	private final MinerSession session;
+	private final StackdSession session;
 	
 	/**
 	 * the arguments
@@ -34,7 +35,7 @@ public final class MinerConsoleCommandLineParser {
 	 * @param session the session to use for error output
 	 * @param arguments the command-line arguments
 	 */
-	public MinerConsoleCommandLineParser(MinerSession session, String[] arguments) {
+	public MinerConsoleCommandLineParser(StackdSession session, String[] arguments) {
 		this.session = session;
 		this.arguments = arguments;
 		this.position = 0;

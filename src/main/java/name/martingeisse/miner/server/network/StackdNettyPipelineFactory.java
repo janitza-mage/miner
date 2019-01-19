@@ -14,21 +14,19 @@ import org.jboss.netty.channel.Channels;
 
 /**
  * Creates a handler pipeline for newly connected clients.
- *
- * @param <S> the session type
  */
-public class StackdNettyPipelineFactory<S extends StackdSession> implements ChannelPipelineFactory {
+public class StackdNettyPipelineFactory implements ChannelPipelineFactory {
 
 	/**
 	 * the server
 	 */
-	private final StackdServer<S> server;
+	private final StackdServer server;
 	
 	/**
 	 * Constructor.
 	 * @param server the application server
 	 */
-	public StackdNettyPipelineFactory(StackdServer<S> server) {
+	public StackdNettyPipelineFactory(StackdServer server) {
 		this.server = server;
 	}
 
@@ -40,7 +38,7 @@ public class StackdNettyPipelineFactory<S extends StackdSession> implements Chan
 	public ChannelPipeline getPipeline() {
 		ChannelHandler frameCodec = StackdPacketCodec.createFrameCodec();
 		ChannelHandler packetCodec = new StackdPacketCodec();
-		ChannelHandler applicationHandler = new StackdApplicationHandler<S>(server);
+		ChannelHandler applicationHandler = new StackdApplicationHandler(server);
 		return Channels.pipeline(frameCodec, packetCodec, applicationHandler);
 	}
 	

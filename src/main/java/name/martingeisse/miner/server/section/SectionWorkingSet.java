@@ -49,7 +49,7 @@ public final class SectionWorkingSet {
 	/**
 	 * the server
 	 */
-	private final StackdServer<?> server;
+	private final StackdServer server;
 
 	/**
 	 * the storage
@@ -66,7 +66,7 @@ public final class SectionWorkingSet {
 	 * @param server the server that uses this storage
 	 * @param storageFolder the storage folder to use for actually storing sections
 	 */
-	public SectionWorkingSet(final StackdServer<?> server, final AbstractSectionStorage storageFolder) {
+	public SectionWorkingSet(final StackdServer server, final AbstractSectionStorage storageFolder) {
 		this.server = server;
 		this.storage = storageFolder;
 		this.cache = CacheBuilder.newBuilder().maximumSize(1000).build(new CacheLoader<SectionDataId, SectionDataCacheEntry>() {
@@ -106,7 +106,7 @@ public final class SectionWorkingSet {
 	 * Getter method for the server.
 	 * @return the server
 	 */
-	public StackdServer<?> getServer() {
+	public StackdServer getServer() {
 		return server;
 	}
 

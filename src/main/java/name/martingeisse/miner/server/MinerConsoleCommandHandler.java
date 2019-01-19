@@ -10,31 +10,30 @@ import name.martingeisse.miner.server.console.IConsoleCommandHandler;
 import name.martingeisse.miner.server.entities.PlayerInventorySlot;
 import name.martingeisse.miner.server.game.InventoryAccess;
 import name.martingeisse.miner.server.game.ItemType;
+import name.martingeisse.miner.server.network.StackdServer;
+import name.martingeisse.miner.server.network.StackdSession;
 
 /**
  * Console command handler.
  */
-public class MinerConsoleCommandHandler implements IConsoleCommandHandler<MinerSession> {
+public class MinerConsoleCommandHandler implements IConsoleCommandHandler {
 
 	/**
 	 * the server
 	 */
-	private final MinerServer server;
+	private final StackdServer server;
 
 	/**
 	 * Constructor.
 	 *
 	 * @param server the server
 	 */
-	public MinerConsoleCommandHandler(final MinerServer server) {
+	public MinerConsoleCommandHandler(final StackdServer server) {
 		this.server = server;
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.server.console.IConsoleCommandHandler#handleCommand(name.martingeisse.stackd.server.network.StackdSession, java.lang.String, java.lang.String[])
-	 */
 	@Override
-	public void handleCommand(final MinerSession session, final String command, final String[] arguments) {
+	public void handleCommand(final StackdSession session, final String command, final String[] arguments) {
 		final MinerConsoleCommandLineParser parser = new MinerConsoleCommandLineParser(session, arguments);
 		final InventoryAccess inventoryAccess = new InventoryAccess(session.getPlayerId());
 		final ItemType[] itemTypes = ItemType.values();

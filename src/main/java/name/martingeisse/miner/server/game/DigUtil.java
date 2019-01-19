@@ -8,9 +8,9 @@ package name.martingeisse.miner.server.game;
 
 import com.querydsl.sql.dml.SQLUpdateClause;
 import name.martingeisse.miner.server.Databases;
-import name.martingeisse.miner.server.MinerSession;
 import name.martingeisse.miner.server.entities.Player;
 import name.martingeisse.miner.server.entities.QPlayer;
+import name.martingeisse.miner.server.network.StackdSession;
 import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
 import org.apache.log4j.Logger;
 
@@ -36,7 +36,7 @@ public final class DigUtil {
 	 * @param z the z position of the cube
 	 * @param cubeType the cube type dug away
 	 */
-	public static void onCubeDugAway(MinerSession session, int x, int y, int z, byte cubeType) {
+	public static void onCubeDugAway(StackdSession session, int x, int y, int z, byte cubeType) {
 		logger.info("dug cube: " + cubeType);
 
 		// check for ores
@@ -84,7 +84,7 @@ public final class DigUtil {
 
 	}
 
-	private static void oreFound(MinerSession session, String name, int value) {
+	private static void oreFound(StackdSession session, String name, int value) {
 		QPlayer qp = QPlayer.Player;
 		try (PostgresConnection connection = Databases.main.newConnection()) {
 			Player player = connection.query().select(qp).from(qp).where(qp.id.eq(session.getPlayerId())).fetchFirst();

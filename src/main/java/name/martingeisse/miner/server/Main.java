@@ -17,6 +17,7 @@ import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.task.TaskSystem;
 import name.martingeisse.miner.server.api.account.AccountApiHandler;
 import name.martingeisse.miner.server.network.StackdNettyPipelineFactory;
+import name.martingeisse.miner.server.network.StackdServer;
 import name.martingeisse.miner.server.util.database.postgres.PostgresService;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.ChannelFactory;
@@ -54,10 +55,10 @@ public class Main {
 		new Thread() {
 			@Override
 			public void run() {
-				MinerServer minerServer = new MinerServer();
+				StackdServer server = new StackdServer();
 				final ChannelFactory factory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 				final ServerBootstrap bootstrap = new ServerBootstrap(factory);
-				bootstrap.setPipelineFactory(new StackdNettyPipelineFactory<MinerSession>(minerServer));
+				bootstrap.setPipelineFactory(new StackdNettyPipelineFactory(server));
 				bootstrap.setOption("child.tcpNoDelay", true);
 				bootstrap.setOption("child.keepAlive", true);
 				bootstrap.bind(new InetSocketAddress(Constants.NETWORK_PORT));

@@ -18,7 +18,7 @@ import org.jboss.netty.channel.*;
  *
  * @param <S> the session type
  */
-final class StackdApplicationHandler<S extends StackdSession> extends SimpleChannelHandler {
+final class StackdApplicationHandler extends SimpleChannelHandler {
 
 	/**
 	 * the logger
@@ -28,18 +28,18 @@ final class StackdApplicationHandler<S extends StackdSession> extends SimpleChan
 	/**
 	 * the server
 	 */
-	private final StackdServer<S> server;
+	private final StackdServer server;
 	
 	/**
 	 * the session
 	 */
-	private S session = null;
+	private StackdSession session = null;
 	
 	/**
 	 * Constructor.
 	 * @param server the server
 	 */
-	public StackdApplicationHandler(final StackdServer<S> server) {
+	public StackdApplicationHandler(final StackdServer server) {
 		this.server = server;
 	}
 	

@@ -9,10 +9,10 @@ package name.martingeisse.miner.server.game;
 import com.querydsl.sql.dml.SQLInsertClause;
 import com.querydsl.sql.dml.SQLUpdateClause;
 import name.martingeisse.miner.server.Databases;
-import name.martingeisse.miner.server.MinerSession;
 import name.martingeisse.miner.server.entities.Player;
 import name.martingeisse.miner.server.entities.QPlayer;
 import name.martingeisse.miner.server.entities.QPlayerAwardedAchievement;
+import name.martingeisse.miner.server.network.StackdSession;
 import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
 
 /**
@@ -39,7 +39,7 @@ public class AchievementUtil {
 	 * @return true if successfully awarded, false if the player had already
 	 * been awarded this achievement (or if no player was loaded)
 	 */
-	public static boolean awardAchievment(MinerSession session, String achievementCode) {
+	public static boolean awardAchievment(StackdSession session, String achievementCode) {
 		if (session.getPlayerId() == null) {
 			return false;
 		}
@@ -53,7 +53,7 @@ public class AchievementUtil {
 	}
 
 	/**
-	 * Like {@link #awardAchievment(MinerSession, String)}, but also sends a message to
+	 * Like {@link #awardAchievment(StackdSession, String)}, but also sends a message to
 	 * the client if the achievment was successfully awarded and assigns some bonus
 	 * coins to the player.
 	 *
@@ -64,7 +64,7 @@ public class AchievementUtil {
 	 * @return true if successfully awarded, false if the player had already
 	 * been awarded this achievement
 	 */
-	public static boolean awardAchievment(MinerSession session, String achievementCode, String description, int reward) {
+	public static boolean awardAchievment(StackdSession session, String achievementCode, String description, int reward) {
 		boolean success = awardAchievment(session, achievementCode);
 		if (success) {
 			session.sendFlashMessage("Achievement Unlocked: " + description + "(reward: " + reward + " coins)");

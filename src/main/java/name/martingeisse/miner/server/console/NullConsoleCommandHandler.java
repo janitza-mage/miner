@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -10,16 +10,10 @@ import name.martingeisse.miner.server.network.StackdSession;
 
 /**
  * Ignores all commands.
- * 
- * @param <S> the session type
  */
-public final class NullConsoleCommandHandler<S extends StackdSession> implements IConsoleCommandHandler<S> {
+public final class NullConsoleCommandHandler implements IConsoleCommandHandler {
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.server.console.ICommandHandler#handleCommand(name.martingeisse.stackd.server.network.StackdSession, java.lang.String, java.lang.String[])
-	 */
-	@Override
-	public void handleCommand(S session, String command, String[] args) {
+	public void handleCommand(StackdSession session, String command, String[] args) {
 	}
 
 }
