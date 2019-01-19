@@ -1,13 +1,10 @@
 package name.martingeisse.miner.common.network.message.c2s;
 
 import com.google.common.collect.ImmutableList;
-import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.network.message.BufferUtil;
 import name.martingeisse.miner.common.network.message.Message;
 import name.martingeisse.miner.common.network.message.MessageDecodingException;
-import name.martingeisse.miner.common.network.message.MessageTypeRegistry;
 import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 
 /**
  * This packet contains a console command to be executed by the server, encoded as a sequence of strings.
@@ -25,11 +22,13 @@ public final class ConsoleInput extends Message {
 	}
 
 	@Override
-	public StackdPacket encodePacket() {
-		ChannelBuffer buffer = ChannelBuffers.dynamicBuffer();
-		buffer.writeZero(StackdPacket.HEADER_SIZE);
+	protected int getPacketBodySize() {
+		return -1;
+	}
+
+	@Override
+	protected void encodeBody(ChannelBuffer buffer) {
 		BufferUtil.encodeList(segments, BufferUtil::encodeString, buffer);
-		return new StackdPacket(MessageTypeRegistry.INSTANCE.getCodeForClass(getClass()), buffer, false);
 	}
 
 	public static ConsoleInput decodeBody(ChannelBuffer buffer) throws MessageDecodingException {

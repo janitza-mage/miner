@@ -5,13 +5,10 @@
 package name.martingeisse.miner.common.network.message.s2c;
 
 import com.google.common.collect.ImmutableList;
-import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.network.message.BufferUtil;
 import name.martingeisse.miner.common.network.message.Message;
 import name.martingeisse.miner.common.network.message.MessageDecodingException;
-import name.martingeisse.miner.common.network.message.MessageTypeRegistry;
 import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 
 /**
  *
@@ -29,11 +26,13 @@ public final class PlayerNamesUpdate extends Message {
 	}
 
 	@Override
-	public StackdPacket encodePacket() {
-		ChannelBuffer buffer = ChannelBuffers.dynamicBuffer();
-		buffer.writeZero(StackdPacket.HEADER_SIZE);
+	protected int getPacketBodySize() {
+		return -1;
+	}
+
+	@Override
+	protected void encodeBody(ChannelBuffer buffer) {
 		BufferUtil.encodeList(elements, Element::encode, buffer);
-		return new StackdPacket(MessageTypeRegistry.INSTANCE.getCodeForClass(getClass()), buffer, false);
 	}
 
 	public static PlayerNamesUpdate decodeBody(ChannelBuffer buffer) throws MessageDecodingException {

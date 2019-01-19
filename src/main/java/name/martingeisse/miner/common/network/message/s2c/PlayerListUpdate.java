@@ -7,11 +7,9 @@ package name.martingeisse.miner.common.network.message.s2c;
 import com.google.common.collect.ImmutableList;
 import name.martingeisse.miner.common.geometry.angle.EulerAngles;
 import name.martingeisse.miner.common.geometry.vector.Vector3d;
-import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.network.message.BufferUtil;
 import name.martingeisse.miner.common.network.message.Message;
 import name.martingeisse.miner.common.network.message.MessageDecodingException;
-import name.martingeisse.miner.common.network.message.MessageTypeRegistry;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -30,10 +28,13 @@ public final class PlayerListUpdate extends Message {
 	}
 
 	@Override
-	public StackdPacket encodePacket() {
-		StackdPacket packet = new StackdPacket(MessageTypeRegistry.INSTANCE.getCodeForClass(getClass()), BufferUtil.computeEncodedListSize(elements, Element.ENCODED_SIZE));
-		BufferUtil.encodeList(elements, Element::encode, packet.getBuffer());
-		return packet;
+	protected int getPacketBodySize() {
+		return BufferUtil.computeEncodedListSize(elements, Element.ENCODED_SIZE);
+	}
+
+	@Override
+	protected void encodeBody(ChannelBuffer buffer) {
+		BufferUtil.encodeList(elements, Element::encode, buffer);
 	}
 
 	public static PlayerListUpdate decodeBody(ChannelBuffer buffer) throws MessageDecodingException {

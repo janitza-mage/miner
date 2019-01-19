@@ -2,13 +2,10 @@ package name.martingeisse.miner.common.network.message.c2s;
 
 import com.google.common.collect.ImmutableList;
 import name.martingeisse.miner.common.geometry.vector.Vector3i;
-import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.network.message.BufferUtil;
 import name.martingeisse.miner.common.network.message.Message;
 import name.martingeisse.miner.common.network.message.MessageDecodingException;
-import name.martingeisse.miner.common.network.message.MessageTypeRegistry;
 import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +26,13 @@ public final class CubeModification extends Message {
 	}
 
 	@Override
-	public StackdPacket encodePacket() {
-		ChannelBuffer buffer = ChannelBuffers.dynamicBuffer();
-		buffer.writeZero(StackdPacket.HEADER_SIZE);
+	protected int getPacketBodySize() {
+		return -1;
+	}
+
+	@Override
+	protected void encodeBody(ChannelBuffer buffer) {
 		BufferUtil.encodeImplicitSizeList(elements, Element::encode, buffer);
-		return new StackdPacket(MessageTypeRegistry.INSTANCE.getCodeForClass(getClass()), buffer, false);
 	}
 
 	public static CubeModification decodeBody(ChannelBuffer buffer) throws MessageDecodingException {

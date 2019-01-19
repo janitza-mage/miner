@@ -8,10 +8,8 @@ import name.martingeisse.miner.common.geometry.angle.EulerAngles;
 import name.martingeisse.miner.common.geometry.angle.ReadableEulerAngles;
 import name.martingeisse.miner.common.geometry.vector.ReadableVector3d;
 import name.martingeisse.miner.common.geometry.vector.Vector3d;
-import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.network.message.Message;
 import name.martingeisse.miner.common.network.message.MessageDecodingException;
-import name.martingeisse.miner.common.network.message.MessageTypeRegistry;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -36,12 +34,14 @@ public final class UpdatePosition extends Message {
 	}
 
 	@Override
-	public StackdPacket encodePacket() {
-		StackdPacket packet = new StackdPacket(MessageTypeRegistry.INSTANCE.getCodeForClass(getClass()), Vector3d.ENCODED_SIZE + EulerAngles.ENCODED_SIZE);
-		ChannelBuffer buffer = packet.getBuffer();
+	protected int getPacketBodySize() {
+		return Vector3d.ENCODED_SIZE + EulerAngles.ENCODED_SIZE;
+	}
+
+	@Override
+	protected void encodeBody(ChannelBuffer buffer) {
 		position.encode(buffer);
 		orientation.encode(buffer);
-		return packet;
 	}
 
 	public static UpdatePosition decodeBody(ChannelBuffer buffer) throws MessageDecodingException {

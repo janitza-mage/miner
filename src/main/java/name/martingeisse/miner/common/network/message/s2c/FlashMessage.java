@@ -4,10 +4,8 @@
  */
 package name.martingeisse.miner.common.network.message.s2c;
 
-import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.network.message.Message;
 import name.martingeisse.miner.common.network.message.MessageDecodingException;
-import name.martingeisse.miner.common.network.message.MessageTypeRegistry;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 import java.nio.charset.StandardCharsets;
@@ -28,11 +26,13 @@ public final class FlashMessage extends Message {
 	}
 
 	@Override
-	public StackdPacket encodePacket() {
-		byte[] messageBytes = text.getBytes(StandardCharsets.UTF_8);
-		StackdPacket packet = new StackdPacket(MessageTypeRegistry.INSTANCE.getCodeForClass(getClass()), messageBytes.length);
-		packet.getBuffer().writeBytes(messageBytes);
-		return packet;
+	protected int getPacketBodySize() {
+		return -1;
+	}
+
+	@Override
+	protected void encodeBody(ChannelBuffer buffer) {
+		buffer.writeBytes(text.getBytes(StandardCharsets.UTF_8));
 	}
 
 	public static FlashMessage decodeBody(ChannelBuffer buffer) throws MessageDecodingException {

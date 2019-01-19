@@ -27,10 +27,13 @@ public final class DigNotification extends Message {
 	}
 
 	@Override
-	public StackdPacket encodePacket() {
-		StackdPacket packet = new StackdPacket(MessageTypeRegistry.INSTANCE.getCodeForClass(getClass()), Vector3i.ENCODED_SIZE);
-		position.encode(packet.getBuffer());
-		return packet;
+	protected int getPacketBodySize() {
+		return Vector3i.ENCODED_SIZE;
+	}
+
+	@Override
+	protected void encodeBody(ChannelBuffer buffer) {
+		position.encode(buffer);
 	}
 
 	public static DigNotification decodeBody(ChannelBuffer buffer) throws MessageDecodingException {

@@ -5,10 +5,8 @@
 package name.martingeisse.miner.common.network.message.c2s;
 
 import name.martingeisse.miner.common.geometry.SectionId;
-import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.network.message.Message;
 import name.martingeisse.miner.common.network.message.MessageDecodingException;
-import name.martingeisse.miner.common.network.message.MessageTypeRegistry;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -27,10 +25,13 @@ public final class InteractiveSectionDataRequest extends Message {
 	}
 
 	@Override
-	public StackdPacket encodePacket() {
-		StackdPacket packet = new StackdPacket(MessageTypeRegistry.INSTANCE.getCodeForClass(getClass()), SectionId.ENCODED_SIZE);
-		sectionId.encode(packet.getBuffer());
-		return packet;
+	protected int getPacketBodySize() {
+		return SectionId.ENCODED_SIZE;
+	}
+
+	@Override
+	protected void encodeBody(ChannelBuffer buffer) {
+		sectionId.encode(buffer);
 	}
 
 	public static InteractiveSectionDataRequest decodeBody(ChannelBuffer buffer) throws MessageDecodingException {

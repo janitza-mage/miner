@@ -5,6 +5,8 @@
 package name.martingeisse.miner.common.network.message;
 
 import name.martingeisse.miner.common.network.StackdPacket;
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
 
 /**
  * Base class for all network messages. These messages carry data between client and server. They can be encoded and
@@ -18,6 +20,30 @@ public abstract class Message {
 	/**
 	 * Encodes this message to a new network packet.
 	 */
-	public abstract StackdPacket encodePacket();
+	public StackdPacket encodePacket() {
+		int messageCode = MessageTypeRegistry.INSTANCE.getCodeForClass(getClass());
+		int bodySize = getPacketBodySize();
+		if (bodySize < 0) {
+			ChannelBuffer buffer = ChannelBuffers.dynamicBuffer();
+			buffer.writeZero(StackdPacket.HEADER_SIZE);
+			encodeBody(buffer);
+			return new StackdPacket(messageCode, buffer, false);
+		} else {
+			StackdPacket packet = new StackdPacket(messageCode, bodySize);
+			encodeBody(packet.getBuffer());
+			return packet;
+		}
+	}
+
+	/**
+	 * Returns the packet body size, if known before actually encoding a packet, or a negative value to indicate that
+	 * the size can only be determined by actually encoding the packet and a dynamic buffer is therefore needed.
+	 */
+	protected abstract int getPacketBodySize();
+
+	/**
+	 * Encodes the packet body to the specified buffer.
+	 */
+	protected abstract void encodeBody(ChannelBuffer buffer);
 
 }

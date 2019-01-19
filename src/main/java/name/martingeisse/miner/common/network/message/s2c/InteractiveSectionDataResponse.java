@@ -5,12 +5,9 @@
 package name.martingeisse.miner.common.network.message.s2c;
 
 import name.martingeisse.miner.common.geometry.SectionId;
-import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.network.message.Message;
 import name.martingeisse.miner.common.network.message.MessageDecodingException;
-import name.martingeisse.miner.common.network.message.MessageTypeRegistry;
 import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 
 /**
  *
@@ -41,12 +38,14 @@ public final class InteractiveSectionDataResponse extends Message {
 	}
 
 	@Override
-	public StackdPacket encodePacket() {
-		ChannelBuffer buffer = ChannelBuffers.dynamicBuffer();
-		buffer.writeZero(StackdPacket.HEADER_SIZE);
+	protected int getPacketBodySize() {
+		return -1;
+	}
+
+	@Override
+	protected void encodeBody(ChannelBuffer buffer) {
 		sectionId.encode(buffer);
 		buffer.writeBytes(data);
-		return new StackdPacket(MessageTypeRegistry.INSTANCE.getCodeForClass(getClass()), buffer, false);
 	}
 
 	public static InteractiveSectionDataResponse decodeBody(ChannelBuffer buffer) throws MessageDecodingException {
