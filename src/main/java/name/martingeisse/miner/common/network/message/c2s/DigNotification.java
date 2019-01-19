@@ -7,8 +7,8 @@ package name.martingeisse.miner.common.network.message.c2s;
 import name.martingeisse.miner.common.geometry.vector.Vector3i;
 import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.network.message.Message;
-import name.martingeisse.miner.common.network.message.MessageCodes;
 import name.martingeisse.miner.common.network.message.MessageDecodingException;
+import name.martingeisse.miner.common.network.message.MessageTypeRegistry;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -28,7 +28,7 @@ public final class DigNotification extends Message {
 
 	@Override
 	public StackdPacket encodePacket() {
-		StackdPacket packet = new StackdPacket(MessageCodes.C2S_DIG_NOTIFICATION, Vector3i.ENCODED_SIZE);
+		StackdPacket packet = new StackdPacket(MessageTypeRegistry.INSTANCE.getCodeForClass(getClass()), Vector3i.ENCODED_SIZE);
 		position.encode(packet.getBuffer());
 		return packet;
 	}

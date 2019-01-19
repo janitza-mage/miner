@@ -5,8 +5,8 @@ import name.martingeisse.miner.common.geometry.vector.Vector3i;
 import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.network.message.BufferUtil;
 import name.martingeisse.miner.common.network.message.Message;
-import name.martingeisse.miner.common.network.message.MessageCodes;
 import name.martingeisse.miner.common.network.message.MessageDecodingException;
+import name.martingeisse.miner.common.network.message.MessageTypeRegistry;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
@@ -33,7 +33,7 @@ public final class CubeModification extends Message {
 		ChannelBuffer buffer = ChannelBuffers.dynamicBuffer();
 		buffer.writeZero(StackdPacket.HEADER_SIZE);
 		BufferUtil.encodeImplicitSizeList(elements, Element::encode, buffer);
-		return new StackdPacket(MessageCodes.C2S_CUBE_MODIFICATION, buffer, false);
+		return new StackdPacket(MessageTypeRegistry.INSTANCE.getCodeForClass(getClass()), buffer, false);
 	}
 
 	public static CubeModification decodeBody(ChannelBuffer buffer) throws MessageDecodingException {

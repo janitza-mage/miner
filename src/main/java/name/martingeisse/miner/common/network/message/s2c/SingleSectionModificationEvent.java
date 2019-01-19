@@ -3,8 +3,8 @@ package name.martingeisse.miner.common.network.message.s2c;
 import name.martingeisse.miner.common.geometry.SectionId;
 import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.network.message.Message;
-import name.martingeisse.miner.common.network.message.MessageCodes;
 import name.martingeisse.miner.common.network.message.MessageDecodingException;
+import name.martingeisse.miner.common.network.message.MessageTypeRegistry;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -28,7 +28,7 @@ public final class SingleSectionModificationEvent extends Message {
 
 	@Override
 	public StackdPacket encodePacket() {
-		StackdPacket packet = new StackdPacket(MessageCodes.S2C_SINGLE_SECTION_MODIFICATION_EVENT, SectionId.ENCODED_SIZE);
+		StackdPacket packet = new StackdPacket(MessageTypeRegistry.INSTANCE.getCodeForClass(getClass()), SectionId.ENCODED_SIZE);
 		ChannelBuffer buffer = packet.getBuffer();
 		sectionId.encode(buffer);
 		return packet;

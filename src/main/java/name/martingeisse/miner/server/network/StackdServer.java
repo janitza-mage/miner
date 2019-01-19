@@ -17,6 +17,7 @@ import name.martingeisse.miner.common.geometry.angle.EulerAngles;
 import name.martingeisse.miner.common.geometry.vector.Vector3d;
 import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.network.message.Message;
+import name.martingeisse.miner.common.network.message.MessageTypeRegistry;
 import name.martingeisse.miner.common.network.message.c2s.*;
 import name.martingeisse.miner.common.network.message.s2c.PlayerListUpdate;
 import name.martingeisse.miner.common.network.message.s2c.PlayerNamesUpdate;
@@ -271,7 +272,7 @@ public class StackdServer {
 	 * TODO should not dispatch directly but through a queue.
 	 */
 	final void onRawPacketReceived(final StackdSession session, final StackdPacket packet) throws Exception {
-		Message untypedMessage = Message.decodePacket(packet);
+		Message untypedMessage = MessageTypeRegistry.INSTANCE.decodePacket(packet);
 		if (untypedMessage instanceof CubeModification) {
 
 			CubeModification message = (CubeModification) untypedMessage;

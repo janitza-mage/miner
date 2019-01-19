@@ -21,6 +21,7 @@ import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.network.StackdPacketCodec;
 import name.martingeisse.miner.common.network.message.Message;
 import name.martingeisse.miner.common.network.message.MessageDecodingException;
+import name.martingeisse.miner.common.network.message.MessageTypeRegistry;
 import name.martingeisse.miner.common.network.message.c2s.ConsoleInput;
 import name.martingeisse.miner.common.network.message.c2s.DigNotification;
 import name.martingeisse.miner.common.network.message.c2s.ResumePlayer;
@@ -359,7 +360,7 @@ public class StackdProtocolClient {
 	 */
 	protected void onApplicationPacketReceived(StackdPacket packet) {
 		try {
-			Message untypedMessage = Message.decodePacket(packet);
+			Message untypedMessage = MessageTypeRegistry.INSTANCE.decodePacket(packet);
 			if (untypedMessage instanceof Hello) {
 
 				logger.debug("hello packet received");

@@ -6,8 +6,8 @@ package name.martingeisse.miner.common.network.message.c2s;
 
 import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.network.message.Message;
-import name.martingeisse.miner.common.network.message.MessageCodes;
 import name.martingeisse.miner.common.network.message.MessageDecodingException;
+import name.martingeisse.miner.common.network.message.MessageTypeRegistry;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -39,7 +39,7 @@ public final class ResumePlayer extends Message {
 
 	@Override
 	public StackdPacket encodePacket() {
-		StackdPacket packet = new StackdPacket(MessageCodes.C2S_RESUME_PLAYER, token.length + 2);
+		StackdPacket packet = new StackdPacket(MessageTypeRegistry.INSTANCE.getCodeForClass(getClass()), token.length + 2);
 		// Although the length may currently be derived from the packet size, the packet still
 		// contains the length explicitly so we can add other fields.
 		packet.getBuffer().writeShort(token.length);

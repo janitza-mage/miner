@@ -10,8 +10,8 @@ import name.martingeisse.miner.common.geometry.vector.Vector3d;
 import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.network.message.BufferUtil;
 import name.martingeisse.miner.common.network.message.Message;
-import name.martingeisse.miner.common.network.message.MessageCodes;
 import name.martingeisse.miner.common.network.message.MessageDecodingException;
+import name.martingeisse.miner.common.network.message.MessageTypeRegistry;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -31,7 +31,7 @@ public final class PlayerListUpdate extends Message {
 
 	@Override
 	public StackdPacket encodePacket() {
-		StackdPacket packet = new StackdPacket(MessageCodes.S2C_PLAYER_LIST_UPDATE, BufferUtil.computeEncodedListSize(elements, Element.ENCODED_SIZE));
+		StackdPacket packet = new StackdPacket(MessageTypeRegistry.INSTANCE.getCodeForClass(getClass()), BufferUtil.computeEncodedListSize(elements, Element.ENCODED_SIZE));
 		BufferUtil.encodeList(elements, Element::encode, packet.getBuffer());
 		return packet;
 	}

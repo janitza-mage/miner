@@ -6,8 +6,8 @@ package name.martingeisse.miner.common.network.message.s2c;
 
 import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.network.message.Message;
-import name.martingeisse.miner.common.network.message.MessageCodes;
 import name.martingeisse.miner.common.network.message.MessageDecodingException;
+import name.martingeisse.miner.common.network.message.MessageTypeRegistry;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
@@ -27,7 +27,7 @@ public final class UpdateCoins extends Message {
 
 	@Override
 	public StackdPacket encodePacket() {
-		StackdPacket packet = new StackdPacket(MessageCodes.S2C_UPDATE_COINS, 8);
+		StackdPacket packet = new StackdPacket(MessageTypeRegistry.INSTANCE.getCodeForClass(getClass()), 8);
 		ChannelBuffer buffer = packet.getBuffer();
 		buffer.writeLong(coins);
 		return packet;
