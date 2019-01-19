@@ -1,28 +1,25 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.miner.server.network;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-
-import name.martingeisse.miner.common.network.message.Message;
-import name.martingeisse.miner.common.network.message.MessageCodes;
+import com.google.common.collect.ImmutableList;
 import name.martingeisse.miner.common.network.StackdPacket;
+import name.martingeisse.miner.common.network.message.Message;
+import name.martingeisse.miner.common.network.message.s2c.ConsoleOutput;
+import name.martingeisse.miner.common.network.message.s2c.FlashMessage;
 import org.apache.log4j.Logger;
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBufferOutputStream;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
+
+import java.util.Collection;
 
 /**
  * Stores the data for one user session (currently associated with the connection,
  * but intended to service connection dropping and re-connecting).
- * 
+ *
  * Application code may subclass this class to add application-specific
  * per-session data.
  */
@@ -39,7 +36,7 @@ public class StackdSession {
 	 * the channel
 	 */
 	private final Channel channel;
-	
+
 	/**
 	 * Constructor.
 	 * @param id the session ID
@@ -57,7 +54,7 @@ public class StackdSession {
 	public final int getId() {
 		return id;
 	}
-	
+
 	/**
 	 * Getter method for the channel.
 	 * @return the channel
@@ -72,7 +69,7 @@ public class StackdSession {
 	 * (hence "destructive") since this method will assemble header
 	 * fields in the packet and alter its reader/writer index,
 	 * possibly asynchronous to the calling thread.
-	 * 
+	 *
 	 * @param packet the packet to send
 	 */
 	public final void sendPacketDestructive(StackdPacket packet) {
@@ -89,12 +86,9 @@ public class StackdSession {
 	 * @param message the message
 	 */
 	public final void sendFlashMessage(String message) {
-		byte[] messageBytes = message.getBytes(StandardCharsets.UTF_8);
-		StackdPacket packet = new StackdPacket(MessageCodes.S2C_FLASH_MESSAGE, messageBytes.length);
-		packet.getBuffer().writeBytes(messageBytes);
-		sendPacketDestructive(packet);
+		send(new FlashMessage(message));
 	}
-	
+
 	/**
 	 * Sends console output lines to the client.
 	 * @param lines the lines to send
@@ -110,19 +104,9 @@ public class StackdSession {
 	 * @param lines the lines to send
 	 */
 	public final void sendConsoleOutput(String... lines) {
-		if (lines.length == 0) {
-			return;
+		if (lines.length > 0) {
+			send(new ConsoleOutput(ImmutableList.copyOf(lines)));
 		}
-		ChannelBuffer buffer = ChannelBuffers.dynamicBuffer();
-		buffer.writeZero(StackdPacket.HEADER_SIZE);
-		try (ChannelBufferOutputStream out = new ChannelBufferOutputStream(buffer)) {
-			for (String line : lines) {
-				out.writeUTF(line);
-			}
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		sendPacketDestructive(new StackdPacket(MessageCodes.S2C_CONSOLE_OUTPUT, buffer, false));
 	}
-	
+
 }

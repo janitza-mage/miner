@@ -8,8 +8,7 @@ package name.martingeisse.miner.server.section;
 
 import com.google.common.collect.ImmutableMap;
 import name.martingeisse.miner.common.geometry.SectionId;
-import name.martingeisse.miner.common.network.StackdPacket;
-import name.martingeisse.miner.common.network.message.MessageCodes;
+import name.martingeisse.miner.common.network.message.s2c.InteractiveSectionDataResponse;
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.common.task.Task;
@@ -17,7 +16,6 @@ import name.martingeisse.miner.server.network.StackdServer;
 import name.martingeisse.miner.server.network.StackdSession;
 import name.martingeisse.miner.server.section.entry.SectionDataCacheEntry;
 import org.apache.log4j.Logger;
-import org.jboss.netty.buffer.ChannelBuffer;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -127,14 +125,8 @@ public final class SectionToClientShipper {
 			throw new RuntimeException(getClass() + " only supports INTERACTIVE section data");
 		}
 		final byte[] data = cacheEntry.getDataForClient();
-		final StackdPacket response = new StackdPacket(MessageCodes.S2C_INTERACTIVE_SECTION_DATA_RESPONSE, data.length + 12);
-		ChannelBuffer buffer = response.getBuffer();
-		buffer.writeInt(sectionId.getX());
-		buffer.writeInt(sectionId.getY());
-		buffer.writeInt(sectionId.getZ());
-		buffer.writeBytes(data);
 		logger.debug("SERVER sending section data: " + sectionDataId + " (" + data.length + " bytes)");
-		session.sendPacketDestructive(response);
+		session.send(new InteractiveSectionDataResponse(sectionId, data));
 		logger.debug("SERVER sent section data: " + sectionDataId + " (" + data.length + " bytes)");
 		total += data.length;
 		logger.debug("SERVER total section data sent: " + total);

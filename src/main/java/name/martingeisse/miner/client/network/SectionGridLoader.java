@@ -17,6 +17,8 @@ import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.miner.common.geometry.SectionId;
 import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.network.message.c2s.InteractiveSectionDataRequest;
+import name.martingeisse.miner.common.network.message.s2c.InteractiveSectionDataResponse;
+import name.martingeisse.miner.common.network.message.s2c.SingleSectionModificationEvent;
 import name.martingeisse.miner.common.task.Task;
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -185,17 +187,14 @@ public final class SectionGridLoader {
 	}
 	
 	/**
-	 * Handles a "single interactive section image" packet that was received from the server.
-	 * @param packet the packet
+	 * Handles a single interactive section image that was received from the server.
 	 */
-	public void handleInteractiveSectionImagePacket(StackdPacket packet) {
+	public void handleInteractiveSectionImage(InteractiveSectionDataResponse response) {
 		
 		// read the section data from the packet
-		ChannelBuffer buffer = packet.getBuffer();
-		final SectionId sectionId = new SectionId(buffer.readInt(), buffer.readInt(), buffer.readInt());
+		final SectionId sectionId = response.getSectionId();
 		logger.debug("received interactive section image for section " + sectionId);
-		byte[] data = new byte[buffer.readableBytes()];
-		buffer.readBytes(data);
+		byte[] data = response.getData();
 		final Cubes cubes = Cubes.createFromCompressedData(workingSet.getClusterSize(), data);
 		logger.debug("created Cubes instance for section " + sectionId);
 		
@@ -234,14 +233,11 @@ public final class SectionGridLoader {
 	}
 	
 	/**
-	 * Handles a "single section modification event" packet that was received from the server.
+	 * Handles a single section modification event that was received from the server.
 	 * Note that such packets are ignored here until the player's position has been set.
-	 * @param packet the packet
 	 */
-	public void handleModificationEventPacket(StackdPacket packet) {
-		ChannelBuffer buffer = packet.getBuffer();
-		final SectionId sectionId = new SectionId(buffer.readInt(), buffer.readInt(), buffer.readInt());
-		reloadSection(sectionId);
+	public void handleModificationEvent(SingleSectionModificationEvent event) {
+		reloadSection(event.getSectionId());
 	}
 
 	/**

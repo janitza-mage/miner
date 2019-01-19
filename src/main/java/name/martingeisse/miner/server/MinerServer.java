@@ -10,15 +10,17 @@ import com.google.common.collect.ImmutableList;
 import name.martingeisse.common.SecurityTokenUtil;
 import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.cubetype.CubeTypes;
-import name.martingeisse.miner.common.geometry.angle.EulerAngles;
-import name.martingeisse.miner.common.geometry.vector.Vector3d;
-import name.martingeisse.miner.common.network.message.MessageCodes;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.SectionId;
+import name.martingeisse.miner.common.geometry.angle.EulerAngles;
+import name.martingeisse.miner.common.geometry.vector.Vector3d;
+import name.martingeisse.miner.common.network.StackdPacket;
+import name.martingeisse.miner.common.network.message.MessageCodes;
 import name.martingeisse.miner.common.network.message.s2c.PlayerListUpdate;
+import name.martingeisse.miner.common.network.message.s2c.PlayerNamesUpdate;
+import name.martingeisse.miner.common.network.message.s2c.SingleSectionModificationEvent;
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
-import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.server.entities.Player;
 import name.martingeisse.miner.server.entities.QPlayer;
 import name.martingeisse.miner.server.game.DigUtil;
@@ -29,7 +31,6 @@ import name.martingeisse.miner.server.terrain.TerrainGenerator;
 import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.joda.time.Instant;
 
@@ -251,12 +252,7 @@ public class MinerServer extends StackdServer<MinerSession> {
 	 */
 	public void notifyClientsAboutModifiedSections(SectionId... sectionIds) {
 		for (SectionId sectionId : sectionIds) {
-			StackdPacket packet = new StackdPacket(MessageCodes.S2C_SINGLE_SECTION_MODIFICATION_EVENT, 12);
-			ChannelBuffer buffer = packet.getBuffer();
-			buffer.writeInt(sectionId.getX());
-			buffer.writeInt(sectionId.getY());
-			buffer.writeInt(sectionId.getZ());
-			MinerServer.this.broadcast(packet);
+			broadcast(new SingleSectionModificationEvent(sectionId));
 		}
 	}
 
@@ -310,31 +306,14 @@ public class MinerServer extends StackdServer<MinerSession> {
 	 * The runnable is run regularly to tell the clients each other's names.
 	 */
 	private class PlayerNameUpdateSender extends TimerTask {
-
-		/* (non-Javadoc)
-		 * @see java.util.TimerTask#run()
-		 */
 		@Override
 		public void run() {
-
-			// assemble the buffer
-			ChannelBuffer buffer = ChannelBuffers.dynamicBuffer();
-			buffer.writeZero(StackdPacket.HEADER_SIZE);
+			List<PlayerNamesUpdate.Element> elements = new ArrayList<>();
 			for (MinerSession session : getSessions()) {
-				String name = session.getName();
-				buffer.writeInt(session.getId());
-				buffer.writeInt(name.length());
-				for (int i = 0; i < name.length(); i++) {
-					buffer.writeChar(name.charAt(i));
-				}
+				elements.add(new PlayerNamesUpdate.Element(session.getId(), session.getName()));
 			}
-
-			// wrap it in a packet and send it
-			StackdPacket packet = new StackdPacket(MessageCodes.S2C_PLAYER_NAMES_UPDATE, buffer, false);
-			broadcast(packet);
-
+			broadcast(new PlayerNamesUpdate(ImmutableList.copyOf(elements)));
 		}
-
 	}
 
 }

@@ -43,7 +43,7 @@ public final class PlayerNamesUpdate extends Message {
 		return new PlayerNamesUpdate(BufferUtil.decodeList(Element::decode, buffer));
 	}
 
-	private static final class Element {
+	public static final class Element {
 
 		private final int id;
 		private final String name;
