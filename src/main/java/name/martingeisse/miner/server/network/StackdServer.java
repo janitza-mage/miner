@@ -6,11 +6,14 @@
 
 package name.martingeisse.miner.server.network;
 
+import com.google.common.collect.ImmutableList;
 import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.geometry.SectionId;
 import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.network.message.Message;
 import name.martingeisse.miner.common.network.message.MessageCodes;
+import name.martingeisse.miner.common.network.message.c2s.ConsoleInput;
+import name.martingeisse.miner.common.network.message.c2s.CubeModification;
 import name.martingeisse.miner.common.network.message.c2s.InteractiveSectionDataRequest;
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
@@ -22,7 +25,6 @@ import name.martingeisse.miner.server.section.entry.SectionCubesCacheEntry;
 import name.martingeisse.miner.server.section.storage.AbstractSectionStorage;
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBufferInputStream;
 import org.jboss.netty.channel.Channel;
 
 import java.util.ArrayList;
@@ -238,39 +240,31 @@ public abstract class StackdServer<S extends StackdSession> {
 	 * TODO should not dispatch directly but through a queue.
 	 */
 	final void onRawPacketReceived(final S session, final StackdPacket packet) throws Exception {
-
-		// analyze the packet
-		ChannelBuffer buffer = packet.getBuffer();
 		switch (packet.getType()) {
 
 			case MessageCodes.C2S_CUBE_MODIFICATION: {
-
-				// process modifications
-				SectionWorkingSet sectionWorkingSet = getSectionWorkingSet();
+				CubeModification message = (CubeModification)Message.decodePacket(packet);
 				int shiftBits = sectionWorkingSet.getClusterSize().getShiftBits();
-				List<SectionId> affectedSectionIds = new ArrayList<SectionId>();
-				while (buffer.readable()) {
-					int x = buffer.readInt(), sectionX = (x >> shiftBits);
-					int y = buffer.readInt(), sectionY = (y >> shiftBits);
-					int z = buffer.readInt(), sectionZ = (z >> shiftBits);
-					byte newCubeType = (byte) buffer.readUnsignedByte();
+				List<SectionId> affectedSectionIds = new ArrayList<>();
+				for (CubeModification.Element element : message.getElements()) {
+					int x = element.getPosition().getX(), sectionX = (x >> shiftBits);
+					int y = element.getPosition().getY(), sectionY = (y >> shiftBits);
+					int z = element.getPosition().getZ(), sectionZ = (z >> shiftBits);
+					byte newCubeType = element.getCubeType ();
 					SectionId sectionId = new SectionId(sectionX, sectionY, sectionZ);
 					SectionDataId sectionDataId = new SectionDataId(sectionId, SectionDataType.DEFINITIVE);
 					SectionCubesCacheEntry sectionDataCacheEntry = (SectionCubesCacheEntry) sectionWorkingSet.get(sectionDataId);
 					sectionDataCacheEntry.setCubeAbsolute(x, y, z, newCubeType);
 					affectedSectionIds.add(sectionId);
 				}
-
-				// notify clients to update their render models
 				SectionId[] affectedSectionIdArray = affectedSectionIds.toArray(new SectionId[affectedSectionIds.size()]);
 				onSectionsModified(affectedSectionIdArray);
-
 				break;
 			}
 
 			case MessageCodes.C2S_INTERACTIVE_SECTION_DATA_REQUEST: {
-				InteractiveSectionDataRequest request = (InteractiveSectionDataRequest) Message.decodePacket(packet);
-				SectionId sectionId = request.getSectionId();
+				InteractiveSectionDataRequest message = (InteractiveSectionDataRequest) Message.decodePacket(packet);
+				SectionId sectionId = message.getSectionId();
 				SectionDataType type = SectionDataType.INTERACTIVE;
 				final SectionDataId dataId = new SectionDataId(sectionId, type);
 				logger.debug("SERVER received section data request: " + dataId);
@@ -279,17 +273,10 @@ public abstract class StackdServer<S extends StackdSession> {
 			}
 
 			case MessageCodes.C2S_CONSOLE_INPUT: {
-				List<String> segments = new ArrayList<String>();
-				try (ChannelBufferInputStream s = new ChannelBufferInputStream(buffer)) {
-					while (buffer.readable()) {
-						segments.add(s.readUTF());
-					}
-				}
-				if (segments.size() < 1) {
-					break;
-				}
-				String command = segments.remove(0);
-				String[] args = segments.toArray(new String[segments.size()]);
+				ConsoleInput message = (ConsoleInput)Message.decodePacket(packet);
+				ImmutableList<String> segments = message.getSegments();
+				String command = segments.get(0);
+				String[] args = segments.subList(1, segments.size()).toArray(new String[0]);
 				handleConsoleCommand(session, command, args);
 				break;
 			}

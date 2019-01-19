@@ -15,9 +15,15 @@ import name.martingeisse.miner.common.geometry.SectionId;
 import name.martingeisse.miner.common.geometry.angle.EulerAngles;
 import name.martingeisse.miner.common.geometry.vector.Vector3d;
 import name.martingeisse.miner.common.network.StackdPacket;
+import name.martingeisse.miner.common.network.message.Message;
 import name.martingeisse.miner.common.network.message.MessageCodes;
+import name.martingeisse.miner.common.network.message.MessageDecodingException;
+import name.martingeisse.miner.common.network.message.c2s.DigNotification;
+import name.martingeisse.miner.common.network.message.c2s.ResumePlayer;
+import name.martingeisse.miner.common.network.message.c2s.UpdatePosition;
 import name.martingeisse.miner.common.network.message.s2c.PlayerListUpdate;
 import name.martingeisse.miner.common.network.message.s2c.PlayerNamesUpdate;
+import name.martingeisse.miner.common.network.message.s2c.PlayerResumed;
 import name.martingeisse.miner.common.network.message.s2c.SingleSectionModificationEvent;
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
@@ -139,102 +145,102 @@ public class MinerServer extends StackdServer<MinerSession> {
 	 */
 	@Override
 	protected void onApplicationPacketReceived(MinerSession session, StackdPacket packet) {
-		ChannelBuffer buffer = packet.getBuffer();
-		switch (packet.getType()) {
+		try {
+			switch (packet.getType()) {
 
-			case MessageCodes.C2S_UPDATE_POSITION: {
-				session.setX(buffer.readDouble());
-				session.setY(buffer.readDouble());
-				session.setZ(buffer.readDouble());
-				session.setLeftAngle(buffer.readDouble());
-				session.setUpAngle(buffer.readDouble());
-				break;
-			}
+				case MessageCodes.C2S_UPDATE_POSITION: {
+					UpdatePosition message = (UpdatePosition) Message.decodePacket(packet);
+					session.setX(message.getPosition().x);
+					session.setY(message.getPosition().y);
+					session.setZ(message.getPosition().z);
+					session.setLeftAngle(message.getOrientation().horizontalAngle);
+					session.setUpAngle(message.getOrientation().verticalAngle);
+					break;
+				}
 
-			case MessageCodes.C2S_RESUME_PLAYER: {
-				byte[] tokenBytes = new byte[buffer.readInt()];
-				buffer.readBytes(tokenBytes);
-				String token = new String(tokenBytes, StandardCharsets.UTF_8);
-				String tokenSubject = SecurityTokenUtil.validateToken(token, new Instant(), MinerServerSecurityConstants.SECURITY_TOKEN_SECRET);
-				long playerId = Long.parseLong(tokenSubject);
+				case MessageCodes.C2S_RESUME_PLAYER: {
+					ResumePlayer message = (ResumePlayer)Message.decodePacket(packet);
 
-				Player player;
-				try (PostgresConnection connection = Databases.main.newConnection()) {
-					QPlayer qp = QPlayer.Player;
-					player = connection.query().select(qp).from(qp).where(qp.id.eq(playerId)).fetchOne();
-					if (player == null) {
-						throw new RuntimeException("player not found, id: " + playerId);
+					String token = new String(message.getToken(), StandardCharsets.UTF_8);
+					String tokenSubject = SecurityTokenUtil.validateToken(token, new Instant(), MinerServerSecurityConstants.SECURITY_TOKEN_SECRET);
+					long playerId = Long.parseLong(tokenSubject);
+
+					Player player;
+					try (PostgresConnection connection = Databases.main.newConnection()) {
+						QPlayer qp = QPlayer.Player;
+						player = connection.query().select(qp).from(qp).where(qp.id.eq(playerId)).fetchOne();
+						if (player == null) {
+							throw new RuntimeException("player not found, id: " + playerId);
+						}
 					}
+
+					session.setPlayerId(player.getId());
+					session.setName(player.getName());
+					session.setX(player.getX().doubleValue());
+					session.setY(player.getY().doubleValue());
+					session.setZ(player.getZ().doubleValue());
+					session.setLeftAngle(player.getLeftAngle().doubleValue());
+					session.setUpAngle(player.getUpAngle().doubleValue());
+					session.sendCoinsUpdate();
+
+					Vector3d position = new Vector3d(session.getX(), session.getY(), session.getZ());
+					EulerAngles orientation = new EulerAngles(session.getLeftAngle(), session.getUpAngle(), 0);
+					broadcast(new PlayerResumed(position, orientation));
+
+					break;
 				}
 
-				session.setPlayerId(player.getId());
-				session.setName(player.getName());
-				session.setX(player.getX().doubleValue());
-				session.setY(player.getY().doubleValue());
-				session.setZ(player.getZ().doubleValue());
-				session.setLeftAngle(player.getLeftAngle().doubleValue());
-				session.setUpAngle(player.getUpAngle().doubleValue());
-				session.sendCoinsUpdate();
+				case MessageCodes.C2S_DIG_NOTIFICATION: {
+					DigNotification message = (DigNotification)Message.decodePacket(packet);
 
-				StackdPacket responsePacket = new StackdPacket(MessageCodes.S2C_PLAYER_RESUMED, 40);
-				ChannelBuffer responseBuffer = responsePacket.getBuffer();
-				responseBuffer.writeDouble(session.getX());
-				responseBuffer.writeDouble(session.getY());
-				responseBuffer.writeDouble(session.getZ());
-				responseBuffer.writeDouble(session.getLeftAngle());
-				responseBuffer.writeDouble(session.getUpAngle());
-				broadcast(responsePacket);
-				break;
+					// determine the cube being dug away
+					int shiftBits = getSectionWorkingSet().getClusterSize().getShiftBits();
+					int x = message.getPosition().x, sectionX = (x >> shiftBits);
+					int y = message.getPosition().y, sectionY = (y >> shiftBits);
+					int z = message.getPosition().z, sectionZ = (z >> shiftBits);
+					SectionId id = new SectionId(sectionX, sectionY, sectionZ);
+					SectionCubesCacheEntry sectionDataCacheEntry = (SectionCubesCacheEntry) getSectionWorkingSet().get(new SectionDataId(id, SectionDataType.DEFINITIVE));
+					byte oldCubeType = sectionDataCacheEntry.getCubeAbsolute(x, y, z);
+
+					// determine whether digging is successful
+					boolean success;
+					if (oldCubeType == 1 || oldCubeType == 5 || oldCubeType == 15) {
+						success = true;
+					} else {
+						success = (new Random().nextInt(3) < 1);
+					}
+					if (!success) {
+						// TODO enable god mode -- digging always succeeds
+						// break;
+					}
+
+					// remove the cube and notify other clients
+					sectionDataCacheEntry.setCubeAbsolute(x, y, z, (byte) 0);
+
+					// TODO should not be necessary with auto-save
+					sectionDataCacheEntry.save();
+
+					// notify listeners
+					notifyClientsAboutModifiedSections(id);
+					for (AxisAlignedDirection neighborDirection : getSectionWorkingSet().getClusterSize().getBorderDirections(x, y, z)) {
+						notifyClientsAboutModifiedSections(id.getNeighbor(neighborDirection));
+					}
+
+					// trigger special logic (e.g. add a unit of ore to the player's inventory)
+					DigUtil.onCubeDugAway(session, x, y, z, oldCubeType);
+
+					break;
+				}
+
+				default: {
+					logger.error("unknown packet type: " + packet.getType());
+					break;
+				}
+
 			}
-
-			case MessageCodes.C2S_DIG_NOTIFICATION: {
-
-				// determine the cube being dug away
-				int shiftBits = getSectionWorkingSet().getClusterSize().getShiftBits();
-				int x = buffer.readInt(), sectionX = (x >> shiftBits);
-				int y = buffer.readInt(), sectionY = (y >> shiftBits);
-				int z = buffer.readInt(), sectionZ = (z >> shiftBits);
-				SectionId id = new SectionId(sectionX, sectionY, sectionZ);
-				SectionCubesCacheEntry sectionDataCacheEntry = (SectionCubesCacheEntry) getSectionWorkingSet().get(new SectionDataId(id, SectionDataType.DEFINITIVE));
-				byte oldCubeType = sectionDataCacheEntry.getCubeAbsolute(x, y, z);
-
-				// determine whether digging is successful
-				boolean success;
-				if (oldCubeType == 1 || oldCubeType == 5 || oldCubeType == 15) {
-					success = true;
-				} else {
-					success = (new Random().nextInt(3) < 1);
-				}
-				if (!success) {
-					// TODO enable god mode -- digging always succeeds
-					// break;
-				}
-
-				// remove the cube and notify other clients
-				sectionDataCacheEntry.setCubeAbsolute(x, y, z, (byte) 0);
-
-				// TODO should not be necessary with auto-save
-				sectionDataCacheEntry.save();
-
-				// notify listeners
-				notifyClientsAboutModifiedSections(id);
-				for (AxisAlignedDirection neighborDirection : getSectionWorkingSet().getClusterSize().getBorderDirections(x, y, z)) {
-					notifyClientsAboutModifiedSections(id.getNeighbor(neighborDirection));
-				}
-
-				// trigger special logic (e.g. add a unit of ore to the player's inventory)
-				DigUtil.onCubeDugAway(session, x, y, z, oldCubeType);
-
-				break;
-			}
-
-			default: {
-				logger.error("unknown packet type: " + packet.getType());
-				break;
-			}
-
+		} catch (MessageDecodingException e) {
+			throw new RuntimeException("received invalid message", e);
 		}
-
 	}
 
 	/* (non-Javadoc)
