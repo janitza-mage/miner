@@ -39,7 +39,7 @@ public final class ResumePlayer extends Message {
 
 	@Override
 	public StackdPacket encodePacket() {
-		StackdPacket packet = new StackdPacket(MessageCodes.S2C_FLASH_MESSAGE, token.length + 2);
+		StackdPacket packet = new StackdPacket(MessageCodes.C2S_RESUME_PLAYER, token.length + 2);
 		// Although the length may currently be derived from the packet size, the packet still
 		// contains the length explicitly so we can add other fields.
 		packet.getBuffer().writeShort(token.length);

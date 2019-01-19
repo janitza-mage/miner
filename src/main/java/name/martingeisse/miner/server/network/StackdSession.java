@@ -73,7 +73,9 @@ public class StackdSession {
 	 * @param packet the packet to send
 	 */
 	public final void sendPacketDestructive(StackdPacket packet) {
-		logger.debug("server sent packet " + packet.getType());
+		if (logger.isDebugEnabled()) {
+			logger.debug("server is going to send packet " + packet.getType() + ": " + packet.readableBytesToString(10));
+		}
 		channel.write(packet);
 	}
 

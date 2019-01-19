@@ -153,4 +153,26 @@ public final class StackdPacket {
 
 	}
 
+	public String readableBytesToString(int limit) {
+		StringBuilder builder = new StringBuilder();
+		int previousReaderIndex = buffer.readerIndex();
+		boolean first = true;
+		while (buffer.readableBytes() > 0) {
+			if (first) {
+				first = false;
+			} else {
+				builder.append(", ");
+			}
+			if (limit > 0) {
+				builder.append(buffer.readUnsignedByte());
+				limit--;
+			} else {
+				builder.append("...");
+				break;
+			}
+		}
+		buffer.readerIndex(previousReaderIndex);
+		return builder.toString();
+	}
+
 }

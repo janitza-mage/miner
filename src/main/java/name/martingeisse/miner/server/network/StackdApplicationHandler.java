@@ -77,7 +77,9 @@ final class StackdApplicationHandler<S extends StackdSession> extends SimpleChan
 		
 		// handle the packet
 		StackdPacket packet = (StackdPacket)e.getMessage();
-		logger.debug("server received packet " + packet.getType());
+		if (logger.isDebugEnabled()) {
+			logger.debug("server received packet " + packet.getType() + ": " + packet.readableBytesToString(10));
+		}
 		server.onRawPacketReceived(session, packet);
 		
 	}

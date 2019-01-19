@@ -36,6 +36,7 @@ import org.jboss.netty.util.ThreadNameDeterminer;
 import org.jboss.netty.util.ThreadRenamingRunnable;
 
 import java.net.InetSocketAddress;
+import java.nio.channels.ClosedChannelException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -231,7 +232,9 @@ public class StackdProtocolClient {
 	 * @param packet the packet to send
 	 */
 	public final void send(StackdPacket packet) {
-		logger.debug("client sent packet " + packet.getType());
+		if (logger.isDebugEnabled()) {
+			logger.debug("client is going to send packet " + packet.getType() + ": " + packet.readableBytesToString(10));
+		}
 		connectFuture.getChannel().write(packet);
 	}
 
@@ -270,7 +273,18 @@ public class StackdProtocolClient {
 	 * @param e the exception
 	 */
 	protected void onException(Throwable e) {
-		throw new RuntimeException(e);
+		// should handle this more gracefully in the future
+		Throwable t = e;
+		while (true) {
+			if (t instanceof ClosedChannelException) {
+				logger.error("lost connection to server");
+				System.exit(0);
+			}
+			if (t.getCause() == t || t.getCause() == null) {
+				throw new RuntimeException(e);
+			}
+			t = t.getCause();
+		}
 	}
 
 	/**
@@ -299,7 +313,9 @@ public class StackdProtocolClient {
 		@Override
 		public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
 			StackdPacket packet = (StackdPacket) e.getMessage();
-			logger.debug("client received packet " + packet.getType());
+			if (logger.isDebugEnabled()) {
+				logger.debug("client received packet " + packet.getType() + ": " + packet.readableBytesToString(10));
+			}
 			onApplicationPacketReceived(packet);
 		}
 
@@ -345,12 +361,13 @@ public class StackdProtocolClient {
 	 */
 	protected void onApplicationPacketReceived(StackdPacket packet) {
 		try {
+			Message untypedMessage = Message.decodePacket(packet);
 			ChannelBuffer buffer = packet.getBuffer();
 			switch (packet.getType()) {
 
 				case MessageCodes.S2C_HELLO: {
 					logger.debug("hello packet received");
-					Hello message = (Hello)Message.decodePacket(packet);
+					Hello message = (Hello)untypedMessage;
 					synchronized (syncObject) {
 						sessionId = message.getSessionId();
 						if (sessionId < 0) {
@@ -364,14 +381,14 @@ public class StackdProtocolClient {
 				}
 
 				case MessageCodes.S2C_FLASH_MESSAGE: {
-					FlashMessage message = (FlashMessage)Message.decodePacket(packet);
+					FlashMessage message = (FlashMessage)untypedMessage;
 					onFlashMessageReceived(message.getText());
 					break;
 				}
 
 				case MessageCodes.S2C_INTERACTIVE_SECTION_DATA_RESPONSE: {
 					if (sectionGridLoader != null) {
-						InteractiveSectionDataResponse message = (InteractiveSectionDataResponse)Message.decodePacket(packet);
+						InteractiveSectionDataResponse message = (InteractiveSectionDataResponse)untypedMessage;
 						sectionGridLoader.handleInteractiveSectionImage(message);
 					} else {
 						logger.error("received interactive section image but no sectionGridLoader is set in the StackdProtoclClient!");
@@ -381,7 +398,7 @@ public class StackdProtocolClient {
 
 				case MessageCodes.S2C_SINGLE_SECTION_MODIFICATION_EVENT: {
 					if (sectionGridLoader != null) {
-						SingleSectionModificationEvent message = (SingleSectionModificationEvent)Message.decodePacket(packet);
+						SingleSectionModificationEvent message = (SingleSectionModificationEvent)untypedMessage;
 						sectionGridLoader.handleModificationEvent(message);
 					} else {
 						logger.error("received section modification event but no sectionGridLoader is set in the StackdProtoclClient!");
@@ -391,7 +408,7 @@ public class StackdProtocolClient {
 
 				case MessageCodes.S2C_CONSOLE_OUTPUT: {
 					if (console != null) {
-						ConsoleOutput message = (ConsoleOutput)Message.decodePacket(packet);
+						ConsoleOutput message = (ConsoleOutput)untypedMessage;
 						for (String line : message.getSegments()) {
 							console.println(line);
 						}
@@ -402,7 +419,7 @@ public class StackdProtocolClient {
 				}
 
 				case MessageCodes.S2C_PLAYER_LIST_UPDATE: {
-					PlayerListUpdate message = (PlayerListUpdate)Message.decodePacket(packet);
+					PlayerListUpdate message = (PlayerListUpdate)untypedMessage;
 					List<PlayerProxy> playerProxiesFromMessage = new ArrayList<PlayerProxy>();
 					for (PlayerListUpdate.Element element : message.getElements()) {
 						PlayerProxy proxy = new PlayerProxy(element.getId());
@@ -417,7 +434,7 @@ public class StackdProtocolClient {
 				}
 
 				case MessageCodes.S2C_PLAYER_NAMES_UPDATE: {
-					PlayerNamesUpdate message = (PlayerNamesUpdate)Message.decodePacket(packet);
+					PlayerNamesUpdate message = (PlayerNamesUpdate)untypedMessage;
 					Map<Integer, String> updatedPlayerNames = new HashMap<>();
 					for (PlayerNamesUpdate.Element element : message.getElements()) {
 						updatedPlayerNames.put(element.getId(), element.getName());
@@ -429,7 +446,7 @@ public class StackdProtocolClient {
 				}
 
 				case MessageCodes.S2C_PLAYER_RESUMED: {
-					PlayerResumed message = (PlayerResumed)Message.decodePacket(packet);
+					PlayerResumed message = (PlayerResumed)untypedMessage;
 					synchronized (this) {
 						this.playerResumedMessage = new PlayerResumedMessage(message.getPosition(), message.getOrientation());
 					}
@@ -437,7 +454,7 @@ public class StackdProtocolClient {
 				}
 
 				case MessageCodes.S2C_UPDATE_COINS: {
-					UpdateCoins message = (UpdateCoins)Message.decodePacket(packet);
+					UpdateCoins message = (UpdateCoins)untypedMessage;
 					coins = message.getCoins();
 					logger.info("update coins: " + coins);
 					break;

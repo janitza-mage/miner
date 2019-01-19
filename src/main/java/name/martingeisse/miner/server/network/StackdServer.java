@@ -240,10 +240,11 @@ public abstract class StackdServer<S extends StackdSession> {
 	 * TODO should not dispatch directly but through a queue.
 	 */
 	final void onRawPacketReceived(final S session, final StackdPacket packet) throws Exception {
+		Message untypedMessage = Message.decodePacket(packet);
 		switch (packet.getType()) {
 
 			case MessageCodes.C2S_CUBE_MODIFICATION: {
-				CubeModification message = (CubeModification)Message.decodePacket(packet);
+				CubeModification message = (CubeModification)untypedMessage;
 				int shiftBits = sectionWorkingSet.getClusterSize().getShiftBits();
 				List<SectionId> affectedSectionIds = new ArrayList<>();
 				for (CubeModification.Element element : message.getElements()) {
@@ -263,7 +264,7 @@ public abstract class StackdServer<S extends StackdSession> {
 			}
 
 			case MessageCodes.C2S_INTERACTIVE_SECTION_DATA_REQUEST: {
-				InteractiveSectionDataRequest message = (InteractiveSectionDataRequest) Message.decodePacket(packet);
+				InteractiveSectionDataRequest message = (InteractiveSectionDataRequest) untypedMessage;
 				SectionId sectionId = message.getSectionId();
 				SectionDataType type = SectionDataType.INTERACTIVE;
 				final SectionDataId dataId = new SectionDataId(sectionId, type);
@@ -273,7 +274,7 @@ public abstract class StackdServer<S extends StackdSession> {
 			}
 
 			case MessageCodes.C2S_CONSOLE_INPUT: {
-				ConsoleInput message = (ConsoleInput)Message.decodePacket(packet);
+				ConsoleInput message = (ConsoleInput)untypedMessage;
 				ImmutableList<String> segments = message.getSegments();
 				String command = segments.get(0);
 				String[] args = segments.subList(1, segments.size()).toArray(new String[0]);
@@ -282,7 +283,7 @@ public abstract class StackdServer<S extends StackdSession> {
 			}
 
 			default:
-				onApplicationPacketReceived(session, packet);
+				onApplicationPacketReceived(session, untypedMessage, packet.getType());
 				break;
 
 		}
@@ -300,11 +301,8 @@ public abstract class StackdServer<S extends StackdSession> {
 	/**
 	 * This method is called when a client has sent an application-specific
 	 * binary packet.
-	 *
-	 * @param session the client's session
-	 * @param packet  the packet
 	 */
-	protected void onApplicationPacketReceived(final S session, final StackdPacket packet) {
+	protected void onApplicationPacketReceived(final S session, final Message message, int packetType) {
 	}
 
 	/**
