@@ -20,7 +20,6 @@ import name.martingeisse.miner.common.geometry.vector.Vector3i;
 import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.network.StackdPacketCodec;
 import name.martingeisse.miner.common.network.message.Message;
-import name.martingeisse.miner.common.network.message.MessageCodes;
 import name.martingeisse.miner.common.network.message.MessageDecodingException;
 import name.martingeisse.miner.common.network.message.c2s.ConsoleInput;
 import name.martingeisse.miner.common.network.message.c2s.DigNotification;
@@ -29,7 +28,6 @@ import name.martingeisse.miner.common.network.message.c2s.UpdatePosition;
 import name.martingeisse.miner.common.network.message.s2c.*;
 import org.apache.log4j.Logger;
 import org.jboss.netty.bootstrap.ClientBootstrap;
-import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.*;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.util.ThreadNameDeterminer;
@@ -362,111 +360,97 @@ public class StackdProtocolClient {
 	protected void onApplicationPacketReceived(StackdPacket packet) {
 		try {
 			Message untypedMessage = Message.decodePacket(packet);
-			ChannelBuffer buffer = packet.getBuffer();
-			switch (packet.getType()) {
+			if (untypedMessage instanceof Hello) {
 
-				case MessageCodes.S2C_HELLO: {
-					logger.debug("hello packet received");
-					Hello message = (Hello)untypedMessage;
-					synchronized (syncObject) {
-						sessionId = message.getSessionId();
-						if (sessionId < 0) {
-							throw new RuntimeException("server sent invalid session ID: " + sessionId);
-						}
-						syncObject.notifyAll();
+				logger.debug("hello packet received");
+				Hello message = (Hello)untypedMessage;
+				synchronized (syncObject) {
+					sessionId = message.getSessionId();
+					if (sessionId < 0) {
+						throw new RuntimeException("server sent invalid session ID: " + sessionId);
 					}
-					onReady();
-					logger.debug("protocol client ready");
-					break;
+					syncObject.notifyAll();
+				}
+				onReady();
+				logger.debug("protocol client ready");
+
+			} else if (untypedMessage instanceof FlashMessage) {
+
+				FlashMessage message = (FlashMessage)untypedMessage;
+				onFlashMessageReceived(message.getText());
+
+			} else if (untypedMessage instanceof InteractiveSectionDataResponse) {
+
+				if (sectionGridLoader != null) {
+					InteractiveSectionDataResponse message = (InteractiveSectionDataResponse)untypedMessage;
+					sectionGridLoader.handleInteractiveSectionImage(message);
+				} else {
+					logger.error("received interactive section image but no sectionGridLoader is set in the StackdProtoclClient!");
 				}
 
-				case MessageCodes.S2C_FLASH_MESSAGE: {
-					FlashMessage message = (FlashMessage)untypedMessage;
-					onFlashMessageReceived(message.getText());
-					break;
+			} else if (untypedMessage instanceof SingleSectionModificationEvent) {
+
+				if (sectionGridLoader != null) {
+					SingleSectionModificationEvent message = (SingleSectionModificationEvent)untypedMessage;
+					sectionGridLoader.handleModificationEvent(message);
+				} else {
+					logger.error("received section modification event but no sectionGridLoader is set in the StackdProtoclClient!");
 				}
 
-				case MessageCodes.S2C_INTERACTIVE_SECTION_DATA_RESPONSE: {
-					if (sectionGridLoader != null) {
-						InteractiveSectionDataResponse message = (InteractiveSectionDataResponse)untypedMessage;
-						sectionGridLoader.handleInteractiveSectionImage(message);
-					} else {
-						logger.error("received interactive section image but no sectionGridLoader is set in the StackdProtoclClient!");
+			} else if (untypedMessage instanceof ConsoleOutput) {
+
+				if (console != null) {
+					ConsoleOutput message = (ConsoleOutput)untypedMessage;
+					for (String line : message.getSegments()) {
+						console.println(line);
 					}
-					break;
+				} else {
+					logger.error("received console output packet but there's no console set for the StackdProtocolClient!");
 				}
 
-				case MessageCodes.S2C_SINGLE_SECTION_MODIFICATION_EVENT: {
-					if (sectionGridLoader != null) {
-						SingleSectionModificationEvent message = (SingleSectionModificationEvent)untypedMessage;
-						sectionGridLoader.handleModificationEvent(message);
-					} else {
-						logger.error("received section modification event but no sectionGridLoader is set in the StackdProtoclClient!");
-					}
-					break;
+			} else if (untypedMessage instanceof PlayerListUpdate) {
+
+				PlayerListUpdate message = (PlayerListUpdate)untypedMessage;
+				List<PlayerProxy> playerProxiesFromMessage = new ArrayList<PlayerProxy>();
+				for (PlayerListUpdate.Element element : message.getElements()) {
+					PlayerProxy proxy = new PlayerProxy(element.getId());
+					proxy.getPosition().copyFrom(element.getPosition());
+					proxy.getOrientation().copyFrom(element.getAngles());
+					playerProxiesFromMessage.add(proxy);
+				}
+				synchronized (this) {
+					this.updatedPlayerProxies = playerProxiesFromMessage;
 				}
 
-				case MessageCodes.S2C_CONSOLE_OUTPUT: {
-					if (console != null) {
-						ConsoleOutput message = (ConsoleOutput)untypedMessage;
-						for (String line : message.getSegments()) {
-							console.println(line);
-						}
-					} else {
-						logger.error("received console output packet but there's no console set for the StackdProtocolClient!");
-					}
-					break;
+			} else if (untypedMessage instanceof PlayerNamesUpdate) {
+
+				PlayerNamesUpdate message = (PlayerNamesUpdate)untypedMessage;
+				Map<Integer, String> updatedPlayerNames = new HashMap<>();
+				for (PlayerNamesUpdate.Element element : message.getElements()) {
+					updatedPlayerNames.put(element.getId(), element.getName());
+				}
+				synchronized (this) {
+					this.updatedPlayerNames = updatedPlayerNames;
 				}
 
-				case MessageCodes.S2C_PLAYER_LIST_UPDATE: {
-					PlayerListUpdate message = (PlayerListUpdate)untypedMessage;
-					List<PlayerProxy> playerProxiesFromMessage = new ArrayList<PlayerProxy>();
-					for (PlayerListUpdate.Element element : message.getElements()) {
-						PlayerProxy proxy = new PlayerProxy(element.getId());
-						proxy.getPosition().copyFrom(element.getPosition());
-						proxy.getOrientation().copyFrom(element.getAngles());
-						playerProxiesFromMessage.add(proxy);
-					}
-					synchronized (this) {
-						this.updatedPlayerProxies = playerProxiesFromMessage;
-					}
-					break;
+			} else if (untypedMessage instanceof PlayerResumed) {
+
+				PlayerResumed message = (PlayerResumed)untypedMessage;
+				synchronized (this) {
+					this.playerResumedMessage = new PlayerResumedMessage(message.getPosition(), message.getOrientation());
 				}
 
-				case MessageCodes.S2C_PLAYER_NAMES_UPDATE: {
-					PlayerNamesUpdate message = (PlayerNamesUpdate)untypedMessage;
-					Map<Integer, String> updatedPlayerNames = new HashMap<>();
-					for (PlayerNamesUpdate.Element element : message.getElements()) {
-						updatedPlayerNames.put(element.getId(), element.getName());
-					}
-					synchronized (this) {
-						this.updatedPlayerNames = updatedPlayerNames;
-					}
-					break;
-				}
+			} else if (untypedMessage instanceof UpdateCoins) {
 
-				case MessageCodes.S2C_PLAYER_RESUMED: {
-					PlayerResumed message = (PlayerResumed)untypedMessage;
-					synchronized (this) {
-						this.playerResumedMessage = new PlayerResumedMessage(message.getPosition(), message.getOrientation());
-					}
-					break;
-				}
+				UpdateCoins message = (UpdateCoins)untypedMessage;
+				coins = message.getCoins();
+				logger.info("update coins: " + coins);
 
-				case MessageCodes.S2C_UPDATE_COINS: {
-					UpdateCoins message = (UpdateCoins)untypedMessage;
-					coins = message.getCoins();
-					logger.info("update coins: " + coins);
-					break;
-				}
-
-				default:
-					logger.error("unknown packet type: " + packet.getType());
-					break;
-
+			} else {
+				logger.error("client received unexpected message: " + untypedMessage);
 			}
 		} catch (MessageDecodingException e) {
-			throw new RuntimeException("received invalid message", e);
+			throw new RuntimeException("client could not decode message", e);
 		}
 	}
 
