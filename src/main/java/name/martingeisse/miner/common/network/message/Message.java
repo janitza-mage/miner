@@ -46,4 +46,13 @@ public abstract class Message {
 	 */
 	protected abstract void encodeBody(ChannelBuffer buffer);
 
+	/**
+	 * Decodes a message from a network packet. The packet is expected to be in the initial state after receiving,
+	 * that is, with the reader index positioned at the start of the packet body and the number of readable bytes
+	 * equal to the packet body size.
+	 */
+	public static Message decodePacket(StackdPacket packet) throws MessageDecodingException {
+		return MessageTypeRegistry.INSTANCE.decodePacket(packet);
+	}
+
 }

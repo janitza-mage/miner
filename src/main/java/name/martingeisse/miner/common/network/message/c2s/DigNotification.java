@@ -5,10 +5,8 @@
 package name.martingeisse.miner.common.network.message.c2s;
 
 import name.martingeisse.miner.common.geometry.vector.Vector3i;
-import name.martingeisse.miner.common.network.StackdPacket;
 import name.martingeisse.miner.common.network.message.Message;
 import name.martingeisse.miner.common.network.message.MessageDecodingException;
-import name.martingeisse.miner.common.network.message.MessageTypeRegistry;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**

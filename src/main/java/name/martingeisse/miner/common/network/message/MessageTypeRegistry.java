@@ -12,9 +12,9 @@ import java.util.Map;
 /**
  * TODO remove packet construction from message classes here?
  */
-public final class MessageTypeRegistry {
+final class MessageTypeRegistry {
 
-	public static final MessageTypeRegistry INSTANCE = new MessageTypeRegistry();
+	static final MessageTypeRegistry INSTANCE = new MessageTypeRegistry();
 
 	private final List<Entry<?>> codeToEntry = new ArrayList<>();
 	private final Map<Class<? extends Message>, Integer> classToCode = new HashMap<>();
@@ -50,7 +50,7 @@ public final class MessageTypeRegistry {
 		classToCode.put(entry.getMessageClass(), code);
 	}
 
-	public int getCodeForClass(Class<? extends Message> messageClass) {
+	int getCodeForClass(Class<? extends Message> messageClass) {
 		Integer code = classToCode.get(messageClass);
 		if (code == null) {
 			throw new RuntimeException("unregistered message class: " + messageClass);
@@ -58,12 +58,7 @@ public final class MessageTypeRegistry {
 		return code;
 	}
 
-	/**
-	 * Decodes a message from a network packet. The packet is expected to be in the initial state after receiving,
-	 * that is, with the reader index positioned at the start of the packet body and the number of readable bytes
-	 * equal to the packet body size.
-	 */
-	public Message decodePacket(StackdPacket packet) throws MessageDecodingException {
+	Message decodePacket(StackdPacket packet) throws MessageDecodingException {
 		try {
 			Message message = decodePacketInternal(packet);
 			if (packet.getBuffer().readableBytes() != 0) {
@@ -89,16 +84,16 @@ public final class MessageTypeRegistry {
 		private final Class<M> messageClass;
 		private final BufferUtil.Decoder<M> decoder;
 
-		public Entry(Class<M> messageClass, BufferUtil.Decoder<M> decoder) {
+		Entry(Class<M> messageClass, BufferUtil.Decoder<M> decoder) {
 			this.messageClass = messageClass;
 			this.decoder = decoder;
 		}
 
-		public Class<M> getMessageClass() {
+		Class<M> getMessageClass() {
 			return messageClass;
 		}
 
-		public BufferUtil.Decoder<M> getDecoder() {
+		BufferUtil.Decoder<M> getDecoder() {
 			return decoder;
 		}
 
