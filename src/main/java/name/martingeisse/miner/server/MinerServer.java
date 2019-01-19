@@ -140,98 +140,88 @@ public class MinerServer extends StackdServer<MinerSession> {
 	}
 
 	@Override
-	protected void onApplicationPacketReceived(MinerSession session, Message untypedMessage, int packetType) {
-		switch (packetType) {
+	protected void onApplicationPacketReceived(MinerSession session, Message untypedMessage) {
+		if (untypedMessage instanceof UpdatePosition) {
 
-			case MessageCodes.C2S_UPDATE_POSITION: {
-				UpdatePosition message = (UpdatePosition) untypedMessage;
-				session.setX(message.getPosition().x);
-				session.setY(message.getPosition().y);
-				session.setZ(message.getPosition().z);
-				session.setLeftAngle(message.getOrientation().horizontalAngle);
-				session.setUpAngle(message.getOrientation().verticalAngle);
-				break;
+			UpdatePosition message = (UpdatePosition) untypedMessage;
+			session.setX(message.getPosition().x);
+			session.setY(message.getPosition().y);
+			session.setZ(message.getPosition().z);
+			session.setLeftAngle(message.getOrientation().horizontalAngle);
+			session.setUpAngle(message.getOrientation().verticalAngle);
+
+		} else if (untypedMessage instanceof ResumePlayer) {
+
+			ResumePlayer message = (ResumePlayer)untypedMessage;
+
+			String token = new String(message.getToken(), StandardCharsets.UTF_8);
+			String tokenSubject = SecurityTokenUtil.validateToken(token, new Instant(), MinerServerSecurityConstants.SECURITY_TOKEN_SECRET);
+			long playerId = Long.parseLong(tokenSubject);
+
+			Player player;
+			try (PostgresConnection connection = Databases.main.newConnection()) {
+				QPlayer qp = QPlayer.Player;
+				player = connection.query().select(qp).from(qp).where(qp.id.eq(playerId)).fetchOne();
+				if (player == null) {
+					throw new RuntimeException("player not found, id: " + playerId);
+				}
 			}
 
-			case MessageCodes.C2S_RESUME_PLAYER: {
-				ResumePlayer message = (ResumePlayer)untypedMessage;
+			session.setPlayerId(player.getId());
+			session.setName(player.getName());
+			session.setX(player.getX().doubleValue());
+			session.setY(player.getY().doubleValue());
+			session.setZ(player.getZ().doubleValue());
+			session.setLeftAngle(player.getLeftAngle().doubleValue());
+			session.setUpAngle(player.getUpAngle().doubleValue());
+			session.sendCoinsUpdate();
 
-				String token = new String(message.getToken(), StandardCharsets.UTF_8);
-				String tokenSubject = SecurityTokenUtil.validateToken(token, new Instant(), MinerServerSecurityConstants.SECURITY_TOKEN_SECRET);
-				long playerId = Long.parseLong(tokenSubject);
+			Vector3d position = new Vector3d(session.getX(), session.getY(), session.getZ());
+			EulerAngles orientation = new EulerAngles(session.getLeftAngle(), session.getUpAngle(), 0);
+			broadcast(new PlayerResumed(position, orientation));
 
-				Player player;
-				try (PostgresConnection connection = Databases.main.newConnection()) {
-					QPlayer qp = QPlayer.Player;
-					player = connection.query().select(qp).from(qp).where(qp.id.eq(playerId)).fetchOne();
-					if (player == null) {
-						throw new RuntimeException("player not found, id: " + playerId);
-					}
-				}
+		} else if (untypedMessage instanceof DigNotification) {
 
-				session.setPlayerId(player.getId());
-				session.setName(player.getName());
-				session.setX(player.getX().doubleValue());
-				session.setY(player.getY().doubleValue());
-				session.setZ(player.getZ().doubleValue());
-				session.setLeftAngle(player.getLeftAngle().doubleValue());
-				session.setUpAngle(player.getUpAngle().doubleValue());
-				session.sendCoinsUpdate();
+			DigNotification message = (DigNotification)untypedMessage;
 
-				Vector3d position = new Vector3d(session.getX(), session.getY(), session.getZ());
-				EulerAngles orientation = new EulerAngles(session.getLeftAngle(), session.getUpAngle(), 0);
-				broadcast(new PlayerResumed(position, orientation));
+			// determine the cube being dug away
+			int shiftBits = getSectionWorkingSet().getClusterSize().getShiftBits();
+			int x = message.getPosition().x, sectionX = (x >> shiftBits);
+			int y = message.getPosition().y, sectionY = (y >> shiftBits);
+			int z = message.getPosition().z, sectionZ = (z >> shiftBits);
+			SectionId id = new SectionId(sectionX, sectionY, sectionZ);
+			SectionCubesCacheEntry sectionDataCacheEntry = (SectionCubesCacheEntry) getSectionWorkingSet().get(new SectionDataId(id, SectionDataType.DEFINITIVE));
+			byte oldCubeType = sectionDataCacheEntry.getCubeAbsolute(x, y, z);
 
-				break;
+			// determine whether digging is successful
+			boolean success;
+			if (oldCubeType == 1 || oldCubeType == 5 || oldCubeType == 15) {
+				success = true;
+			} else {
+				success = (new Random().nextInt(3) < 1);
+			}
+			if (!success) {
+				// TODO enable god mode -- digging always succeeds
+				// break;
 			}
 
-			case MessageCodes.C2S_DIG_NOTIFICATION: {
-				DigNotification message = (DigNotification)untypedMessage;
+			// remove the cube and notify other clients
+			sectionDataCacheEntry.setCubeAbsolute(x, y, z, (byte) 0);
 
-				// determine the cube being dug away
-				int shiftBits = getSectionWorkingSet().getClusterSize().getShiftBits();
-				int x = message.getPosition().x, sectionX = (x >> shiftBits);
-				int y = message.getPosition().y, sectionY = (y >> shiftBits);
-				int z = message.getPosition().z, sectionZ = (z >> shiftBits);
-				SectionId id = new SectionId(sectionX, sectionY, sectionZ);
-				SectionCubesCacheEntry sectionDataCacheEntry = (SectionCubesCacheEntry) getSectionWorkingSet().get(new SectionDataId(id, SectionDataType.DEFINITIVE));
-				byte oldCubeType = sectionDataCacheEntry.getCubeAbsolute(x, y, z);
+			// TODO should not be necessary with auto-save
+			sectionDataCacheEntry.save();
 
-				// determine whether digging is successful
-				boolean success;
-				if (oldCubeType == 1 || oldCubeType == 5 || oldCubeType == 15) {
-					success = true;
-				} else {
-					success = (new Random().nextInt(3) < 1);
-				}
-				if (!success) {
-					// TODO enable god mode -- digging always succeeds
-					// break;
-				}
-
-				// remove the cube and notify other clients
-				sectionDataCacheEntry.setCubeAbsolute(x, y, z, (byte) 0);
-
-				// TODO should not be necessary with auto-save
-				sectionDataCacheEntry.save();
-
-				// notify listeners
-				notifyClientsAboutModifiedSections(id);
-				for (AxisAlignedDirection neighborDirection : getSectionWorkingSet().getClusterSize().getBorderDirections(x, y, z)) {
-					notifyClientsAboutModifiedSections(id.getNeighbor(neighborDirection));
-				}
-
-				// trigger special logic (e.g. add a unit of ore to the player's inventory)
-				DigUtil.onCubeDugAway(session, x, y, z, oldCubeType);
-
-				break;
+			// notify listeners
+			notifyClientsAboutModifiedSections(id);
+			for (AxisAlignedDirection neighborDirection : getSectionWorkingSet().getClusterSize().getBorderDirections(x, y, z)) {
+				notifyClientsAboutModifiedSections(id.getNeighbor(neighborDirection));
 			}
 
-			default: {
-				logger.error("unknown packet type: " + packetType);
-				break;
-			}
+			// trigger special logic (e.g. add a unit of ore to the player's inventory)
+			DigUtil.onCubeDugAway(session, x, y, z, oldCubeType);
 
+		} else {
+			logger.error("unknown message: " + untypedMessage);
 		}
 	}
 

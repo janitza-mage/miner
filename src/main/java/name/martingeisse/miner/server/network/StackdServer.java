@@ -241,51 +241,44 @@ public abstract class StackdServer<S extends StackdSession> {
 	 */
 	final void onRawPacketReceived(final S session, final StackdPacket packet) throws Exception {
 		Message untypedMessage = Message.decodePacket(packet);
-		switch (packet.getType()) {
+		if (untypedMessage instanceof CubeModification) {
 
-			case MessageCodes.C2S_CUBE_MODIFICATION: {
-				CubeModification message = (CubeModification)untypedMessage;
-				int shiftBits = sectionWorkingSet.getClusterSize().getShiftBits();
-				List<SectionId> affectedSectionIds = new ArrayList<>();
-				for (CubeModification.Element element : message.getElements()) {
-					int x = element.getPosition().getX(), sectionX = (x >> shiftBits);
-					int y = element.getPosition().getY(), sectionY = (y >> shiftBits);
-					int z = element.getPosition().getZ(), sectionZ = (z >> shiftBits);
-					byte newCubeType = element.getCubeType ();
-					SectionId sectionId = new SectionId(sectionX, sectionY, sectionZ);
-					SectionDataId sectionDataId = new SectionDataId(sectionId, SectionDataType.DEFINITIVE);
-					SectionCubesCacheEntry sectionDataCacheEntry = (SectionCubesCacheEntry) sectionWorkingSet.get(sectionDataId);
-					sectionDataCacheEntry.setCubeAbsolute(x, y, z, newCubeType);
-					affectedSectionIds.add(sectionId);
-				}
-				SectionId[] affectedSectionIdArray = affectedSectionIds.toArray(new SectionId[affectedSectionIds.size()]);
-				onSectionsModified(affectedSectionIdArray);
-				break;
+			CubeModification message = (CubeModification)untypedMessage;
+			int shiftBits = sectionWorkingSet.getClusterSize().getShiftBits();
+			List<SectionId> affectedSectionIds = new ArrayList<>();
+			for (CubeModification.Element element : message.getElements()) {
+				int x = element.getPosition().getX(), sectionX = (x >> shiftBits);
+				int y = element.getPosition().getY(), sectionY = (y >> shiftBits);
+				int z = element.getPosition().getZ(), sectionZ = (z >> shiftBits);
+				byte newCubeType = element.getCubeType ();
+				SectionId sectionId = new SectionId(sectionX, sectionY, sectionZ);
+				SectionDataId sectionDataId = new SectionDataId(sectionId, SectionDataType.DEFINITIVE);
+				SectionCubesCacheEntry sectionDataCacheEntry = (SectionCubesCacheEntry) sectionWorkingSet.get(sectionDataId);
+				sectionDataCacheEntry.setCubeAbsolute(x, y, z, newCubeType);
+				affectedSectionIds.add(sectionId);
 			}
+			SectionId[] affectedSectionIdArray = affectedSectionIds.toArray(new SectionId[affectedSectionIds.size()]);
+			onSectionsModified(affectedSectionIdArray);
 
-			case MessageCodes.C2S_INTERACTIVE_SECTION_DATA_REQUEST: {
-				InteractiveSectionDataRequest message = (InteractiveSectionDataRequest) untypedMessage;
-				SectionId sectionId = message.getSectionId();
-				SectionDataType type = SectionDataType.INTERACTIVE;
-				final SectionDataId dataId = new SectionDataId(sectionId, type);
-				logger.debug("SERVER received section data request: " + dataId);
-				sectionToClientShipper.addJob(dataId, session);
-				break;
-			}
+		} else if (untypedMessage instanceof InteractiveSectionDataRequest) {
 
-			case MessageCodes.C2S_CONSOLE_INPUT: {
-				ConsoleInput message = (ConsoleInput)untypedMessage;
-				ImmutableList<String> segments = message.getSegments();
-				String command = segments.get(0);
-				String[] args = segments.subList(1, segments.size()).toArray(new String[0]);
-				handleConsoleCommand(session, command, args);
-				break;
-			}
+			InteractiveSectionDataRequest message = (InteractiveSectionDataRequest) untypedMessage;
+			SectionId sectionId = message.getSectionId();
+			SectionDataType type = SectionDataType.INTERACTIVE;
+			final SectionDataId dataId = new SectionDataId(sectionId, type);
+			logger.debug("SERVER received section data request: " + dataId);
+			sectionToClientShipper.addJob(dataId, session);
 
-			default:
-				onApplicationPacketReceived(session, untypedMessage, packet.getType());
-				break;
+		} else if (untypedMessage instanceof ConsoleInput) {
 
+			ConsoleInput message = (ConsoleInput)untypedMessage;
+			ImmutableList<String> segments = message.getSegments();
+			String command = segments.get(0);
+			String[] args = segments.subList(1, segments.size()).toArray(new String[0]);
+			handleConsoleCommand(session, command, args);
+
+		} else {
+			onApplicationPacketReceived(session, untypedMessage);
 		}
 
 	}
@@ -302,7 +295,7 @@ public abstract class StackdServer<S extends StackdSession> {
 	 * This method is called when a client has sent an application-specific
 	 * binary packet.
 	 */
-	protected void onApplicationPacketReceived(final S session, final Message message, int packetType) {
+	protected void onApplicationPacketReceived(final S session, final Message message) {
 	}
 
 	/**
