@@ -54,10 +54,6 @@ public class MinerConsoleCommandHandler implements IConsoleCommandHandler {
 				session.sendConsoleOutput("  trash inventory <index>");
 				session.sendConsoleOutput("  give ...");
 
-			} else if (command.equals("initworld")) {
-				server.initializeWorld();
-				session.sendConsoleOutput("world initialized");
-
 			} else if (command.equals("itemtypes")) {
 				session.sendConsoleOutput("item types: ");
 				for (ItemType itemType : itemTypes) {

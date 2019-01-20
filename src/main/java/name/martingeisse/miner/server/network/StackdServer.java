@@ -27,7 +27,6 @@ import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.server.Databases;
 import name.martingeisse.miner.server.MinerConsoleCommandHandler;
 import name.martingeisse.miner.server.MinerServerSecurityConstants;
-import name.martingeisse.miner.server.TestRegionImporter;
 import name.martingeisse.miner.server.console.IConsoleCommandHandler;
 import name.martingeisse.miner.server.console.NullConsoleCommandHandler;
 import name.martingeisse.miner.server.entities.Player;
@@ -43,7 +42,6 @@ import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
 import org.apache.log4j.Logger;
 import org.joda.time.Instant;
 
-import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -108,7 +106,6 @@ public class StackdServer {
 
 		// TODO for testing
 		try {
-			// initializeWorld();
 			// initializeWorldWithHeightField();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -431,23 +428,6 @@ public class StackdServer {
 	 */
 	public void handleConsoleCommand(final StackdSession session, String command, String[] args) {
 		consoleCommandHandler.handleCommand(session, command, args);
-	}
-
-	/**
-	 * Handles an "initialize world" request.
-	 *
-	 * @throws Exception on errors
-	 */
-	public void initializeWorld() throws Exception {
-		logger.info("initializing world...");
-
-		TestRegionImporter importer = new TestRegionImporter(getSectionWorkingSet().getStorage());
-		// importer.setTranslation(-15, -9, -72);
-		// importer.importRegions(new File("resource/fis/region"));
-		importer.importRegions(new File("resource/stoneless"));
-
-		getSectionWorkingSet().clearCache();
-		logger.info("world initialized");
 	}
 
 	/**
