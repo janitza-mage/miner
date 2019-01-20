@@ -15,13 +15,13 @@ import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.SectionId;
 import name.martingeisse.miner.common.geometry.angle.EulerAngles;
 import name.martingeisse.miner.common.geometry.vector.Vector3d;
-import name.martingeisse.miner.common.network.protocol.StackdPacket;
 import name.martingeisse.miner.common.network.message.Message;
 import name.martingeisse.miner.common.network.message.c2s.*;
 import name.martingeisse.miner.common.network.message.s2c.PlayerListUpdate;
 import name.martingeisse.miner.common.network.message.s2c.PlayerNamesUpdate;
 import name.martingeisse.miner.common.network.message.s2c.PlayerResumed;
 import name.martingeisse.miner.common.network.message.s2c.SingleSectionModificationEvent;
+import name.martingeisse.miner.common.network.protocol.StackdPacket;
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.server.Databases;
@@ -41,7 +41,6 @@ import name.martingeisse.miner.server.section.storage.CassandraSectionStorage;
 import name.martingeisse.miner.server.terrain.TerrainGenerator;
 import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
 import org.apache.log4j.Logger;
-import org.jboss.netty.channel.Channel;
 import org.joda.time.Instant;
 
 import java.io.File;
@@ -170,13 +169,9 @@ public class StackdServer {
 	 * detected later on and one of the sessions will be thrown away. This method must
 	 * be able to handle such a case. Use {@link #onClientConnected(StackdSession)}
 	 * for code that should only run once per created session.
-	 *
-	 * @param id      the session ID
-	 * @param channel the channel to the client
-	 * @return the session
 	 */
-	protected StackdSession newSession(int id, Channel channel) {
-		return new StackdSession(id, channel);
+	protected StackdSession newSession(int id, ServerEndpoint endpoint) {
+		return new StackdSession(id, endpoint);
 	}
 
 	/**
@@ -190,38 +185,12 @@ public class StackdServer {
 	}
 
 	/**
-	 * Returns the session with the specified ID, creating it if it does not yet exist.
-	 *
-	 * @param id      the session ID
-	 * @param channel the channel to use when creating a session
-	 * @return the session
-	 */
-	public final StackdSession getOrCreateSession(final int id, final Channel channel) {
-
-		// shortcut for existing sessions
-		StackdSession existingSession = sessions.get(id);
-		if (existingSession != null) {
-			return existingSession;
-		}
-
-		// create and store a new session in a thread-safe way
-		final StackdSession newSession = newSession(id, channel);
-		existingSession = sessions.putIfAbsent(id, newSession);
-		final StackdSession effectiveSession = (existingSession != null ? existingSession : newSession);
-
-		return effectiveSession;
-	}
-
-	/**
 	 * Creates a new session with a random unused ID and returns it.
-	 *
-	 * @param channel the channel that connects to the client
-	 * @return the session
 	 */
-	public final StackdSession createSession(final Channel channel) {
+	public final StackdSession createSession(final ServerEndpoint endpoint) {
 		final Random random = new Random();
 		while (true) {
-			final StackdSession session = newSession(random.nextInt(0x7fffffff), channel);
+			final StackdSession session = newSession(random.nextInt(0x7fffffff), endpoint);
 			if (sessions.putIfAbsent(session.getId(), session) == null) {
 				return session;
 			}
@@ -273,8 +242,7 @@ public class StackdServer {
 	 * Internal packet dispatch that gets called in the receiving thread.
 	 * TODO should not dispatch directly but through a queue.
 	 */
-	final void onRawPacketReceived(final StackdSession session, final StackdPacket packet) throws Exception {
-		Message untypedMessage = Message.decodePacket(packet);
+	final void onMessageReceived(final StackdSession session, final Message untypedMessage) {
 		if (untypedMessage instanceof CubeModification) {
 
 			CubeModification message = (CubeModification) untypedMessage;
@@ -407,8 +375,6 @@ public class StackdServer {
 
 	/**
 	 * This method is called when one or more sections have been modified.
-	 *
-	 * @param sections the modified sections
 	 */
 	protected void onSectionsModified(SectionId[] sectionIds) {
 		notifyClientsAboutModifiedSections(sectionIds);

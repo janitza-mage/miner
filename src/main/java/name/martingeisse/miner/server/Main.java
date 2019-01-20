@@ -16,7 +16,7 @@ import name.martingeisse.common.javascript.JavascriptAssembler;
 import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.task.TaskSystem;
 import name.martingeisse.miner.server.api.account.AccountApiHandler;
-import name.martingeisse.miner.server.network.StackdNettyPipelineFactory;
+import name.martingeisse.miner.server.network.ServerPipelineFactory;
 import name.martingeisse.miner.server.network.StackdServer;
 import name.martingeisse.miner.server.util.database.postgres.PostgresService;
 import org.jboss.netty.bootstrap.ServerBootstrap;
@@ -58,7 +58,7 @@ public class Main {
 				StackdServer server = new StackdServer();
 				final ChannelFactory factory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 				final ServerBootstrap bootstrap = new ServerBootstrap(factory);
-				bootstrap.setPipelineFactory(new StackdNettyPipelineFactory(server));
+				bootstrap.setPipelineFactory(new ServerPipelineFactory(server));
 				bootstrap.setOption("child.tcpNoDelay", true);
 				bootstrap.setOption("child.keepAlive", true);
 				bootstrap.bind(new InetSocketAddress(Constants.NETWORK_PORT));
@@ -104,6 +104,7 @@ public class Main {
 
 	/**
 	 * Initializes URL handlers, time zones and the database.
+	 *
 	 * @throws IOException on I/O errors
 	 */
 	private static void initializeBase() throws IOException {

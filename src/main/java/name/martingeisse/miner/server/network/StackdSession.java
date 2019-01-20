@@ -8,16 +8,15 @@ package name.martingeisse.miner.server.network;
 
 import com.google.common.collect.ImmutableList;
 import com.querydsl.sql.dml.SQLUpdateClause;
-import name.martingeisse.miner.common.network.protocol.StackdPacket;
 import name.martingeisse.miner.common.network.message.Message;
 import name.martingeisse.miner.common.network.message.s2c.ConsoleOutput;
 import name.martingeisse.miner.common.network.message.s2c.FlashMessage;
 import name.martingeisse.miner.common.network.message.s2c.UpdateCoins;
+import name.martingeisse.miner.common.network.protocol.StackdPacket;
 import name.martingeisse.miner.server.Databases;
 import name.martingeisse.miner.server.entities.QPlayer;
 import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
 import org.apache.log4j.Logger;
-import org.jboss.netty.channel.Channel;
 
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -34,7 +33,7 @@ public class StackdSession {
 	private static Logger logger = Logger.getLogger(StackdSession.class);
 
 	private final int id;
-	private final Channel channel;
+	private final ServerEndpoint endpoint;
 
 	private volatile Long playerId;
 	private volatile double x;
@@ -44,34 +43,18 @@ public class StackdSession {
 	private volatile double upAngle;
 	private volatile String name;
 
-	/**
-	 * Constructor.
-	 *
-	 * @param id      the session ID
-	 * @param channel the channel that connects to the client
-	 */
-	public StackdSession(final int id, final Channel channel) {
+	public StackdSession(final int id, final ServerEndpoint endpoint) {
 		this.id = id;
-		this.channel = channel;
+		this.endpoint = endpoint;
 		this.name = "Player";
 	}
 
-	/**
-	 * Getter method for the id.
-	 *
-	 * @return the id
-	 */
 	public final int getId() {
 		return id;
 	}
 
-	/**
-	 * Getter method for the channel.
-	 *
-	 * @return the channel
-	 */
-	public final Channel getChannel() {
-		return channel;
+	public ServerEndpoint getEndpoint() {
+		return endpoint;
 	}
 
 	public Long getPlayerId() {
@@ -140,14 +123,11 @@ public class StackdSession {
 	 * @param packet the packet to send
 	 */
 	public final void sendPacketDestructive(StackdPacket packet) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("server is going to send packet " + packet.getType() + ": " + packet.readableBytesToString(10));
-		}
-		channel.write(packet);
+		endpoint.sendPacketDestructive(packet);
 	}
 
 	public final void send(Message message) {
-		sendPacketDestructive(message.encodePacket());
+		endpoint.send(message);
 	}
 
 	/**
