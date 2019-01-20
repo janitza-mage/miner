@@ -4,9 +4,8 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.server;
+package name.martingeisse.miner.server.console;
 
-import name.martingeisse.miner.server.console.IConsoleCommandHandler;
 import name.martingeisse.miner.server.entities.PlayerInventorySlot;
 import name.martingeisse.miner.server.game.InventoryAccess;
 import name.martingeisse.miner.server.game.ItemType;

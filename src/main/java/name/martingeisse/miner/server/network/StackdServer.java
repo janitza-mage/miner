@@ -25,7 +25,7 @@ import name.martingeisse.miner.common.network.protocol.StackdPacket;
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.server.Databases;
-import name.martingeisse.miner.server.MinerConsoleCommandHandler;
+import name.martingeisse.miner.server.console.MinerConsoleCommandHandler;
 import name.martingeisse.miner.server.MinerServerSecurityConstants;
 import name.martingeisse.miner.server.console.IConsoleCommandHandler;
 import name.martingeisse.miner.server.console.NullConsoleCommandHandler;
