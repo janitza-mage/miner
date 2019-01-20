@@ -6,8 +6,8 @@
 
 package name.martingeisse.miner.server.network;
 
-import name.martingeisse.miner.common.network.StackdPacket;
-import name.martingeisse.miner.common.network.s2c.Hello;
+import name.martingeisse.miner.common.network.protocol.StackdPacket;
+import name.martingeisse.miner.common.network.message.s2c.Hello;
 import org.apache.log4j.Logger;
 import org.jboss.netty.channel.*;
 
@@ -15,8 +15,6 @@ import org.jboss.netty.channel.*;
  * Netty handler for the application protocol. Any code that
  * is actually application-specific belongs into the {@link StackdServer}
  * subclass and is called by this handler.
- *
- * @param <S> the session type
  */
 final class StackdApplicationHandler extends SimpleChannelHandler {
 

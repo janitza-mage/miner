@@ -1,7 +1,8 @@
-package name.martingeisse.miner.common.network;
+package name.martingeisse.miner.common.network.message;
 
-import name.martingeisse.miner.common.network.c2s.*;
-import name.martingeisse.miner.common.network.s2c.*;
+import name.martingeisse.miner.common.network.protocol.StackdPacket;
+import name.martingeisse.miner.common.network.message.c2s.*;
+import name.martingeisse.miner.common.network.message.s2c.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;

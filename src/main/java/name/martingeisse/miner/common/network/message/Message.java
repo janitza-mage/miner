@@ -2,8 +2,9 @@
  * Copyright (c) 2018 Martin Geisse
  * This file is distributed under the terms of the MIT license.
  */
-package name.martingeisse.miner.common.network;
+package name.martingeisse.miner.common.network.message;
 
+import name.martingeisse.miner.common.network.protocol.StackdPacket;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 

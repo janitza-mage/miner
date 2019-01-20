@@ -28,7 +28,7 @@ import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.RectangularRegion;
-import name.martingeisse.miner.common.network.c2s.CubeModification;
+import name.martingeisse.miner.common.network.message.c2s.CubeModification;
 import name.martingeisse.miner.common.util.ProfilingHelper;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;

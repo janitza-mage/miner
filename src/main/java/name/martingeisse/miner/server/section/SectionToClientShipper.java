@@ -8,7 +8,7 @@ package name.martingeisse.miner.server.section;
 
 import com.google.common.collect.ImmutableMap;
 import name.martingeisse.miner.common.geometry.SectionId;
-import name.martingeisse.miner.common.network.s2c.InteractiveSectionDataResponse;
+import name.martingeisse.miner.common.network.message.s2c.InteractiveSectionDataResponse;
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.common.task.Task;

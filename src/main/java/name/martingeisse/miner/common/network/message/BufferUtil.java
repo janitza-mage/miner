@@ -1,4 +1,4 @@
-package name.martingeisse.miner.common.network;
+package name.martingeisse.miner.common.network.message;
 
 import com.google.common.collect.ImmutableList;
 import org.jboss.netty.buffer.ChannelBuffer;

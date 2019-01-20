@@ -15,9 +15,9 @@ import name.martingeisse.miner.common.cubes.Cubes;
 import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.miner.common.geometry.SectionId;
-import name.martingeisse.miner.common.network.c2s.InteractiveSectionDataRequest;
-import name.martingeisse.miner.common.network.s2c.InteractiveSectionDataResponse;
-import name.martingeisse.miner.common.network.s2c.SingleSectionModificationEvent;
+import name.martingeisse.miner.common.network.message.c2s.InteractiveSectionDataRequest;
+import name.martingeisse.miner.common.network.message.s2c.InteractiveSectionDataResponse;
+import name.martingeisse.miner.common.network.message.s2c.SingleSectionModificationEvent;
 import name.martingeisse.miner.common.task.Task;
 import org.apache.log4j.Logger;
 
