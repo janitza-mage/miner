@@ -27,7 +27,6 @@ import name.martingeisse.miner.common.network.protocol.StackdPacket;
 import org.apache.log4j.Logger;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.ChannelFactory;
-import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.util.ThreadNameDeterminer;
 import org.jboss.netty.util.ThreadRenamingRunnable;
@@ -48,59 +47,17 @@ import java.util.concurrent.Executors;
  */
 public class StackdProtocolClient {
 
-	/**
-	 * the logger
-	 */
 	private static Logger logger = Logger.getLogger(StackdProtocolClient.class);
 
-	/**
-	 * the connectFuture
-	 */
-	private final ChannelFuture connectFuture;
-
-	/**
-	 * the syncObject
-	 */
+	private ClientEndpoint endpoint;
 	private final Object syncObject = new Object();
-
-	/**
-	 * the sessionId
-	 */
 	private int sessionId = -1;
-
-	/**
-	 * the flashMessageHandler
-	 */
 	private FlashMessageHandler flashMessageHandler;
-
-	/**
-	 * the sectionGridLoader
-	 */
 	private SectionGridLoader sectionGridLoader;
-
-	/**
-	 * the console
-	 */
 	private Console console;
-
-	/**
-	 * the updatedPlayerProxies
-	 */
 	private List<PlayerProxy> updatedPlayerProxies;
-
-	/**
-	 * the updatedPlayerNames
-	 */
 	private Map<Integer, String> updatedPlayerNames;
-
-	/**
-	 * the playerResumedMessage
-	 */
 	private PlayerResumedMessage playerResumedMessage;
-
-	/**
-	 * the coins
-	 */
 	private volatile long coins = 0;
 
 	/**
@@ -117,13 +74,16 @@ public class StackdProtocolClient {
 				return proposedThreadName.replace(' ', '-');
 			}
 		});
-		// final ChannelFactory factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 		final ChannelFactory factory = new NioClientSocketChannelFactory(Executors.newSingleThreadExecutor(), Executors.newSingleThreadExecutor());
 		final ClientBootstrap bootstrap = new ClientBootstrap(factory);
 		bootstrap.setPipelineFactory(new ClientPipelineFactory(this));
 		bootstrap.setOption("tcpNoDelay", true);
 		bootstrap.setOption("keepAlive", true);
-		connectFuture = bootstrap.connect(new InetSocketAddress(host, port));
+		bootstrap.connect(new InetSocketAddress(host, port));
+	}
+
+	public void setEndpoint(ClientEndpoint endpoint) {
+		this.endpoint = endpoint;
 	}
 
 	/**
@@ -224,21 +184,11 @@ public class StackdProtocolClient {
 	 * @param packet the packet to send
 	 */
 	public final void send(StackdPacket packet) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("client is going to send packet " + packet.getType() + ": " + packet.readableBytesToString(10));
-		}
-		connectFuture.getChannel().write(packet);
+		endpoint.sendPacketDestructive(packet);
 	}
 
 	public final void send(Message message) {
-		send(message.encodePacket());
-	}
-
-	/**
-	 * Disconnects from the server.
-	 */
-	public final void disconnect() {
-		connectFuture.getChannel().disconnect();
+		endpoint.send(message);
 	}
 
 	/**
@@ -326,7 +276,7 @@ public class StackdProtocolClient {
 		if (untypedMessage instanceof Hello) {
 
 			logger.debug("hello packet received");
-			Hello message = (Hello)untypedMessage;
+			Hello message = (Hello) untypedMessage;
 			synchronized (syncObject) {
 				sessionId = message.getSessionId();
 				if (sessionId < 0) {
@@ -339,13 +289,13 @@ public class StackdProtocolClient {
 
 		} else if (untypedMessage instanceof FlashMessage) {
 
-			FlashMessage message = (FlashMessage)untypedMessage;
+			FlashMessage message = (FlashMessage) untypedMessage;
 			onFlashMessageReceived(message.getText());
 
 		} else if (untypedMessage instanceof InteractiveSectionDataResponse) {
 
 			if (sectionGridLoader != null) {
-				InteractiveSectionDataResponse message = (InteractiveSectionDataResponse)untypedMessage;
+				InteractiveSectionDataResponse message = (InteractiveSectionDataResponse) untypedMessage;
 				sectionGridLoader.handleInteractiveSectionImage(message);
 			} else {
 				logger.error("received interactive section image but no sectionGridLoader is set in the StackdProtoclClient!");
@@ -354,7 +304,7 @@ public class StackdProtocolClient {
 		} else if (untypedMessage instanceof SingleSectionModificationEvent) {
 
 			if (sectionGridLoader != null) {
-				SingleSectionModificationEvent message = (SingleSectionModificationEvent)untypedMessage;
+				SingleSectionModificationEvent message = (SingleSectionModificationEvent) untypedMessage;
 				sectionGridLoader.handleModificationEvent(message);
 			} else {
 				logger.error("received section modification event but no sectionGridLoader is set in the StackdProtoclClient!");
@@ -363,7 +313,7 @@ public class StackdProtocolClient {
 		} else if (untypedMessage instanceof ConsoleOutput) {
 
 			if (console != null) {
-				ConsoleOutput message = (ConsoleOutput)untypedMessage;
+				ConsoleOutput message = (ConsoleOutput) untypedMessage;
 				for (String line : message.getSegments()) {
 					console.println(line);
 				}
@@ -373,7 +323,7 @@ public class StackdProtocolClient {
 
 		} else if (untypedMessage instanceof PlayerListUpdate) {
 
-			PlayerListUpdate message = (PlayerListUpdate)untypedMessage;
+			PlayerListUpdate message = (PlayerListUpdate) untypedMessage;
 			List<PlayerProxy> playerProxiesFromMessage = new ArrayList<PlayerProxy>();
 			for (PlayerListUpdate.Element element : message.getElements()) {
 				PlayerProxy proxy = new PlayerProxy(element.getId());
@@ -387,7 +337,7 @@ public class StackdProtocolClient {
 
 		} else if (untypedMessage instanceof PlayerNamesUpdate) {
 
-			PlayerNamesUpdate message = (PlayerNamesUpdate)untypedMessage;
+			PlayerNamesUpdate message = (PlayerNamesUpdate) untypedMessage;
 			Map<Integer, String> updatedPlayerNames = new HashMap<>();
 			for (PlayerNamesUpdate.Element element : message.getElements()) {
 				updatedPlayerNames.put(element.getId(), element.getName());
@@ -398,14 +348,14 @@ public class StackdProtocolClient {
 
 		} else if (untypedMessage instanceof PlayerResumed) {
 
-			PlayerResumed message = (PlayerResumed)untypedMessage;
+			PlayerResumed message = (PlayerResumed) untypedMessage;
 			synchronized (this) {
 				this.playerResumedMessage = new PlayerResumedMessage(message.getPosition(), message.getOrientation());
 			}
 
 		} else if (untypedMessage instanceof UpdateCoins) {
 
-			UpdateCoins message = (UpdateCoins)untypedMessage;
+			UpdateCoins message = (UpdateCoins) untypedMessage;
 			coins = message.getCoins();
 			logger.info("update coins: " + coins);
 

@@ -8,7 +8,6 @@ package name.martingeisse.miner.client.network;
 
 import name.martingeisse.miner.common.network.message.Message;
 import name.martingeisse.miner.common.network.protocol.ProtocolEndpoint;
-import org.apache.log4j.Logger;
 
 /**
  *
@@ -23,12 +22,12 @@ final class ClientEndpoint extends ProtocolEndpoint {
 
 	@Override
 	protected void onConnect() {
-		// NOP
+		protocolClient.setEndpoint(this);
 	}
 
 	@Override
 	protected void onDisconnect() {
-		// NOP
+		protocolClient.setEndpoint(null);
 	}
 
 	@Override
