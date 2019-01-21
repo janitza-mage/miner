@@ -139,6 +139,8 @@ public final class Color {
 
 	/**
 	 * Sets this color as the current drawing color in OpenGL.
+	 *
+	 * This method must be called from the OpenGL thread.
 	 */
 	public void glColor() {
 		GL11.glColor4ub((byte)red, (byte)green, (byte)blue, (byte)alpha);
@@ -148,7 +150,9 @@ public final class Color {
 	 * Sets this color as the current drawing color in OpenGL,
 	 * applying another external alpha value as well as the alpha value
 	 * from this color. The external alpha value too should be in the range 0..255.
-	 * 
+	 *
+	 * This method must be called from the OpenGL thread.
+	 *
 	 * @param externalAlpha the external alpha value to apply
 	 */
 	public void glColorWithCombinedAlpha(int externalAlpha) {

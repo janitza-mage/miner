@@ -20,6 +20,13 @@ import org.lwjgl.opengl.GL11;
  * The GUI uses an integer coordinate system where the total height
  * of the GUI is a hundred thousand units, and the total width a determined such
  * that a unit has the same length along either axis.
+ *
+ * TODO refactor drawing to submit individual OpenGL work units, so anything above basic GUI elements
+ * is thread safe. For now, it is sufficient that handling the DRAW event submits a work unit and
+ * that this event is dispatched in the main thread, not the OpenGL thread. If further optimization is
+ * needed, the work units themselves can be made more modular and the main-thread implementation
+ * passing more work to the OpenGL thread, as long as application code doesn't *have* to deal with
+ * it in normal situations.
  */
 public final class Gui {
 
