@@ -27,6 +27,10 @@ import org.lwjgl.opengl.GL11;
  * needed, the work units themselves can be made more modular and the main-thread implementation
  * passing more work to the OpenGL thread, as long as application code doesn't *have* to deal with
  * it in normal situations.
+ *
+ * TODO support setting a main GlWorkUnit in GuiElement. draw() of GuiElement just submits this. Make its
+ * getter / setter protected. For most elements, that will be sufficient. Elements with children will
+ * have to override it.
  */
 public final class Gui {
 
