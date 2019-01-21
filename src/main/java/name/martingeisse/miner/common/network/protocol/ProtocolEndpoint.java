@@ -25,6 +25,10 @@ public abstract class ProtocolEndpoint {
 	protected abstract void onDisconnect();
 	protected abstract void onMessage(Message message);
 
+	protected void onDisconnectAfterException(Throwable t) {
+		onDisconnect();
+	}
+
 	/**
 	 * Sends a network packet to the opposite endpoint. The packet object should be considered invalid afterwards
 	 * (hence "destructive") since this method will assemble header fields in the packet and alter its reader/writer
@@ -65,7 +69,7 @@ public abstract class ProtocolEndpoint {
 		public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
 			StackdPacket packet = (StackdPacket)e.getMessage();
 			if (logger.isDebugEnabled()) {
-				logger.debug("server received packet " + packet.getType() + ": " + packet.readableBytesToString(10));
+				logger.debug(getClass().getSimpleName() + " received packet " + packet.getType() + ": " + packet.readableBytesToString(10));
 			}
 			onMessage(Message.decodePacket(packet));
 		}
@@ -74,10 +78,10 @@ public abstract class ProtocolEndpoint {
 		public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 			if (ctx.getChannel().isConnected()) {
 				ctx.getChannel().disconnect();
-				logger.error("unexpected exception", e.getCause());
+				logger.error(getClass().getSimpleName() + " got unexpected exception", e.getCause());
 			}
 			channel = null;
-			ProtocolEndpoint.this.onDisconnect();
+			ProtocolEndpoint.this.onDisconnectAfterException(e.getCause());
 		}
 
 	}

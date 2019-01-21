@@ -17,18 +17,17 @@ import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.geometry.angle.ReadableEulerAngles;
 import name.martingeisse.miner.common.geometry.vector.ReadableVector3d;
 import name.martingeisse.miner.common.geometry.vector.Vector3i;
-import name.martingeisse.miner.common.network.protocol.StackdPacket;
-import name.martingeisse.miner.common.network.protocol.StackdPacketCodec;
 import name.martingeisse.miner.common.network.message.Message;
-import name.martingeisse.miner.common.network.message.MessageDecodingException;
 import name.martingeisse.miner.common.network.message.c2s.ConsoleInput;
 import name.martingeisse.miner.common.network.message.c2s.DigNotification;
 import name.martingeisse.miner.common.network.message.c2s.ResumePlayer;
 import name.martingeisse.miner.common.network.message.c2s.UpdatePosition;
 import name.martingeisse.miner.common.network.message.s2c.*;
+import name.martingeisse.miner.common.network.protocol.StackdPacket;
 import org.apache.log4j.Logger;
 import org.jboss.netty.bootstrap.ClientBootstrap;
-import org.jboss.netty.channel.*;
+import org.jboss.netty.channel.ChannelFactory;
+import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.util.ThreadNameDeterminer;
 import org.jboss.netty.util.ThreadRenamingRunnable;
@@ -121,12 +120,7 @@ public class StackdProtocolClient {
 		// final ChannelFactory factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 		final ChannelFactory factory = new NioClientSocketChannelFactory(Executors.newSingleThreadExecutor(), Executors.newSingleThreadExecutor());
 		final ClientBootstrap bootstrap = new ClientBootstrap(factory);
-		bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
-			@Override
-			public ChannelPipeline getPipeline() {
-				return Channels.pipeline(StackdPacketCodec.createFrameCodec(), new StackdPacketCodec(), new ApplicationHandler());
-			}
-		});
+		bootstrap.setPipelineFactory(new ClientPipelineFactory(this));
 		bootstrap.setOption("tcpNoDelay", true);
 		bootstrap.setOption("keepAlive", true);
 		connectFuture = bootstrap.connect(new InetSocketAddress(host, port));
@@ -301,33 +295,6 @@ public class StackdProtocolClient {
 	}
 
 	/**
-	 * The netty handler class.
-	 */
-	final class ApplicationHandler extends SimpleChannelHandler {
-
-		/* (non-Javadoc)
-		 * @see org.jboss.netty.channel.SimpleChannelHandler#messageReceived(org.jboss.netty.channel.ChannelHandlerContext, org.jboss.netty.channel.MessageEvent)
-		 */
-		@Override
-		public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-			StackdPacket packet = (StackdPacket) e.getMessage();
-			if (logger.isDebugEnabled()) {
-				logger.debug("client received packet " + packet.getType() + ": " + packet.readableBytesToString(10));
-			}
-			onApplicationPacketReceived(packet);
-		}
-
-		/* (non-Javadoc)
-		 * @see org.jboss.netty.channel.SimpleChannelHandler#exceptionCaught(org.jboss.netty.channel.ChannelHandlerContext, org.jboss.netty.channel.ExceptionEvent)
-		 */
-		@Override
-		public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-			onException(e.getCause());
-		}
-
-	}
-
-	/**
 	 * Sends an update message for the player's position to the server.
 	 *
 	 * @param position    the player's position
@@ -354,103 +321,96 @@ public class StackdProtocolClient {
 	 * <p>
 	 * NOTE: This method gets invoked by the Netty thread, asynchronous
 	 * to the main game thread!
-	 *
-	 * @param packet the received packet
 	 */
-	protected void onApplicationPacketReceived(StackdPacket packet) {
-		try {
-			Message untypedMessage = Message.decodePacket(packet);
-			if (untypedMessage instanceof Hello) {
+	protected void onMessageReceived(Message untypedMessage) {
+		if (untypedMessage instanceof Hello) {
 
-				logger.debug("hello packet received");
-				Hello message = (Hello)untypedMessage;
-				synchronized (syncObject) {
-					sessionId = message.getSessionId();
-					if (sessionId < 0) {
-						throw new RuntimeException("server sent invalid session ID: " + sessionId);
-					}
-					syncObject.notifyAll();
+			logger.debug("hello packet received");
+			Hello message = (Hello)untypedMessage;
+			synchronized (syncObject) {
+				sessionId = message.getSessionId();
+				if (sessionId < 0) {
+					throw new RuntimeException("server sent invalid session ID: " + sessionId);
 				}
-				onReady();
-				logger.debug("protocol client ready");
-
-			} else if (untypedMessage instanceof FlashMessage) {
-
-				FlashMessage message = (FlashMessage)untypedMessage;
-				onFlashMessageReceived(message.getText());
-
-			} else if (untypedMessage instanceof InteractiveSectionDataResponse) {
-
-				if (sectionGridLoader != null) {
-					InteractiveSectionDataResponse message = (InteractiveSectionDataResponse)untypedMessage;
-					sectionGridLoader.handleInteractiveSectionImage(message);
-				} else {
-					logger.error("received interactive section image but no sectionGridLoader is set in the StackdProtoclClient!");
-				}
-
-			} else if (untypedMessage instanceof SingleSectionModificationEvent) {
-
-				if (sectionGridLoader != null) {
-					SingleSectionModificationEvent message = (SingleSectionModificationEvent)untypedMessage;
-					sectionGridLoader.handleModificationEvent(message);
-				} else {
-					logger.error("received section modification event but no sectionGridLoader is set in the StackdProtoclClient!");
-				}
-
-			} else if (untypedMessage instanceof ConsoleOutput) {
-
-				if (console != null) {
-					ConsoleOutput message = (ConsoleOutput)untypedMessage;
-					for (String line : message.getSegments()) {
-						console.println(line);
-					}
-				} else {
-					logger.error("received console output packet but there's no console set for the StackdProtocolClient!");
-				}
-
-			} else if (untypedMessage instanceof PlayerListUpdate) {
-
-				PlayerListUpdate message = (PlayerListUpdate)untypedMessage;
-				List<PlayerProxy> playerProxiesFromMessage = new ArrayList<PlayerProxy>();
-				for (PlayerListUpdate.Element element : message.getElements()) {
-					PlayerProxy proxy = new PlayerProxy(element.getId());
-					proxy.getPosition().copyFrom(element.getPosition());
-					proxy.getOrientation().copyFrom(element.getAngles());
-					playerProxiesFromMessage.add(proxy);
-				}
-				synchronized (this) {
-					this.updatedPlayerProxies = playerProxiesFromMessage;
-				}
-
-			} else if (untypedMessage instanceof PlayerNamesUpdate) {
-
-				PlayerNamesUpdate message = (PlayerNamesUpdate)untypedMessage;
-				Map<Integer, String> updatedPlayerNames = new HashMap<>();
-				for (PlayerNamesUpdate.Element element : message.getElements()) {
-					updatedPlayerNames.put(element.getId(), element.getName());
-				}
-				synchronized (this) {
-					this.updatedPlayerNames = updatedPlayerNames;
-				}
-
-			} else if (untypedMessage instanceof PlayerResumed) {
-
-				PlayerResumed message = (PlayerResumed)untypedMessage;
-				synchronized (this) {
-					this.playerResumedMessage = new PlayerResumedMessage(message.getPosition(), message.getOrientation());
-				}
-
-			} else if (untypedMessage instanceof UpdateCoins) {
-
-				UpdateCoins message = (UpdateCoins)untypedMessage;
-				coins = message.getCoins();
-				logger.info("update coins: " + coins);
-
-			} else {
-				logger.error("client received unexpected message: " + untypedMessage);
+				syncObject.notifyAll();
 			}
-		} catch (MessageDecodingException e) {
-			throw new RuntimeException("client could not decode message", e);
+			onReady();
+			logger.debug("protocol client ready");
+
+		} else if (untypedMessage instanceof FlashMessage) {
+
+			FlashMessage message = (FlashMessage)untypedMessage;
+			onFlashMessageReceived(message.getText());
+
+		} else if (untypedMessage instanceof InteractiveSectionDataResponse) {
+
+			if (sectionGridLoader != null) {
+				InteractiveSectionDataResponse message = (InteractiveSectionDataResponse)untypedMessage;
+				sectionGridLoader.handleInteractiveSectionImage(message);
+			} else {
+				logger.error("received interactive section image but no sectionGridLoader is set in the StackdProtoclClient!");
+			}
+
+		} else if (untypedMessage instanceof SingleSectionModificationEvent) {
+
+			if (sectionGridLoader != null) {
+				SingleSectionModificationEvent message = (SingleSectionModificationEvent)untypedMessage;
+				sectionGridLoader.handleModificationEvent(message);
+			} else {
+				logger.error("received section modification event but no sectionGridLoader is set in the StackdProtoclClient!");
+			}
+
+		} else if (untypedMessage instanceof ConsoleOutput) {
+
+			if (console != null) {
+				ConsoleOutput message = (ConsoleOutput)untypedMessage;
+				for (String line : message.getSegments()) {
+					console.println(line);
+				}
+			} else {
+				logger.error("received console output packet but there's no console set for the StackdProtocolClient!");
+			}
+
+		} else if (untypedMessage instanceof PlayerListUpdate) {
+
+			PlayerListUpdate message = (PlayerListUpdate)untypedMessage;
+			List<PlayerProxy> playerProxiesFromMessage = new ArrayList<PlayerProxy>();
+			for (PlayerListUpdate.Element element : message.getElements()) {
+				PlayerProxy proxy = new PlayerProxy(element.getId());
+				proxy.getPosition().copyFrom(element.getPosition());
+				proxy.getOrientation().copyFrom(element.getAngles());
+				playerProxiesFromMessage.add(proxy);
+			}
+			synchronized (this) {
+				this.updatedPlayerProxies = playerProxiesFromMessage;
+			}
+
+		} else if (untypedMessage instanceof PlayerNamesUpdate) {
+
+			PlayerNamesUpdate message = (PlayerNamesUpdate)untypedMessage;
+			Map<Integer, String> updatedPlayerNames = new HashMap<>();
+			for (PlayerNamesUpdate.Element element : message.getElements()) {
+				updatedPlayerNames.put(element.getId(), element.getName());
+			}
+			synchronized (this) {
+				this.updatedPlayerNames = updatedPlayerNames;
+			}
+
+		} else if (untypedMessage instanceof PlayerResumed) {
+
+			PlayerResumed message = (PlayerResumed)untypedMessage;
+			synchronized (this) {
+				this.playerResumedMessage = new PlayerResumedMessage(message.getPosition(), message.getOrientation());
+			}
+
+		} else if (untypedMessage instanceof UpdateCoins) {
+
+			UpdateCoins message = (UpdateCoins)untypedMessage;
+			coins = message.getCoins();
+			logger.info("update coins: " + coins);
+
+		} else {
+			logger.error("client received unexpected message: " + untypedMessage);
 		}
 	}
 
