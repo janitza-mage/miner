@@ -92,7 +92,7 @@ public final class FrameLoop {
 				rootHandler.onAfterDraw(glWorkerLoop);
 				if (glWorkerLoop != null) {
 					// TODO don't create a new object every frame
-					glWorkerLoop.getQueue().add(new GlWorkUnit() {
+					glWorkerLoop.schedule(new GlWorkUnit() {
 						@Override
 						public void execute() {
 							glFlush();

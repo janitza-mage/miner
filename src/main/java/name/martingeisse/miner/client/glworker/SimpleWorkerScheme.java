@@ -35,14 +35,6 @@ public final class SimpleWorkerScheme {
 	}
 
 	/**
-	 * Getter method for the OpenGL work queue.
-	 * @return the OpenGL work queue
-	 */
-	public static BlockingQueue<GlWorkUnit> getGlWorkQueue() {
-		return glWorkerLoop.getQueue();
-	}
-	
-	/**
 	 * Requests execution of a work unit.
 	 * @param workUnit the work unit
 	 */

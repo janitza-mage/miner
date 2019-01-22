@@ -33,7 +33,7 @@ public final class GuiFrameHandler extends AbstractFrameHandler {
 			drawInternal();
 		}
 	};
-	
+
 	/**
 	 * Constructor.
 	 */
