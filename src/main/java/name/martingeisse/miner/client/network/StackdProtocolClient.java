@@ -23,7 +23,6 @@ import name.martingeisse.miner.common.network.message.c2s.DigNotification;
 import name.martingeisse.miner.common.network.message.c2s.ResumePlayer;
 import name.martingeisse.miner.common.network.message.c2s.UpdatePosition;
 import name.martingeisse.miner.common.network.message.s2c.*;
-import name.martingeisse.miner.common.network.protocol.StackdPacket;
 import org.apache.log4j.Logger;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.ChannelFactory;
@@ -169,22 +168,6 @@ public class StackdProtocolClient {
 	 */
 	public void setConsole(Console console) {
 		this.console = console;
-	}
-
-	/**
-	 * Sends a packet to the server.
-	 * <p>
-	 * The packet object should be considered invalid afterwards
-	 * (hence "destructive") since this method will assemble header
-	 * fields in the packet and alter its reader/writer index,
-	 * possibly asynchronous to the calling thread.
-	 * <p>
-	 * TODO: call this method sendDestructive().
-	 *
-	 * @param packet the packet to send
-	 */
-	public final void send(StackdPacket packet) {
-		endpoint.sendPacketDestructive(packet);
 	}
 
 	public final void send(Message message) {

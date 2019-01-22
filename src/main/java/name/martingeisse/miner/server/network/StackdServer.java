@@ -21,13 +21,12 @@ import name.martingeisse.miner.common.network.message.s2c.PlayerListUpdate;
 import name.martingeisse.miner.common.network.message.s2c.PlayerNamesUpdate;
 import name.martingeisse.miner.common.network.message.s2c.PlayerResumed;
 import name.martingeisse.miner.common.network.message.s2c.SingleSectionModificationEvent;
-import name.martingeisse.miner.common.network.protocol.StackdPacket;
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.server.Databases;
-import name.martingeisse.miner.server.console.MinerConsoleCommandHandler;
 import name.martingeisse.miner.server.MinerServerSecurityConstants;
 import name.martingeisse.miner.server.console.IConsoleCommandHandler;
+import name.martingeisse.miner.server.console.MinerConsoleCommandHandler;
 import name.martingeisse.miner.server.console.NullConsoleCommandHandler;
 import name.martingeisse.miner.server.entities.Player;
 import name.martingeisse.miner.server.entities.QPlayer;
@@ -203,30 +202,6 @@ public class StackdServer {
 	 */
 	public final Collection<StackdSession> getSessions() {
 		return sessions.values();
-	}
-
-	/**
-	 * Broadcasts a packet to all clients.
-	 * <p>
-	 * This method takes the list of clients as it exists when calling this
-	 * method. Calling code must make sure that the packet does not
-	 * contain information that can become invalid when the list of clients
-	 * has changed since the packet was built.
-	 * <p>
-	 * Header fields of the packet will be assembled by this method. This
-	 * will actually happen for each channel, but since the header fields
-	 * are the same for all channel (they only depend on the packet), this
-	 * should not be a problem. (Implementation note: This method still
-	 * must ensure that each channel gets its own buffer object with
-	 * separate reader/writer index).
-	 *
-	 * @param packet the packet to broadcast to all clients
-	 */
-	public final void broadcast(final StackdPacket packet) {
-		for (final StackdSession session : sessions.values()) {
-			final StackdPacket duplicatePacket = new StackdPacket(packet.getType(), packet.getBuffer().duplicate(), false);
-			session.sendPacketDestructive(duplicatePacket);
-		}
 	}
 
 	public final void broadcast(final Message message) {

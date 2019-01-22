@@ -148,7 +148,7 @@ public final class SectionGridLoader {
 				final SectionId[] sectionIds = missingSectionIds.toArray(new SectionId[missingSectionIds.size()]);
 				for (SectionId sectionId : sectionIds) {
 					logger.debug("requested render model update for section " + sectionId);
-					protocolClient.send(new InteractiveSectionDataRequest(sectionId).encodePacket());
+					protocolClient.send(new InteractiveSectionDataRequest(sectionId));
 					anythingUpdated = true;
 				}
 			}
@@ -164,7 +164,7 @@ public final class SectionGridLoader {
 				final SectionId[] sectionIds = missingSectionIds.toArray(new SectionId[missingSectionIds.size()]);
 				for (SectionId sectionId : sectionIds) {
 					logger.debug("requested collider update for section " + sectionId);
-					protocolClient.send(new InteractiveSectionDataRequest(sectionId).encodePacket());
+					protocolClient.send(new InteractiveSectionDataRequest(sectionId));
 					anythingUpdated = true;
 				}
 			}
@@ -181,7 +181,7 @@ public final class SectionGridLoader {
 	 */
 	public void reloadSection(SectionId sectionId) {
 		// TODO check distance; adjust data type; fetch at all?
-		protocolClient.send(new InteractiveSectionDataRequest(sectionId).encodePacket());
+		protocolClient.send(new InteractiveSectionDataRequest(sectionId));
 	}
 	
 	/**

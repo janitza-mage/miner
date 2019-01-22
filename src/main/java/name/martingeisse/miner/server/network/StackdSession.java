@@ -12,7 +12,6 @@ import name.martingeisse.miner.common.network.message.Message;
 import name.martingeisse.miner.common.network.message.s2c.ConsoleOutput;
 import name.martingeisse.miner.common.network.message.s2c.FlashMessage;
 import name.martingeisse.miner.common.network.message.s2c.UpdateCoins;
-import name.martingeisse.miner.common.network.protocol.StackdPacket;
 import name.martingeisse.miner.server.Databases;
 import name.martingeisse.miner.server.entities.QPlayer;
 import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
@@ -111,19 +110,6 @@ public class StackdSession {
 
 	public void setName(final String name) {
 		this.name = name;
-	}
-
-	/**
-	 * Sends a network packet to the client that owns this session.
-	 * The packet object should be considered invalid afterwards
-	 * (hence "destructive") since this method will assemble header
-	 * fields in the packet and alter its reader/writer index,
-	 * possibly asynchronous to the calling thread.
-	 *
-	 * @param packet the packet to send
-	 */
-	public final void sendPacketDestructive(StackdPacket packet) {
-		endpoint.sendPacketDestructive(packet);
 	}
 
 	public final void send(Message message) {

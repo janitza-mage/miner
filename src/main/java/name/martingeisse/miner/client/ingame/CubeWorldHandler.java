@@ -461,7 +461,7 @@ public class CubeWorldHandler {
 							CubeModification.Builder builder = new CubeModification.Builder();
 							builder.add(x, y, z, effectiveCubeType);
 							breakFree(builder);
-							IngameHandler.protocolClient.send(builder.build().encodePacket());
+							IngameHandler.protocolClient.send(builder.build());
 
 							// cooldownFinishTime = now + 1000;
 							cooldownFinishTime = now + 200;
@@ -488,7 +488,7 @@ public class CubeWorldHandler {
 		if (keysEnabled && Keyboard.isKeyDown(Keyboard.KEY_B)) {
 			final CubeModification.Builder builder = new CubeModification.Builder();
 			breakFree(builder);
-			IngameHandler.protocolClient.send(builder.build().encodePacket());
+			IngameHandler.protocolClient.send(builder.build());
 		}
 
 		// handle player logic
