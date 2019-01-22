@@ -9,6 +9,7 @@ package name.martingeisse.miner.client.gui;
 import name.martingeisse.miner.client.frame.AbstractFrameHandler;
 import name.martingeisse.miner.client.frame.BreakFrameLoopException;
 import name.martingeisse.miner.client.glworker.GlWorkerLoop;
+import org.apache.log4j.Logger;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -17,6 +18,8 @@ import org.lwjgl.opengl.Display;
  * This handler draws the GUI and sends events to it.
  */
 public final class GuiFrameHandler extends AbstractFrameHandler {
+
+	private static Logger logger = Logger.getLogger(GuiFrameHandler.class);
 
 	/**
 	 * the gui
@@ -43,9 +46,13 @@ public final class GuiFrameHandler extends AbstractFrameHandler {
 	 */
 	@Override
 	public void draw(final GlWorkerLoop glWorkerLoop) {
-		gui.setGlWorkerLoop(glWorkerLoop);
-		gui.fireEvent(GuiEvent.DRAW);
-		gui.executeFollowupOpenglActions();
+		try {
+			gui.setGlWorkerLoop(glWorkerLoop);
+			gui.fireEvent(GuiEvent.DRAW);
+			gui.executeFollowupOpenglActions();
+		} catch (Exception e) {
+			logger.error("unexpected exception in GUI (drawing)", e);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -53,25 +60,29 @@ public final class GuiFrameHandler extends AbstractFrameHandler {
 	 */
 	@Override
 	public synchronized void handleStep() throws BreakFrameLoopException {
+		try {
 
-		// dispatch keyboard events
-		while (Keyboard.next()) {
-			gui.fireEvent(Keyboard.getEventKeyState() ? GuiEvent.KEY_PRESSED : GuiEvent.KEY_RELEASED);
-		}
-
-		// dispatch mouse events
-		while (Mouse.next()) {
-			if (Mouse.getEventDX() != 0 || Mouse.getEventDY() != 0) {
-				gui.fireEvent(GuiEvent.MOUSE_MOVED);
+			// dispatch keyboard events
+			while (Keyboard.next()) {
+				gui.fireEvent(Keyboard.getEventKeyState() ? GuiEvent.KEY_PRESSED : GuiEvent.KEY_RELEASED);
 			}
-			if (Mouse.getEventButton() != -1) {
-				gui.fireEvent(Mouse.getEventButtonState() ? GuiEvent.MOUSE_BUTTON_PRESSED : GuiEvent.MOUSE_BUTTON_RELEASED);
+
+			// dispatch mouse events
+			while (Mouse.next()) {
+				if (Mouse.getEventDX() != 0 || Mouse.getEventDY() != 0) {
+					gui.fireEvent(GuiEvent.MOUSE_MOVED);
+				}
+				if (Mouse.getEventButton() != -1) {
+					gui.fireEvent(Mouse.getEventButtonState() ? GuiEvent.MOUSE_BUTTON_PRESSED : GuiEvent.MOUSE_BUTTON_RELEASED);
+				}
 			}
+
+			// handle pending followup actions
+			gui.executeFollowupLogicActions();
+
+		} catch (Exception e) {
+			logger.error("unexpected exception in GUI (logic)", e);
 		}
-
-		// handle pending followup actions
-		gui.executeFollowupLogicActions();
-
 	}
 
 }

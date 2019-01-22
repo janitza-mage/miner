@@ -14,6 +14,7 @@ import name.martingeisse.miner.client.gui.control.Button;
 import name.martingeisse.miner.client.gui.element.Grid;
 import name.martingeisse.miner.client.gui.element.Spacer;
 import name.martingeisse.miner.client.gui.element.VerticalLayout;
+import name.martingeisse.miner.client.util.UserVisibleMessageException;
 
 /**
  * The "login" menu page.
@@ -59,7 +60,11 @@ public class LoginPage extends AbstractStartmenuPage {
 				getGui().addFollowupLogicAction(new Runnable() {
 					@Override
 					public void run() {
-						login();
+						try {
+							login();
+						} catch (UserVisibleMessageException e) {
+							onException(e);
+						}
 					}
 				});
 			}
