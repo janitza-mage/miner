@@ -17,7 +17,7 @@ import name.martingeisse.miner.client.system.SystemResourceNode;
 import name.martingeisse.miner.common.collision.CompositeCollider;
 import name.martingeisse.miner.common.collision.IAxisAlignedCollider;
 import name.martingeisse.miner.common.geometry.ClusterSize;
-import name.martingeisse.miner.common.geometry.SectionId;
+import name.martingeisse.miner.common.section.SectionId;
 import org.apache.log4j.Logger;
 
 /**

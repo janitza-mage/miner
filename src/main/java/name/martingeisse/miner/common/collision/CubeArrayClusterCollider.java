@@ -10,7 +10,7 @@ import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.miner.common.geometry.RectangularRegion;
-import name.martingeisse.miner.common.geometry.SectionId;
+import name.martingeisse.miner.common.section.SectionId;
 
 /**
  * A collider for an array of cubes that represents a cube cluster. This

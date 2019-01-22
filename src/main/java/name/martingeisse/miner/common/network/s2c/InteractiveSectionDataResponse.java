@@ -4,7 +4,7 @@
  */
 package name.martingeisse.miner.common.network.s2c;
 
-import name.martingeisse.miner.common.geometry.SectionId;
+import name.martingeisse.miner.common.section.SectionId;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
 import org.jboss.netty.buffer.ChannelBuffer;

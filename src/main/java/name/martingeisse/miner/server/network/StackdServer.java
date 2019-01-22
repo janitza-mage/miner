@@ -12,7 +12,7 @@ import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
-import name.martingeisse.miner.common.geometry.SectionId;
+import name.martingeisse.miner.common.section.SectionId;
 import name.martingeisse.miner.common.geometry.angle.EulerAngles;
 import name.martingeisse.miner.common.geometry.vector.Vector3d;
 import name.martingeisse.miner.common.network.Message;

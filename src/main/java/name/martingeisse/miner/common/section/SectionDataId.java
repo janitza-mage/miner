@@ -7,7 +7,6 @@
 package name.martingeisse.miner.common.section;
 
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
-import name.martingeisse.miner.common.geometry.SectionId;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 

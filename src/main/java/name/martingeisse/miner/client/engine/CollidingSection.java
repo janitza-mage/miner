@@ -9,7 +9,7 @@ package name.martingeisse.miner.client.engine;
 import name.martingeisse.miner.common.collision.IAxisAlignedCollider;
 import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.miner.common.geometry.RectangularRegion;
-import name.martingeisse.miner.common.geometry.SectionId;
+import name.martingeisse.miner.common.section.SectionId;
 
 /**
  * This class wraps an {@link IAxisAlignedCollider} for a section.

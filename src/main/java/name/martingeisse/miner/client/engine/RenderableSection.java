@@ -17,7 +17,7 @@ import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.miner.common.geometry.RectangularRegion;
-import name.martingeisse.miner.common.geometry.SectionId;
+import name.martingeisse.miner.common.section.SectionId;
 import org.apache.log4j.Logger;
 
 /**
