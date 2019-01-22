@@ -6,6 +6,7 @@
 
 package name.martingeisse.miner.client.gui.element;
 
+import name.martingeisse.miner.client.glworker.GlWorkUnit;
 import org.lwjgl.opengl.GL11;
 
 import name.martingeisse.common.util.ParameterUtil;
@@ -24,31 +25,43 @@ import name.martingeisse.miner.client.gui.util.Color;
  */
 public abstract class Grid extends GuiElement {
 
-	/**
-	 * the cellCountX
-	 */
 	private final int cellCountX;
-	
-	/**
-	 * the cellCountY
-	 */
 	private final int cellCountY;
-	
-	/**
-	 * the children
-	 */
 	private GuiElement[] children;
-	
-	/**
-	 * the color
-	 */
 	private Color color;
-	
-	/**
-	 * the thickness
-	 */
 	private int thickness;
-	
+
+	private int childLayoutWidth;
+	private int childLayoutHeight;
+	private final GlWorkUnit workUnit = new GlWorkUnit() {
+		@Override
+		public void execute() {
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GL11.glDisable(GL11.GL_BLEND);
+			GL11.glEnable(GL11.GL_LINE_SMOOTH);
+			GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
+			color.glColor();
+			GL11.glLineWidth(getGui().unitsToPixelsFloat(thickness));
+			GL11.glBegin(GL11.GL_LINES);
+			int halfThickness = thickness / 2;
+			int startX = getAbsoluteX() + halfThickness;
+			int startY = getAbsoluteY() + halfThickness;
+			int endX = getAbsoluteX() + cellCountX * childLayoutWidth + halfThickness;
+			int endY = getAbsoluteY() + cellCountY * childLayoutHeight + halfThickness;
+			for (int i=0; i<cellCountX + 1; i++) {
+				float x = getAbsoluteX() + i * childLayoutWidth + halfThickness;
+				GL11.glVertex2f(x, startY);
+				GL11.glVertex2f(x, endY);
+			}
+			for (int i=0; i<cellCountY + 1; i++) {
+				float y = getAbsoluteY() + i * childLayoutHeight + halfThickness;
+				GL11.glVertex2f(startX, y);
+				GL11.glVertex2f(endX, y);
+			}
+			GL11.glEnd();
+		}
+	};
+
 	/**
 	 * Constructor.
 	 * @param cellCountX the number of cells along the X axis
@@ -149,31 +162,9 @@ public abstract class Grid extends GuiElement {
 		}
 		if (event == GuiEvent.DRAW && children.length > 0) {
 			GuiElement child = children[0];
-			int childLayoutWidth = child.getWidth() + thickness;
-			int childLayoutHeight = child.getHeight() + thickness;
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glDisable(GL11.GL_BLEND);
-			GL11.glEnable(GL11.GL_LINE_SMOOTH);
-			GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
-			color.glColor();
-			GL11.glLineWidth(getGui().unitsToPixelsFloat(thickness));
-			GL11.glBegin(GL11.GL_LINES);
-			int halfThickness = thickness / 2;
-			int startX = getAbsoluteX() + halfThickness;
-			int startY = getAbsoluteY() + halfThickness;
-			int endX = getAbsoluteX() + cellCountX * childLayoutWidth + halfThickness;
-			int endY = getAbsoluteY() + cellCountY * childLayoutHeight + halfThickness;
-			for (int i=0; i<cellCountX + 1; i++) {
-				float x = getAbsoluteX() + i * childLayoutWidth + halfThickness;
-				GL11.glVertex2f(x, startY);
-				GL11.glVertex2f(x, endY);
-			}
-			for (int i=0; i<cellCountY + 1; i++) {
-				float y = getAbsoluteY() + i * childLayoutHeight + halfThickness;
-				GL11.glVertex2f(startX, y);
-				GL11.glVertex2f(endX, y);
-			}
-			GL11.glEnd();
+			childLayoutWidth = child.getWidth() + thickness;
+			childLayoutHeight = child.getHeight() + thickness;
+			getGui().getGlWorkerLoop().schedule(workUnit);
 		}
 	}
 

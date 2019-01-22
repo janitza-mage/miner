@@ -1,25 +1,19 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.miner.client.gui.control;
 
+import name.martingeisse.miner.client.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.gui.Gui;
 import name.martingeisse.miner.client.gui.GuiElement;
 import name.martingeisse.miner.client.gui.GuiEvent;
-import name.martingeisse.miner.client.gui.element.AbstractFillElement;
-import name.martingeisse.miner.client.gui.element.FillColor;
-import name.martingeisse.miner.client.gui.element.IFocusableElement;
-import name.martingeisse.miner.client.gui.element.Margin;
-import name.martingeisse.miner.client.gui.element.OverlayStack;
-import name.martingeisse.miner.client.gui.element.TextLine;
-import name.martingeisse.miner.client.gui.element.ThinBorder;
+import name.martingeisse.miner.client.gui.element.*;
 import name.martingeisse.miner.client.gui.util.AreaAlignment;
 import name.martingeisse.miner.client.gui.util.Color;
 import name.martingeisse.miner.client.system.Font;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
@@ -62,12 +56,12 @@ public final class TextField extends Control implements IFocusableElement {
 	 * the passwordCharacter
 	 */
 	private char passwordCharacter;
-	
+
 	/**
 	 * the nextFocusableElement
 	 */
 	private IFocusableElement nextFocusableElement;
-	
+
 	/**
 	 * the cursorPosition
 	 */
@@ -77,27 +71,27 @@ public final class TextField extends Control implements IFocusableElement {
 	 * Constructor.
 	 */
 	public TextField() {
-		
+
 		// text line and cursor
 		this.textLine = new TextLine();
 		this.innerOverlayStack = new OverlayStack().setAlignment(AreaAlignment.LEFT_CENTER);
 		this.innerOverlayStack.addElement(textLine);
 		this.innerOverlayStack.addElement(new CursorLayer());
-		
+
 		// embed into margin
 		this.margin = new Margin(innerOverlayStack, 5 * Gui.MINIGRID);
 		this.outerOverlayStack = new OverlayStack().setAlignment(AreaAlignment.LEFT_CENTER);
 		outerOverlayStack.addElement(new FillColor(new Color(0, 0, 64, 255)));
 		outerOverlayStack.addElement(margin);
-		
+
 		// add border
 		this.border = new ThinBorder(outerOverlayStack);
-		
+
 		// initialize fields
 		this.value = "";
-		this.passwordCharacter = (char)0;
+		this.passwordCharacter = (char) 0;
 		setControlRootElement(border);
-		
+
 	}
 
 	/**
@@ -197,7 +191,7 @@ public final class TextField extends Control implements IFocusableElement {
 		this.passwordCharacter = passwordCharacter;
 		setValue(value);
 	}
-	
+
 	/**
 	 * Getter method for the nextFocusableElement.
 	 * @return the nextFocusableElement
@@ -205,7 +199,7 @@ public final class TextField extends Control implements IFocusableElement {
 	public IFocusableElement getNextFocusableElement() {
 		return nextFocusableElement;
 	}
-	
+
 	/**
 	 * Setter method for the nextFocusableElement.
 	 * @param nextFocusableElement the nextFocusableElement to set
@@ -215,7 +209,7 @@ public final class TextField extends Control implements IFocusableElement {
 		this.nextFocusableElement = nextFocusableElement;
 		return this;
 	}
-	
+
 	/**
 	 * Getter method for the cursorPosition.
 	 * @return the cursorPosition
@@ -223,7 +217,7 @@ public final class TextField extends Control implements IFocusableElement {
 	public int getCursorPosition() {
 		return cursorPosition;
 	}
-	
+
 	/**
 	 * Setter method for the cursorPosition.
 	 * @param cursorPosition the cursorPosition to set
@@ -233,7 +227,7 @@ public final class TextField extends Control implements IFocusableElement {
 		this.cursorPosition = cursorPosition;
 		return this;
 	}
-	
+
 	/**
 	 * Moves the cursor to the position after the last character.
 	 * @return this
@@ -250,57 +244,57 @@ public final class TextField extends Control implements IFocusableElement {
 	@SuppressWarnings("incomplete-switch")
 	public void handleEvent(GuiEvent event) {
 		switch (event) {
-		
-		case MOUSE_BUTTON_PRESSED:
-			if (isMouseInside()) {
-				getGui().setFocus(this);
-			}
-			break;
-			
-		case KEY_PRESSED:
-			if (getGui().getFocus() == this) {
-				char character = Keyboard.getEventCharacter();
-				int code = Keyboard.getEventKey();
-				if (code == Keyboard.KEY_BACK) {
-					if (cursorPosition > 0) {
-						int newPosition = cursorPosition - 1;
-						String prefix = value.substring(0, cursorPosition - 1);
-						String suffix = value.substring(cursorPosition);
-						setValue(prefix + suffix);
-						cursorPosition = newPosition;
-					}
-				} else if (code == Keyboard.KEY_DELETE) {
-					if (cursorPosition < value.length()) {
+
+			case MOUSE_BUTTON_PRESSED:
+				if (isMouseInside()) {
+					getGui().setFocus(this);
+				}
+				break;
+
+			case KEY_PRESSED:
+				if (getGui().getFocus() == this) {
+					char character = Keyboard.getEventCharacter();
+					int code = Keyboard.getEventKey();
+					if (code == Keyboard.KEY_BACK) {
+						if (cursorPosition > 0) {
+							int newPosition = cursorPosition - 1;
+							String prefix = value.substring(0, cursorPosition - 1);
+							String suffix = value.substring(cursorPosition);
+							setValue(prefix + suffix);
+							cursorPosition = newPosition;
+						}
+					} else if (code == Keyboard.KEY_DELETE) {
+						if (cursorPosition < value.length()) {
+							String prefix = value.substring(0, cursorPosition);
+							String suffix = value.substring(cursorPosition + 1);
+							setValue(prefix + suffix);
+						}
+					} else if (character == '\t') {
+						if (nextFocusableElement != null) {
+							getGui().addFollowupLogicAction(new Runnable() {
+								@Override
+								public void run() {
+									getGui().setFocus(nextFocusableElement);
+								}
+							});
+						}
+					} else if (code == Keyboard.KEY_LEFT) {
+						if (cursorPosition > 0) {
+							cursorPosition--;
+						}
+					} else if (code == Keyboard.KEY_RIGHT) {
+						if (cursorPosition < value.length()) {
+							cursorPosition++;
+						}
+					} else if (character >= 32) {
 						String prefix = value.substring(0, cursorPosition);
-						String suffix = value.substring(cursorPosition + 1);
-						setValue(prefix + suffix);
-					}
-				} else if (character == '\t') {
-					if (nextFocusableElement != null) {
-						getGui().addFollowupLogicAction(new Runnable() {
-							@Override
-							public void run() {
-								getGui().setFocus(nextFocusableElement);
-							}
-						});
-					}
-				} else if (code == Keyboard.KEY_LEFT) {
-					if (cursorPosition > 0) {
-						cursorPosition--;
-					}
-				} else if (code == Keyboard.KEY_RIGHT) {
-					if (cursorPosition < value.length()) {
+						String suffix = value.substring(cursorPosition);
+						setValue(prefix + character + suffix);
 						cursorPosition++;
 					}
-				} else if (character >= 32) {
-					String prefix = value.substring(0, cursorPosition);
-					String suffix = value.substring(cursorPosition);
-					setValue(prefix + character + suffix);
-					cursorPosition++;
 				}
-			}
-			break;
-			
+				break;
+
 		}
 		super.handleEvent(event);
 	}
@@ -317,26 +311,39 @@ public final class TextField extends Control implements IFocusableElement {
 	 *
 	 */
 	private final class CursorLayer extends AbstractFillElement {
-		@Override
-		protected void draw() {
-			if (getGui().getFocus() == TextField.this) {
+
+		private final GlWorkUnit workUnit = new GlWorkUnit() {
+			@Override
+			public void execute() {
+
+				String currentText = textLine.getText();
+				Font currentFont = textLine.getEffectiveFont();
+
 				GL11.glDisable(GL11.GL_TEXTURE_2D);
 				GL11.glDisable(GL11.GL_BLEND);
 				Color.WHITE.glColor();
 				GL11.glLineWidth(1);
-				
-				String textBeforeCursor = textLine.getText().substring(0, cursorPosition);
-				Font font = textLine.getEffectiveFont();
-				int x = getAbsoluteX() + getGui().pixelsToUnitsInt(font.getStringWidth(textBeforeCursor));
+
+				int substringEnd = Math.min(cursorPosition, currentText.length());
+				String textBeforeCursor = currentText.substring(0, substringEnd);
+				int x = getAbsoluteX() + getGui().pixelsToUnitsInt(currentFont.getStringWidth(textBeforeCursor));
 				int y1 = getAbsoluteY();
 				int y2 = y1 + getHeight();
-				
+
 				GL11.glBegin(GL11.GL_LINES);
 				GL11.glVertex2i(x, y1);
 				GL11.glVertex2i(x, y2);
 				GL11.glEnd();
 			}
+		};
+
+		@Override
+		protected void draw() {
+			if (getGui().getFocus() == TextField.this) {
+				getGui().getGlWorkerLoop().schedule(workUnit);
+			}
 		}
+
 	}
-	
+
 }

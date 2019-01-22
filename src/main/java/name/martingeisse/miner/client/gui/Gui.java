@@ -6,12 +6,15 @@
 
 package name.martingeisse.miner.client.gui;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import name.martingeisse.miner.client.glworker.GlWorkUnit;
+import name.martingeisse.miner.client.glworker.GlWorkerLoop;
 import name.martingeisse.miner.client.gui.element.IFocusableElement;
 import name.martingeisse.miner.client.system.Font;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
+
+import java.util.LinkedList;
+import java.util.Queue;
 
 
 /**
@@ -49,56 +52,29 @@ public final class Gui {
 	 */
 	public static final int MINIGRID = 100;
 	
-	/**
-	 * the widthPixels
-	 */
 	private final int widthPixels;
-	
-	/**
-	 * the heightPixels
-	 */
 	private final int heightPixels;
-	
-	/**
-	 * the widthUnits
-	 */
 	private final int widthUnits;
-	
-	/**
-	 * the rootElement
-	 */
 	private GuiElement rootElement;
-
-	/**
-	 * the layoutRequested
-	 */
 	private boolean layoutRequested;
-	
-	/**
-	 * the time
-	 */
 	private int time;
-	
-	/**
-	 * the defaultFont
-	 */
 	private Font defaultFont;
-	
-	/**
-	 * the focus
-	 */
 	private IFocusableElement focus;
-	
-	/**
-	 * the followupLogicActions
-	 */
 	private Queue<Runnable> followupLogicActions;
-
-	/**
-	 * the followupOpenglActions
-	 */
 	private Queue<Runnable> followupOpenglActions;
-	
+	private GlWorkerLoop glWorkerLoop;
+
+	private final GlWorkUnit initializeFrameWorkUnit = new GlWorkUnit() {
+		@Override
+		public void execute() {
+			GL11.glMatrixMode(GL11.GL_MODELVIEW);
+			GL11.glLoadIdentity();
+			GL11.glMatrixMode(GL11.GL_PROJECTION);
+			GL11.glLoadIdentity();
+			GL11.glOrtho(0, widthUnits, HEIGHT_UNITS, 0, -1, 1);
+		}
+	};
+
 	/**
 	 * Constructor.
 	 * @param widthPixels the width of the GUI in pixels
@@ -172,16 +148,15 @@ public final class Gui {
 			return;
 		}
 		if (event == GuiEvent.DRAW) {
+			if (glWorkerLoop == null) {
+				throw new IllegalStateException("trying to draw the GUI without setting a GlWorkerLoop");
+			}
 			if (layoutRequested) {
 				rootElement.requestSize(widthUnits, HEIGHT_UNITS);
 				rootElement.setPosition(0, 0);
 				layoutRequested = false;
 			}
-			GL11.glMatrixMode(GL11.GL_MODELVIEW);
-			GL11.glLoadIdentity();
-			GL11.glMatrixMode(GL11.GL_PROJECTION);
-			GL11.glLoadIdentity();
-			GL11.glOrtho(0, widthUnits, HEIGHT_UNITS, 0, -1, 1);
+			glWorkerLoop.schedule(initializeFrameWorkUnit);
 		}
 		time = (int)System.currentTimeMillis();
 		rootElement.handleEvent(event);
@@ -344,5 +319,13 @@ public final class Gui {
 			action.run();
 		}
 	}
-	
+
+	public GlWorkerLoop getGlWorkerLoop() {
+		return glWorkerLoop;
+	}
+
+	public void setGlWorkerLoop(GlWorkerLoop glWorkerLoop) {
+		this.glWorkerLoop = glWorkerLoop;
+	}
+
 }

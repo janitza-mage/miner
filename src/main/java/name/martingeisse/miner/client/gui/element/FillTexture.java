@@ -7,6 +7,7 @@
 package name.martingeisse.miner.client.gui.element;
 
 import name.martingeisse.common.util.ParameterUtil;
+import name.martingeisse.miner.client.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.gui.Gui;
 import name.martingeisse.miner.client.system.StackdTexture;
 import org.lwjgl.opengl.GL11;
@@ -16,20 +17,36 @@ import org.lwjgl.opengl.GL11;
  */
 public final class FillTexture extends AbstractFillElement {
 
-	/**
-	 * the texture
-	 */
 	private StackdTexture texture;
-
-	/**
-	 * the repetitionLengthX
-	 */
 	private int repetitionLengthX;
-
-	/**
-	 * the repetitionLengthY
-	 */
 	private int repetitionLengthY;
+
+	private final GlWorkUnit workUnit = new GlWorkUnit() {
+		@Override
+		public void execute() {
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			GL11.glDisable(GL11.GL_BLEND);
+			texture.glBindTexture();
+			final int x = getAbsoluteX(), y = getAbsoluteY(), w = getWidth(), h = getHeight();
+			final Gui gui = getGui();
+			final float effectiveRepetitionLengthX = (repetitionLengthX < 1 ? gui.pixelsToUnitsInt(texture.getWidth()) : repetitionLengthX);
+			final float effectiveRepetitionLengthY = (repetitionLengthY < 1 ? gui.pixelsToUnitsInt(texture.getHeight()) : repetitionLengthY);
+			final float s = (w / effectiveRepetitionLengthX);
+			final float t = (h / effectiveRepetitionLengthY);
+
+			GL11.glColor3ub((byte)255, (byte)255, (byte)255);
+			GL11.glBegin(GL11.GL_TRIANGLE_FAN);
+			GL11.glTexCoord2f(0.0f, 0.0f);
+			GL11.glVertex2i(x, y);
+			GL11.glTexCoord2f(s, 0.0f);
+			GL11.glVertex2i(x + w, y);
+			GL11.glTexCoord2f(s, t);
+			GL11.glVertex2i(x + w, y + h);
+			GL11.glTexCoord2f(0.0f, t);
+			GL11.glVertex2i(x, y + h);
+			GL11.glEnd();
+		}
+	};
 
 	/**
 	 * Constructor.
@@ -115,27 +132,7 @@ public final class FillTexture extends AbstractFillElement {
 	 */
 	@Override
 	protected void draw() {
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glDisable(GL11.GL_BLEND);
-		texture.glBindTexture();
-		final int x = getAbsoluteX(), y = getAbsoluteY(), w = getWidth(), h = getHeight();
-		final Gui gui = getGui();
-		final float effectiveRepetitionLengthX = (repetitionLengthX < 1 ? gui.pixelsToUnitsInt(texture.getWidth()) : repetitionLengthX);
-		final float effectiveRepetitionLengthY = (repetitionLengthY < 1 ? gui.pixelsToUnitsInt(texture.getHeight()) : repetitionLengthY);
-		final float s = (w / effectiveRepetitionLengthX);
-		final float t = (h / effectiveRepetitionLengthY);
-
-		GL11.glColor3ub((byte)255, (byte)255, (byte)255);
-		GL11.glBegin(GL11.GL_TRIANGLE_FAN);
-		GL11.glTexCoord2f(0.0f, 0.0f);
-		GL11.glVertex2i(x, y);
-		GL11.glTexCoord2f(s, 0.0f);
-		GL11.glVertex2i(x + w, y);
-		GL11.glTexCoord2f(s, t);
-		GL11.glVertex2i(x + w, y + h);
-		GL11.glTexCoord2f(0.0f, t);
-		GL11.glVertex2i(x, y + h);
-		GL11.glEnd();
+		getGui().getGlWorkerLoop().schedule(workUnit);
 	}
 
 }

@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -8,7 +8,6 @@ package name.martingeisse.miner.client.gui;
 
 import name.martingeisse.miner.client.frame.AbstractFrameHandler;
 import name.martingeisse.miner.client.frame.BreakFrameLoopException;
-import name.martingeisse.miner.client.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.glworker.GlWorkerLoop;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -25,22 +24,12 @@ public final class GuiFrameHandler extends AbstractFrameHandler {
 	private final Gui gui;
 
 	/**
-	 * the drawWorkUnit
-	 */
-	private final GlWorkUnit drawWorkUnit = new GlWorkUnit() {
-		@Override
-		public void execute() {
-			drawInternal();
-		}
-	};
-
-	/**
 	 * Constructor.
 	 */
 	public GuiFrameHandler() {
 		this.gui = new Gui(Display.getWidth(), Display.getHeight());
 	}
-	
+
 	/**
 	 * Getter method for the gui.
 	 * @return the gui
@@ -48,19 +37,13 @@ public final class GuiFrameHandler extends AbstractFrameHandler {
 	public Gui getGui() {
 		return gui;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.client.frame.AbstractFrameHandler#draw(name.martingeisse.glworker.GlWorkerLoop)
 	 */
 	@Override
 	public void draw(final GlWorkerLoop glWorkerLoop) {
-		glWorkerLoop.schedule(drawWorkUnit);
-	}
-	
-	/**
-	 * Called in the OpenGL thread.
-	 */
-	private synchronized void drawInternal() {
+		gui.setGlWorkerLoop(glWorkerLoop);
 		gui.fireEvent(GuiEvent.DRAW);
 		gui.executeFollowupOpenglActions();
 	}
@@ -70,12 +53,12 @@ public final class GuiFrameHandler extends AbstractFrameHandler {
 	 */
 	@Override
 	public synchronized void handleStep() throws BreakFrameLoopException {
-		
+
 		// dispatch keyboard events
 		while (Keyboard.next()) {
 			gui.fireEvent(Keyboard.getEventKeyState() ? GuiEvent.KEY_PRESSED : GuiEvent.KEY_RELEASED);
 		}
-		
+
 		// dispatch mouse events
 		while (Mouse.next()) {
 			if (Mouse.getEventDX() != 0 || Mouse.getEventDY() != 0) {
@@ -85,10 +68,10 @@ public final class GuiFrameHandler extends AbstractFrameHandler {
 				gui.fireEvent(Mouse.getEventButtonState() ? GuiEvent.MOUSE_BUTTON_PRESSED : GuiEvent.MOUSE_BUTTON_RELEASED);
 			}
 		}
-		
+
 		// handle pending followup actions
 		gui.executeFollowupLogicActions();
-		
+
 	}
-	
+
 }

@@ -1,13 +1,13 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.miner.client.gui.element;
 
-import static org.lwjgl.opengl.GL14.glWindowPos2i;
 import name.martingeisse.common.util.ParameterUtil;
+import name.martingeisse.miner.client.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.gui.Gui;
 import name.martingeisse.miner.client.gui.GuiElement;
 import name.martingeisse.miner.client.gui.GuiEvent;
@@ -15,26 +15,40 @@ import name.martingeisse.miner.client.gui.util.Color;
 import name.martingeisse.miner.client.system.Font;
 import org.lwjgl.opengl.GL11;
 
+import static org.lwjgl.opengl.GL14.glWindowPos2i;
+
 /**
  * This element draws a line of text. Its size depends solely on the
  * text and is not affected during layout.
  */
 public final class TextLine extends GuiElement {
 
-	/**
-	 * the font
-	 */
 	private Font font;
-
-	/**
-	 * the color
-	 */
 	private Color color;
-
-	/**
-	 * the text
-	 */
 	private String text;
+
+	private int windowPosX;
+	private int windowPosY;
+	private final GlWorkUnit workUnit = new GlWorkUnit() {
+		@Override
+		public void execute() {
+			final Font effectiveFont = getEffectiveFont();
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GL11.glPixelTransferf(GL11.GL_RED_SCALE, 0.0f);
+			GL11.glPixelTransferf(GL11.GL_GREEN_SCALE, 0.0f);
+			GL11.glPixelTransferf(GL11.GL_BLUE_SCALE, 0.0f);
+			GL11.glPixelTransferf(GL11.GL_ALPHA_SCALE, 1.0f);
+			GL11.glPixelTransferf(GL11.GL_RED_BIAS, color.getRed() / 255.0f);
+			GL11.glPixelTransferf(GL11.GL_GREEN_BIAS, color.getGreen() / 255.0f);
+			GL11.glPixelTransferf(GL11.GL_BLUE_BIAS, color.getBlue() / 255.0f);
+			GL11.glPixelTransferf(GL11.GL_ALPHA_BIAS, 0.0f);
+			// TODO scale font so text doesn't become smaller with higher resolution
+			glWindowPos2i(windowPosX, windowPosY);
+			effectiveFont.drawText(text, 1.0f, Font.ALIGN_LEFT, Font.ALIGN_TOP);
+		}
+	};
 
 	/**
 	 * Constructor.
@@ -64,7 +78,7 @@ public final class TextLine extends GuiElement {
 		requestLayout();
 		return this;
 	}
-	
+
 	/**
 	 * Getter method for the color.
 	 * @return the color
@@ -72,7 +86,7 @@ public final class TextLine extends GuiElement {
 	public Color getColor() {
 		return color;
 	}
-	
+
 	/**
 	 * Setter method for the color.
 	 * @param color the color to set
@@ -105,7 +119,7 @@ public final class TextLine extends GuiElement {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public Font getEffectiveFont() {
 		if (font == null) {
@@ -117,7 +131,7 @@ public final class TextLine extends GuiElement {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void computeSize() {
 		final Font effectiveFont = getEffectiveFont();
@@ -137,26 +151,10 @@ public final class TextLine extends GuiElement {
 	@Override
 	public void handleEvent(final GuiEvent event) {
 		if (event == GuiEvent.DRAW) {
-			final Font effectiveFont = getEffectiveFont();
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GL11.glPixelTransferf(GL11.GL_RED_SCALE, 0.0f);
-			GL11.glPixelTransferf(GL11.GL_GREEN_SCALE, 0.0f);
-			GL11.glPixelTransferf(GL11.GL_BLUE_SCALE, 0.0f);
-			GL11.glPixelTransferf(GL11.GL_ALPHA_SCALE, 1.0f);
-			GL11.glPixelTransferf(GL11.GL_RED_BIAS, color.getRed() / 255.0f);
-			GL11.glPixelTransferf(GL11.GL_GREEN_BIAS, color.getGreen() / 255.0f);
-			GL11.glPixelTransferf(GL11.GL_BLUE_BIAS, color.getBlue() / 255.0f);
-			GL11.glPixelTransferf(GL11.GL_ALPHA_BIAS, 0.0f);
-			
-			// TODO scale font so text doesn't become smaller with higher resolution
 			Gui gui = getGui();
-			int x = gui.unitsToPixelsInt(getAbsoluteX());
-			int y = getGui().getHeightPixels() - gui.unitsToPixelsInt(getAbsoluteY());
-			glWindowPos2i(x, y);
-			
-			effectiveFont.drawText(text, 1.0f, Font.ALIGN_LEFT, Font.ALIGN_TOP);
+			windowPosX = gui.unitsToPixelsInt(getAbsoluteX());
+			windowPosY = getGui().getHeightPixels() - gui.unitsToPixelsInt(getAbsoluteY());
+			gui.getGlWorkerLoop().schedule(workUnit);
 		}
 	}
 

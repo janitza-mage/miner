@@ -1,14 +1,13 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.miner.client.gui.element;
 
-import static org.lwjgl.opengl.GL14.glWindowPos2i;
-import java.util.ArrayList;
 import name.martingeisse.common.util.ParameterUtil;
+import name.martingeisse.miner.client.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.gui.Gui;
 import name.martingeisse.miner.client.gui.GuiElement;
 import name.martingeisse.miner.client.gui.GuiEvent;
@@ -17,36 +16,50 @@ import name.martingeisse.miner.client.system.Font;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.opengl.GL11;
 
+import java.util.ArrayList;
+
+import static org.lwjgl.opengl.GL14.glWindowPos2i;
+
 /**
  * This element draws a paragraph of text, breaking the text into lines
  * of the width requested by the enclosing element.
  */
 public final class TextParagraph extends GuiElement {
 
-	/**
-	 * the NO_LINES
-	 */
 	private static final String[] NO_LINES = new String[0];
-	
-	/**
-	 * the font
-	 */
+
 	private Font font;
-
-	/**
-	 * the color
-	 */
 	private Color color;
-
-	/**
-	 * the text
-	 */
 	private String text;
-	
-	/**
-	 * the lines
-	 */
 	private String[] lines;
+
+	private int windowPosX;
+	private int windowPosY;
+	private final GlWorkUnit workUnit = new GlWorkUnit() {
+		@Override
+		public void execute() {
+			final Font effectiveFont = getEffectiveFont();
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GL11.glPixelTransferf(GL11.GL_RED_SCALE, 0.0f);
+			GL11.glPixelTransferf(GL11.GL_GREEN_SCALE, 0.0f);
+			GL11.glPixelTransferf(GL11.GL_BLUE_SCALE, 0.0f);
+			GL11.glPixelTransferf(GL11.GL_ALPHA_SCALE, 1.0f);
+			GL11.glPixelTransferf(GL11.GL_RED_BIAS, color.getRed() / 255.0f);
+			GL11.glPixelTransferf(GL11.GL_GREEN_BIAS, color.getGreen() / 255.0f);
+			GL11.glPixelTransferf(GL11.GL_BLUE_BIAS, color.getBlue() / 255.0f);
+			GL11.glPixelTransferf(GL11.GL_ALPHA_BIAS, 0.0f);
+			// TODO scale font so text doesn't become smaller with higher resolution
+			final int lineHeight = effectiveFont.getCharacterHeight();
+			int i = 0;
+			for (String line : lines) {
+				glWindowPos2i(windowPosX, windowPosY - i * lineHeight);
+				effectiveFont.drawText(line, 1.0f, Font.ALIGN_LEFT, Font.ALIGN_TOP);
+				i++;
+			}
+		}
+	};
 
 	/**
 	 * Constructor.
@@ -118,7 +131,7 @@ public final class TextParagraph extends GuiElement {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private Font getEffectiveFont() {
 		if (font == null) {
@@ -134,14 +147,14 @@ public final class TextParagraph extends GuiElement {
 	 */
 	@Override
 	public void requestSize(final int width, final int height) {
-		
+
 		// obtain the font
 		final Font effectiveFont = getEffectiveFont();
 		if (effectiveFont == null || text == null) {
 			setSize(0, 0);
 			return;
 		}
-		
+
 		// break the text into lines
 		final Gui gui = getGui();
 		ArrayList<String> lines = new ArrayList<>();
@@ -164,11 +177,11 @@ public final class TextParagraph extends GuiElement {
 			lines.add(lineBuilder.toString());
 		}
 		this.lines = lines.toArray(new String[lines.size()]);
-		
+
 		// determine the size of the paragraph
 		final int lineHeight = gui.pixelsToUnitsInt(effectiveFont.getCharacterHeight());
 		setSize(width, lineHeight * this.lines.length);
-			
+
 	}
 
 	/* (non-Javadoc)
@@ -177,32 +190,10 @@ public final class TextParagraph extends GuiElement {
 	@Override
 	public void handleEvent(final GuiEvent event) {
 		if (event == GuiEvent.DRAW) {
-			final Font effectiveFont = getEffectiveFont();
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GL11.glPixelTransferf(GL11.GL_RED_SCALE, 0.0f);
-			GL11.glPixelTransferf(GL11.GL_GREEN_SCALE, 0.0f);
-			GL11.glPixelTransferf(GL11.GL_BLUE_SCALE, 0.0f);
-			GL11.glPixelTransferf(GL11.GL_ALPHA_SCALE, 1.0f);
-			GL11.glPixelTransferf(GL11.GL_RED_BIAS, color.getRed() / 255.0f);
-			GL11.glPixelTransferf(GL11.GL_GREEN_BIAS, color.getGreen() / 255.0f);
-			GL11.glPixelTransferf(GL11.GL_BLUE_BIAS, color.getBlue() / 255.0f);
-			GL11.glPixelTransferf(GL11.GL_ALPHA_BIAS, 0.0f);
-
-			// TODO scale font so text doesn't become smaller with higher resolution
 			final Gui gui = getGui();
-			final int x = gui.unitsToPixelsInt(getAbsoluteX());
-			final int y = getGui().getHeightPixels() - gui.unitsToPixelsInt(getAbsoluteY());
-			
-			final int lineHeight = effectiveFont.getCharacterHeight();
-			int i = 0;
-			for (String line : lines) {
-				glWindowPos2i(x, y - i * lineHeight);
-				effectiveFont.drawText(line, 1.0f, Font.ALIGN_LEFT, Font.ALIGN_TOP);
-				i++;
-			}
-			
+			windowPosX = gui.unitsToPixelsInt(getAbsoluteX());
+			windowPosY = getGui().getHeightPixels() - gui.unitsToPixelsInt(getAbsoluteY());
+			gui.getGlWorkerLoop().schedule(workUnit);
 		}
 	}
 

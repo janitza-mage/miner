@@ -7,6 +7,7 @@
 package name.martingeisse.miner.client.gui.element;
 
 import name.martingeisse.common.util.ParameterUtil;
+import name.martingeisse.miner.client.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.gui.GuiElement;
 import name.martingeisse.miner.client.gui.GuiEvent;
 import name.martingeisse.miner.client.gui.util.Color;
@@ -18,15 +19,31 @@ import org.lwjgl.opengl.GL11;
  */
 public final class ThickBorder extends AbstractWrapperElement {
 
-	/**
-	 * the color
-	 */
 	private Color color;
-	
-	/**
-	 * the thickness
-	 */
 	private int thickness;
+
+	private final GlWorkUnit workUnit = new GlWorkUnit() {
+		@Override
+		public void execute() {
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GL11.glDisable(GL11.GL_BLEND);
+			color.glColor();
+			int sizeDelta = getGui().pixelsToUnitsInt(thickness);
+			int borderOffset = sizeDelta / 2;
+			int x = getAbsoluteX() + borderOffset;
+			int y = getAbsoluteY() + borderOffset;
+			int w = getWidth() - sizeDelta;
+			int h = getHeight() - sizeDelta;
+			GL11.glLineWidth(thickness);
+			GL11.glBegin(GL11.GL_LINE_STRIP);
+			GL11.glVertex2i(x, y);
+			GL11.glVertex2i(x + w, y);
+			GL11.glVertex2i(x + w, y + h);
+			GL11.glVertex2i(x, y + h);
+			GL11.glVertex2i(x, y);
+			GL11.glEnd();
+		}
+	};
 
 	/**
 	 * Constructor.
@@ -91,23 +108,7 @@ public final class ThickBorder extends AbstractWrapperElement {
 		requireWrappedElement();
 		getWrappedElement().handleEvent(event);
 		if (event == GuiEvent.DRAW) {
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glDisable(GL11.GL_BLEND);
-			color.glColor();
-			int sizeDelta = getGui().pixelsToUnitsInt(thickness);
-			int borderOffset = sizeDelta / 2;
-			int x = getAbsoluteX() + borderOffset;
-			int y = getAbsoluteY() + borderOffset;
-			int w = getWidth() - sizeDelta;
-			int h = getHeight() - sizeDelta;
-			GL11.glLineWidth(thickness);
-			GL11.glBegin(GL11.GL_LINE_STRIP);
-			GL11.glVertex2i(x, y);
-			GL11.glVertex2i(x + w, y);
-			GL11.glVertex2i(x + w, y + h);
-			GL11.glVertex2i(x, y + h);
-			GL11.glVertex2i(x, y);
-			GL11.glEnd();
+			getGui().getGlWorkerLoop().schedule(workUnit);
 		}
 	}
 
