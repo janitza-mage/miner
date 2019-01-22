@@ -1,10 +1,10 @@
-package name.martingeisse.miner.common.network.message.c2s;
+package name.martingeisse.miner.common.network.c2s;
 
 import com.google.common.collect.ImmutableList;
 import name.martingeisse.miner.common.geometry.vector.Vector3i;
-import name.martingeisse.miner.common.network.message.Message;
-import name.martingeisse.miner.common.network.message.MessageDecodingException;
-import name.martingeisse.miner.common.network.message.BufferUtil;
+import name.martingeisse.miner.common.network.Message;
+import name.martingeisse.miner.common.network.MessageDecodingException;
+import name.martingeisse.miner.common.network.BufferUtil;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 import java.util.ArrayList;

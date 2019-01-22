@@ -2,12 +2,12 @@
  * Copyright (c) 2018 Martin Geisse
  * This file is distributed under the terms of the MIT license.
  */
-package name.martingeisse.miner.common.network.message.s2c;
+package name.martingeisse.miner.common.network.s2c;
 
 import com.google.common.collect.ImmutableList;
-import name.martingeisse.miner.common.network.message.Message;
-import name.martingeisse.miner.common.network.message.BufferUtil;
-import name.martingeisse.miner.common.network.message.MessageDecodingException;
+import name.martingeisse.miner.common.network.Message;
+import name.martingeisse.miner.common.network.BufferUtil;
+import name.martingeisse.miner.common.network.MessageDecodingException;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**

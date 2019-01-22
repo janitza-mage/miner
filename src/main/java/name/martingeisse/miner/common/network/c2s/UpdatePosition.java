@@ -2,14 +2,14 @@
  * Copyright (c) 2018 Martin Geisse
  * This file is distributed under the terms of the MIT license.
  */
-package name.martingeisse.miner.common.network.message.c2s;
+package name.martingeisse.miner.common.network.c2s;
 
 import name.martingeisse.miner.common.geometry.angle.EulerAngles;
 import name.martingeisse.miner.common.geometry.angle.ReadableEulerAngles;
 import name.martingeisse.miner.common.geometry.vector.ReadableVector3d;
 import name.martingeisse.miner.common.geometry.vector.Vector3d;
-import name.martingeisse.miner.common.network.message.Message;
-import name.martingeisse.miner.common.network.message.MessageDecodingException;
+import name.martingeisse.miner.common.network.Message;
+import name.martingeisse.miner.common.network.MessageDecodingException;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**

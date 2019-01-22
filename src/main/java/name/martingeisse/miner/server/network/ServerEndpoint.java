@@ -6,9 +6,9 @@
 
 package name.martingeisse.miner.server.network;
 
-import name.martingeisse.miner.common.network.message.Message;
-import name.martingeisse.miner.common.network.message.s2c.Hello;
-import name.martingeisse.miner.common.network.protocol.ProtocolEndpoint;
+import name.martingeisse.miner.common.network.Message;
+import name.martingeisse.miner.common.network.s2c.Hello;
+import name.martingeisse.miner.common.network.ProtocolEndpoint;
 import org.apache.log4j.Logger;
 
 /**

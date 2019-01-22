@@ -1,11 +1,11 @@
-package name.martingeisse.miner.common.network.message.s2c;
+package name.martingeisse.miner.common.network.s2c;
 
 import name.martingeisse.miner.common.geometry.angle.EulerAngles;
 import name.martingeisse.miner.common.geometry.angle.ReadableEulerAngles;
 import name.martingeisse.miner.common.geometry.vector.ReadableVector3d;
 import name.martingeisse.miner.common.geometry.vector.Vector3d;
-import name.martingeisse.miner.common.network.message.Message;
-import name.martingeisse.miner.common.network.message.MessageDecodingException;
+import name.martingeisse.miner.common.network.Message;
+import name.martingeisse.miner.common.network.MessageDecodingException;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 /**

@@ -2,9 +2,8 @@
  * Copyright (c) 2018 Martin Geisse
  * This file is distributed under the terms of the MIT license.
  */
-package name.martingeisse.miner.common.network.protocol;
+package name.martingeisse.miner.common.network;
 
-import name.martingeisse.miner.common.network.message.Message;
 import org.apache.log4j.Logger;
 import org.jboss.netty.channel.*;
 

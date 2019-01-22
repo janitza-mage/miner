@@ -6,8 +6,8 @@
 
 package name.martingeisse.miner.client.network;
 
-import name.martingeisse.miner.common.network.message.Message;
-import name.martingeisse.miner.common.network.protocol.ProtocolEndpoint;
+import name.martingeisse.miner.common.network.Message;
+import name.martingeisse.miner.common.network.ProtocolEndpoint;
 
 /**
  *
