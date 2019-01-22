@@ -25,7 +25,7 @@ public final class InteractiveSectionDataRequest extends Message {
 	}
 
 	@Override
-	protected int getPacketBodySize() {
+	protected int getExpectedBodySize() {
 		return SectionId.ENCODED_SIZE;
 	}
 

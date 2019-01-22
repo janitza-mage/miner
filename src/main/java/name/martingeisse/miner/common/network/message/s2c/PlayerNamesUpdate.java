@@ -26,7 +26,7 @@ public final class PlayerNamesUpdate extends Message {
 	}
 
 	@Override
-	protected int getPacketBodySize() {
+	protected int getExpectedBodySize() {
 		return -1;
 	}
 

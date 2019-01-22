@@ -26,7 +26,7 @@ public final class CubeModification extends Message {
 	}
 
 	@Override
-	protected int getPacketBodySize() {
+	protected int getExpectedBodySize() {
 		return -1;
 	}
 

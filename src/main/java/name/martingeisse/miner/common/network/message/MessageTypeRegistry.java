@@ -1,8 +1,8 @@
 package name.martingeisse.miner.common.network.message;
 
-import name.martingeisse.miner.common.network.protocol.StackdPacket;
 import name.martingeisse.miner.common.network.message.c2s.*;
 import name.martingeisse.miner.common.network.message.s2c.*;
+import org.jboss.netty.buffer.ChannelBuffer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,7 +50,7 @@ final class MessageTypeRegistry {
 		classToCode.put(entry.getMessageClass(), code);
 	}
 
-	int getCodeForClass(Class<? extends Message> messageClass) {
+	int getTypeCodeForClass(Class<? extends Message> messageClass) {
 		Integer code = classToCode.get(messageClass);
 		if (code == null) {
 			throw new RuntimeException("unregistered message class: " + messageClass);
@@ -58,25 +58,24 @@ final class MessageTypeRegistry {
 		return code;
 	}
 
-	Message decodePacket(StackdPacket packet) throws MessageDecodingException {
+	Message decodePacket(int messageTypeCode, ChannelBuffer bodyBuffer) throws MessageDecodingException {
 		try {
-			Message message = decodePacketInternal(packet);
-			if (packet.getBuffer().readableBytes() != 0) {
-				throw new MessageDecodingException("unexpected extra bytes at end of packet");
+			Message message = decodePacketInternal(messageTypeCode, bodyBuffer);
+			if (bodyBuffer.readableBytes() != 0) {
+				throw new MessageDecodingException("unexpected extra bytes at end of packet body buffer");
 			}
 			return message;
 		} catch (IndexOutOfBoundsException e) {
-			throw new MessageDecodingException("index out of bounds, probably unexpected end of packet", e);
+			throw new MessageDecodingException("index out of bounds, probably unexpected end of packet body buffer", e);
 		}
 	}
 
-	private Message decodePacketInternal(StackdPacket packet) throws MessageDecodingException {
-		int code = packet.getType();
-		if (code < 0 || code >= codeToEntry.size()) {
-			throw new RuntimeException("unknown message code: " + code);
+	private Message decodePacketInternal(int messageTypeCode, ChannelBuffer bodyBuffer) throws MessageDecodingException {
+		if (messageTypeCode < 0 || messageTypeCode >= codeToEntry.size()) {
+			throw new RuntimeException("unknown message type code: " + messageTypeCode);
 		}
-		Entry<?> entry = codeToEntry.get(code);
-		return entry.getDecoder().decode(packet.getBuffer());
+		Entry<?> entry = codeToEntry.get(messageTypeCode);
+		return entry.getDecoder().decode(bodyBuffer);
 	}
 
 	private static final class Entry<M extends Message> {

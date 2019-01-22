@@ -24,7 +24,7 @@ public final class Hello extends Message {
 	}
 
 	@Override
-	protected int getPacketBodySize() {
+	protected int getExpectedBodySize() {
 		return 4;
 	}
 

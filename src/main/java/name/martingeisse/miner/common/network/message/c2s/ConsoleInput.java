@@ -22,7 +22,7 @@ public final class ConsoleInput extends Message {
 	}
 
 	@Override
-	protected int getPacketBodySize() {
+	protected int getExpectedBodySize() {
 		return -1;
 	}
 

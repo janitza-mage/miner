@@ -25,7 +25,7 @@ public final class DigNotification extends Message {
 	}
 
 	@Override
-	protected int getPacketBodySize() {
+	protected int getExpectedBodySize() {
 		return Vector3i.ENCODED_SIZE;
 	}
 

@@ -38,7 +38,7 @@ public final class InteractiveSectionDataResponse extends Message {
 	}
 
 	@Override
-	protected int getPacketBodySize() {
+	protected int getExpectedBodySize() {
 		return -1;
 	}
 

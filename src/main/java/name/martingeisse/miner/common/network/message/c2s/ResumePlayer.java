@@ -36,7 +36,7 @@ public final class ResumePlayer extends Message {
 	}
 
 	@Override
-	protected int getPacketBodySize() {
+	protected int getExpectedBodySize() {
 		return token.length + 2;
 	}
 

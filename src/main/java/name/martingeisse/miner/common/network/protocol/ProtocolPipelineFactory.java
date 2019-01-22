@@ -6,6 +6,7 @@
 
 package name.martingeisse.miner.common.network.protocol;
 
+import name.martingeisse.miner.common.network.message.MessageCodec;
 import org.jboss.netty.channel.ChannelHandler;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
@@ -18,8 +19,8 @@ public abstract class ProtocolPipelineFactory implements ChannelPipelineFactory 
 
 	@Override
 	public ChannelPipeline getPipeline() {
-		ChannelHandler frameCodec = StackdPacketCodec.createFrameCodec();
-		ChannelHandler packetCodec = new StackdPacketCodec();
+		ChannelHandler frameCodec = MessageCodec.createFrameCodec();
+		ChannelHandler packetCodec = new MessageCodec();
 		ProtocolEndpoint protocolEndpoint = createProtocolEndpoint();
 		ChannelHandler applicationHandler = protocolEndpoint.createNettyHandler();
 		return Channels.pipeline(frameCodec, packetCodec, applicationHandler);

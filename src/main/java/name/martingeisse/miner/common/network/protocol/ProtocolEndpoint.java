@@ -22,31 +22,21 @@ public abstract class ProtocolEndpoint {
 	}
 
 	protected abstract void onConnect();
+
 	protected abstract void onDisconnect();
+
 	protected abstract void onMessage(Message message);
 
 	protected void onDisconnectAfterException(Throwable t) {
 		onDisconnect();
 	}
 
-	/**
-	 * Sends a network packet to the opposite endpoint. The packet object should be considered invalid afterwards
-	 * (hence "destructive") since this method will assemble header fields in the packet and alter its reader/writer
-	 * index, possibly asynchronous to the calling thread.
-	 */
-	public final void sendPacketDestructive(StackdPacket packet) {
-		if (logger.isDebugEnabled()) {
-			logger.debug(getClass().getSimpleName() + " is going to send packet " + packet.getType() + ": " + packet.readableBytesToString(10));
-		}
+	public final void send(Message message) {
 		if (channel == null) {
 			logger.error("trying to send packet while not connected");
 		} else {
-			channel.write(packet);
+			channel.write(message);
 		}
-	}
-
-	public final void send(Message message) {
-		sendPacketDestructive(message.encodePacket());
 	}
 
 	private final class NettyHandler extends SimpleChannelHandler {
@@ -67,11 +57,7 @@ public abstract class ProtocolEndpoint {
 
 		@Override
 		public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-			StackdPacket packet = (StackdPacket)e.getMessage();
-			if (logger.isDebugEnabled()) {
-				logger.debug(getClass().getSimpleName() + " received packet " + packet.getType() + ": " + packet.readableBytesToString(10));
-			}
-			onMessage(Message.decodePacket(packet));
+			onMessage((Message) e.getMessage());
 		}
 
 		@Override

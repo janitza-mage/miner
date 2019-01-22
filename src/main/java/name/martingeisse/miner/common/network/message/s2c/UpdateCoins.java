@@ -24,7 +24,7 @@ public final class UpdateCoins extends Message {
 	}
 
 	@Override
-	protected int getPacketBodySize() {
+	protected int getExpectedBodySize() {
 		return 8;
 	}
 

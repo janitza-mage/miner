@@ -28,7 +28,7 @@ public final class PlayerListUpdate extends Message {
 	}
 
 	@Override
-	protected int getPacketBodySize() {
+	protected int getExpectedBodySize() {
 		return BufferUtil.computeEncodedListSize(elements, Element.ENCODED_SIZE);
 	}
 

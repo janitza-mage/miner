@@ -34,7 +34,7 @@ public final class UpdatePosition extends Message {
 	}
 
 	@Override
-	protected int getPacketBodySize() {
+	protected int getExpectedBodySize() {
 		return Vector3d.ENCODED_SIZE + EulerAngles.ENCODED_SIZE;
 	}
 
