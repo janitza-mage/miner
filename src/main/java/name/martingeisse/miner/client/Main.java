@@ -6,12 +6,12 @@
 
 package name.martingeisse.miner.client;
 
+import name.martingeisse.miner.client.frame.FrameLoop;
+import name.martingeisse.miner.client.glworker.GlWorkerLoop;
 import name.martingeisse.miner.client.ingame.IngameHandler;
 import name.martingeisse.miner.client.ingame.MinerResources;
 import name.martingeisse.miner.client.startmenu.AccountApiClient;
 import name.martingeisse.miner.client.startmenu.StartmenuHandler;
-import name.martingeisse.miner.client.frame.FrameLoop;
-import name.martingeisse.miner.client.glworker.SimpleWorkerScheme;
 import name.martingeisse.miner.client.util.LwjglNativeLibraryHelper;
 import name.martingeisse.miner.client.util.MouseUtil;
 import name.martingeisse.miner.common.task.Task;
@@ -104,9 +104,9 @@ public class Main {
 			logger.trace("command line options parsed");
 
 			// create a worker loop -- we need to access this in closures
-			logger.trace("initializing OpenGL worker scheme...");
-			SimpleWorkerScheme.initialize();
-			logger.trace("OpenGL worker scheme initialized");
+			logger.trace("initializing OpenGL worker loop...");
+			GlWorkerLoop glWorkerLoop = new GlWorkerLoop();
+			logger.trace("OpenGL worker loop initialized");
 			
 			// prepare native libraries
 			logger.trace("preparing native libraries...");
@@ -149,7 +149,7 @@ public class Main {
 			logger.trace("resources loaded...");
 
 			// build the frame loop
-			frameLoop = new FrameLoop(SimpleWorkerScheme.getGlWorkerLoop());
+			frameLoop = new FrameLoop(glWorkerLoop);
 			frameLoop.getRootHandler().setWrappedHandler(new StartmenuHandler());
 			
 			// TODO remove, used for development
@@ -163,12 +163,12 @@ public class Main {
 				@Override
 				public void run() {
 					frameLoop.executeLoop(null);
-					SimpleWorkerScheme.requestStop();
+					glWorkerLoop.scheduleStop();
 				};
 			}.start();
 			logger.debug("startup thread becoming the OpenGL thread now");
 			Thread.currentThread().setName("OpenGL");
-			SimpleWorkerScheme.workAndWait();
+			glWorkerLoop.workAndWait();
 			
 			// clean up
 			Display.destroy();
