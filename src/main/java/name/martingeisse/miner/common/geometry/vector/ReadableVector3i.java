@@ -6,7 +6,7 @@
 
 package name.martingeisse.miner.common.geometry.vector;
 
-import org.jboss.netty.buffer.ChannelBuffer;
+import io.netty.buffer.ByteBuf;
 
 /**
  *
@@ -19,7 +19,7 @@ public abstract class ReadableVector3i {
 
 	public abstract Vector3i freeze();
 
-	public final void encode(ChannelBuffer buffer) {
+	public final void encode(ByteBuf buffer) {
 		buffer.writeInt(getX());
 		buffer.writeInt(getY());
 		buffer.writeInt(getZ());

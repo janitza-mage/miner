@@ -87,7 +87,7 @@ dependencies {
 	compile 'com.googlecode.soundlibs:jorbis:0.0.17-2'
 
 	// networking
-	compile group: 'io.netty', name: 'netty', version: '3.10.6.Final'
+	compile group: 'io.netty', name: 'netty-all', version: '4.0.4.Final'
 
 	// Cassandra DB
 	compile group: 'com.datastax.cassandra', name: 'cassandra-driver-core', version: '3.6.0'

@@ -4,10 +4,10 @@
  */
 package name.martingeisse.miner.common.network.c2s;
 
+import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.geometry.vector.Vector3i;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
-import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
  *
@@ -30,11 +30,11 @@ public final class DigNotification extends Message {
 	}
 
 	@Override
-	protected void encodeBody(ChannelBuffer buffer) {
+	protected void encodeBody(ByteBuf buffer) {
 		position.encode(buffer);
 	}
 
-	public static DigNotification decodeBody(ChannelBuffer buffer) throws MessageDecodingException {
+	public static DigNotification decodeBody(ByteBuf buffer) throws MessageDecodingException {
 		return new DigNotification(Vector3i.decode(buffer));
 	}
 

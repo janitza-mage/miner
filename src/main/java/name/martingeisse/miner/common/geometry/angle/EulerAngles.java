@@ -6,8 +6,8 @@
 
 package name.martingeisse.miner.common.geometry.angle;
 
+import io.netty.buffer.ByteBuf;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
  * Value-object implementation of {@link ReadableEulerAngles}.
@@ -24,7 +24,7 @@ public final class EulerAngles extends ReadableEulerAngles {
 		this.rollAngle = rollAngle;
 	}
 
-	public static EulerAngles decode(ChannelBuffer buffer) {
+	public static EulerAngles decode(ByteBuf buffer) {
 		return new EulerAngles(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
 	}
 

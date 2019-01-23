@@ -6,6 +6,7 @@
 
 package name.martingeisse.miner.common.section;
 
+import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.miner.common.geometry.vector.ReadableVector3d;
@@ -13,7 +14,6 @@ import name.martingeisse.miner.common.geometry.vector.ReadableVector3i;
 import name.martingeisse.miner.common.geometry.vector.Vector3i;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
  * A section ID is used as the identifying key for a section, and also
@@ -201,13 +201,13 @@ public final class SectionId {
 		return new SectionId(x + direction.getSignX(), y + direction.getSignY(), z + direction.getSignZ());
 	}
 
-	public final void encode(ChannelBuffer buffer) {
+	public final void encode(ByteBuf buffer) {
 		buffer.writeInt(getX());
 		buffer.writeInt(getY());
 		buffer.writeInt(getZ());
 	}
 
-	public static SectionId decode(ChannelBuffer buffer) {
+	public static SectionId decode(ByteBuf buffer) {
 		return new SectionId(buffer.readInt(), buffer.readInt(), buffer.readInt());
 	}
 

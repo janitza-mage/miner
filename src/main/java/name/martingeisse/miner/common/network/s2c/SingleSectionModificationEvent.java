@@ -1,9 +1,9 @@
 package name.martingeisse.miner.common.network.s2c;
 
-import name.martingeisse.miner.common.section.SectionId;
+import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
-import org.jboss.netty.buffer.ChannelBuffer;
+import name.martingeisse.miner.common.section.SectionId;
 
 /**
  * Sent by the server when a section gets modified. Clients that are close enough to be interested in the update would
@@ -30,11 +30,11 @@ public final class SingleSectionModificationEvent extends Message {
 	}
 
 	@Override
-	protected void encodeBody(ChannelBuffer buffer) {
+	protected void encodeBody(ByteBuf buffer) {
 		sectionId.encode(buffer);
 	}
 
-	public static SingleSectionModificationEvent decodeBody(ChannelBuffer buffer) throws MessageDecodingException {
+	public static SingleSectionModificationEvent decodeBody(ByteBuf buffer) throws MessageDecodingException {
 		return new SingleSectionModificationEvent(SectionId.decode(buffer));
 	}
 

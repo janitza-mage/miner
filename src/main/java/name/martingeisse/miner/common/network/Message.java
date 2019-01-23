@@ -4,7 +4,7 @@
  */
 package name.martingeisse.miner.common.network;
 
-import org.jboss.netty.buffer.ChannelBuffer;
+import io.netty.buffer.ByteBuf;
 
 /**
  * Base class for all network messages. These messages carry data between client and server. They will be encoded and
@@ -24,6 +24,6 @@ public abstract class Message {
 	/**
 	 * Encodes the packet body to the specified buffer.
 	 */
-	protected abstract void encodeBody(ChannelBuffer buffer);
+	protected abstract void encodeBody(ByteBuf buffer);
 
 }

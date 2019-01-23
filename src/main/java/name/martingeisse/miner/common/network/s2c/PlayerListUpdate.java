@@ -5,12 +5,12 @@
 package name.martingeisse.miner.common.network.s2c;
 
 import com.google.common.collect.ImmutableList;
+import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.geometry.angle.EulerAngles;
 import name.martingeisse.miner.common.geometry.vector.Vector3d;
-import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.BufferUtil;
+import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
-import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
  *
@@ -33,11 +33,11 @@ public final class PlayerListUpdate extends Message {
 	}
 
 	@Override
-	protected void encodeBody(ChannelBuffer buffer) {
+	protected void encodeBody(ByteBuf buffer) {
 		BufferUtil.encodeList(elements, Element::encode, buffer);
 	}
 
-	public static PlayerListUpdate decodeBody(ChannelBuffer buffer) throws MessageDecodingException {
+	public static PlayerListUpdate decodeBody(ByteBuf buffer) throws MessageDecodingException {
 		return new PlayerListUpdate(BufferUtil.decodeList(Element::decode, buffer));
 	}
 
@@ -67,13 +67,13 @@ public final class PlayerListUpdate extends Message {
 			return angles;
 		}
 
-		public void encode(ChannelBuffer buffer) {
+		public void encode(ByteBuf buffer) {
 			buffer.writeInt(id);
 			position.encode(buffer);
 			angles.encode(buffer);
 		}
 
-		public static Element decode(ChannelBuffer buffer) {
+		public static Element decode(ByteBuf buffer) {
 			return new Element(buffer.readInt(), Vector3d.decode(buffer), EulerAngles.decode(buffer));
 		}
 

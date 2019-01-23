@@ -4,9 +4,9 @@
  */
 package name.martingeisse.miner.common.network.s2c;
 
+import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
-import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
  *
@@ -29,11 +29,11 @@ public final class Hello extends Message {
 	}
 
 	@Override
-	protected void encodeBody(ChannelBuffer buffer) {
+	protected void encodeBody(ByteBuf buffer) {
 		buffer.writeInt(sessionId);
 	}
 
-	public static Hello decodeBody(ChannelBuffer buffer) throws MessageDecodingException {
+	public static Hello decodeBody(ByteBuf buffer) throws MessageDecodingException {
 		return new Hello(buffer.readInt());
 	}
 

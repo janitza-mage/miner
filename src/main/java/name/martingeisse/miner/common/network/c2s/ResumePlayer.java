@@ -4,9 +4,9 @@
  */
 package name.martingeisse.miner.common.network.c2s;
 
+import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
-import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
  *
@@ -41,14 +41,14 @@ public final class ResumePlayer extends Message {
 	}
 
 	@Override
-	protected void encodeBody(ChannelBuffer buffer) {
+	protected void encodeBody(ByteBuf buffer) {
 		// Although the length may currently be derived from the packet size, the packet still
 		// contains the length explicitly so we can add other fields.
 		buffer.writeShort(token.length);
 		buffer.writeBytes(token);
 	}
 
-	public static ResumePlayer decodeBody(ChannelBuffer buffer) throws MessageDecodingException {
+	public static ResumePlayer decodeBody(ByteBuf buffer) throws MessageDecodingException {
 		int length = buffer.readShort();
 		if (length < 0) {
 			throw new MessageDecodingException("negative token length");

@@ -1,11 +1,11 @@
 package name.martingeisse.miner.common.network.c2s;
 
 import com.google.common.collect.ImmutableList;
+import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.geometry.vector.Vector3i;
+import name.martingeisse.miner.common.network.BufferUtil;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
-import name.martingeisse.miner.common.network.BufferUtil;
-import org.jboss.netty.buffer.ChannelBuffer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,11 +31,11 @@ public final class CubeModification extends Message {
 	}
 
 	@Override
-	protected void encodeBody(ChannelBuffer buffer) {
+	protected void encodeBody(ByteBuf buffer) {
 		BufferUtil.encodeImplicitSizeList(elements, Element::encode, buffer);
 	}
 
-	public static CubeModification decodeBody(ChannelBuffer buffer) throws MessageDecodingException {
+	public static CubeModification decodeBody(ByteBuf buffer) throws MessageDecodingException {
 		return new CubeModification(BufferUtil.decodeImplicitSizeList(Element::decode, buffer));
 	}
 
@@ -57,12 +57,12 @@ public final class CubeModification extends Message {
 			return cubeType;
 		}
 
-		public void encode(ChannelBuffer buffer) {
+		public void encode(ByteBuf buffer) {
 			position.encode(buffer);
 			buffer.writeByte(cubeType);
 		}
 
-		public static Element decode(ChannelBuffer buffer) throws MessageDecodingException {
+		public static Element decode(ByteBuf buffer) throws MessageDecodingException {
 			return new Element(Vector3i.decode(buffer), buffer.readByte());
 		}
 

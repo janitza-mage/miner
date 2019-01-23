@@ -1,10 +1,10 @@
 package name.martingeisse.miner.common.network.c2s;
 
 import com.google.common.collect.ImmutableList;
+import io.netty.buffer.ByteBuf;
+import name.martingeisse.miner.common.network.BufferUtil;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
-import name.martingeisse.miner.common.network.BufferUtil;
-import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
  * This packet contains a console command to be executed by the server, encoded as a sequence of strings.
@@ -27,11 +27,11 @@ public final class ConsoleInput extends Message {
 	}
 
 	@Override
-	protected void encodeBody(ChannelBuffer buffer) {
+	protected void encodeBody(ByteBuf buffer) {
 		BufferUtil.encodeList(segments, BufferUtil::encodeString, buffer);
 	}
 
-	public static ConsoleInput decodeBody(ChannelBuffer buffer) throws MessageDecodingException {
+	public static ConsoleInput decodeBody(ByteBuf buffer) throws MessageDecodingException {
 		return new ConsoleInput(BufferUtil.decodeList(BufferUtil::decodeString, buffer));
 	}
 

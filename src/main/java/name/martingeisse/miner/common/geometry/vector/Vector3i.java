@@ -6,9 +6,8 @@
 
 package name.martingeisse.miner.common.geometry.vector;
 
-import name.martingeisse.miner.common.geometry.angle.EulerAngles;
+import io.netty.buffer.ByteBuf;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
  * Value-object implementation of {@link ReadableVector3i}.
@@ -25,7 +24,7 @@ public final class Vector3i extends ReadableVector3i {
 		this.z = z;
 	}
 
-	public static Vector3i decode(ChannelBuffer buffer) {
+	public static Vector3i decode(ByteBuf buffer) {
 		return new Vector3i(buffer.readInt(), buffer.readInt(), buffer.readInt());
 	}
 

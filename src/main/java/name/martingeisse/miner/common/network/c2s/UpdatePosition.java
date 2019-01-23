@@ -4,13 +4,13 @@
  */
 package name.martingeisse.miner.common.network.c2s;
 
+import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.geometry.angle.EulerAngles;
 import name.martingeisse.miner.common.geometry.angle.ReadableEulerAngles;
 import name.martingeisse.miner.common.geometry.vector.ReadableVector3d;
 import name.martingeisse.miner.common.geometry.vector.Vector3d;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
-import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
  *
@@ -39,12 +39,12 @@ public final class UpdatePosition extends Message {
 	}
 
 	@Override
-	protected void encodeBody(ChannelBuffer buffer) {
+	protected void encodeBody(ByteBuf buffer) {
 		position.encode(buffer);
 		orientation.encode(buffer);
 	}
 
-	public static UpdatePosition decodeBody(ChannelBuffer buffer) throws MessageDecodingException {
+	public static UpdatePosition decodeBody(ByteBuf buffer) throws MessageDecodingException {
 		return new UpdatePosition(Vector3d.decode(buffer), EulerAngles.decode(buffer));
 	}
 

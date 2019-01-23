@@ -1,10 +1,10 @@
 package name.martingeisse.miner.common.network.s2c;
 
 import com.google.common.collect.ImmutableList;
-import name.martingeisse.miner.common.network.Message;
+import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.network.BufferUtil;
+import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
-import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
  * This packet contains output lines to print on the console.
@@ -28,11 +28,11 @@ public final class ConsoleOutput extends Message {
 	}
 
 	@Override
-	protected void encodeBody(ChannelBuffer buffer) {
+	protected void encodeBody(ByteBuf buffer) {
 		BufferUtil.encodeList(segments, BufferUtil::encodeString, buffer);
 	}
 
-	public static ConsoleOutput decodeBody(ChannelBuffer buffer) throws MessageDecodingException {
+	public static ConsoleOutput decodeBody(ByteBuf buffer) throws MessageDecodingException {
 		return new ConsoleOutput(BufferUtil.decodeList(BufferUtil::decodeString, buffer));
 	}
 

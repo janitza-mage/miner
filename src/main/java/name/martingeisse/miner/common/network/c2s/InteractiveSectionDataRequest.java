@@ -4,10 +4,10 @@
  */
 package name.martingeisse.miner.common.network.c2s;
 
-import name.martingeisse.miner.common.section.SectionId;
+import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
-import org.jboss.netty.buffer.ChannelBuffer;
+import name.martingeisse.miner.common.section.SectionId;
 
 /**
  *
@@ -30,11 +30,11 @@ public final class InteractiveSectionDataRequest extends Message {
 	}
 
 	@Override
-	protected void encodeBody(ChannelBuffer buffer) {
+	protected void encodeBody(ByteBuf buffer) {
 		sectionId.encode(buffer);
 	}
 
-	public static InteractiveSectionDataRequest decodeBody(ChannelBuffer buffer) throws MessageDecodingException {
+	public static InteractiveSectionDataRequest decodeBody(ByteBuf buffer) throws MessageDecodingException {
 		return new InteractiveSectionDataRequest(SectionId.decode(buffer));
 	}
 

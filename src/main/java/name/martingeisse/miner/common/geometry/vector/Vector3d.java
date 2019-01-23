@@ -6,8 +6,8 @@
 
 package name.martingeisse.miner.common.geometry.vector;
 
+import io.netty.buffer.ByteBuf;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.jboss.netty.buffer.ChannelBuffer;
 
 /**
  * Value-object implementation of {@link ReadableVector3d}.
@@ -24,7 +24,7 @@ public final class Vector3d extends ReadableVector3d {
 		this.z = z;
 	}
 
-	public static Vector3d decode(ChannelBuffer buffer) {
+	public static Vector3d decode(ByteBuf buffer) {
 		return new Vector3d(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
 	}
 
