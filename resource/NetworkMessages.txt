@@ -2,7 +2,7 @@ rewrite using network message objects?
 
 -> client uses something like that anyway, but with a custom solution for every case
 -> messages are better!
--> except section data updates, but those could avoid a whole copy by decoding Cubes objects directly from ChannelBuffer
+-> except section data updates, but those could avoid a whole copy by decoding Cubes objects directly from ByteBuf
 	and/or use a background thread for that
 -> also don't have to synchronize everything just for interaction with the network thread. Instead, have the network
 	thread decode messages and put them into a queue, and have the main thread read them. (But many things must still

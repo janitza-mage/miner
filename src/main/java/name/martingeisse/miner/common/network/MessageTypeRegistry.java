@@ -1,8 +1,8 @@
 package name.martingeisse.miner.common.network;
 
+import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.network.c2s.*;
 import name.martingeisse.miner.common.network.s2c.*;
-import org.jboss.netty.buffer.ChannelBuffer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,7 +58,7 @@ final class MessageTypeRegistry {
 		return code;
 	}
 
-	Message decodePacket(int messageTypeCode, ChannelBuffer bodyBuffer) throws MessageDecodingException {
+	Message decodePacket(int messageTypeCode, ByteBuf bodyBuffer) throws MessageDecodingException {
 		try {
 			Message message = decodePacketInternal(messageTypeCode, bodyBuffer);
 			if (bodyBuffer.readableBytes() != 0) {
@@ -70,7 +70,7 @@ final class MessageTypeRegistry {
 		}
 	}
 
-	private Message decodePacketInternal(int messageTypeCode, ChannelBuffer bodyBuffer) throws MessageDecodingException {
+	private Message decodePacketInternal(int messageTypeCode, ByteBuf bodyBuffer) throws MessageDecodingException {
 		if (messageTypeCode < 0 || messageTypeCode >= codeToEntry.size()) {
 			throw new RuntimeException("unknown message type code: " + messageTypeCode);
 		}
