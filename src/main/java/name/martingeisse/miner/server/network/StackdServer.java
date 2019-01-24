@@ -275,7 +275,7 @@ public class StackdServer {
 
 			Vector3d position = new Vector3d(session.getX(), session.getY(), session.getZ());
 			EulerAngles orientation = new EulerAngles(session.getLeftAngle(), session.getUpAngle(), 0);
-			broadcast(new PlayerResumed(position, orientation));
+			session.send(new PlayerResumed(position, orientation));
 
 		} else if (untypedMessage instanceof DigNotification) {
 

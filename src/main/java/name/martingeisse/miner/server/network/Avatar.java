@@ -6,6 +6,9 @@ package name.martingeisse.miner.server.network;
 
 import name.martingeisse.miner.common.geometry.angle.EulerAngles;
 import name.martingeisse.miner.common.geometry.vector.Vector3d;
+import name.martingeisse.miner.server.entities.Player;
+
+import java.math.BigDecimal;
 
 /**
  *
@@ -47,6 +50,21 @@ public final class Avatar {
 			throw new IllegalArgumentException("name cannot be null");
 		}
 		this.name = name;
+	}
+
+	public void copyFrom(Player player) {
+		position = new Vector3d(player.getX().doubleValue(), player.getY().doubleValue(), player.getZ().doubleValue());
+		orientation = new EulerAngles(player.getLeftAngle().doubleValue(), player.getUpAngle().doubleValue(), 0);
+		name = player.getName();
+	}
+
+	public void copyTo(Player player) {
+		player.setX(BigDecimal.valueOf(position.x));
+		player.setY(BigDecimal.valueOf(position.y));
+		player.setZ(BigDecimal.valueOf(position.z));
+		player.setLeftAngle(BigDecimal.valueOf(orientation.horizontalAngle));
+		player.setUpAngle(BigDecimal.valueOf(orientation.verticalAngle));
+		player.setName(name);
 	}
 
 }

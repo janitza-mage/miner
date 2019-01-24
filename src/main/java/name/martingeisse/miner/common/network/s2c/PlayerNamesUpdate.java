@@ -11,8 +11,8 @@ import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
 
 /**
- * TODO this message isn't really needed since player names cannot change mid-game. They can only change while not
- * active in the game (i.e. no avatar exists).
+ * This message is used to tell the player's name to all clients. It is not really an *update* since the player's
+ * name cannot change mid-game, and currently it sends all players' names redundantly in regular intervals.
  */
 public final class PlayerNamesUpdate extends Message {
 
