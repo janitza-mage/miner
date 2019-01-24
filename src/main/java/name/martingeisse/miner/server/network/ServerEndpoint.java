@@ -7,7 +7,6 @@
 package name.martingeisse.miner.server.network;
 
 import name.martingeisse.miner.common.network.Message;
-import name.martingeisse.miner.common.network.s2c.Hello;
 import name.martingeisse.miner.common.network.ProtocolEndpoint;
 import org.apache.log4j.Logger;
 
@@ -42,14 +41,19 @@ final class ServerEndpoint extends ProtocolEndpoint {
 	@Override
 	protected void onConnect() {
 		session = server.createSession(this);
-		session.send(new Hello(session.getId()));
-		logger.info("client connected: " + session.getId());
-		server.onClientConnected(session);
+		logger.info("client connected. Session ID: " + session.getId());
+		session.onConnect();
 	}
 
 	@Override
 	protected void onDisconnect() {
-		server.internalOnClientDisconnected(session);
+		if (session != null) {
+			logger.info("client disconnected. Session ID: " + session.getId());
+			session.onDisconnect();
+			server.removeSession(session);
+		} else {
+			logger.info("client without session disconnected");
+		}
 	}
 
 	@Override

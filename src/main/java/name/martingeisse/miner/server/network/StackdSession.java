@@ -11,6 +11,7 @@ import com.querydsl.sql.dml.SQLUpdateClause;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.s2c.ConsoleOutput;
 import name.martingeisse.miner.common.network.s2c.FlashMessage;
+import name.martingeisse.miner.common.network.s2c.Hello;
 import name.martingeisse.miner.common.network.s2c.UpdateCoins;
 import name.martingeisse.miner.server.Databases;
 import name.martingeisse.miner.server.entities.QPlayer;
@@ -42,13 +43,19 @@ public class StackdSession {
 	private volatile double upAngle;
 	private volatile String name;
 
-	public StackdSession(final int id, final ServerEndpoint endpoint) {
+	/**
+	 * Note that a race condition might cause this constructor to be invoked twice to
+	 * create a session for the same ID. In such a case, the race condition will be
+	 * detected later on and one of the sessions will be thrown away. This method must
+	 * be able to handle such a case.
+	 */
+	public StackdSession(int id, ServerEndpoint endpoint) {
 		this.id = id;
 		this.endpoint = endpoint;
 		this.name = "Player";
 	}
 
-	public final int getId() {
+	public int getId() {
 		return id;
 	}
 
@@ -56,11 +63,42 @@ public class StackdSession {
 		return endpoint;
 	}
 
+	/**
+	 * Called after this session has been created.
+	 * <p>
+	 * As noted in the constructor comment, a race condition may cause multiple sessions to be created. This
+	 * initialization method will be called only for the one that is actually kept.
+	 */
+	public void onConnect() {
+		send(new Hello(id));
+		sendFlashMessage("Connected to server.");
+		sendCoinsUpdate();
+	}
+
+	/**
+	 * Called when the client disconnects, just before the session gets removed from the server.
+	 */
+	public void onDisconnect() {
+		if (playerId != null) {
+			try (PostgresConnection connection = Databases.main.newConnection()) {
+				QPlayer qp = QPlayer.Player;
+				SQLUpdateClause update = connection.update(qp);
+				update.where(qp.id.eq(playerId));
+				update.set(qp.x, new BigDecimal(x));
+				update.set(qp.y, new BigDecimal(y));
+				update.set(qp.z, new BigDecimal(z));
+				update.set(qp.leftAngle, new BigDecimal(leftAngle));
+				update.set(qp.upAngle, new BigDecimal(upAngle));
+				update.execute();
+			}
+		}
+	}
+
 	public Long getPlayerId() {
 		return playerId;
 	}
 
-	public void setPlayerId(final Long playerId) {
+	public void setPlayerId(Long playerId) {
 		this.playerId = playerId;
 	}
 
@@ -68,7 +106,7 @@ public class StackdSession {
 		return x;
 	}
 
-	public void setX(final double x) {
+	public void setX(double x) {
 		this.x = x;
 	}
 
@@ -76,7 +114,7 @@ public class StackdSession {
 		return y;
 	}
 
-	public void setY(final double y) {
+	public void setY(double y) {
 		this.y = y;
 	}
 
@@ -84,7 +122,7 @@ public class StackdSession {
 		return z;
 	}
 
-	public void setZ(final double z) {
+	public void setZ(double z) {
 		this.z = z;
 	}
 
@@ -92,7 +130,7 @@ public class StackdSession {
 		return leftAngle;
 	}
 
-	public void setLeftAngle(final double leftAngle) {
+	public void setLeftAngle(double leftAngle) {
 		this.leftAngle = leftAngle;
 	}
 
@@ -100,7 +138,7 @@ public class StackdSession {
 		return upAngle;
 	}
 
-	public void setUpAngle(final double upAngle) {
+	public void setUpAngle(double upAngle) {
 		this.upAngle = upAngle;
 	}
 
@@ -108,11 +146,11 @@ public class StackdSession {
 		return name;
 	}
 
-	public void setName(final String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 
-	public final void send(Message message) {
+	public void send(Message message) {
 		endpoint.send(message);
 	}
 
@@ -121,7 +159,7 @@ public class StackdSession {
 	 *
 	 * @param message the message
 	 */
-	public final void sendFlashMessage(String message) {
+	public void sendFlashMessage(String message) {
 		send(new FlashMessage(message));
 	}
 
@@ -130,7 +168,7 @@ public class StackdSession {
 	 *
 	 * @param lines the lines to send
 	 */
-	public final void sendConsoleOutput(Collection<String> lines) {
+	public void sendConsoleOutput(Collection<String> lines) {
 		if (!lines.isEmpty()) {
 			sendConsoleOutput(lines.toArray(new String[lines.size()]));
 		}
@@ -141,28 +179,9 @@ public class StackdSession {
 	 *
 	 * @param lines the lines to send
 	 */
-	public final void sendConsoleOutput(String... lines) {
+	public void sendConsoleOutput(String... lines) {
 		if (lines.length > 0) {
 			send(new ConsoleOutput(ImmutableList.copyOf(lines)));
-		}
-	}
-
-	/**
-	 * Handles disconnected clients.
-	 */
-	public void handleDisconnect() {
-		if (playerId != null) {
-			try (PostgresConnection connection = Databases.main.newConnection()) {
-				QPlayer qp = QPlayer.Player;
-				final SQLUpdateClause update = connection.update(qp);
-				update.where(qp.id.eq(playerId));
-				update.set(qp.x, new BigDecimal(x));
-				update.set(qp.y, new BigDecimal(y));
-				update.set(qp.z, new BigDecimal(z));
-				update.set(qp.leftAngle, new BigDecimal(leftAngle));
-				update.set(qp.upAngle, new BigDecimal(upAngle));
-				update.execute();
-			}
 		}
 	}
 
@@ -187,7 +206,7 @@ public class StackdSession {
 	 *
 	 * @param coins the number of coins to send
 	 */
-	public void sendCoinsUpdate(final long coins) {
+	public void sendCoinsUpdate(long coins) {
 		send(new UpdateCoins(coins));
 	}
 

@@ -158,19 +158,6 @@ public class StackdServer {
 	}
 
 	/**
-	 * Creates a new session.
-	 * <p>
-	 * Note that a race condition might cause this method to be invoked twice to
-	 * create a session for the same ID. In such a case, the race condition will be
-	 * detected later on and one of the sessions will be thrown away. This method must
-	 * be able to handle such a case. Use {@link #onClientConnected(StackdSession)}
-	 * for code that should only run once per created session.
-	 */
-	protected StackdSession newSession(int id, ServerEndpoint endpoint) {
-		return new StackdSession(id, endpoint);
-	}
-
-	/**
 	 * Returns the session with the specified ID, or null if no such session exists.
 	 *
 	 * @param id the session ID
@@ -186,7 +173,7 @@ public class StackdServer {
 	public final StackdSession createSession(final ServerEndpoint endpoint) {
 		final Random random = new Random();
 		while (true) {
-			final StackdSession session = newSession(random.nextInt(0x7fffffff), endpoint);
+			final StackdSession session = new StackdSession(random.nextInt(0x7fffffff), endpoint);
 			if (sessions.putIfAbsent(session.getId(), session) == null) {
 				return session;
 			}
@@ -336,16 +323,6 @@ public class StackdServer {
 	}
 
 	/**
-	 * This method is called when a client has been connected.
-	 *
-	 * @param session the client's session
-	 */
-	protected void onClientConnected(StackdSession session) {
-		session.sendFlashMessage("Connected to server.");
-		session.sendCoinsUpdate();
-	}
-
-	/**
 	 * This method is called when one or more sections have been modified.
 	 */
 	protected void onSectionsModified(SectionId[] sectionIds) {
@@ -366,27 +343,12 @@ public class StackdServer {
 	/**
 	 * This method is called when a client channel has been disconnected.
 	 */
-	final void internalOnClientDisconnected(final StackdSession session) {
-		if (session == null) {
-			logger.info("client without session disconnected");
-		} else {
+	final void removeSession(final StackdSession session) {
+		if (session != null) {
 			final int sessionId = session.getId();
-			logger.info("client disconnected: " + sessionId);
-			onClientDisconnected(session);
+			logger.info("removing session: " + sessionId);
 			sessions.remove(sessionId);
 		}
-	}
-
-	/**
-	 * This method is called when a client has been disconnected.
-	 * <p>
-	 * Special case: Clients that have not been allocated a session
-	 * yet are handled without calling this method.
-	 *
-	 * @param session the client's session
-	 */
-	protected void onClientDisconnected(StackdSession session) {
-		session.handleDisconnect();
 	}
 
 	/**
