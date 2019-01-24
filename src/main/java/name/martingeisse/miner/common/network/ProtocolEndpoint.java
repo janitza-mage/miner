@@ -37,7 +37,7 @@ public abstract class ProtocolEndpoint {
 		if (channel == null) {
 			logger.error("trying to send packet while not connected");
 		} else {
-			channel.write(message);
+			channel.writeAndFlush(message);
 		}
 	}
 
