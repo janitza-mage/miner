@@ -5,16 +5,16 @@
 package name.martingeisse.miner.server.network;
 
 import name.martingeisse.miner.common.network.ProtocolEndpoint;
-import name.martingeisse.miner.common.network.ProtocolPipelineFactory;
+import name.martingeisse.miner.common.network.ProtocolChannelInitializer;
 
 /**
  *
  */
-public final class ServerPipelineFactory extends ProtocolPipelineFactory {
+public final class ServerChannelInitializer extends ProtocolChannelInitializer {
 
 	private final StackdServer server;
 
-	public ServerPipelineFactory(StackdServer server) {
+	public ServerChannelInitializer(StackdServer server) {
 		this.server = server;
 	}
 

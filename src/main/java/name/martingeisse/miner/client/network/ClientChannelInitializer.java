@@ -5,16 +5,16 @@
 package name.martingeisse.miner.client.network;
 
 import name.martingeisse.miner.common.network.ProtocolEndpoint;
-import name.martingeisse.miner.common.network.ProtocolPipelineFactory;
+import name.martingeisse.miner.common.network.ProtocolChannelInitializer;
 
 /**
  *
  */
-public final class ClientPipelineFactory extends ProtocolPipelineFactory {
+public final class ClientChannelInitializer extends ProtocolChannelInitializer {
 
 	private final StackdProtocolClient protocolClient;
 
-	public ClientPipelineFactory(StackdProtocolClient protocolClient) {
+	public ClientChannelInitializer(StackdProtocolClient protocolClient) {
 		this.protocolClient = protocolClient;
 	}
 

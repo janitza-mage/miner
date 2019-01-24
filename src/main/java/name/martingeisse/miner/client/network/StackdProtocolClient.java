@@ -7,6 +7,11 @@
 package name.martingeisse.miner.client.network;
 
 import com.google.common.collect.ImmutableList;
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import name.martingeisse.miner.client.console.Console;
 import name.martingeisse.miner.client.frame.handlers.FlashMessageHandler;
 import name.martingeisse.miner.client.ingame.IngameHandler;
@@ -24,11 +29,6 @@ import name.martingeisse.miner.common.network.c2s.ResumePlayer;
 import name.martingeisse.miner.common.network.c2s.UpdatePosition;
 import name.martingeisse.miner.common.network.s2c.*;
 import org.apache.log4j.Logger;
-import org.jboss.netty.bootstrap.ClientBootstrap;
-import org.jboss.netty.channel.ChannelFactory;
-import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
-import org.jboss.netty.util.ThreadNameDeterminer;
-import org.jboss.netty.util.ThreadRenamingRunnable;
 
 import java.net.InetSocketAddress;
 import java.nio.channels.ClosedChannelException;
@@ -37,7 +37,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executors;
 
 /**
  * This class handles the connection to the server. Applications are
@@ -67,17 +66,13 @@ public class StackdProtocolClient {
 		int port = Constants.NETWORK_PORT;
 
 		logger.info("connecting to server");
-		ThreadRenamingRunnable.setThreadNameDeterminer(new ThreadNameDeterminer() {
-			@Override
-			public String determineThreadName(String currentThreadName, String proposedThreadName) throws Exception {
-				return proposedThreadName.replace(' ', '-');
-			}
-		});
-		final ChannelFactory factory = new NioClientSocketChannelFactory(Executors.newSingleThreadExecutor(), Executors.newSingleThreadExecutor());
-		final ClientBootstrap bootstrap = new ClientBootstrap(factory);
-		bootstrap.setPipelineFactory(new ClientPipelineFactory(this));
-		bootstrap.setOption("tcpNoDelay", true);
-		bootstrap.setOption("keepAlive", true);
+		EventLoopGroup workerGroup = new NioEventLoopGroup();
+		final Bootstrap bootstrap = new Bootstrap();
+		bootstrap.group(workerGroup);
+		bootstrap.channel(NioSocketChannel.class);
+		bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
+		bootstrap.option(ChannelOption.TCP_NODELAY, true);
+		bootstrap.handler(new ClientChannelInitializer(this));
 		bootstrap.connect(new InetSocketAddress(host, port));
 	}
 

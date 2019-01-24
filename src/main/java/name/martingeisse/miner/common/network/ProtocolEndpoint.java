@@ -4,8 +4,11 @@
  */
 package name.martingeisse.miner.common.network;
 
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.apache.log4j.Logger;
-import org.jboss.netty.channel.*;
 
 /**
  *
@@ -16,7 +19,7 @@ public abstract class ProtocolEndpoint {
 
 	private Channel channel;
 
-	SimpleChannelHandler createNettyHandler() {
+	ChannelHandler createNettyHandler() {
 		return new NettyHandler();
 	}
 
@@ -38,35 +41,35 @@ public abstract class ProtocolEndpoint {
 		}
 	}
 
-	private final class NettyHandler extends SimpleChannelHandler {
+	private final class NettyHandler extends ChannelInboundHandlerAdapter {
 
 		@Override
-		public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
-			super.channelConnected(ctx, e);
-			channel = e.getChannel();
+		public void channelActive(ChannelHandlerContext context) throws Exception {
+			super.channelActive(context);
+			channel = context.channel();
 			ProtocolEndpoint.this.onConnect();
 		}
 
 		@Override
-		public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
+		public void channelInactive(ChannelHandlerContext context) throws Exception {
 			channel = null;
 			ProtocolEndpoint.this.onDisconnect();
-			super.channelDisconnected(ctx, e);
+			super.channelInactive(context);
 		}
 
 		@Override
-		public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-			onMessage((Message) e.getMessage());
+		public void channelRead(ChannelHandlerContext context, Object payload) throws Exception {
+			onMessage((Message)payload);
 		}
 
 		@Override
-		public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-			if (ctx.getChannel().isConnected()) {
-				ctx.getChannel().disconnect();
-				logger.error(getClass().getSimpleName() + " got unexpected exception", e.getCause());
+		public void exceptionCaught(ChannelHandlerContext context, Throwable cause) throws Exception {
+			if (context.channel().isActive()) {
+				context.channel().disconnect();
+				logger.error(getClass().getSimpleName() + " got unexpected exception", cause);
 			}
 			channel = null;
-			ProtocolEndpoint.this.onDisconnectAfterException(e.getCause());
+			ProtocolEndpoint.this.onDisconnectAfterException(cause);
 		}
 
 	}

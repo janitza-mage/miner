@@ -7,6 +7,12 @@
 package name.martingeisse.miner.server;
 
 import com.datastax.driver.core.Cluster;
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
 import name.martingeisse.api.handler.DefaultMasterHandler;
 import name.martingeisse.api.handler.misc.NotFoundHandler;
 import name.martingeisse.api.request.ApiRequestCycle;
@@ -16,12 +22,9 @@ import name.martingeisse.common.javascript.JavascriptAssembler;
 import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.task.TaskSystem;
 import name.martingeisse.miner.server.api.account.AccountApiHandler;
-import name.martingeisse.miner.server.network.ServerPipelineFactory;
+import name.martingeisse.miner.server.network.ServerChannelInitializer;
 import name.martingeisse.miner.server.network.StackdServer;
 import name.martingeisse.miner.server.util.database.postgres.PostgresService;
-import org.jboss.netty.bootstrap.ServerBootstrap;
-import org.jboss.netty.channel.ChannelFactory;
-import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 
@@ -30,7 +33,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executors;
 
 /**
  * The main class for the game server.
@@ -56,12 +58,21 @@ public class Main {
 			@Override
 			public void run() {
 				StackdServer server = new StackdServer();
-				final ChannelFactory factory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
-				final ServerBootstrap bootstrap = new ServerBootstrap(factory);
-				bootstrap.setPipelineFactory(new ServerPipelineFactory(server));
-				bootstrap.setOption("child.tcpNoDelay", true);
-				bootstrap.setOption("child.keepAlive", true);
-				bootstrap.bind(new InetSocketAddress(Constants.NETWORK_PORT));
+				EventLoopGroup bossGroup = new NioEventLoopGroup();
+				EventLoopGroup workerGroup = new NioEventLoopGroup();
+				final ServerBootstrap bootstrap = new ServerBootstrap();
+				bootstrap.group(bossGroup, workerGroup);
+				bootstrap.channel(NioServerSocketChannel.class);
+				bootstrap.option(ChannelOption.SO_BACKLOG, 128);
+				bootstrap.option(ChannelOption.TCP_NODELAY, true);
+				bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
+				bootstrap.childHandler(new ServerChannelInitializer(server));
+				ChannelFuture bindFuture = bootstrap.bind(new InetSocketAddress(Constants.NETWORK_PORT));
+				try {
+					bindFuture.sync();
+				} catch (InterruptedException e) {
+					throw new RuntimeException("failed to wait for binding the socket");
+				}
 				startupFinishedLatch.countDown();
 			}
 		}.start();

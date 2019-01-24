@@ -6,15 +6,18 @@
 
 package name.martingeisse.miner.common.network;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
-import org.jboss.netty.channel.*;
-import org.jboss.netty.handler.codec.frame.LengthFieldBasedFrameDecoder;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelDuplexHandler;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPromise;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 
 /**
  * Netty handler that decodes and encodes between {@link Message}s and raw buffers. Other payloads are ignored.
  */
-public class MessageCodec extends SimpleChannelHandler {
+public class MessageCodec extends ChannelDuplexHandler {
 
 	/**
 	 * The number of bytes for the header.
@@ -38,27 +41,26 @@ public class MessageCodec extends SimpleChannelHandler {
 	 * 
 	 * @return the handler
 	 */
-	public static ChannelHandler createFrameCodec() {
+	public static ChannelHandler createFrameDecoder() {
 		return new LengthFieldBasedFrameDecoder(MAX_PACKET_SIZE, 0, 2, 2, 0, true);
 	}
-	
+
 	@Override
-	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-		Object payload = e.getMessage();
-		if (payload instanceof ChannelBuffer) {
-			ChannelBuffer buffer = (ChannelBuffer)payload;
+	public void channelRead(ChannelHandlerContext context, Object payload) throws Exception {
+		if (payload instanceof ByteBuf) {
+			ByteBuf buffer = (ByteBuf)payload;
 			buffer.setIndex(2, buffer.capacity());
 			int messageTypeCode = buffer.readUnsignedShort();
 			Message message = MessageTypeRegistry.INSTANCE.decodePacket(messageTypeCode, buffer);
-			Channels.fireMessageReceived(ctx, message);
+			buffer.release();
+			context.fireChannelRead(message);
 		} else {
-			super.messageReceived(ctx, e);
+			context.fireChannelRead(payload);
 		}
 	}
-	
+
 	@Override
-	public void writeRequested(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-		Object payload = e.getMessage();
+	public void write(ChannelHandlerContext context, Object payload, ChannelPromise promise) throws Exception {
 		if (payload instanceof Message) {
 
 			// analyze message
@@ -67,8 +69,7 @@ public class MessageCodec extends SimpleChannelHandler {
 			int expectedBodySize = message.getExpectedBodySize();
 
 			// assemble a packet with expected size, empty header but actual message body
-			ChannelBuffer buffer = expectedBodySize < 0 ? ChannelBuffers.dynamicBuffer() :
-				ChannelBuffers.buffer(HEADER_SIZE + expectedBodySize);
+			ByteBuf buffer = expectedBodySize < 0 ? Unpooled.buffer() : Unpooled.buffer(HEADER_SIZE + expectedBodySize);
 			buffer.writeZero(HEADER_SIZE);
 			message.encodeBody(buffer);
 			int packetSize = buffer.readableBytes();
@@ -84,10 +85,10 @@ public class MessageCodec extends SimpleChannelHandler {
 			buffer.writerIndex(previousWriterIndex);
 
 			// send message
-			Channels.write(ctx, e.getFuture(), buffer);
+			context.write(buffer, promise);
 
 		} else {
-			super.writeRequested(ctx, e);
+			context.write(payload, promise);
 		}
 	}
 	
