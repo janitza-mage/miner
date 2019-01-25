@@ -18,7 +18,7 @@ import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
 import java.math.BigDecimal;
 
 /**
- *
+ * TODO rename {@link Player} to PlayerRow and rename this class to Player.
  */
 public final class PlayerAccess {
 
