@@ -20,6 +20,8 @@ public final class PlayerProxy extends PlayerBase {
 	 */
 	private final int id;
 
+	private String name;
+
 	/**
 	 * Constructor.
 	 * @param id the session ID
@@ -35,6 +37,14 @@ public final class PlayerProxy extends PlayerBase {
 	 */
 	public int getId() {
 		return id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

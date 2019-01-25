@@ -54,7 +54,6 @@ public class StackdProtocolClient {
 	private SectionGridLoader sectionGridLoader;
 	private Console console;
 	private List<PlayerProxy> updatedPlayerProxies;
-	private Map<Integer, String> updatedPlayerNames;
 	private PlayerResumedMessage playerResumedMessage;
 	private volatile long coins = 0;
 
@@ -307,21 +306,11 @@ public class StackdProtocolClient {
 				PlayerProxy proxy = new PlayerProxy(element.getId());
 				proxy.getPosition().copyFrom(element.getPosition());
 				proxy.getOrientation().copyFrom(element.getAngles());
+				proxy.setName(element.getName());
 				playerProxiesFromMessage.add(proxy);
 			}
 			synchronized (this) {
 				this.updatedPlayerProxies = playerProxiesFromMessage;
-			}
-
-		} else if (untypedMessage instanceof PlayerNamesUpdate) {
-
-			PlayerNamesUpdate message = (PlayerNamesUpdate) untypedMessage;
-			Map<Integer, String> updatedPlayerNames = new HashMap<>();
-			for (PlayerNamesUpdate.Element element : message.getElements()) {
-				updatedPlayerNames.put(element.getId(), element.getName());
-			}
-			synchronized (this) {
-				this.updatedPlayerNames = updatedPlayerNames;
 			}
 
 		} else if (untypedMessage instanceof PlayerResumed) {
@@ -352,19 +341,6 @@ public class StackdProtocolClient {
 	public synchronized List<PlayerProxy> fetchUpdatedPlayerProxies() {
 		List<PlayerProxy> result = updatedPlayerProxies;
 		updatedPlayerProxies = null;
-		return result;
-	}
-
-	/**
-	 * If there is an updated map of player names, returns that
-	 * map and deletes it from this object.
-	 *
-	 * @return the updated player names, or null if no update
-	 * is available
-	 */
-	public synchronized Map<Integer, String> fetchUpdatedPlayerNames() {
-		Map<Integer, String> result = updatedPlayerNames;
-		updatedPlayerNames = null;
 		return result;
 	}
 

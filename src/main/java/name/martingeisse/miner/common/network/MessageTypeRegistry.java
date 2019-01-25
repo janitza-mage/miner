@@ -32,7 +32,6 @@ final class MessageTypeRegistry {
 		register(FlashMessage.class, FlashMessage::decodeBody);
 		register(Hello.class, Hello::decodeBody);
 		register(PlayerListUpdate.class, PlayerListUpdate::decodeBody);
-		register(PlayerNamesUpdate.class, PlayerNamesUpdate::decodeBody);
 		register(PlayerResumed.class, PlayerResumed::decodeBody);
 		register(SingleSectionModificationEvent.class, SingleSectionModificationEvent::decodeBody);
 		register(UpdateCoins.class, UpdateCoins::decodeBody);

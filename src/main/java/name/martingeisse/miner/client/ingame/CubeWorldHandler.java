@@ -40,9 +40,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL14.glWindowPos2i;
@@ -135,11 +133,6 @@ public class CubeWorldHandler {
 	private List<PlayerProxy> playerProxies;
 
 	/**
-	 * the playerNames
-	 */
-	private Map<Integer, String> playerNames;
-
-	/**
 	 * the minusPressed
 	 */
 	private boolean minusPressed;
@@ -230,10 +223,9 @@ public class CubeWorldHandler {
 		aspectRatio = (float)width / (float)height;
 		frameDurationSensor = new FrameDurationSensor();
 		playerProxies = new ArrayList<PlayerProxy>();
-		playerNames = new HashMap<Integer, String>();
 		footstepSound = new RegularSound(resources.getFootstep(), 500);
 		cooldownFinishTime = System.currentTimeMillis();
-		otherPlayerVisualTemplate = new OtherPlayerVisualTemplate(resources, player, this);
+		otherPlayerVisualTemplate = new OtherPlayerVisualTemplate(resources, player);
 
 		// TODO: implement better checking for connection problems: only stall when surrounding sections
 		// are missing AND the player is in that half of the current section. currently using collider
@@ -288,22 +280,6 @@ public class CubeWorldHandler {
 	 */
 	public void setPlayerProxies(final List<PlayerProxy> playerProxies) {
 		this.playerProxies = playerProxies;
-	}
-
-	/**
-	 * Getter method for the playerNames.
-	 * @return the playerNames
-	 */
-	public Map<Integer, String> getPlayerNames() {
-		return playerNames;
-	}
-
-	/**
-	 * Setter method for the playerNames.
-	 * @param playerNames the playerNames to set
-	 */
-	public void setPlayerNames(final Map<Integer, String> playerNames) {
-		this.playerNames = playerNames;
 	}
 
 	/**

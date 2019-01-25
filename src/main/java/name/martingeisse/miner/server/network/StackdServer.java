@@ -15,7 +15,6 @@ import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.c2s.*;
 import name.martingeisse.miner.common.network.s2c.PlayerListUpdate;
-import name.martingeisse.miner.common.network.s2c.PlayerNamesUpdate;
 import name.martingeisse.miner.common.network.s2c.SingleSectionModificationEvent;
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
@@ -356,38 +355,18 @@ public class StackdServer {
 	 */
 	private class AvatarUpdateSender extends TimerTask {
 
-		private int counter = 0;
-
 		@Override
 		public void run() {
-
-			// send names only once per 10 updates
-			boolean sendNames = false;
-			counter++;
-			if (counter == 10) {
-				counter = 0;
-				sendNames = true;
-			}
-
-			List<PlayerListUpdate.Element> positionElements = new ArrayList<>();
-			List<PlayerNamesUpdate.Element> nameElements = new ArrayList<>();
+			List<PlayerListUpdate.Element> elements = new ArrayList<>();
 			for (StackdSession session : getSessions()) {
 				Avatar avatar = session.getAvatar();
 				if (avatar != null) {
-					positionElements.add(new PlayerListUpdate.Element(session.getId(), avatar.getPosition(), avatar.getOrientation()));
-					if (sendNames) {
-						nameElements.add(new PlayerNamesUpdate.Element(session.getId(), avatar.getName()));
-					}
+					elements.add(new PlayerListUpdate.Element(session.getId(), avatar.getPosition(), avatar.getOrientation(), avatar.getName()));
 				}
 			}
-
-			if (positionElements.size() > 0) {
-				broadcast(new PlayerListUpdate(ImmutableList.copyOf(positionElements)));
+			if (elements.size() > 0) {
+				broadcast(new PlayerListUpdate(ImmutableList.copyOf(elements)));
 			}
-			if (nameElements.size() > 0) {
-				broadcast(new PlayerNamesUpdate(ImmutableList.copyOf(nameElements)));
-			}
-
 		}
 
 	}

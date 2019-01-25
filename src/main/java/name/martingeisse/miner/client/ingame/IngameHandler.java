@@ -18,7 +18,6 @@ import name.martingeisse.miner.client.ingame.player.PlayerProxy;
 import name.martingeisse.miner.client.network.StackdProtocolClient;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * The in-game frame handler
@@ -155,10 +154,6 @@ public class IngameHandler extends HandlerList {
 				final List<PlayerProxy> updatedPlayerProxies = protocolClient.fetchUpdatedPlayerProxies();
 				if (updatedPlayerProxies != null) {
 					cubeWorldHandler.setPlayerProxies(updatedPlayerProxies);
-				}
-				final Map<Integer, String> updatedPlayerNames = protocolClient.fetchUpdatedPlayerNames();
-				if (updatedPlayerNames != null) {
-					cubeWorldHandler.setPlayerNames(updatedPlayerNames);
 				}
 				final PlayerResumedMessage playerResumedMessage = protocolClient.fetchPlayerResumedMessage();
 				if (playerResumedMessage != null) {
