@@ -43,20 +43,14 @@ public final class PlayerListUpdate extends Message {
 
 	public static final class Element {
 
-		private final int id;
 		private final Vector3d position;
 		private final EulerAngles angles;
 		private final String name;
 
-		public Element(int id, Vector3d position, EulerAngles angles, String name) {
-			this.id = id;
+		public Element(Vector3d position, EulerAngles angles, String name) {
 			this.position = position;
 			this.angles = angles;
 			this.name = name;
-		}
-
-		public int getId() {
-			return id;
 		}
 
 		public Vector3d getPosition() {
@@ -72,14 +66,13 @@ public final class PlayerListUpdate extends Message {
 		}
 
 		public void encode(ByteBuf buffer) {
-			buffer.writeInt(id);
 			position.encode(buffer);
 			angles.encode(buffer);
 			BufferUtil.encodeString(name, buffer);
 		}
 
 		public static Element decode(ByteBuf buffer) {
-			return new Element(buffer.readInt(), Vector3d.decode(buffer), EulerAngles.decode(buffer), BufferUtil.decodeString(buffer));
+			return new Element(Vector3d.decode(buffer), EulerAngles.decode(buffer), BufferUtil.decodeString(buffer));
 		}
 
 	}

@@ -264,7 +264,7 @@ public class StackdProtocolClient {
 			PlayerListUpdate message = (PlayerListUpdate) untypedMessage;
 			List<PlayerProxy> playerProxiesFromMessage = new ArrayList<PlayerProxy>();
 			for (PlayerListUpdate.Element element : message.getElements()) {
-				PlayerProxy proxy = new PlayerProxy(element.getId());
+				PlayerProxy proxy = new PlayerProxy();
 				proxy.getPosition().copyFrom(element.getPosition());
 				proxy.getOrientation().copyFrom(element.getAngles());
 				proxy.setName(element.getName());

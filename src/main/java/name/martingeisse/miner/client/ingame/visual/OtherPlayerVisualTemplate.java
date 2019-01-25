@@ -49,9 +49,8 @@ public final class OtherPlayerVisualTemplate extends AbstractSingleWorkUnitVisua
 	@Override
 	public void renderEmbedded(PlayerProxy playerProxy) {
 
-		// set a color that is computed from the player's session ID
-		final Random random = new Random(playerProxy.getId());
-		glColor4ub((byte) random.nextInt(255), (byte) random.nextInt(255), (byte) random.nextInt(255), (byte) 255);
+		// since we removed client-side session IDs we don't have a specific color for player proxies, so make them blue for now
+		glColor4ub((byte) 0, (byte) 0, (byte) 255, (byte) 255);
 
 		// Set up inverse modelview matrix, draw, then restore previous matrix.
 		// Also set the raster position for drawing the name.

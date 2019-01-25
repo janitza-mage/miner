@@ -363,7 +363,7 @@ public class StackdServer {
 					if (avatarSession != recipientSession) {
 						Avatar avatar = avatarSession.getAvatar();
 						if (avatar != null) {
-							elements.add(new PlayerListUpdate.Element(avatarSession.getId(), avatar.getPosition(), avatar.getOrientation(), avatar.getName()));
+							elements.add(new PlayerListUpdate.Element(avatar.getPosition(), avatar.getOrientation(), avatar.getName()));
 						}
 					}
 				}
