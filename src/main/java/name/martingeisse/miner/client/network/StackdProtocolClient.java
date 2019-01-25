@@ -34,9 +34,7 @@ import java.net.InetSocketAddress;
 import java.nio.channels.ClosedChannelException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * This class handles the connection to the server. Applications are
@@ -48,8 +46,6 @@ public class StackdProtocolClient {
 	private static Logger logger = Logger.getLogger(StackdProtocolClient.class);
 
 	private ClientEndpoint endpoint;
-	private final Object syncObject = new Object();
-	private int sessionId = -1;
 	private FlashMessageHandler flashMessageHandler;
 	private SectionGridLoader sectionGridLoader;
 	private Console console;
@@ -77,15 +73,16 @@ public class StackdProtocolClient {
 
 	public void setEndpoint(ClientEndpoint endpoint) {
 		this.endpoint = endpoint;
+		if (endpoint != null) {
+			send(new ResumePlayer(AccountApiClient.getInstance().getPlayerAccessToken().getBytes(StandardCharsets.UTF_8)));
+		}
 	}
 
 	/**
 	 * @return true if ready, false if still connecting
 	 */
 	public final boolean isReady() {
-		synchronized (syncObject) {
-			return (sessionId != -1);
-		}
+		return (endpoint != null);
 	}
 
 	/**
@@ -94,20 +91,9 @@ public class StackdProtocolClient {
 	 * @throws InterruptedException if interrupted while waiting
 	 */
 	public final void waitUntilReady() throws InterruptedException {
-		synchronized (syncObject) {
-			if (sessionId == -1) {
-				syncObject.wait();
-			}
+		while (!isReady()) {
+			Thread.sleep(10);
 		}
-	}
-
-	/**
-	 * Getter method for the sessionId.
-	 *
-	 * @return the sessionId
-	 */
-	public final int getSessionId() {
-		return sessionId;
 	}
 
 	/**
@@ -232,17 +218,6 @@ public class StackdProtocolClient {
 	}
 
 	/**
-	 * This method gets invoked after receiving the "hello" packet from the server.
-	 * The default implementation does nothing.
-	 * <p>
-	 * NOTE: This method gets invoked by the Netty thread, asynchronous
-	 * to the main game thread!
-	 */
-	protected void onReady() {
-		send(new ResumePlayer(AccountApiClient.getInstance().getPlayerAccessToken().getBytes(StandardCharsets.UTF_8)));
-	}
-
-	/**
 	 * This method gets invoked when receiving an application packet from the server.
 	 * The default implementation does nothing.
 	 * <p>
@@ -250,21 +225,7 @@ public class StackdProtocolClient {
 	 * to the main game thread!
 	 */
 	protected void onMessageReceived(Message untypedMessage) {
-		if (untypedMessage instanceof Hello) {
-
-			logger.debug("hello packet received");
-			Hello message = (Hello) untypedMessage;
-			synchronized (syncObject) {
-				sessionId = message.getSessionId();
-				if (sessionId < 0) {
-					throw new RuntimeException("server sent invalid session ID: " + sessionId);
-				}
-				syncObject.notifyAll();
-			}
-			onReady();
-			logger.debug("protocol client ready");
-
-		} else if (untypedMessage instanceof FlashMessage) {
+		if (untypedMessage instanceof FlashMessage) {
 
 			FlashMessage message = (FlashMessage) untypedMessage;
 			onFlashMessageReceived(message.getText());

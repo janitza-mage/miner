@@ -8,7 +8,10 @@ package name.martingeisse.miner.server.network;
 
 import com.google.common.collect.ImmutableList;
 import name.martingeisse.miner.common.network.Message;
-import name.martingeisse.miner.common.network.s2c.*;
+import name.martingeisse.miner.common.network.s2c.ConsoleOutput;
+import name.martingeisse.miner.common.network.s2c.FlashMessage;
+import name.martingeisse.miner.common.network.s2c.PlayerResumed;
+import name.martingeisse.miner.common.network.s2c.UpdateCoins;
 import name.martingeisse.miner.server.game.PlayerAccess;
 import org.apache.log4j.Logger;
 
@@ -101,7 +104,6 @@ public class StackdSession {
 	 * initialization method will be called only for the one that is actually kept.
 	 */
 	public void onConnect() {
-		send(new Hello(id));
 		sendFlashMessage("Connected to server.");
 		sendCoinsUpdate();
 	}
