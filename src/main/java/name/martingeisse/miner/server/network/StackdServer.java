@@ -25,6 +25,7 @@ import name.martingeisse.miner.server.console.IConsoleCommandHandler;
 import name.martingeisse.miner.server.console.MinerConsoleCommandHandler;
 import name.martingeisse.miner.server.console.NullConsoleCommandHandler;
 import name.martingeisse.miner.server.game.DigUtil;
+import name.martingeisse.miner.server.game.PlayerAccess;
 import name.martingeisse.miner.server.section.SectionToClientShipper;
 import name.martingeisse.miner.server.section.SectionWorkingSet;
 import name.martingeisse.miner.server.section.entry.SectionCubesCacheEntry;
@@ -267,7 +268,10 @@ public class StackdServer {
 			}
 
 			// trigger special logic (e.g. add a unit of ore to the player's inventory)
-			DigUtil.onCubeDugAway(session, x, y, z, oldCubeType);
+			PlayerAccess playerAccess = session.getPlayerAccess();
+			if (playerAccess != null) {
+				DigUtil.onCubeDugAway(playerAccess, x, y, z, oldCubeType);
+			}
 
 		} else {
 			logger.error("unknown message: " + untypedMessage);

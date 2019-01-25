@@ -50,10 +50,17 @@ public class StackdSession {
 		}
 		playerAccess = new PlayerAccess(playerId);
 		playerAccess.add(new PlayerAccess.Listener() {
+
 			@Override
 			public void onCoinsChanged() {
 				sendCoinsUpdate();
 			}
+
+			@Override
+			public void onFlashMessage(String message) {
+				sendFlashMessage(message);
+			}
+
 		});
 		sendCoinsUpdate();
 	}

@@ -6,8 +6,6 @@
 
 package name.martingeisse.miner.server.game;
 
-import name.martingeisse.miner.server.network.StackdSession;
-
 /**
  * Utility methods to deal with player's achievements.
  */
@@ -27,13 +25,12 @@ public class AchievementUtil {
 	 * In that case, the calling function should next credit a reward to
 	 * the player.
 	 *
-	 * @param session         the player's session
+	 * @param playerAccess         the player's playerAccess
 	 * @param achievementCode the internal unique code for the achievement
 	 * @return true if successfully awarded, false if the player had already
 	 * been awarded this achievement (or if no player was loaded)
 	 */
-	public static boolean awardAchievment(StackdSession session, String achievementCode) {
-		PlayerAccess playerAccess = session.getPlayerAccess();
+	public static boolean awardAchievment(PlayerAccess playerAccess, String achievementCode) {
 		if (playerAccess == null) {
 			return false;
 		} else {
@@ -42,24 +39,23 @@ public class AchievementUtil {
 	}
 
 	/**
-	 * Like {@link #awardAchievment(StackdSession, String)}, but also sends a message to
+	 * Like {@link #awardAchievment(PlayerAccess, String)}, but also sends a message to
 	 * the client if the achievment was successfully awarded and assigns some bonus
 	 * coins to the player.
 	 *
-	 * @param session         the player's session
+	 * @param playerAccess         the player's playerAccess
 	 * @param achievementCode the internal unique code for the achievement
 	 * @param description     a short description of the achievement, used in the message
 	 * @param reward          player's reward in coins
 	 * @return true if successfully awarded, false if the player had already
 	 * been awarded this achievement
 	 */
-	public static boolean awardAchievment(StackdSession session, String achievementCode, String description, int reward) {
-		boolean success = awardAchievment(session, achievementCode);
+	public static boolean awardAchievment(PlayerAccess playerAccess, String achievementCode, String description, int reward) {
+		boolean success = awardAchievment(playerAccess, achievementCode);
 		if (success) {
-			PlayerAccess playerAccess = session.getPlayerAccess();
 			if (playerAccess != null) {
-				session.sendFlashMessage("Achievement Unlocked: " + description + "(reward: " + reward + " coins)");
-				session.getPlayerAccess().addCoins(reward);
+				playerAccess.sendFlashMessage("Achievement Unlocked: " + description + "(reward: " + reward + " coins)");
+				playerAccess.addCoins(reward);
 			}
 		}
 		return success;

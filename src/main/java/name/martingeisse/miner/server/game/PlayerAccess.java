@@ -4,6 +4,7 @@
  */
 package name.martingeisse.miner.server.game;
 
+import com.querydsl.core.QueryException;
 import com.querydsl.sql.dml.SQLInsertClause;
 import com.querydsl.sql.dml.SQLUpdateClause;
 import io.netty.util.internal.ConcurrentSet;
@@ -15,6 +16,7 @@ import name.martingeisse.miner.server.entities.QPlayer;
 import name.martingeisse.miner.server.entities.QPlayerAwardedAchievement;
 import name.martingeisse.miner.server.network.Avatar;
 import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
+import name.martingeisse.miner.server.util.database.postgres.PostgresUtil;
 
 import java.math.BigDecimal;
 import java.util.concurrent.ConcurrentHashMap;
@@ -59,6 +61,7 @@ public final class PlayerAccess {
 
 	public interface Listener {
 		void onCoinsChanged();
+		void onFlashMessage(String message);
 	}
 
 	public void add(Listener listener) {
@@ -85,7 +88,15 @@ public final class PlayerAccess {
 			SQLInsertClause insert = connection.insert(qpaa);
 			insert.set(qpaa.playerId, id);
 			insert.set(qpaa.achievementCode, achievementCode);
-			return (insert.execute() > 0);
+			try {
+				return (insert.execute() > 0);
+			} catch (QueryException e) {
+				if (PostgresUtil.isDuplicateKeyViolation(e)) {
+					return false;
+				} else {
+					throw e;
+				}
+			}
 		}
 	}
 
@@ -135,6 +146,10 @@ public final class PlayerAccess {
 			// note: cannot change the player's name this way
 			update.execute();
 		}
+	}
+
+	public void sendFlashMessage(String message) {
+		notifyListeners(l -> l.onFlashMessage(message));
 	}
 
 }
