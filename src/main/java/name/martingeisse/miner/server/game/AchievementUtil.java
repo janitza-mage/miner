@@ -6,14 +6,7 @@
 
 package name.martingeisse.miner.server.game;
 
-import com.querydsl.sql.dml.SQLInsertClause;
-import com.querydsl.sql.dml.SQLUpdateClause;
-import name.martingeisse.miner.server.Databases;
-import name.martingeisse.miner.server.entities.Player;
-import name.martingeisse.miner.server.entities.QPlayer;
-import name.martingeisse.miner.server.entities.QPlayerAwardedAchievement;
 import name.martingeisse.miner.server.network.StackdSession;
-import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
 
 /**
  * Utility methods to deal with player's achievements.
@@ -40,15 +33,11 @@ public class AchievementUtil {
 	 * been awarded this achievement (or if no player was loaded)
 	 */
 	public static boolean awardAchievment(StackdSession session, String achievementCode) {
-		if (session.getPlayerId() == null) {
+		PlayerAccess playerAccess = session.getPlayerAccess();
+		if (playerAccess == null) {
 			return false;
-		}
-		QPlayerAwardedAchievement qpaa = QPlayerAwardedAchievement.PlayerAwardedAchievement;
-		try (PostgresConnection connection = Databases.main.newConnection()) {
-			SQLInsertClause insert = connection.insert(qpaa);
-			insert.set(qpaa.playerId, session.getPlayerId());
-			insert.set(qpaa.achievementCode, achievementCode);
-			return (insert.execute() > 0);
+		} else {
+			return playerAccess.addAchievement(achievementCode);
 		}
 	}
 
@@ -67,20 +56,11 @@ public class AchievementUtil {
 	public static boolean awardAchievment(StackdSession session, String achievementCode, String description, int reward) {
 		boolean success = awardAchievment(session, achievementCode);
 		if (success) {
-			session.sendFlashMessage("Achievement Unlocked: " + description + "(reward: " + reward + " coins)");
-			try (PostgresConnection connection = Databases.main.newConnection()) {
-				QPlayer qp = QPlayer.Player;
-				Player player = connection.query().select(qp).from(qp).where(qp.id.eq(session.getPlayerId())).fetchFirst();
-				if (player == null) {
-					session.sendFlashMessage("no player loaded");
-				} else {
-					long newCoins = player.getCoins() + reward;
-					SQLUpdateClause update = connection.update(qp);
-					update.where(qp.id.eq(session.getPlayerId()));
-					update.set(qp.coins, newCoins);
-					update.execute();
-					session.sendCoinsUpdate(newCoins);
-				}
+			PlayerAccess playerAccess = session.getPlayerAccess();
+			if (playerAccess != null) {
+				session.sendFlashMessage("Achievement Unlocked: " + description + "(reward: " + reward + " coins)");
+				session.getPlayerAccess().addCoins(reward);
+				session.sendCoinsUpdate(session.getPlayerAccess().getCoins());
 			}
 		}
 		return success;

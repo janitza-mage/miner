@@ -7,13 +7,9 @@
 package name.martingeisse.miner.server.network;
 
 import com.google.common.collect.ImmutableList;
-import com.querydsl.sql.dml.SQLUpdateClause;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.s2c.*;
-import name.martingeisse.miner.server.Databases;
-import name.martingeisse.miner.server.entities.Player;
-import name.martingeisse.miner.server.entities.QPlayer;
-import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
+import name.martingeisse.miner.server.game.PlayerAccess;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
@@ -33,7 +29,7 @@ public class StackdSession {
 	private final ServerEndpoint endpoint;
 
 	// player info
-	private volatile Long playerId;
+	private volatile PlayerAccess playerAccess;
 
 	// avatar info
 	private volatile Avatar avatar;
@@ -58,41 +54,21 @@ public class StackdSession {
 	}
 
 	//
-	// database access
-	//
-
-	private static Player loadPlayerRow(long playerId) {
-		try (PostgresConnection connection = Databases.main.newConnection()) {
-			QPlayer qp = QPlayer.Player;
-			Player player = connection.query().select(qp).from(qp).where(qp.id.eq(playerId)).fetchOne();
-			if (player == null) {
-				throw new RuntimeException("player not found, id: " + playerId);
-			}
-			return player;
-		}
-	}
-
-	private Player loadPlayerRow() {
-		return loadPlayerRow(playerId);
-	}
-
-	//
 	// player management
 	//
 
 	public void selectPlayer(long playerId) {
-		if (this.playerId != null) {
+		if (playerAccess != null) {
 			throw new IllegalStateException("player already selected");
 		}
-		if (this.avatar != null) {
+		if (avatar != null) {
 			throw new IllegalStateException("cannot select player -- avatar exists (state inconsistent)");
 		}
-		Player player = loadPlayerRow(playerId);
-		this.playerId = playerId;
+		playerAccess = new PlayerAccess(playerId);
 	}
 
-	public Long getPlayerId() {
-		return playerId;
+	public PlayerAccess getPlayerAccess() {
+		return playerAccess;
 	}
 
 	//
@@ -100,15 +76,14 @@ public class StackdSession {
 	//
 
 	public void createAvatar() {
-		if (playerId == null) {
+		if (playerAccess == null) {
 			throw new IllegalStateException("cannot create avatar -- no player selected");
 		}
 		if (avatar != null) {
 			throw new IllegalStateException("avatar already exists");
 		}
-		Player player = loadPlayerRow();
 		avatar = new Avatar();
-		avatar.copyFrom(player);
+		playerAccess.loadAvatar(avatar);
 	}
 
 	public Avatar getAvatar() {
@@ -135,21 +110,8 @@ public class StackdSession {
 	 * Called when the client disconnects, just before the session gets removed from the server.
 	 */
 	public void onDisconnect() {
-		if (playerId != null) {
-			try (PostgresConnection connection = Databases.main.newConnection()) {
-				Player patch = new Player();
-				avatar.copyTo(patch);
-
-				QPlayer qp = QPlayer.Player;
-				SQLUpdateClause update = connection.update(qp);
-				update.where(qp.id.eq(playerId));
-				update.set(qp.x, patch.getX());
-				update.set(qp.y, patch.getY());
-				update.set(qp.z, patch.getZ());
-				update.set(qp.leftAngle, patch.getLeftAngle());
-				update.set(qp.upAngle, patch.getUpAngle());
-				update.execute();
-			}
+		if (playerAccess != null && avatar != null) {
+			playerAccess.saveAvatar(avatar);
 		}
 	}
 
@@ -193,15 +155,7 @@ public class StackdSession {
 	 * number of coins from the database.
 	 */
 	public void sendCoinsUpdate() {
-		if (playerId == null) {
-			sendCoinsUpdate(0);
-		} else {
-			try (PostgresConnection connection = Databases.main.newConnection()) {
-				QPlayer qp = QPlayer.Player;
-				Long coins = connection.query().select(qp.coins).from(qp).where(qp.id.eq(playerId)).fetchFirst();
-				sendCoinsUpdate(coins == null ? 0 : coins);
-			}
-		}
+		sendCoinsUpdate(playerAccess == null ? 0 : playerAccess.getCoins());
 	}
 
 	/**

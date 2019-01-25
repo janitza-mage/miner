@@ -34,7 +34,7 @@ public class MinerConsoleCommandHandler implements IConsoleCommandHandler {
 	@Override
 	public void handleCommand(final StackdSession session, final String command, final String[] arguments) {
 		final MinerConsoleCommandLineParser parser = new MinerConsoleCommandLineParser(session, arguments);
-		final InventoryAccess inventoryAccess = new InventoryAccess(session.getPlayerId());
+		final InventoryAccess inventoryAccess = session.getPlayerAccess().getInventoryAccess();
 		final ItemType[] itemTypes = ItemType.values();
 		try {
 
@@ -72,7 +72,7 @@ public class MinerConsoleCommandHandler implements IConsoleCommandHandler {
 			} else if (command.equals("wish")) {
 				final ItemType type = parser.fetchItemType(false);
 				if (type != null) {
-					new InventoryAccess(session.getPlayerId()).add(type);
+					session.getPlayerAccess().getInventoryAccess().add(type);
 					session.sendConsoleOutput("wish granted");
 				}
 

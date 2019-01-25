@@ -6,12 +6,7 @@
 
 package name.martingeisse.miner.server.game;
 
-import com.querydsl.sql.dml.SQLUpdateClause;
-import name.martingeisse.miner.server.Databases;
-import name.martingeisse.miner.server.entities.Player;
-import name.martingeisse.miner.server.entities.QPlayer;
 import name.martingeisse.miner.server.network.StackdSession;
-import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
 import org.apache.log4j.Logger;
 
 /**
@@ -30,10 +25,10 @@ public final class DigUtil {
 	 * and saving the updated cube server-side. For example, this method rewards
 	 * inventory items for digging ores.
 	 *
-	 * @param session the player's session
-	 * @param x the x position of the cube
-	 * @param y the y position of the cube
-	 * @param z the z position of the cube
+	 * @param session  the player's session
+	 * @param x        the x position of the cube
+	 * @param y        the y position of the cube
+	 * @param z        the z position of the cube
 	 * @param cubeType the cube type dug away
 	 */
 	public static void onCubeDugAway(StackdSession session, int x, int y, int z, byte cubeType) {
@@ -85,24 +80,13 @@ public final class DigUtil {
 	}
 
 	private static void oreFound(StackdSession session, String name, int value) {
-		QPlayer qp = QPlayer.Player;
-		try (PostgresConnection connection = Databases.main.newConnection()) {
-			Player player = connection.query().select(qp).from(qp).where(qp.id.eq(session.getPlayerId())).fetchFirst();
-			if (player == null) {
-				session.sendFlashMessage("no player loaded");
-				return;
-			}
-			long newCoins = player.getCoins() + value;
-			{
-				SQLUpdateClause update = connection.update(qp);
-				update.where(qp.id.eq(session.getPlayerId()));
-				update.set(qp.coins, newCoins);
-				update.execute();
-
-			}
-			session.sendFlashMessage("You found some " + name + " (worth " + value + " coins).");
-			session.sendCoinsUpdate(newCoins);
+		PlayerAccess playerAccess = session.getPlayerAccess();
+		if (playerAccess == null) {
+			return;
 		}
+		playerAccess.addCoins(value);
+		session.sendFlashMessage("You found some " + name + " (worth " + value + " coins).");
+		session.sendCoinsUpdate(playerAccess.getCoins());
 	}
 
 	/**
