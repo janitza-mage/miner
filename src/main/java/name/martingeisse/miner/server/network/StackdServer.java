@@ -32,6 +32,7 @@ import name.martingeisse.miner.server.section.storage.AbstractSectionStorage;
 import name.martingeisse.miner.server.section.storage.CassandraSectionStorage;
 import name.martingeisse.miner.server.terrain.TerrainGenerator;
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.joda.time.Instant;
 
 import java.nio.charset.StandardCharsets;
@@ -53,7 +54,7 @@ public class StackdServer {
 	/**
 	 * the sessions
 	 */
-	private final ConcurrentHashMap<Integer, StackdSession> sessions;
+	private final ConcurrentHashSet<StackdSession> sessions;
 
 	/**
 	 * the sectionWorkingSet
@@ -81,7 +82,7 @@ public class StackdServer {
 	public StackdServer() {
 		AbstractSectionStorage sectionStorage = new CassandraSectionStorage(Constants.CLUSTER_SIZE, Databases.world, "section_data");
 
-		this.sessions = new ConcurrentHashMap<Integer, StackdSession>();
+		this.sessions = new ConcurrentHashSet<>();
 		this.sectionWorkingSet = new SectionWorkingSet(this, sectionStorage);
 		this.sectionToClientShipper = new SectionToClientShipper(sectionWorkingSet);
 		this.cubeTypes = new CubeType[0];
@@ -150,41 +151,24 @@ public class StackdServer {
 	}
 
 	/**
-	 * Returns the session with the specified ID, or null if no such session exists.
-	 *
-	 * @param id the session ID
-	 * @return the session or null
-	 */
-	public final StackdSession getExistingSession(final int id) {
-		return sessions.get(id);
-	}
-
-	/**
 	 * Creates a new session with a random unused ID and returns it.
 	 */
 	public final StackdSession createSession(final ServerEndpoint endpoint) {
-		final Random random = new Random();
-		while (true) {
-			final StackdSession session = new StackdSession(random.nextInt(0x7fffffff), endpoint);
-			if (sessions.putIfAbsent(session.getId(), session) == null) {
-				return session;
-			}
-		}
+		final StackdSession session = new StackdSession(endpoint);
+		sessions.add(session);
+		return session;
 	}
 
 	/**
-	 * Returns a collection that contains all sessions. This collection is
-	 * a live view on the session map in this server and will be changed
+	 * Returns a collection that contains all sessions. This collection is "live" and will be changed
 	 * concurrently by other threads.
-	 *
-	 * @return the sessions
 	 */
-	public final Collection<StackdSession> getSessions() {
-		return sessions.values();
+	public final Set<StackdSession> getSessions() {
+		return sessions;
 	}
 
 	public final void broadcast(final Message message) {
-		for (final StackdSession session : sessions.values()) {
+		for (final StackdSession session : sessions) {
 			session.send(message);
 		}
 	}
@@ -316,9 +300,7 @@ public class StackdServer {
 	 */
 	final void removeSession(final StackdSession session) {
 		if (session != null) {
-			final int sessionId = session.getId();
-			logger.info("removing session: " + sessionId);
-			sessions.remove(sessionId);
+			sessions.remove(session);
 		}
 	}
 
@@ -357,7 +339,7 @@ public class StackdServer {
 
 		@Override
 		public void run() {
-			for (final StackdSession recipientSession : sessions.values()) {
+			for (final StackdSession recipientSession : sessions) {
 				List<PlayerListUpdate.Element> elements = new ArrayList<>();
 				for (StackdSession avatarSession : getSessions()) {
 					if (avatarSession != recipientSession) {

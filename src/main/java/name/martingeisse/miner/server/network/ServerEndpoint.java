@@ -41,14 +41,14 @@ final class ServerEndpoint extends ProtocolEndpoint {
 	@Override
 	protected void onConnect() {
 		session = server.createSession(this);
-		logger.info("client connected. Session ID: " + session.getId());
+		logger.info("client connected");
 		session.onConnect();
 	}
 
 	@Override
 	protected void onDisconnect() {
 		if (session != null) {
-			logger.info("client disconnected. Session ID: " + session.getId());
+			logger.info("client disconnected");
 			session.onDisconnect();
 			server.removeSession(session);
 		} else {

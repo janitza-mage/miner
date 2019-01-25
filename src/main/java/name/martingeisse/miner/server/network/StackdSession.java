@@ -20,15 +20,11 @@ import java.util.Collection;
 /**
  * Stores the data for one user session (currently associated with the connection,
  * but intended to service connection dropping and re-connecting).
- * <p>
- * Application code may subclass this class to add application-specific
- * per-session data.
  */
 public class StackdSession {
 
 	private static Logger logger = Logger.getLogger(StackdSession.class);
 
-	private final int id;
 	private final ServerEndpoint endpoint;
 
 	// player info
@@ -37,19 +33,8 @@ public class StackdSession {
 	// avatar info
 	private volatile Avatar avatar;
 
-	/**
-	 * Note that a race condition might cause this constructor to be invoked twice to
-	 * create a session for the same ID. In such a case, the race condition will be
-	 * detected later on and one of the sessions will be thrown away. This method must
-	 * be able to handle such a case.
-	 */
-	public StackdSession(int id, ServerEndpoint endpoint) {
-		this.id = id;
+	public StackdSession(ServerEndpoint endpoint) {
 		this.endpoint = endpoint;
-	}
-
-	public int getId() {
-		return id;
 	}
 
 	public ServerEndpoint getEndpoint() {
@@ -98,10 +83,7 @@ public class StackdSession {
 	//
 
 	/**
-	 * Called after this session has been created.
-	 * <p>
-	 * As noted in the constructor comment, a race condition may cause multiple sessions to be created. This
-	 * initialization method will be called only for the one that is actually kept.
+	 * Called after this session has been created and registered with the server.
 	 */
 	public void onConnect() {
 		sendFlashMessage("Connected to server.");
