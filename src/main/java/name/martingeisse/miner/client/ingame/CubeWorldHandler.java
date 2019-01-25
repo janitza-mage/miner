@@ -633,9 +633,7 @@ public class CubeWorldHandler {
 				glEnable(GL_BLEND);
 				glMatrixMode(GL_MODELVIEW);
 				for (final PlayerProxy playerProxy : playerProxies) {
-					if (playerProxy.getId() != IngameHandler.protocolClient.getSessionId()) {
-						otherPlayerVisualTemplate.renderEmbedded(playerProxy);
-					}
+					otherPlayerVisualTemplate.renderEmbedded(playerProxy);
 				}
 				glDisable(GL_BLEND);
 

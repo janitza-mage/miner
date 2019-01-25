@@ -357,15 +357,19 @@ public class StackdServer {
 
 		@Override
 		public void run() {
-			List<PlayerListUpdate.Element> elements = new ArrayList<>();
-			for (StackdSession session : getSessions()) {
-				Avatar avatar = session.getAvatar();
-				if (avatar != null) {
-					elements.add(new PlayerListUpdate.Element(session.getId(), avatar.getPosition(), avatar.getOrientation(), avatar.getName()));
+			for (final StackdSession recipientSession : sessions.values()) {
+				List<PlayerListUpdate.Element> elements = new ArrayList<>();
+				for (StackdSession avatarSession : getSessions()) {
+					if (avatarSession != recipientSession) {
+						Avatar avatar = avatarSession.getAvatar();
+						if (avatar != null) {
+							elements.add(new PlayerListUpdate.Element(avatarSession.getId(), avatar.getPosition(), avatar.getOrientation(), avatar.getName()));
+						}
+					}
 				}
-			}
-			if (elements.size() > 0) {
-				broadcast(new PlayerListUpdate(ImmutableList.copyOf(elements)));
+				if (elements.size() > 0) {
+					recipientSession.send(new PlayerListUpdate(ImmutableList.copyOf(elements)));
+				}
 			}
 		}
 
