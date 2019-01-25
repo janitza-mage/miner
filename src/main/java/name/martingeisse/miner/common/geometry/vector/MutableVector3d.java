@@ -7,7 +7,8 @@
 package name.martingeisse.miner.common.geometry.vector;
 
 /**
- * Mutable implementation of {@link ReadableVector3d}.
+ * Mutable implementation of {@link ReadableVector3d}. TODO check if the mutable implementation actually has a
+ * real performance advantage, otherwise replace by immutable everywhere.
  */
 public class MutableVector3d extends ReadableVector3d {
 

@@ -73,4 +73,43 @@ public final class Vector3d extends ReadableVector3d {
 		return this;
 	}
 
+	public Vector3d add(Vector3d other) {
+		return new Vector3d(x + other.x, y + other.y, z + other.z);
+	}
+
+	public Vector3d subtract(Vector3d other) {
+		return new Vector3d(x + other.x, y + other.y, z + other.z);
+	}
+
+	public Vector3d multiply(double a) {
+		return new Vector3d(x * a, y * a, z * a);
+	}
+
+	public Vector3d divide(double a) {
+		return new Vector3d(x / a, y / a, z / a);
+	}
+
+	public double dot(Vector3d other) {
+		return x * other.x + y * other.y + z * other.z;
+	}
+
+	public double normSquared() {
+		return x * x + y * y + z * z;
+	}
+
+	public double norm() {
+		return Math.sqrt(normSquared());
+	}
+
+	public double distanceSquared(Vector3d other) {
+		double dx = x - other.x;
+		double dy = y - other.y;
+		double dz = z - other.z;
+		return dx * dx + dy * dy + dz * dz;
+	}
+
+	public double distance(Vector3d other) {
+		return Math.sqrt(distanceSquared(other));
+	}
+
 }
