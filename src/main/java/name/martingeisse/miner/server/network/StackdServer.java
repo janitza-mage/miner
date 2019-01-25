@@ -32,7 +32,6 @@ import name.martingeisse.miner.server.section.storage.AbstractSectionStorage;
 import name.martingeisse.miner.server.section.storage.CassandraSectionStorage;
 import name.martingeisse.miner.server.terrain.TerrainGenerator;
 import org.apache.log4j.Logger;
-import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.joda.time.Instant;
 
 import java.nio.charset.StandardCharsets;
@@ -54,7 +53,7 @@ public class StackdServer {
 	/**
 	 * the sessions
 	 */
-	private final ConcurrentHashSet<StackdSession> sessions;
+	private final ConcurrentHashMap<StackdSession, StackdSession> sessions;
 
 	/**
 	 * the sectionWorkingSet
@@ -82,7 +81,7 @@ public class StackdServer {
 	public StackdServer() {
 		AbstractSectionStorage sectionStorage = new CassandraSectionStorage(Constants.CLUSTER_SIZE, Databases.world, "section_data");
 
-		this.sessions = new ConcurrentHashSet<>();
+		this.sessions = new ConcurrentHashMap<>();
 		this.sectionWorkingSet = new SectionWorkingSet(this, sectionStorage);
 		this.sectionToClientShipper = new SectionToClientShipper(sectionWorkingSet);
 		this.cubeTypes = new CubeType[0];
@@ -155,7 +154,7 @@ public class StackdServer {
 	 */
 	public final StackdSession createSession(final ServerEndpoint endpoint) {
 		final StackdSession session = new StackdSession(endpoint);
-		sessions.add(session);
+		sessions.put(session, session);
 		return session;
 	}
 
@@ -164,11 +163,11 @@ public class StackdServer {
 	 * concurrently by other threads.
 	 */
 	public final Set<StackdSession> getSessions() {
-		return sessions;
+		return sessions.keySet();
 	}
 
 	public final void broadcast(final Message message) {
-		for (final StackdSession session : sessions) {
+		for (final StackdSession session : sessions.keySet()) {
 			session.send(message);
 		}
 	}
@@ -229,8 +228,6 @@ public class StackdServer {
 			long playerId = Long.parseLong(tokenSubject);
 			session.selectPlayer(playerId);
 			session.createAvatar();
-			session.sendCoinsUpdate();
-			session.sendPlayerResumed();
 
 		} else if (untypedMessage instanceof DigNotification) {
 
@@ -339,7 +336,7 @@ public class StackdServer {
 
 		@Override
 		public void run() {
-			for (final StackdSession recipientSession : sessions) {
+			for (final StackdSession recipientSession : sessions.keySet()) {
 				List<PlayerListUpdate.Element> elements = new ArrayList<>();
 				for (StackdSession avatarSession : getSessions()) {
 					if (avatarSession != recipientSession) {

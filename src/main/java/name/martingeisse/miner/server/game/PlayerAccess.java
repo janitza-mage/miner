@@ -6,6 +6,7 @@ package name.martingeisse.miner.server.game;
 
 import com.querydsl.sql.dml.SQLInsertClause;
 import com.querydsl.sql.dml.SQLUpdateClause;
+import io.netty.util.internal.ConcurrentSet;
 import name.martingeisse.miner.common.geometry.angle.EulerAngles;
 import name.martingeisse.miner.common.geometry.vector.Vector3d;
 import name.martingeisse.miner.server.Databases;
@@ -16,6 +17,9 @@ import name.martingeisse.miner.server.network.Avatar;
 import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
 
 import java.math.BigDecimal;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.function.Consumer;
 
 /**
  * TODO rename {@link Player} to PlayerRow and rename this class to Player.
@@ -23,7 +27,12 @@ import java.math.BigDecimal;
 public final class PlayerAccess {
 
 	private final long id;
+	private final ConcurrentMap<Listener, Listener> listeners = new ConcurrentHashMap<>();
 
+	/**
+	 * TODO use repository pattern and prevent multiple instances from being created. Rather, re-use an existing instance.
+	 * @param id
+	 */
 	public PlayerAccess(long id) {
 		this.id = id;
 		loadPlayerRow();
@@ -48,6 +57,28 @@ public final class PlayerAccess {
 	// ------------------------------------------------------------------------------------------------------------
 	//
 
+	public interface Listener {
+		void onCoinsChanged();
+	}
+
+	public void add(Listener listener) {
+		listeners.put(listener, listener);
+	}
+
+	public void remove(Listener listener) {
+		listeners.remove(listener);
+	}
+
+	private void notifyListeners(Consumer<Listener> function) {
+		for (Listener listener : listeners.keySet()) {
+			function.accept(listener);
+		}
+	}
+
+	//
+	// ------------------------------------------------------------------------------------------------------------
+	//
+
 	public boolean addAchievement(String achievementCode) {
 		QPlayerAwardedAchievement qpaa = QPlayerAwardedAchievement.PlayerAwardedAchievement;
 		try (PostgresConnection connection = Databases.main.newConnection()) {
@@ -60,12 +91,17 @@ public final class PlayerAccess {
 
 	public boolean addCoins(long amount) {
 		QPlayer qp = QPlayer.Player;
+		boolean success;
 		try (PostgresConnection connection = Databases.main.newConnection()) {
 			SQLUpdateClause update = connection.update(qp);
 			update.where(qp.id.eq(id));
 			update.set(qp.coins, qp.coins.add(amount));
-			return (update.execute() > 0);
+			success = (update.execute() > 0);
 		}
+		if (success) {
+			notifyListeners(Listener::onCoinsChanged);
+		}
+		return success;
 	}
 
 	public long getCoins() {

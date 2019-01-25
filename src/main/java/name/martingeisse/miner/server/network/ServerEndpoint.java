@@ -11,7 +11,7 @@ import name.martingeisse.miner.common.network.ProtocolEndpoint;
 import org.apache.log4j.Logger;
 
 /**
- *
+ * TODO consider merging this class with {@link StackdSession}.
  */
 final class ServerEndpoint extends ProtocolEndpoint {
 

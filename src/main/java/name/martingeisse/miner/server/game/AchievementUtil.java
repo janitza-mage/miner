@@ -60,7 +60,6 @@ public class AchievementUtil {
 			if (playerAccess != null) {
 				session.sendFlashMessage("Achievement Unlocked: " + description + "(reward: " + reward + " coins)");
 				session.getPlayerAccess().addCoins(reward);
-				session.sendCoinsUpdate(session.getPlayerAccess().getCoins());
 			}
 		}
 		return success;

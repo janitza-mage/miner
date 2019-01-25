@@ -86,7 +86,6 @@ public final class DigUtil {
 		}
 		playerAccess.addCoins(value);
 		session.sendFlashMessage("You found some " + name + " (worth " + value + " coins).");
-		session.sendCoinsUpdate(playerAccess.getCoins());
 	}
 
 	/**

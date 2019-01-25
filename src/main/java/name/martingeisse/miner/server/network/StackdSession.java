@@ -26,11 +26,7 @@ public class StackdSession {
 	private static Logger logger = Logger.getLogger(StackdSession.class);
 
 	private final ServerEndpoint endpoint;
-
-	// player info
 	private volatile PlayerAccess playerAccess;
-
-	// avatar info
 	private volatile Avatar avatar;
 
 	public StackdSession(ServerEndpoint endpoint) {
@@ -53,6 +49,13 @@ public class StackdSession {
 			throw new IllegalStateException("cannot select player -- avatar exists (state inconsistent)");
 		}
 		playerAccess = new PlayerAccess(playerId);
+		playerAccess.add(new PlayerAccess.Listener() {
+			@Override
+			public void onCoinsChanged() {
+				sendCoinsUpdate();
+			}
+		});
+		sendCoinsUpdate();
 	}
 
 	public PlayerAccess getPlayerAccess() {
@@ -72,6 +75,7 @@ public class StackdSession {
 		}
 		avatar = new Avatar();
 		playerAccess.loadAvatar(avatar);
+		send(new PlayerResumed(avatar.getPosition(), avatar.getOrientation()));
 	}
 
 	public Avatar getAvatar() {
@@ -87,7 +91,6 @@ public class StackdSession {
 	 */
 	public void onConnect() {
 		sendFlashMessage("Connected to server.");
-		sendCoinsUpdate();
 	}
 
 	/**
@@ -139,20 +142,7 @@ public class StackdSession {
 	 * number of coins from the database.
 	 */
 	public void sendCoinsUpdate() {
-		sendCoinsUpdate(playerAccess == null ? 0 : playerAccess.getCoins());
-	}
-
-	/**
-	 * Sends an update for the number of coins to the client.
-	 *
-	 * @param coins the number of coins to send
-	 */
-	public void sendCoinsUpdate(long coins) {
-		send(new UpdateCoins(coins));
-	}
-
-	void sendPlayerResumed() {
-		send(new PlayerResumed(avatar.getPosition(), avatar.getOrientation()));
+		send(new UpdateCoins(playerAccess == null ? 0 : playerAccess.getCoins()));
 	}
 
 }
