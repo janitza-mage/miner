@@ -12,24 +12,19 @@ import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
-import name.martingeisse.miner.common.section.SectionId;
-import name.martingeisse.miner.common.geometry.angle.EulerAngles;
-import name.martingeisse.miner.common.geometry.vector.Vector3d;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.c2s.*;
 import name.martingeisse.miner.common.network.s2c.PlayerListUpdate;
 import name.martingeisse.miner.common.network.s2c.PlayerNamesUpdate;
-import name.martingeisse.miner.common.network.s2c.PlayerResumed;
 import name.martingeisse.miner.common.network.s2c.SingleSectionModificationEvent;
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
+import name.martingeisse.miner.common.section.SectionId;
 import name.martingeisse.miner.server.Databases;
 import name.martingeisse.miner.server.MinerServerSecurityConstants;
 import name.martingeisse.miner.server.console.IConsoleCommandHandler;
 import name.martingeisse.miner.server.console.MinerConsoleCommandHandler;
 import name.martingeisse.miner.server.console.NullConsoleCommandHandler;
-import name.martingeisse.miner.server.entities.Player;
-import name.martingeisse.miner.server.entities.QPlayer;
 import name.martingeisse.miner.server.game.DigUtil;
 import name.martingeisse.miner.server.section.SectionToClientShipper;
 import name.martingeisse.miner.server.section.SectionWorkingSet;
@@ -37,7 +32,6 @@ import name.martingeisse.miner.server.section.entry.SectionCubesCacheEntry;
 import name.martingeisse.miner.server.section.storage.AbstractSectionStorage;
 import name.martingeisse.miner.server.section.storage.CassandraSectionStorage;
 import name.martingeisse.miner.server.terrain.TerrainGenerator;
-import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
 import org.apache.log4j.Logger;
 import org.joda.time.Instant;
 
@@ -97,8 +91,7 @@ public class StackdServer {
 		setCubeTypes(CubeTypes.CUBE_TYPES);
 
 		Timer timer = new Timer(true);
-		timer.schedule(new PlayerListUpdateSender(), 0, 200);
-		timer.schedule(new PlayerNameUpdateSender(), 0, 2000);
+		timer.schedule(new AvatarUpdateSender(), 0, 200);
 
 		//
 		setConsoleCommandHandler(new MinerConsoleCommandHandler(this));
@@ -241,11 +234,8 @@ public class StackdServer {
 		} else if (untypedMessage instanceof UpdatePosition) {
 
 			UpdatePosition message = (UpdatePosition) untypedMessage;
-			session.setX(message.getPosition().x);
-			session.setY(message.getPosition().y);
-			session.setZ(message.getPosition().z);
-			session.setLeftAngle(message.getOrientation().horizontalAngle);
-			session.setUpAngle(message.getOrientation().verticalAngle);
+			session.getAvatar().setPosition(message.getPosition());
+			session.getAvatar().setOrientation(message.getOrientation());
 
 		} else if (untypedMessage instanceof ResumePlayer) {
 
@@ -254,28 +244,10 @@ public class StackdServer {
 			String token = new String(message.getToken(), StandardCharsets.UTF_8);
 			String tokenSubject = SecurityTokenUtil.validateToken(token, new Instant(), MinerServerSecurityConstants.SECURITY_TOKEN_SECRET);
 			long playerId = Long.parseLong(tokenSubject);
-
-			Player player;
-			try (PostgresConnection connection = Databases.main.newConnection()) {
-				QPlayer qp = QPlayer.Player;
-				player = connection.query().select(qp).from(qp).where(qp.id.eq(playerId)).fetchOne();
-				if (player == null) {
-					throw new RuntimeException("player not found, id: " + playerId);
-				}
-			}
-
-			session.setPlayerId(player.getId());
-			session.setName(player.getName());
-			session.setX(player.getX().doubleValue());
-			session.setY(player.getY().doubleValue());
-			session.setZ(player.getZ().doubleValue());
-			session.setLeftAngle(player.getLeftAngle().doubleValue());
-			session.setUpAngle(player.getUpAngle().doubleValue());
+			session.selectPlayer(playerId);
+			session.createAvatar();
 			session.sendCoinsUpdate();
-
-			Vector3d position = new Vector3d(session.getX(), session.getY(), session.getZ());
-			EulerAngles orientation = new EulerAngles(session.getLeftAngle(), session.getUpAngle(), 0);
-			session.send(new PlayerResumed(position, orientation));
+			session.sendPlayerResumed();
 
 		} else if (untypedMessage instanceof DigNotification) {
 
@@ -380,55 +352,44 @@ public class StackdServer {
 	}
 
 	/**
-	 * The runnable is run regularly to send an updated player's
-	 * list to all players.
+	 * Sends updates for position, orientation and name of all avatars to all clients.
 	 */
-	private class PlayerListUpdateSender extends TimerTask {
+	private class AvatarUpdateSender extends TimerTask {
 
-		/* (non-Javadoc)
-		 * @see java.util.TimerTask#run()
-		 */
+		private int counter = 0;
+
 		@Override
 		public void run() {
 
-			// copy the session list to be safe against concurrent modification
-			// (the number of sessions must not change since we must allocate
-			// a buffer of the correct size in advance)
-			List<StackdSession> sessionList = new ArrayList<StackdSession>();
+			// send names only once per 10 updates
+			boolean sendNames = false;
+			counter++;
+			if (counter == 10) {
+				counter = 0;
+				sendNames = true;
+			}
+
+			List<PlayerListUpdate.Element> positionElements = new ArrayList<>();
+			List<PlayerNamesUpdate.Element> nameElements = new ArrayList<>();
 			for (StackdSession session : getSessions()) {
-				if (session.getPlayerId() != null) {
-					sessionList.add(session);
+				Avatar avatar = session.getAvatar();
+				if (avatar != null) {
+					positionElements.add(new PlayerListUpdate.Element(session.getId(), avatar.getPosition(), avatar.getOrientation()));
+					if (sendNames) {
+						nameElements.add(new PlayerNamesUpdate.Element(session.getId(), avatar.getName()));
+					}
 				}
 			}
 
-			// assemble the message
-			List<PlayerListUpdate.Element> elements = new ArrayList<>();
-			for (StackdSession session : sessionList) {
-				Vector3d position = new Vector3d(session.getX(), session.getY(), session.getZ());
-				EulerAngles eulerAngles = new EulerAngles(session.getLeftAngle(), session.getUpAngle(), 0);
-				elements.add(new PlayerListUpdate.Element(session.getId(), position, eulerAngles));
+			if (positionElements.size() > 0) {
+				broadcast(new PlayerListUpdate(ImmutableList.copyOf(positionElements)));
 			}
-
-			// send the packet
-			// broadcast(packet);
-			broadcast(new PlayerListUpdate(ImmutableList.copyOf(elements)));
+			if (nameElements.size() > 0) {
+				broadcast(new PlayerNamesUpdate(ImmutableList.copyOf(nameElements)));
+			}
 
 		}
 
-	}
-
-	/**
-	 * The runnable is run regularly to tell the clients each other's names.
-	 */
-	private class PlayerNameUpdateSender extends TimerTask {
-		@Override
-		public void run() {
-			List<PlayerNamesUpdate.Element> elements = new ArrayList<>();
-			for (StackdSession session : getSessions()) {
-				elements.add(new PlayerNamesUpdate.Element(session.getId(), session.getName()));
-			}
-			broadcast(new PlayerNamesUpdate(ImmutableList.copyOf(elements)));
-		}
 	}
 
 }
