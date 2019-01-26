@@ -21,6 +21,7 @@ import name.martingeisse.miner.server.network.StackdServer;
 import name.martingeisse.miner.server.network.StackdSession;
 import name.martingeisse.miner.server.world.entry.SectionCubesCacheEntry;
 import name.martingeisse.miner.server.world.entry.SectionDataCacheEntry;
+import name.martingeisse.miner.server.world.terrain.TerrainGenerator;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -223,6 +224,22 @@ public final class WorldSubsystem {
 			}
 		}
 		notifyModificationListeners(ImmutableList.copyOf(sectionIds));
+	}
+
+	//
+	// --- initialization
+	//
+
+	/**
+	 * Initializes the world using a Perlin noise based height field.
+	 */
+	public void initializeWorldWithHeightField() {
+		int horizontalRadius = 10;
+		int verticalRadius = 5;
+		TerrainGenerator terrainGenerator = new TerrainGenerator();
+		terrainGenerator.generate(workingSet.getStorage(), new SectionId(-horizontalRadius, -verticalRadius, -horizontalRadius), new SectionId(horizontalRadius, verticalRadius, horizontalRadius));
+		workingSet.clearCache();
+		logger.info("world initialized");
 	}
 
 }
