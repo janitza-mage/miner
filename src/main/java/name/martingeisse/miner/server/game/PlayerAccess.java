@@ -10,6 +10,7 @@ import com.querydsl.sql.dml.SQLUpdateClause;
 import io.netty.util.internal.ConcurrentSet;
 import name.martingeisse.miner.common.geometry.angle.EulerAngles;
 import name.martingeisse.miner.common.geometry.vector.Vector3d;
+import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.server.Databases;
 import name.martingeisse.miner.server.entities.Player;
 import name.martingeisse.miner.server.entities.QPlayer;
@@ -76,6 +77,14 @@ public final class PlayerAccess {
 		for (Listener listener : listeners.keySet()) {
 			function.accept(listener);
 		}
+	}
+
+	//
+	// ------------------------------------------------------------------------------------------------------------
+	//
+
+	public void handleMessage(Message untypedMessage) {
+
 	}
 
 	//
