@@ -31,7 +31,7 @@ import name.martingeisse.miner.server.section.SectionWorkingSet;
 import name.martingeisse.miner.server.section.entry.SectionCubesCacheEntry;
 import name.martingeisse.miner.server.section.storage.AbstractSectionStorage;
 import name.martingeisse.miner.server.section.storage.CassandraSectionStorage;
-import name.martingeisse.miner.server.terrain.TerrainGenerator;
+import name.martingeisse.miner.server.section.terrain.TerrainGenerator;
 import org.apache.log4j.Logger;
 import org.joda.time.Instant;
 

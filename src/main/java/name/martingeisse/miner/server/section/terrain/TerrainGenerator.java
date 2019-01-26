@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.server.terrain;
+package name.martingeisse.miner.server.section.terrain;
 
 import java.util.Random;
 import name.martingeisse.miner.common.Constants;
