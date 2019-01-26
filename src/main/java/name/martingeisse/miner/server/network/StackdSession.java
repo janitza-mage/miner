@@ -18,6 +18,13 @@ import java.util.Collection;
 /**
  * Stores the data for one user session (currently associated with the connection,
  * but intended to service connection dropping and re-connecting).
+ *
+ * The session stores per-client, per-subsystem state: user account, player, avatar, and so on. It routes network
+ * messages to these objects. It also consumes a few network messages itself that affect creation / deletion of
+ * subsystem state, e.g. logging in, loading a player and creating an avatar.
+ *
+ * Threading model: All message handling coming from the session is done in Netty threads and should therefore finish
+ * quickly. Use the task system for long-lasting stuff.
  */
 public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 
