@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.server.section.terrain;
+package name.martingeisse.miner.server.world.terrain;
 
 import java.util.Random;
 import name.martingeisse.miner.common.Constants;
@@ -17,7 +17,7 @@ import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.common.task.ParallelGoal;
 import name.martingeisse.miner.common.util.PerlinNoise;
-import name.martingeisse.miner.server.section.storage.AbstractSectionStorage;
+import name.martingeisse.miner.server.world.storage.AbstractSectionStorage;
 import org.apache.log4j.Logger;
 
 /**

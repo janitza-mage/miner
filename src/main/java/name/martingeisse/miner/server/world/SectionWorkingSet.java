@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.server.section;
+package name.martingeisse.miner.server.world;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,10 +17,10 @@ import name.martingeisse.miner.common.cubes.UniformCubes;
 import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.server.network.StackdServer;
-import name.martingeisse.miner.server.section.entry.InteractiveSectionImageCacheEntry;
-import name.martingeisse.miner.server.section.entry.SectionCubesCacheEntry;
-import name.martingeisse.miner.server.section.entry.SectionDataCacheEntry;
-import name.martingeisse.miner.server.section.storage.AbstractSectionStorage;
+import name.martingeisse.miner.server.world.entry.InteractiveSectionImageCacheEntry;
+import name.martingeisse.miner.server.world.entry.SectionCubesCacheEntry;
+import name.martingeisse.miner.server.world.entry.SectionDataCacheEntry;
+import name.martingeisse.miner.server.world.storage.AbstractSectionStorage;
 import org.apache.commons.collections.iterators.ArrayIterator;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import com.google.common.cache.CacheBuilder;

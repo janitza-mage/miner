@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.server.section;
+package name.martingeisse.miner.server.world;
 
 import com.google.common.collect.ImmutableMap;
 import name.martingeisse.miner.common.section.SectionId;
@@ -14,7 +14,7 @@ import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.common.task.Task;
 import name.martingeisse.miner.server.network.StackdServer;
 import name.martingeisse.miner.server.network.StackdSession;
-import name.martingeisse.miner.server.section.entry.SectionDataCacheEntry;
+import name.martingeisse.miner.server.world.entry.SectionDataCacheEntry;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -29,12 +29,12 @@ import java.util.concurrent.LinkedBlockingQueue;
  * them to the client. The point of this class is to fetch as many
  * section datas as possible from Cassandra in a single query.
  */
-public final class SectionToClientShipper {
+public final class WorldSubsystem {
 
 	/**
 	 * the logger
 	 */
-	private static Logger logger = Logger.getLogger(SectionToClientShipper.class);
+	private static Logger logger = Logger.getLogger(WorldSubsystem.class);
 
 	/**
 	 * the workingSet
@@ -55,7 +55,7 @@ public final class SectionToClientShipper {
 	 * Constructor.
 	 * @param workingSet the working set
 	 */
-	public SectionToClientShipper(final SectionWorkingSet workingSet) {
+	public WorldSubsystem(final SectionWorkingSet workingSet) {
 		this.workingSet = workingSet;
 		this.jobQueue = new LinkedBlockingQueue<>();
 		this.handleAllJobsTask = new HandleAllJobsTask();
@@ -91,7 +91,7 @@ public final class SectionToClientShipper {
 		if (jobQueue.isEmpty()) {
 			return;
 		}
-		ArrayList<ShippingJob> jobs = new ArrayList<SectionToClientShipper.ShippingJob>();
+		ArrayList<ShippingJob> jobs = new ArrayList<WorldSubsystem.ShippingJob>();
 		jobQueue.drainTo(jobs);
 		if (jobs.isEmpty()) {
 			return;
@@ -149,7 +149,7 @@ public final class SectionToClientShipper {
 		@Override
 		public void run() {
 			try {
-				SectionToClientShipper.this.handleJobs();
+				WorldSubsystem.this.handleJobs();
 			} catch (Throwable t) {
 				logger.error("unexpected exception", t);
 			}

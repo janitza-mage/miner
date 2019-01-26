@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.server.section.entry;
+package name.martingeisse.miner.server.world.entry;
 
 import name.martingeisse.miner.common.edit.IEditAccessHost;
 import name.martingeisse.miner.common.geometry.RectangularRegion;

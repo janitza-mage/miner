@@ -26,12 +26,12 @@ import name.martingeisse.miner.server.console.MinerConsoleCommandHandler;
 import name.martingeisse.miner.server.console.NullConsoleCommandHandler;
 import name.martingeisse.miner.server.game.DigUtil;
 import name.martingeisse.miner.server.game.PlayerAccess;
-import name.martingeisse.miner.server.section.SectionToClientShipper;
-import name.martingeisse.miner.server.section.SectionWorkingSet;
-import name.martingeisse.miner.server.section.entry.SectionCubesCacheEntry;
-import name.martingeisse.miner.server.section.storage.AbstractSectionStorage;
-import name.martingeisse.miner.server.section.storage.CassandraSectionStorage;
-import name.martingeisse.miner.server.section.terrain.TerrainGenerator;
+import name.martingeisse.miner.server.world.WorldSubsystem;
+import name.martingeisse.miner.server.world.SectionWorkingSet;
+import name.martingeisse.miner.server.world.entry.SectionCubesCacheEntry;
+import name.martingeisse.miner.server.world.storage.AbstractSectionStorage;
+import name.martingeisse.miner.server.world.storage.CassandraSectionStorage;
+import name.martingeisse.miner.server.world.terrain.TerrainGenerator;
 import org.apache.log4j.Logger;
 import org.joda.time.Instant;
 
@@ -62,9 +62,9 @@ public class StackdServer {
 	private final SectionWorkingSet sectionWorkingSet;
 
 	/**
-	 * the sectionToClientShipper
+	 * the worldSubsystem
 	 */
-	private final SectionToClientShipper sectionToClientShipper;
+	private final WorldSubsystem worldSubsystem;
 
 	/**
 	 * the cubeTypes
@@ -84,7 +84,7 @@ public class StackdServer {
 
 		this.sessions = new ConcurrentHashMap<>();
 		this.sectionWorkingSet = new SectionWorkingSet(this, sectionStorage);
-		this.sectionToClientShipper = new SectionToClientShipper(sectionWorkingSet);
+		this.worldSubsystem = new WorldSubsystem(sectionWorkingSet);
 		this.cubeTypes = new CubeType[0];
 		this.consoleCommandHandler = new NullConsoleCommandHandler();
 
@@ -204,7 +204,7 @@ public class StackdServer {
 			SectionDataType type = SectionDataType.INTERACTIVE;
 			final SectionDataId dataId = new SectionDataId(sectionId, type);
 			logger.debug("SERVER received section data request: " + dataId);
-			sectionToClientShipper.addJob(dataId, session);
+			worldSubsystem.addJob(dataId, session);
 
 		} else if (untypedMessage instanceof ConsoleInput) {
 

@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.server.section.entry;
+package name.martingeisse.miner.server.world.entry;
 
 import name.martingeisse.miner.common.cubes.Cubes;
 import name.martingeisse.miner.common.cubetype.CubeType;
@@ -12,7 +12,7 @@ import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
-import name.martingeisse.miner.server.section.SectionWorkingSet;
+import name.martingeisse.miner.server.world.SectionWorkingSet;
 
 /**
  * A section cache entry for the INTERACTIVE section image.

@@ -4,11 +4,11 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.server.section.entry;
+package name.martingeisse.miner.server.world.entry;
 
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.task.Task;
-import name.martingeisse.miner.server.section.SectionWorkingSet;
+import name.martingeisse.miner.server.world.SectionWorkingSet;
 
 /**
  * Base class for cached section data objects. This class stores
