@@ -21,7 +21,8 @@ import java.util.Collection;
  *
  * The session stores per-client, per-subsystem state: user account, player, avatar, and so on. It routes network
  * messages to these objects. It also consumes a few network messages itself that affect creation / deletion of
- * subsystem state, e.g. logging in, loading a player and creating an avatar.
+ * subsystem state, e.g. logging in, loading a player and creating an avatar. Subsystems should shield themselves
+ * against knowing about the session by using role interfaces.
  *
  * Threading model: All message handling coming from the session is done in Netty threads and should therefore finish
  * quickly. Use the task system for long-lasting stuff.
