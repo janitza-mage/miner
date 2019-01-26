@@ -60,7 +60,7 @@ final class ServerEndpoint extends ProtocolEndpoint {
 	protected void onMessage(Message message) {
 		// premature data packets will be ignored
 		if (session != null) {
-			server.onMessageReceived(session, message);
+			session.onMessageReceived(message);
 		}
 	}
 
