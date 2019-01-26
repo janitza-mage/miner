@@ -18,7 +18,6 @@ import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.common.section.SectionId;
 import name.martingeisse.miner.common.task.Task;
 import name.martingeisse.miner.server.Databases;
-import name.martingeisse.miner.server.network.StackdServer;
 import name.martingeisse.miner.server.network.StackdSession;
 import name.martingeisse.miner.server.world.entry.SectionCubesCacheEntry;
 import name.martingeisse.miner.server.world.entry.SectionDataCacheEntry;
@@ -34,10 +33,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * This is a helper class used by the {@link StackdServer} to fetch
- * sections from the {@link SectionWorkingSet} in parallel and ship
- * them to the client. The point of this class is to fetch as many
- * section datas as possible from Cassandra in a single query.
+ * Encapsulates all server-side functionality recarding the cube world.
  */
 public final class WorldSubsystem {
 
