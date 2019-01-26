@@ -24,9 +24,9 @@ public class Constants {
 	public static final int BCRYPT_COST = 12;
 
 	/**
-	 * the CLUSTER_SIZE
+	 * the SECTION_SIZE
 	 */
-	public static final ClusterSize CLUSTER_SIZE = new ClusterSize(5);
+	public static final ClusterSize SECTION_SIZE = new ClusterSize(5);
 
 	/**
 	 * Whenever "detailed" coordinates are needed, fixed-point numbers

@@ -208,7 +208,7 @@ public class CubeWorldHandler {
 		final DefaultSectionRenderer sectionRenderer = new DefaultSectionRenderer();
 		sectionRenderer.prepareForTextures(resources.getCubeTextures());
 		final EngineParameters engineParameters = new EngineParameters(sectionRenderer, resources.getCubeTextures(), CubeTypes.CUBE_TYPES);
-		workingSet = new WorldWorkingSet(engineParameters, Constants.CLUSTER_SIZE);
+		workingSet = new WorldWorkingSet(engineParameters, Constants.SECTION_SIZE);
 
 		// the player
 		player = new Player(workingSet);
@@ -602,9 +602,9 @@ public class CubeWorldHandler {
 				if (grid) {
 					glDisable(GL_TEXTURE_2D);
 					glColor3f(1.0f, 1.0f, 1.0f);
-					final int sectionX = playerX >> Constants.CLUSTER_SIZE.getShiftBits();
-					final int sectionY = playerY >> Constants.CLUSTER_SIZE.getShiftBits();
-					final int sectionZ = playerZ >> Constants.CLUSTER_SIZE.getShiftBits();
+					final int sectionX = playerX >> Constants.SECTION_SIZE.getShiftBits();
+					final int sectionY = playerY >> Constants.SECTION_SIZE.getShiftBits();
+					final int sectionZ = playerZ >> Constants.SECTION_SIZE.getShiftBits();
 					final int distance = 48;
 					glLineWidth(2.0f);
 					glBegin(GL_LINES);
@@ -614,11 +614,11 @@ public class CubeWorldHandler {
 								if (direction.isNegative()) {
 									continue;
 								}
-								final int x = Constants.CLUSTER_SIZE.getSize() * (sectionX + direction.selectByAxis(0, u, v));
+								final int x = Constants.SECTION_SIZE.getSize() * (sectionX + direction.selectByAxis(0, u, v));
 								final int dx = direction.selectByAxis(distance, 0, 0);
-								final int y = Constants.CLUSTER_SIZE.getSize() * (sectionY + direction.selectByAxis(v, 0, u));
+								final int y = Constants.SECTION_SIZE.getSize() * (sectionY + direction.selectByAxis(v, 0, u));
 								final int dy = direction.selectByAxis(0, distance, 0);
-								final int z = Constants.CLUSTER_SIZE.getSize() * (sectionZ + direction.selectByAxis(u, v, 0));
+								final int z = Constants.SECTION_SIZE.getSize() * (sectionZ + direction.selectByAxis(u, v, 0));
 								final int dz = direction.selectByAxis(0, 0, distance);
 								glVertex3f(x + dx, y + dy, z + dz);
 								glVertex3f(x - dx, y - dy, z - dz);

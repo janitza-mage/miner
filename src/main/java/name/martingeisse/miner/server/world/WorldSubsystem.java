@@ -6,19 +6,26 @@
 
 package name.martingeisse.miner.server.world;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import name.martingeisse.miner.common.section.SectionId;
+import name.martingeisse.miner.common.Constants;
+import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
+import name.martingeisse.miner.common.geometry.vector.Vector3i;
+import name.martingeisse.miner.common.network.c2s.CubeModification;
 import name.martingeisse.miner.common.network.s2c.InteractiveSectionDataResponse;
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
+import name.martingeisse.miner.common.section.SectionId;
 import name.martingeisse.miner.common.task.Task;
 import name.martingeisse.miner.server.network.StackdServer;
 import name.martingeisse.miner.server.network.StackdSession;
+import name.martingeisse.miner.server.world.entry.SectionCubesCacheEntry;
 import name.martingeisse.miner.server.world.entry.SectionDataCacheEntry;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -31,41 +38,46 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public final class WorldSubsystem {
 
-	/**
-	 * the logger
-	 */
 	private static Logger logger = Logger.getLogger(WorldSubsystem.class);
 
-	/**
-	 * the workingSet
-	 */
 	private final SectionWorkingSet workingSet;
-
-	/**
-	 * the jobQueue
-	 */
 	private final BlockingQueue<ShippingJob> jobQueue;
-
-	/**
-	 * the handleAllJobsTask
-	 */
 	private final HandleAllJobsTask handleAllJobsTask;
+	private final Set<WorldModificationListener> modificationListeners = new HashSet<>();
 
-	/**
-	 * Constructor.
-	 * @param workingSet the working set
-	 */
 	public WorldSubsystem(final SectionWorkingSet workingSet) {
 		this.workingSet = workingSet;
 		this.jobQueue = new LinkedBlockingQueue<>();
 		this.handleAllJobsTask = new HandleAllJobsTask();
 	}
 
+	//
+	// --- listeners
+	//
+
+	public void addListener(WorldModificationListener listener) {
+		modificationListeners.add(listener);
+	}
+
+	public void removeListener(WorldModificationListener listener) {
+		modificationListeners.remove(listener);
+	}
+
+	private void notifyModificationListeners(ImmutableList<SectionId> sectionIds) {
+		for (WorldModificationListener listener : modificationListeners) {
+			listener.onSectionsModified(sectionIds);
+		}
+	}
+
+	//
+	// --- reading sections
+	//
+
 	/**
 	 * Adds a shipping job.
 	 *
 	 * @param sectionDataId the ID of the section data to ship
-	 * @param session the session to ship to
+	 * @param session       the session to ship to
 	 */
 	public void addJob(SectionDataId sectionDataId, StackdSession session) {
 		SectionDataCacheEntry presentEntry = workingSet.getIfPresent(sectionDataId);
@@ -154,6 +166,63 @@ public final class WorldSubsystem {
 				logger.error("unexpected exception", t);
 			}
 		}
+	}
+
+	/**
+	 * TODO cannot work if the section is not cached, but that assumption is currently true because it's about placing
+	 * and digging
+	 */
+	public byte getCube(Vector3i position) {
+		int shiftBits = workingSet.getClusterSize().getShiftBits();
+		int x = position.x, sectionX = (x >> shiftBits);
+		int y = position.y, sectionY = (y >> shiftBits);
+		int z = position.z, sectionZ = (z >> shiftBits);
+		SectionId id = new SectionId(sectionX, sectionY, sectionZ);
+		SectionCubesCacheEntry sectionDataCacheEntry = (SectionCubesCacheEntry) workingSet.get(new SectionDataId(id, SectionDataType.DEFINITIVE));
+		return sectionDataCacheEntry.getCubeAbsolute(x, y, z);
+	}
+
+	//
+	// --- modifications
+	//
+
+	public void handleMessage(CubeModification message) {
+		List<Vector3i> affectedPositions = new ArrayList<>();
+		for (CubeModification.Element element : message.getElements()) {
+			Vector3i position = element.getPosition();
+			SectionId sectionId = SectionId.fromPosition(element.getPosition());
+			SectionDataId sectionDataId = new SectionDataId(sectionId, SectionDataType.DEFINITIVE);
+			SectionCubesCacheEntry sectionDataCacheEntry = (SectionCubesCacheEntry) workingSet.get(sectionDataId);
+			sectionDataCacheEntry.setCubeAbsolute(position.x, position.y, position.z, element.getCubeType());
+			affectedPositions.add(element.getPosition());
+		}
+		notifyModificationListenersAboutModifiedPositions(ImmutableList.copyOf(affectedPositions));
+	}
+
+	/**
+	 * TODO cannot work if the section is not cached, but that assumption is currently true because it's about placing
+	 * and digging
+	 */
+	public void setCube(Vector3i position, byte cube) {
+		SectionId sectionId = SectionId.fromPosition(position);
+		SectionDataId sectionDataId = new SectionDataId(sectionId, SectionDataType.DEFINITIVE);
+		SectionCubesCacheEntry sectionDataCacheEntry = (SectionCubesCacheEntry) workingSet.get(sectionDataId);
+		sectionDataCacheEntry.setCubeAbsolute(position.x, position.y, position.z, cube);
+		notifyModificationListenersAboutModifiedPositions(ImmutableList.of(position));
+	}
+
+	private void notifyModificationListenersAboutModifiedPositions(ImmutableList<Vector3i> positions) {
+		// Treating the neighbors as modified is currently necessary. I am not totally sure why, but I suspect it is
+		// because their INTERACTIVE data actually changes, even though their DEFINITIVE data does not.
+		Set<SectionId> sectionIds = new HashSet<>();
+		for (Vector3i position : positions) {
+			SectionId sectionId = SectionId.fromPosition(position);
+			sectionIds.add(sectionId);
+			for (AxisAlignedDirection neighborDirection : Constants.SECTION_SIZE.getBorderDirections(position)) {
+				sectionIds.add(sectionId.getNeighbor(neighborDirection));
+			}
+		}
+		notifyModificationListeners(ImmutableList.copyOf(sectionIds));
 	}
 
 }

@@ -7,6 +7,7 @@
 package name.martingeisse.miner.common.section;
 
 import io.netty.buffer.ByteBuf;
+import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.miner.common.geometry.vector.ReadableVector3d;
@@ -58,45 +59,33 @@ public final class SectionId {
 	}
 
 	/**
-	 * Constructor for scaling a cube-unit (x, y, z) position to cluster-size units.
+	 * Factory method for scaling a cube-unit (x, y, z) position to section units.
 	 *
 	 * @param x           the x coordinate of the cube position
 	 * @param y           the y coordinate of the cube position
 	 * @param z           the z coordinate of the cube position
-	 * @param clusterSize the cluster size
 	 */
-	public SectionId(int x, int y, int z, ClusterSize clusterSize) {
-		int shift = clusterSize.getShiftBits();
-		this.x = x >> shift;
-		this.y = y >> shift;
-		this.z = z >> shift;
-
+	public static SectionId fromPosition(int x, int y, int z) {
+		int shift = Constants.SECTION_SIZE.getShiftBits();
+		return new SectionId(x >> shift, y >> shift, z >> shift);
 	}
 
 	/**
-	 * Constructor for scaling a cube-unit (x, y, z) position to cluster-size units.
+	 * Factory method for scaling a cube-unit (x, y, z) position to cluster-size units.
 	 *
 	 * @param position    the cube position
-	 * @param clusterSize the cluster size
 	 */
-	public SectionId(ReadableVector3i position, ClusterSize clusterSize) {
-		int shift = clusterSize.getShiftBits();
-		this.x = position.getX() >> shift;
-		this.y = position.getY() >> shift;
-		this.z = position.getZ() >> shift;
+	public static SectionId fromPosition(ReadableVector3i position) {
+		return fromPosition(position.getX(), position.getY(), position.getZ());
 	}
 
 	/**
-	 * Constructor for scaling a cube-unit (x, y, z) position to cluster-size units.
+	 * Factory method for scaling a cube-unit (x, y, z) position to cluster-size units.
 	 *
 	 * @param position    the cube position
-	 * @param clusterSize the cluster size
 	 */
-	public SectionId(ReadableVector3d position, ClusterSize clusterSize) {
-		int shift = clusterSize.getShiftBits();
-		this.x = (int) Math.floor(position.getX()) >> shift;
-		this.y = (int) Math.floor(position.getY()) >> shift;
-		this.z = (int) Math.floor(position.getZ()) >> shift;
+	public static SectionId fromPosition(ReadableVector3d position) {
+		return fromPosition((int)Math.floor(position.getX()), (int)Math.floor(position.getY()), (int)Math.floor(position.getZ()));
 	}
 
 	/**

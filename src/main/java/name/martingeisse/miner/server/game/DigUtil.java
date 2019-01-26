@@ -6,6 +6,7 @@
 
 package name.martingeisse.miner.server.game;
 
+import name.martingeisse.miner.common.geometry.vector.Vector3i;
 import org.apache.log4j.Logger;
 
 /**
@@ -24,7 +25,7 @@ public final class DigUtil {
 	 * and saving the updated cube server-side. For example, this method rewards
 	 * inventory items for digging ores.
 	 */
-	public static void onCubeDugAway(PlayerAccess playerAccess, int x, int y, int z, byte cubeType) {
+	public static void onCubeDugAway(PlayerAccess playerAccess, Vector3i position, byte cubeType) {
 		logger.info("dug cube: " + cubeType);
 
 		// check for ores
@@ -57,16 +58,16 @@ public final class DigUtil {
 		}
 
 		// check for achievements
-		if (y > 10) {
+		if (position.y > 10) {
 			AchievementUtil.awardAchievment(playerAccess, "digAbove10", "Dig a cube above 10m height", 10);
 		}
-		if (y > 100) {
+		if (position.y > 100) {
 			AchievementUtil.awardAchievment(playerAccess, "digAbove100", "Dig a cube above 100m height", 100);
 		}
-		if (y < -10) {
+		if (position.y < -10) {
 			AchievementUtil.awardAchievment(playerAccess, "digBelow10", "Dig a cube below 10m depth", 10);
 		}
-		if (y < -100) {
+		if (position.y < -100) {
 			AchievementUtil.awardAchievment(playerAccess, "bigBelow100", "Dig a cube below 100m depth", 100);
 		}
 

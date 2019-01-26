@@ -22,6 +22,7 @@ public final class ClusterSize implements Comparable<ClusterSize> {
 
 	/**
 	 * Constructor.
+	 *
 	 * @param shiftBits the log2 of the cluster size along each axis
 	 */
 	public ClusterSize(final int shiftBits) {
@@ -33,6 +34,7 @@ public final class ClusterSize implements Comparable<ClusterSize> {
 
 	/**
 	 * Getter method for the shiftBits.
+	 *
 	 * @return the shiftBits
 	 */
 	public int getShiftBits() {
@@ -41,6 +43,7 @@ public final class ClusterSize implements Comparable<ClusterSize> {
 
 	/**
 	 * Getter method for the size.
+	 *
 	 * @return the size
 	 */
 	public int getSize() {
@@ -49,6 +52,7 @@ public final class ClusterSize implements Comparable<ClusterSize> {
 
 	/**
 	 * Getter method for the squared size.
+	 *
 	 * @return the squared size
 	 */
 	public int getSquaredSize() {
@@ -57,6 +61,7 @@ public final class ClusterSize implements Comparable<ClusterSize> {
 
 	/**
 	 * Getter method for the mask.
+	 *
 	 * @return the mask
 	 */
 	public int getMask() {
@@ -93,6 +98,7 @@ public final class ClusterSize implements Comparable<ClusterSize> {
 
 	/**
 	 * Returns the maximum of this size and the specified other size.
+	 *
 	 * @param other the other size
 	 * @return the maximum
 	 */
@@ -102,6 +108,7 @@ public final class ClusterSize implements Comparable<ClusterSize> {
 
 	/**
 	 * Returns the minimum of this size and the specified other size.
+	 *
 	 * @param other the other size
 	 * @return the minimum
 	 */
@@ -111,6 +118,7 @@ public final class ClusterSize implements Comparable<ClusterSize> {
 
 	/**
 	 * Returns the product of this size and the specified other size.
+	 *
 	 * @param other the other size
 	 * @return the product
 	 */
@@ -133,6 +141,7 @@ public final class ClusterSize implements Comparable<ClusterSize> {
 	/**
 	 * Returns the number of cells in a cluster of this size. The cluster
 	 * has an edge length of (size), so it has (size^3) cells.
+	 *
 	 * @return the number of cells
 	 */
 	public int getCellCount() {

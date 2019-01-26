@@ -11,7 +11,6 @@ import name.martingeisse.common.SecurityTokenUtil;
 import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.cubetype.CubeTypes;
-import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.c2s.*;
 import name.martingeisse.miner.common.network.s2c.PlayerListUpdate;
@@ -28,7 +27,6 @@ import name.martingeisse.miner.server.game.DigUtil;
 import name.martingeisse.miner.server.game.PlayerAccess;
 import name.martingeisse.miner.server.world.WorldSubsystem;
 import name.martingeisse.miner.server.world.SectionWorkingSet;
-import name.martingeisse.miner.server.world.entry.SectionCubesCacheEntry;
 import name.martingeisse.miner.server.world.storage.AbstractSectionStorage;
 import name.martingeisse.miner.server.world.storage.CassandraSectionStorage;
 import name.martingeisse.miner.server.world.terrain.TerrainGenerator;
@@ -80,11 +78,12 @@ public class StackdServer {
 	 * Constructor.
 	 */
 	public StackdServer() {
-		AbstractSectionStorage sectionStorage = new CassandraSectionStorage(Constants.CLUSTER_SIZE, Databases.world, "section_data");
+		AbstractSectionStorage sectionStorage = new CassandraSectionStorage(Constants.SECTION_SIZE, Databases.world, "section_data");
 
 		this.sessions = new ConcurrentHashMap<>();
 		this.sectionWorkingSet = new SectionWorkingSet(this, sectionStorage);
 		this.worldSubsystem = new WorldSubsystem(sectionWorkingSet);
+		worldSubsystem.addListener(this::onSectionsModified);
 		this.cubeTypes = new CubeType[0];
 		this.consoleCommandHandler = new NullConsoleCommandHandler();
 
@@ -180,22 +179,7 @@ public class StackdServer {
 	final void onMessageReceived(final StackdSession session, final Message untypedMessage) {
 		if (untypedMessage instanceof CubeModification) {
 
-			CubeModification message = (CubeModification) untypedMessage;
-			int shiftBits = sectionWorkingSet.getClusterSize().getShiftBits();
-			List<SectionId> affectedSectionIds = new ArrayList<>();
-			for (CubeModification.Element element : message.getElements()) {
-				int x = element.getPosition().getX(), sectionX = (x >> shiftBits);
-				int y = element.getPosition().getY(), sectionY = (y >> shiftBits);
-				int z = element.getPosition().getZ(), sectionZ = (z >> shiftBits);
-				byte newCubeType = element.getCubeType();
-				SectionId sectionId = new SectionId(sectionX, sectionY, sectionZ);
-				SectionDataId sectionDataId = new SectionDataId(sectionId, SectionDataType.DEFINITIVE);
-				SectionCubesCacheEntry sectionDataCacheEntry = (SectionCubesCacheEntry) sectionWorkingSet.get(sectionDataId);
-				sectionDataCacheEntry.setCubeAbsolute(x, y, z, newCubeType);
-				affectedSectionIds.add(sectionId);
-			}
-			SectionId[] affectedSectionIdArray = affectedSectionIds.toArray(new SectionId[affectedSectionIds.size()]);
-			onSectionsModified(affectedSectionIdArray);
+			worldSubsystem.handleMessage((CubeModification) untypedMessage);
 
 		} else if (untypedMessage instanceof InteractiveSectionDataRequest) {
 
@@ -232,18 +216,9 @@ public class StackdServer {
 
 		} else if (untypedMessage instanceof DigNotification) {
 
+			// check if successful and remove the cube
 			DigNotification message = (DigNotification) untypedMessage;
-
-			// determine the cube being dug away
-			int shiftBits = getSectionWorkingSet().getClusterSize().getShiftBits();
-			int x = message.getPosition().x, sectionX = (x >> shiftBits);
-			int y = message.getPosition().y, sectionY = (y >> shiftBits);
-			int z = message.getPosition().z, sectionZ = (z >> shiftBits);
-			SectionId id = new SectionId(sectionX, sectionY, sectionZ);
-			SectionCubesCacheEntry sectionDataCacheEntry = (SectionCubesCacheEntry) getSectionWorkingSet().get(new SectionDataId(id, SectionDataType.DEFINITIVE));
-			byte oldCubeType = sectionDataCacheEntry.getCubeAbsolute(x, y, z);
-
-			// determine whether digging is successful
+			byte oldCubeType = worldSubsystem.getCube(message.getPosition());
 			boolean success;
 			if (oldCubeType == 1 || oldCubeType == 5 || oldCubeType == 15) {
 				success = true;
@@ -254,23 +229,12 @@ public class StackdServer {
 				// TODO enable god mode -- digging always succeeds
 				// break;
 			}
-
-			// remove the cube and notify other clients
-			sectionDataCacheEntry.setCubeAbsolute(x, y, z, (byte) 0);
-
-			// TODO should not be necessary with auto-save
-			sectionDataCacheEntry.save();
-
-			// notify listeners
-			notifyClientsAboutModifiedSections(id);
-			for (AxisAlignedDirection neighborDirection : getSectionWorkingSet().getClusterSize().getBorderDirections(x, y, z)) {
-				notifyClientsAboutModifiedSections(id.getNeighbor(neighborDirection));
-			}
+			worldSubsystem.setCube(message.getPosition(), (byte) 0);
 
 			// trigger special logic (e.g. add a unit of ore to the player's inventory)
 			PlayerAccess playerAccess = session.getPlayerAccess();
 			if (playerAccess != null) {
-				DigUtil.onCubeDugAway(playerAccess, x, y, z, oldCubeType);
+				DigUtil.onCubeDugAway(playerAccess, message.getPosition(), oldCubeType);
 			}
 
 		} else {
@@ -281,16 +245,7 @@ public class StackdServer {
 	/**
 	 * This method is called when one or more sections have been modified.
 	 */
-	protected void onSectionsModified(SectionId[] sectionIds) {
-		notifyClientsAboutModifiedSections(sectionIds);
-	}
-
-	/**
-	 * Sends a "section modified" event packet to all clients.
-	 *
-	 * @param sectionIds the modified section IDs
-	 */
-	public void notifyClientsAboutModifiedSections(SectionId... sectionIds) {
+	protected void onSectionsModified(ImmutableList<SectionId> sectionIds) {
 		for (SectionId sectionId : sectionIds) {
 			broadcast(new SingleSectionModificationEvent(sectionId));
 		}

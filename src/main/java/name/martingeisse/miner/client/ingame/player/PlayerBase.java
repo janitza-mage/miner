@@ -78,7 +78,7 @@ public abstract class PlayerBase {
 	 * @return the section ID of the section the player is currently in
 	 */
 	public final SectionId getSectionId() {
-		return new SectionId(position, world.getClusterSize());
+		return SectionId.fromPosition(position);
 	}
 	
 	/**
