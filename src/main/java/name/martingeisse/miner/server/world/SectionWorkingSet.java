@@ -6,27 +6,23 @@
 
 package name.martingeisse.miner.server.world;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableMap;
 import name.martingeisse.miner.common.cubes.Cubes;
 import name.martingeisse.miner.common.cubes.UniformCubes;
 import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.miner.common.section.SectionDataId;
-import name.martingeisse.miner.server.network.StackdServer;
 import name.martingeisse.miner.server.world.entry.InteractiveSectionImageCacheEntry;
 import name.martingeisse.miner.server.world.entry.SectionCubesCacheEntry;
 import name.martingeisse.miner.server.world.entry.SectionDataCacheEntry;
 import name.martingeisse.miner.server.world.storage.AbstractSectionStorage;
 import org.apache.commons.collections.iterators.ArrayIterator;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.google.common.collect.ImmutableMap;
+
+import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 /**
  * This class is the front-end to section storage. It maintains a cache of recently
@@ -47,11 +43,6 @@ import com.google.common.collect.ImmutableMap;
 public final class SectionWorkingSet {
 
 	/**
-	 * the server
-	 */
-	private final StackdServer server;
-
-	/**
 	 * the storage
 	 */
 	private final AbstractSectionStorage storage;
@@ -63,11 +54,9 @@ public final class SectionWorkingSet {
 
 	/**
 	 * Constructor.
-	 * @param server the server that uses this storage
 	 * @param storageFolder the storage folder to use for actually storing sections
 	 */
-	public SectionWorkingSet(final StackdServer server, final AbstractSectionStorage storageFolder) {
-		this.server = server;
+	public SectionWorkingSet(final AbstractSectionStorage storageFolder) {
 		this.storage = storageFolder;
 		this.cache = CacheBuilder.newBuilder().maximumSize(1000).build(new CacheLoader<SectionDataId, SectionDataCacheEntry>() {
 
@@ -100,14 +89,6 @@ public final class SectionWorkingSet {
 	 */
 	public ClusterSize getClusterSize() {
 		return storage.getClusterSize();
-	}
-
-	/**
-	 * Getter method for the server.
-	 * @return the server
-	 */
-	public StackdServer getServer() {
-		return server;
 	}
 
 	/**

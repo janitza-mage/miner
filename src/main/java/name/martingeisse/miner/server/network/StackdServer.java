@@ -8,7 +8,6 @@ package name.martingeisse.miner.server.network;
 
 import com.google.common.collect.ImmutableList;
 import name.martingeisse.common.SecurityTokenUtil;
-import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.c2s.*;
 import name.martingeisse.miner.common.network.s2c.PlayerListUpdate;
@@ -16,17 +15,13 @@ import name.martingeisse.miner.common.network.s2c.SingleSectionModificationEvent
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.common.section.SectionId;
-import name.martingeisse.miner.server.Databases;
 import name.martingeisse.miner.server.MinerServerSecurityConstants;
 import name.martingeisse.miner.server.console.IConsoleCommandHandler;
 import name.martingeisse.miner.server.console.MinerConsoleCommandHandler;
 import name.martingeisse.miner.server.console.NullConsoleCommandHandler;
 import name.martingeisse.miner.server.game.DigUtil;
 import name.martingeisse.miner.server.game.PlayerAccess;
-import name.martingeisse.miner.server.world.SectionWorkingSet;
 import name.martingeisse.miner.server.world.WorldSubsystem;
-import name.martingeisse.miner.server.world.storage.AbstractSectionStorage;
-import name.martingeisse.miner.server.world.storage.CassandraSectionStorage;
 import org.apache.log4j.Logger;
 import org.joda.time.Instant;
 
@@ -65,10 +60,8 @@ public class StackdServer {
 	 * Constructor.
 	 */
 	public StackdServer() {
-		AbstractSectionStorage sectionStorage = new CassandraSectionStorage(Constants.SECTION_SIZE, Databases.world, "section_data");
-
 		this.sessions = new ConcurrentHashMap<>();
-		this.worldSubsystem = new WorldSubsystem(new SectionWorkingSet(this, sectionStorage));
+		this.worldSubsystem = new WorldSubsystem();
 		worldSubsystem.addListener(this::onSectionsModified);
 		this.consoleCommandHandler = new NullConsoleCommandHandler();
 

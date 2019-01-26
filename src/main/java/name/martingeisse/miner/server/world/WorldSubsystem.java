@@ -17,10 +17,12 @@ import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.common.section.SectionId;
 import name.martingeisse.miner.common.task.Task;
+import name.martingeisse.miner.server.Databases;
 import name.martingeisse.miner.server.network.StackdServer;
 import name.martingeisse.miner.server.network.StackdSession;
 import name.martingeisse.miner.server.world.entry.SectionCubesCacheEntry;
 import name.martingeisse.miner.server.world.entry.SectionDataCacheEntry;
+import name.martingeisse.miner.server.world.storage.CassandraSectionStorage;
 import name.martingeisse.miner.server.world.terrain.TerrainGenerator;
 import org.apache.log4j.Logger;
 
@@ -46,8 +48,8 @@ public final class WorldSubsystem {
 	private final HandleAllJobsTask handleAllJobsTask;
 	private final Set<WorldModificationListener> modificationListeners = new HashSet<>();
 
-	public WorldSubsystem(final SectionWorkingSet workingSet) {
-		this.workingSet = workingSet;
+	public WorldSubsystem() {
+		this.workingSet = new SectionWorkingSet(new CassandraSectionStorage(Constants.SECTION_SIZE, Databases.world, "section_data"));
 		this.jobQueue = new LinkedBlockingQueue<>();
 		this.handleAllJobsTask = new HandleAllJobsTask();
 	}
