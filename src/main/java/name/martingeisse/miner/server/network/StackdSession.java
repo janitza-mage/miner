@@ -8,11 +8,9 @@ package name.martingeisse.miner.server.network;
 
 import com.google.common.collect.ImmutableList;
 import name.martingeisse.miner.common.network.Message;
-import name.martingeisse.miner.common.network.s2c.ConsoleOutput;
-import name.martingeisse.miner.common.network.s2c.FlashMessage;
-import name.martingeisse.miner.common.network.s2c.PlayerResumed;
-import name.martingeisse.miner.common.network.s2c.UpdateCoins;
+import name.martingeisse.miner.common.network.s2c.*;
 import name.martingeisse.miner.server.game.PlayerAccess;
+import name.martingeisse.miner.server.world.WorldSubsystem;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
@@ -21,7 +19,7 @@ import java.util.Collection;
  * Stores the data for one user session (currently associated with the connection,
  * but intended to service connection dropping and re-connecting).
  */
-public class StackdSession {
+public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 
 	private static Logger logger = Logger.getLogger(StackdSession.class);
 
@@ -150,6 +148,11 @@ public class StackdSession {
 	 */
 	public void sendCoinsUpdate() {
 		send(new UpdateCoins(playerAccess == null ? 0 : playerAccess.getCoins()));
+	}
+
+	@Override
+	public void consumeInteractiveSectionDataResponse(InteractiveSectionDataResponse response) {
+		send(response);
 	}
 
 }

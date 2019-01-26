@@ -34,7 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * is used on the server side, and it is actually an application-specific
  * subclass of this class.
  */
-public class StackdServer {
+public class StackdServer{
 
 	/**
 	 * the logger

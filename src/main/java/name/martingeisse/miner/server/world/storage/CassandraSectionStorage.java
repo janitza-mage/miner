@@ -6,19 +6,20 @@
 
 package name.martingeisse.miner.server.world.storage;
 
-import java.nio.ByteBuffer;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import name.martingeisse.miner.common.geometry.ClusterSize;
-import name.martingeisse.miner.common.section.SectionDataId;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.querybuilder.Clause;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
+import name.martingeisse.miner.common.geometry.ClusterSize;
+import name.martingeisse.miner.common.section.SectionDataId;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+
+import java.nio.ByteBuffer;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This storage implementation stores sections in a Cassandra database.
@@ -75,9 +76,6 @@ public final class CassandraSectionStorage extends AbstractSectionStorage {
 		return cassandrasSession.execute(QueryBuilder.select().all().from(tableName).where(clause));
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.server.section.storage.AbstractSectionStorage#loadSectionRelatedObject(name.martingeisse.stackd.common.network.SectionDataId)
-	 */
 	@Override
 	public byte[] loadSectionRelatedObject(final SectionDataId id) {
 		try {
@@ -93,9 +91,6 @@ public final class CassandraSectionStorage extends AbstractSectionStorage {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.server.section.storage.AbstractSectionStorage#loadSectionRelatedObjects(java.util.Collection)
-	 */
 	@Override
 	public Map<SectionDataId, byte[]> loadSectionRelatedObjects(final Collection<? extends SectionDataId> ids) {
 		if (logger.isDebugEnabled()) {
@@ -129,9 +124,6 @@ public final class CassandraSectionStorage extends AbstractSectionStorage {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.server.section.storage.AbstractSectionStorage#saveSectionRelatedObject(name.martingeisse.stackd.common.network.SectionDataId, byte[])
-	 */
 	@Override
 	public void saveSectionRelatedObject(final SectionDataId sectionDataId, final byte[] data) {
 		try {
@@ -142,9 +134,6 @@ public final class CassandraSectionStorage extends AbstractSectionStorage {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.server.section.storage.AbstractSectionStorage#deleteSectionRelatedObject(name.martingeisse.stackd.common.network.SectionDataId)
-	 */
 	@Override
 	public void deleteSectionRelatedObject(final SectionDataId sectionDataId) {
 		try {

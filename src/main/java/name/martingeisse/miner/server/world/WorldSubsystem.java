@@ -18,7 +18,6 @@ import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.common.section.SectionId;
 import name.martingeisse.miner.common.task.Task;
 import name.martingeisse.miner.server.Databases;
-import name.martingeisse.miner.server.network.StackdSession;
 import name.martingeisse.miner.server.world.entry.SectionCubesCacheEntry;
 import name.martingeisse.miner.server.world.entry.SectionDataCacheEntry;
 import name.martingeisse.miner.server.world.storage.CassandraSectionStorage;
@@ -72,22 +71,26 @@ public final class WorldSubsystem {
 	// --- reading sections
 	//
 
+	public interface SectionDataConsumer {
+		void consumeInteractiveSectionDataResponse(InteractiveSectionDataResponse response);
+	}
+
 	/**
 	 * Adds a shipping job.
 	 *
 	 * @param sectionDataId the ID of the section data to ship
-	 * @param session       the session to ship to
+	 * @param consumer      the consumer to return the section data to
 	 */
-	public void addJob(SectionDataId sectionDataId, StackdSession session) {
+	public void addJob(SectionDataId sectionDataId, SectionDataConsumer consumer) {
 		SectionDataCacheEntry presentEntry = workingSet.getIfPresent(sectionDataId);
 		if (presentEntry == null) {
 			ShippingJob job = new ShippingJob();
 			job.sectionDataId = sectionDataId;
-			job.session = session;
+			job.consumer = consumer;
 			jobQueue.add(job);
 			handleAllJobsTask.schedule();
 		} else {
-			sendResult(presentEntry, session);
+			sendResult(presentEntry, consumer);
 		}
 	}
 
@@ -119,7 +122,7 @@ public final class WorldSubsystem {
 
 		// complete the jobs by sending data to the clients
 		for (ShippingJob job : jobs) {
-			sendResult(cacheEntries.get(job.sectionDataId), job.session);
+			sendResult(cacheEntries.get(job.sectionDataId), job.consumer);
 		}
 
 	}
@@ -127,7 +130,7 @@ public final class WorldSubsystem {
 	/**
 	 *
 	 */
-	private void sendResult(SectionDataCacheEntry cacheEntry, StackdSession session) {
+	private void sendResult(SectionDataCacheEntry cacheEntry, SectionDataConsumer consumer) {
 		final SectionDataId sectionDataId = cacheEntry.getSectionDataId();
 		final SectionId sectionId = sectionDataId.getSectionId();
 		final SectionDataType type = sectionDataId.getType();
@@ -137,7 +140,7 @@ public final class WorldSubsystem {
 		}
 		final byte[] data = cacheEntry.getDataForClient();
 		logger.debug("SERVER sending section data: " + sectionDataId + " (" + data.length + " bytes)");
-		session.send(new InteractiveSectionDataResponse(sectionId, data));
+		consumer.consumeInteractiveSectionDataResponse(new InteractiveSectionDataResponse(sectionId, data));
 		logger.debug("SERVER sent section data: " + sectionDataId + " (" + data.length + " bytes)");
 		total += data.length;
 		logger.debug("SERVER total section data sent: " + total);
@@ -150,7 +153,7 @@ public final class WorldSubsystem {
 	 */
 	static final class ShippingJob {
 		SectionDataId sectionDataId;
-		StackdSession session;
+		SectionDataConsumer consumer;
 	}
 
 	/**
