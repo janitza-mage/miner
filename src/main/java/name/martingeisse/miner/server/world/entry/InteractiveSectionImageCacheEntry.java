@@ -8,6 +8,7 @@ package name.martingeisse.miner.server.world.entry;
 
 import name.martingeisse.miner.common.cubes.Cubes;
 import name.martingeisse.miner.common.cubetype.CubeType;
+import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.miner.common.section.SectionDataId;
@@ -52,7 +53,7 @@ public final class InteractiveSectionImageCacheEntry extends SectionDataCacheEnt
 			Cubes clonedCubes = originalCubes.clone();
 			ClusterSize clusterSize = workingSet.getClusterSize();
 			int size = clusterSize.getSize();
-			CubeType[] cubeTypes = workingSet.getServer().getCubeTypes();
+			CubeType[] cubeTypes = CubeTypes.CUBE_TYPES;
 			AxisAlignedDirection[] directions = AxisAlignedDirection.values();
 			for (int x=0; x<size; x++) {
 				for (int y=0; y<size; y++) {

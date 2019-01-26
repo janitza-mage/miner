@@ -9,8 +9,6 @@ package name.martingeisse.miner.server.network;
 import com.google.common.collect.ImmutableList;
 import name.martingeisse.common.SecurityTokenUtil;
 import name.martingeisse.miner.common.Constants;
-import name.martingeisse.miner.common.cubetype.CubeType;
-import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.c2s.*;
 import name.martingeisse.miner.common.network.s2c.PlayerListUpdate;
@@ -59,11 +57,6 @@ public class StackdServer {
 	private final WorldSubsystem worldSubsystem;
 
 	/**
-	 * the cubeTypes
-	 */
-	private CubeType[] cubeTypes;
-
-	/**
 	 * the consoleCommandHandler
 	 */
 	private IConsoleCommandHandler consoleCommandHandler;
@@ -77,10 +70,7 @@ public class StackdServer {
 		this.sessions = new ConcurrentHashMap<>();
 		this.worldSubsystem = new WorldSubsystem(new SectionWorkingSet(this, sectionStorage));
 		worldSubsystem.addListener(this::onSectionsModified);
-		this.cubeTypes = new CubeType[0];
 		this.consoleCommandHandler = new NullConsoleCommandHandler();
-
-		setCubeTypes(CubeTypes.CUBE_TYPES);
 
 		Timer timer = new Timer(true);
 		timer.schedule(new AvatarUpdateSender(), 0, 200);
@@ -95,24 +85,6 @@ public class StackdServer {
 			throw new RuntimeException(e);
 		}
 
-	}
-
-	/**
-	 * Getter method for the cubeTypes.
-	 *
-	 * @return the cubeTypes
-	 */
-	public final CubeType[] getCubeTypes() {
-		return cubeTypes;
-	}
-
-	/**
-	 * Setter method for the cubeTypes.
-	 *
-	 * @param cubeTypes the cubeTypes to set
-	 */
-	public final void setCubeTypes(final CubeType[] cubeTypes) {
-		this.cubeTypes = cubeTypes;
 	}
 
 	/**
