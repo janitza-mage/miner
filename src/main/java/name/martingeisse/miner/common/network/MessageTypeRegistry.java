@@ -21,14 +21,12 @@ final class MessageTypeRegistry {
 
 	private MessageTypeRegistry() {
 
-		register(ConsoleInput.class, ConsoleInput::decodeBody);
 		register(CubeModification.class, CubeModification::decodeBody);
 		register(DigNotification.class, DigNotification::decodeBody);
 		register(ResumePlayer.class, ResumePlayer::decodeBody);
 		register(UpdatePosition.class, UpdatePosition::decodeBody);
 		register(InteractiveSectionDataRequest.class, InteractiveSectionDataRequest::decodeBody);
 
-		register(ConsoleOutput.class, ConsoleOutput::decodeBody);
 		register(FlashMessage.class, FlashMessage::decodeBody);
 		register(PlayerListUpdate.class, PlayerListUpdate::decodeBody);
 		register(PlayerResumed.class, PlayerResumed::decodeBody);

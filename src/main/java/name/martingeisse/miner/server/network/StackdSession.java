@@ -6,11 +6,13 @@
 
 package name.martingeisse.miner.server.network;
 
-import com.google.common.collect.ImmutableList;
 import name.martingeisse.common.SecurityTokenUtil;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.c2s.*;
-import name.martingeisse.miner.common.network.s2c.*;
+import name.martingeisse.miner.common.network.s2c.FlashMessage;
+import name.martingeisse.miner.common.network.s2c.InteractiveSectionDataResponse;
+import name.martingeisse.miner.common.network.s2c.PlayerResumed;
+import name.martingeisse.miner.common.network.s2c.UpdateCoins;
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.common.section.SectionId;
@@ -22,7 +24,6 @@ import org.apache.log4j.Logger;
 import org.joda.time.Instant;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
 import java.util.Random;
 
 /**
@@ -137,28 +138,6 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 	}
 
 	/**
-	 * Sends console output lines to the client.
-	 *
-	 * @param lines the lines to send
-	 */
-	public void sendConsoleOutput(Collection<String> lines) {
-		if (!lines.isEmpty()) {
-			sendConsoleOutput(lines.toArray(new String[lines.size()]));
-		}
-	}
-
-	/**
-	 * Sends console output lines to the client.
-	 *
-	 * @param lines the lines to send
-	 */
-	public void sendConsoleOutput(String... lines) {
-		if (lines.length > 0) {
-			send(new ConsoleOutput(ImmutableList.copyOf(lines)));
-		}
-	}
-
-	/**
 	 * Sends an update for the number of coins to the client, fetching the
 	 * number of coins from the database.
 	 */
@@ -199,14 +178,6 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 			SectionDataType type = SectionDataType.INTERACTIVE;
 			final SectionDataId dataId = new SectionDataId(sectionId, type);
 			server.getWorldSubsystem().addJob(dataId, this);
-
-		} else if (untypedMessage instanceof ConsoleInput) {
-
-			ConsoleInput message = (ConsoleInput) untypedMessage;
-			ImmutableList<String> segments = message.getSegments();
-			String command = segments.get(0);
-			String[] args = segments.subList(1, segments.size()).toArray(new String[0]);
-			server.getConsoleCommandHandler().handleCommand(this, command, args);
 
 		} else if (untypedMessage instanceof DigNotification) {
 

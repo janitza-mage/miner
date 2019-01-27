@@ -11,8 +11,6 @@ import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.s2c.PlayerListUpdate;
 import name.martingeisse.miner.common.network.s2c.SingleSectionModificationEvent;
 import name.martingeisse.miner.common.section.SectionId;
-import name.martingeisse.miner.server.console.IConsoleCommandHandler;
-import name.martingeisse.miner.server.console.MinerConsoleCommandHandler;
 import name.martingeisse.miner.server.world.WorldSubsystem;
 
 import java.util.*;
@@ -27,12 +25,10 @@ public class StackdServer {
 
 	private final ConcurrentHashMap<StackdSession, StackdSession> sessions;
 	private final WorldSubsystem worldSubsystem;
-	private final IConsoleCommandHandler consoleCommandHandler;
 
 	public StackdServer() {
 		this.sessions = new ConcurrentHashMap<>();
 		this.worldSubsystem = new WorldSubsystem();
-		this.consoleCommandHandler = new MinerConsoleCommandHandler(this);
 
 		worldSubsystem.addListener(sectionIds -> {
 			for (SectionId sectionId : sectionIds) {
@@ -62,10 +58,6 @@ public class StackdServer {
 
 	public WorldSubsystem getWorldSubsystem() {
 		return worldSubsystem;
-	}
-
-	public IConsoleCommandHandler getConsoleCommandHandler() {
-		return consoleCommandHandler;
 	}
 
 	/**

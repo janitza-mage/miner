@@ -6,13 +6,11 @@
 
 package name.martingeisse.miner.client.network;
 
-import com.google.common.collect.ImmutableList;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import name.martingeisse.miner.client.console.Console;
 import name.martingeisse.miner.client.frame.handlers.FlashMessageHandler;
 import name.martingeisse.miner.client.ingame.IngameHandler;
 import name.martingeisse.miner.client.ingame.network.PlayerResumedMessage;
@@ -23,7 +21,6 @@ import name.martingeisse.miner.common.geometry.angle.ReadableEulerAngles;
 import name.martingeisse.miner.common.geometry.vector.ReadableVector3d;
 import name.martingeisse.miner.common.geometry.vector.Vector3i;
 import name.martingeisse.miner.common.network.Message;
-import name.martingeisse.miner.common.network.c2s.ConsoleInput;
 import name.martingeisse.miner.common.network.c2s.DigNotification;
 import name.martingeisse.miner.common.network.c2s.ResumePlayer;
 import name.martingeisse.miner.common.network.c2s.UpdatePosition;
@@ -48,7 +45,6 @@ public class StackdProtocolClient {
 	private ClientEndpoint endpoint;
 	private FlashMessageHandler flashMessageHandler;
 	private SectionGridLoader sectionGridLoader;
-	private Console console;
 	private List<PlayerProxy> updatedPlayerProxies;
 	private PlayerResumedMessage playerResumedMessage;
 	private volatile long coins = 0;
@@ -132,24 +128,6 @@ public class StackdProtocolClient {
 		this.sectionGridLoader = sectionGridLoader;
 	}
 
-	/**
-	 * Getter method for the console.
-	 *
-	 * @return the console
-	 */
-	public Console getConsole() {
-		return console;
-	}
-
-	/**
-	 * Setter method for the console.
-	 *
-	 * @param console the console to set
-	 */
-	public void setConsole(Console console) {
-		this.console = console;
-	}
-
 	public final void send(Message message) {
 		endpoint.send(message);
 	}
@@ -193,21 +171,6 @@ public class StackdProtocolClient {
 	}
 
 	/**
-	 * Sends a server-side console command to the server.
-	 *
-	 * @param command the command
-	 * @param args    the arguments
-	 */
-	public void sendConsoleCommand(String command, String[] args) {
-		List<String> segments = new ArrayList<>();
-		segments.add(command);
-		for (String arg : args) {
-			segments.add(arg);
-		}
-		send(new ConsoleInput(ImmutableList.copyOf(segments)));
-	}
-
-	/**
 	 * Sends an update message for the player's position to the server.
 	 *
 	 * @param position    the player's position
@@ -246,17 +209,6 @@ public class StackdProtocolClient {
 				sectionGridLoader.handleModificationEvent(message);
 			} else {
 				logger.error("received section modification event but no sectionGridLoader is set in the StackdProtoclClient!");
-			}
-
-		} else if (untypedMessage instanceof ConsoleOutput) {
-
-			if (console != null) {
-				ConsoleOutput message = (ConsoleOutput) untypedMessage;
-				for (String line : message.getSegments()) {
-					console.println(line);
-				}
-			} else {
-				logger.error("received console output packet but there's no console set for the StackdProtocolClient!");
 			}
 
 		} else if (untypedMessage instanceof PlayerListUpdate) {

@@ -165,26 +165,6 @@ public class IngameHandler extends HandlerList {
 		});
 		add(flashMessageHandler);
 		
-		/*
-		console.setCommandHandler(new IConsoleCommandHandler() {
-			@Override
-			public void handleCommand(Console console, String command, String[] args) {
-				if (command.equals("quit")) {
-					SimpleWorkerScheme.requestStop();
-					throw new BreakFrameLoopException();
-				} else if (command.equals("initworld") || command.equals("help") || command.equals("itemtypes") || command.equals("wish") || command.equals("equip") || command.equals("unequip") || command.equals("trash") || command.equals("give") || command.equals("inventory")) {
-					protocolClient.sendConsoleCommand(command, args);
-				} else if (command.equals("echo")) {
-					for (String arg : args) {
-						console.println(arg);
-					}
-				} else {
-					console.println("unknown command: " + command);
-				}
-			}
-		});
-		*/
-
 		// the in-game menu
 		gameMenuHandler = new GameMenuHandler();
 		gameMenuHandlerWrapper = new SwappableHandler();
