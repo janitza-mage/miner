@@ -7,6 +7,7 @@
 package name.martingeisse.miner.client.ingame.gui;
 
 import name.martingeisse.miner.client.ingame.IngameHandler;
+import name.martingeisse.miner.client.util.frame.BreakFrameLoopException;
 import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.element.Margin;
 import name.martingeisse.miner.client.util.gui.element.Spacer;
@@ -34,7 +35,9 @@ public class MainMenuPage extends AbstractGameGuiPage {
 		menu.addElement(new GameGuiButton("Quit") {
 			@Override
 			protected void onClick() {
-				GameMenuHandler.programmaticExit = true;
+				getGui().addFollowupLogicAction(() -> {
+					throw new BreakFrameLoopException();
+				});
 			}
 		});
 		initializePage(null, new Margin(menu, 30 * Gui.GRID, 30 * Gui.GRID));

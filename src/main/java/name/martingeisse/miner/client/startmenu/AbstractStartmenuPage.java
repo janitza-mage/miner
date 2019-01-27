@@ -8,6 +8,7 @@ package name.martingeisse.miner.client.startmenu;
 
 import name.martingeisse.launcher.assets.LauncherAssets;
 import name.martingeisse.miner.client.util.UserVisibleMessageException;
+import name.martingeisse.miner.client.util.frame.BreakFrameLoopException;
 import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiEvent;
@@ -29,7 +30,9 @@ public class AbstractStartmenuPage extends Page {
 	protected static final StartmenuButton EXIT_BUTTON = new StartmenuButton("Quit") {
 		@Override
 		protected void onClick() {
-			StartmenuHandler.programmaticExit = true;
+			getGui().addFollowupLogicAction(() -> {
+				throw new BreakFrameLoopException();
+			});
 		}
 	};
 	

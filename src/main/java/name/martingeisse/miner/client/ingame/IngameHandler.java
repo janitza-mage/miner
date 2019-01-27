@@ -6,20 +6,24 @@
 
 package name.martingeisse.miner.client.ingame;
 
+import name.martingeisse.launcher.assets.LauncherAssets;
 import name.martingeisse.miner.client.Main;
-import name.martingeisse.miner.client.util.frame.AbstractFrameHandler;
-import name.martingeisse.miner.client.util.frame.BreakFrameLoopException;
-import name.martingeisse.miner.client.util.frame.HandlerList;
-import name.martingeisse.miner.client.util.frame.SwappableHandler;
 import name.martingeisse.miner.client.ingame.frame.FlashMessageHandler;
 import name.martingeisse.miner.client.ingame.frame.FpsPanel;
 import name.martingeisse.miner.client.ingame.frame.SelectedCubeHud;
-import name.martingeisse.miner.client.ingame.gui.GameMenuHandler;
-import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
+import name.martingeisse.miner.client.ingame.gui.MainMenuPage;
 import name.martingeisse.miner.client.ingame.network.PlayerResumedMessage;
 import name.martingeisse.miner.client.ingame.network.SendPositionToServerHandler;
 import name.martingeisse.miner.client.ingame.player.PlayerProxy;
 import name.martingeisse.miner.client.network.StackdProtocolClient;
+import name.martingeisse.miner.client.util.frame.AbstractFrameHandler;
+import name.martingeisse.miner.client.util.frame.BreakFrameLoopException;
+import name.martingeisse.miner.client.util.frame.HandlerList;
+import name.martingeisse.miner.client.util.frame.SwappableHandler;
+import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
+import name.martingeisse.miner.client.util.gui.GuiFrameHandler;
+import name.martingeisse.miner.client.util.lwjgl.FixedWidthFont;
+import name.martingeisse.miner.client.util.lwjgl.ResourceLoader;
 
 import java.util.List;
 
@@ -66,7 +70,7 @@ public class IngameHandler extends HandlerList {
 	/**
 	 * the gameMenuHandler
 	 */
-	public static GameMenuHandler gameMenuHandler;
+	public static GuiFrameHandler gameMenuHandler;
 
 	/**
 	 * the ingameMenuHandlerWrapper
@@ -170,7 +174,12 @@ public class IngameHandler extends HandlerList {
 		add(flashMessageHandler);
 		
 		// the in-game menu
-		gameMenuHandler = new GameMenuHandler();
+		{
+			// TODO share resources properly
+			gameMenuHandler = new GuiFrameHandler();
+			gameMenuHandler.getGui().setDefaultFont(new FixedWidthFont(ResourceLoader.loadAwtImage(LauncherAssets.class, "font.png"), 8, 16));
+			gameMenuHandler.getGui().setRootElement(new MainMenuPage());
+		}
 		gameMenuHandlerWrapper = new SwappableHandler();
 		add(gameMenuHandlerWrapper);
 

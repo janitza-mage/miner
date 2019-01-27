@@ -80,6 +80,8 @@ public final class GuiFrameHandler extends AbstractFrameHandler {
 			// handle pending followup actions
 			gui.executeFollowupLogicActions();
 
+		} catch (BreakFrameLoopException e) {
+			throw e;
 		} catch (Exception e) {
 			logger.error("unexpected exception in GUI (logic)", e);
 		}
