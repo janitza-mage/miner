@@ -192,6 +192,7 @@ public class IngameHandler extends HandlerList {
 	public static void closeGui() {
 		gameMenuHandlerWrapper.setWrappedHandler(null);
 		MouseUtil.grab();
+		CubeWorldHandler.disableLeftMouseButtonBecauseWeJustClosedTheGui = true;
 	}
 
 	public static boolean isGuiOpen() {

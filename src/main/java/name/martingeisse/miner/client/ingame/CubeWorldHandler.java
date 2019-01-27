@@ -11,6 +11,7 @@ import name.martingeisse.miner.client.ingame.engine.EngineParameters;
 import name.martingeisse.miner.client.ingame.engine.FrameRenderParameters;
 import name.martingeisse.miner.client.ingame.engine.WorldWorkingSet;
 import name.martingeisse.miner.client.ingame.engine.renderer.DefaultSectionRenderer;
+import name.martingeisse.miner.client.ingame.gui.InventoryPage;
 import name.martingeisse.miner.client.ingame.gui.MainMenuPage;
 import name.martingeisse.miner.client.util.frame.AbstractIntervalFrameHandler;
 import name.martingeisse.miner.client.util.frame.FrameDurationSensor;
@@ -62,6 +63,8 @@ public class CubeWorldHandler {
 	 * the MAX_STAIRS_HEIGHT
 	 */
 	public static final double MAX_STAIRS_HEIGHT = 0.8;
+
+	public static boolean disableLeftMouseButtonBecauseWeJustClosedTheGui = false;
 
 	/**
 	 * the player
@@ -292,7 +295,7 @@ public class CubeWorldHandler {
 
 		// first, handle the stuff that already works without the world being loaded "enough"
 		frameDurationSensor.tick();
-		if (keysEnabled && Keyboard.isKeyDown(Keyboard.KEY_I)) {
+		if (keysEnabled && Keyboard.isKeyDown(Keyboard.KEY_M)) {
 			if (!infoButtonPressed) {
 				player.dump();
 			}
@@ -349,6 +352,9 @@ public class CubeWorldHandler {
 				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE && Keyboard.getEventKeyState()) {
 					IngameHandler.openGui(new MainMenuPage());
 				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_I && Keyboard.getEventKeyState()) {
+					IngameHandler.openGui(new InventoryPage());
+				}
 			}
 		}
 
@@ -402,10 +408,13 @@ public class CubeWorldHandler {
 		}
 
 		// cube placement
+		if (!Mouse.isButtonDown(0)) {
+			disableLeftMouseButtonBecauseWeJustClosedTheGui = false;
+		}
 		captureRayActionSupport = false;
 		final long now = System.currentTimeMillis();
 		if (now >= cooldownFinishTime) {
-			if (mouseMovementEnabled && Mouse.isButtonDown(0)) {
+			if (mouseMovementEnabled && Mouse.isButtonDown(0) && !disableLeftMouseButtonBecauseWeJustClosedTheGui) {
 				captureRayActionSupport = true;
 				rayActionSupport.execute(player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), new RayAction(false) {
 					@Override
