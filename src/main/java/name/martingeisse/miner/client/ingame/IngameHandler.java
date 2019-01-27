@@ -124,17 +124,11 @@ public class IngameHandler extends HandlerList {
 
 			}
 
-			/* (non-Javadoc)
-			 * @see name.martingeisse.stackd.frame.AbstractFrameHandler#onAfterHandleStep()
-			 */
 			@Override
 			public void onAfterHandleStep() {
 				cubeWorldHandler.purge();
 			}
 
-			/* (non-Javadoc)
-			 * @see name.martingeisse.stackd.client.frame.AbstractFrameHandler#draw(name.martingeisse.glworker.GlWorkerLoop)
-			 */
 			@Override
 			public void draw(GlWorkerLoop glWorkerLoop) {
 				cubeWorldHandler.draw(glWorkerLoop);
@@ -142,7 +136,6 @@ public class IngameHandler extends HandlerList {
 
 		});
 		add(new FpsPanel(resources.getFont()));
-		// add(new ExitHandler(true, Keyboard.KEY_ESCAPE));
 		final SelectedCubeHud selectedCubeHud = new SelectedCubeHud(cubeWorldHandler.getResources().getCubeTextures(), cubeWorldHandler.getWorkingSet().getEngineParameters().getCubeTypes());
 		add(selectedCubeHud);
 		add(new AbstractFrameHandler() {
