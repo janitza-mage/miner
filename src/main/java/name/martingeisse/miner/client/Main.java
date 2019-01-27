@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2012 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -32,30 +32,34 @@ public class Main {
 	 * the logger
 	 */
 	private static Logger logger = Logger.getLogger(Main.class);
-	
+
 	/**
 	 * the screenWidth
 	 */
 	public static int screenWidth = 800;
-	
+
 	/**
 	 * the screenHeight
 	 */
 	public static int screenHeight = 600;
-	
+
 	/**
 	 * the frameLoop
 	 */
 	public static FrameLoop frameLoop;
-	
+
 	/**
 	 * @param args ...
 	 * @throws Exception ...
 	 */
 	public static void main(final String[] args) throws Exception {
 		logger.info("Miner client started");
+
+		// set LWJGL switches
+		System.setProperty("org.lwjgl.opengl.Window.undecorated", "true");
+
 		try {
-			
+
 			// initialize task system so we can start up in parallel tasks
 			Thread.currentThread().setName("Startup (later OpenGL)");
 			TaskSystem.initialize();
@@ -107,7 +111,7 @@ public class Main {
 			logger.trace("initializing OpenGL worker loop...");
 			GlWorkerLoop glWorkerLoop = new GlWorkerLoop();
 			logger.trace("OpenGL worker loop initialized");
-			
+
 			// prepare native libraries
 			logger.trace("preparing native libraries...");
 			LwjglNativeLibraryHelper.prepareNativeLibraries();
@@ -115,21 +119,21 @@ public class Main {
 
 			// configure the display
 			logger.trace("finding optimal display mode...");
-	        DisplayMode bestMode = null;
-	        int bestModeFrequency = -1;
-	        for (DisplayMode mode : Display.getAvailableDisplayModes()) {
-	        	if (mode.getWidth() == screenWidth && mode.getHeight() == screenHeight && (mode.isFullscreenCapable() || !fullscreen)) {
-	        		if (mode.getFrequency() > bestModeFrequency) {
-	        			bestMode = mode;
-	        			bestModeFrequency = mode.getFrequency();
-	        		}
-	        	}
-	        }
-	        if (bestMode == null) {
-	        	bestMode = new DisplayMode(screenWidth, screenHeight);
-	        }
+			DisplayMode bestMode = null;
+			int bestModeFrequency = -1;
+			for (DisplayMode mode : Display.getAvailableDisplayModes()) {
+				if (mode.getWidth() == screenWidth && mode.getHeight() == screenHeight && (mode.isFullscreenCapable() || !fullscreen)) {
+					if (mode.getFrequency() > bestModeFrequency) {
+						bestMode = mode;
+						bestModeFrequency = mode.getFrequency();
+					}
+				}
+			}
+			if (bestMode == null) {
+				bestMode = new DisplayMode(screenWidth, screenHeight);
+			}
 			logger.trace("setting intended display mode...");
-	        Display.setDisplayMode(bestMode);
+			Display.setDisplayMode(bestMode);
 			if (fullscreen) {
 				Display.setFullscreen(true);
 			}
@@ -142,7 +146,7 @@ public class Main {
 			Mouse.create();
 			Mouse.poll();
 			logger.trace("mouse prepared");
-			
+
 			// load images and sounds
 			logger.trace("loading resources...");
 			MinerResources.initializeInstance();
@@ -151,7 +155,7 @@ public class Main {
 			// build the frame loop
 			frameLoop = new FrameLoop(glWorkerLoop);
 			frameLoop.getRootHandler().setWrappedHandler(new StartmenuHandler());
-			
+
 			// TODO remove, used for development
 			logger.info("auto-login...");
 			barrier.await();
@@ -164,21 +168,23 @@ public class Main {
 				public void run() {
 					frameLoop.executeLoop(null);
 					glWorkerLoop.scheduleStop();
-				};
+				}
+
+				;
 			}.start();
 			logger.debug("startup thread becoming the OpenGL thread now");
 			Thread.currentThread().setName("OpenGL");
 			glWorkerLoop.workAndWait();
-			
+
 			// clean up
 			Display.destroy();
-			
+
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 		System.exit(0);
 	}
-	
+
 	/**
 	 * Helper method for development.
 	 */
@@ -186,7 +192,7 @@ public class Main {
 		AccountApiClient.getInstance().login(username, password);
 		AccountApiClient.getInstance().accessPlayer(playerId);
 	}
-	
+
 	/**
 	 * Helper method for development. Must be called from the OpenGL thread.
 	 */

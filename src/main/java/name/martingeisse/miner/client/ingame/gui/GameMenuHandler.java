@@ -8,7 +8,6 @@ package name.martingeisse.miner.client.ingame.gui;
 
 import name.martingeisse.launcher.assets.LauncherAssets;
 import name.martingeisse.miner.client.util.frame.BreakFrameLoopException;
-import name.martingeisse.miner.client.util.frame.ExitHandler;
 import name.martingeisse.miner.client.util.frame.HandlerList;
 import name.martingeisse.miner.client.util.gui.GuiFrameHandler;
 import name.martingeisse.miner.client.util.lwjgl.FixedWidthFont;
@@ -33,7 +32,6 @@ public class GameMenuHandler extends HandlerList {
 		guiFrameHandler.getGui().setDefaultFont(new FixedWidthFont(ResourceLoader.loadAwtImage(LauncherAssets.class, "font.png"), 8, 16));
 		guiFrameHandler.getGui().setRootElement(new MainMenuPage());
 		add(guiFrameHandler);
-		add(new ExitHandler(true, null));
 	}
 
 	/* (non-Javadoc)
