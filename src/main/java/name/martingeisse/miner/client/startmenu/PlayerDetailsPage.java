@@ -10,19 +10,19 @@ import name.martingeisse.common.javascript.analyze.JsonAnalyzer;
 import name.martingeisse.miner.client.Main;
 import name.martingeisse.miner.common.Faction;
 import name.martingeisse.miner.client.ingame.IngameHandler;
-import name.martingeisse.miner.client.gui.Gui;
-import name.martingeisse.miner.client.gui.GuiElement;
-import name.martingeisse.miner.client.gui.control.MessageBox;
-import name.martingeisse.miner.client.gui.element.FillColor;
-import name.martingeisse.miner.client.gui.element.Margin;
-import name.martingeisse.miner.client.gui.element.OverlayStack;
-import name.martingeisse.miner.client.gui.element.Sizer;
-import name.martingeisse.miner.client.gui.element.Spacer;
-import name.martingeisse.miner.client.gui.element.TextParagraph;
-import name.martingeisse.miner.client.gui.element.ThinBorder;
-import name.martingeisse.miner.client.gui.element.VerticalLayout;
-import name.martingeisse.miner.client.gui.util.Color;
-import name.martingeisse.miner.client.util.MouseUtil;
+import name.martingeisse.miner.client.util.gui.Gui;
+import name.martingeisse.miner.client.util.gui.GuiElement;
+import name.martingeisse.miner.client.util.gui.control.MessageBox;
+import name.martingeisse.miner.client.util.gui.element.FillColor;
+import name.martingeisse.miner.client.util.gui.element.Margin;
+import name.martingeisse.miner.client.util.gui.element.OverlayStack;
+import name.martingeisse.miner.client.util.gui.element.Sizer;
+import name.martingeisse.miner.client.util.gui.element.Spacer;
+import name.martingeisse.miner.client.util.gui.element.TextParagraph;
+import name.martingeisse.miner.client.util.gui.element.ThinBorder;
+import name.martingeisse.miner.client.util.gui.element.VerticalLayout;
+import name.martingeisse.miner.client.util.gui.util.Color;
+import name.martingeisse.miner.client.util.lwjgl.MouseUtil;
 
 /**
  * The "character details" menu page.

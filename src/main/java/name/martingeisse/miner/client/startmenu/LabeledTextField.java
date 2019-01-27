@@ -6,12 +6,12 @@
 
 package name.martingeisse.miner.client.startmenu;
 
-import name.martingeisse.miner.client.gui.control.Control;
-import name.martingeisse.miner.client.gui.control.TextField;
-import name.martingeisse.miner.client.gui.element.TextLine;
-import name.martingeisse.miner.client.gui.element.VerticalLayout;
-import name.martingeisse.miner.client.gui.util.Color;
-import name.martingeisse.miner.client.gui.util.HorizontalAlignment;
+import name.martingeisse.miner.client.util.gui.control.Control;
+import name.martingeisse.miner.client.util.gui.control.TextField;
+import name.martingeisse.miner.client.util.gui.element.TextLine;
+import name.martingeisse.miner.client.util.gui.element.VerticalLayout;
+import name.martingeisse.miner.client.util.gui.util.Color;
+import name.martingeisse.miner.client.util.gui.util.HorizontalAlignment;
 
 /**
  * A text field with a label.

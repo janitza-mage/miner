@@ -7,9 +7,9 @@
 package name.martingeisse.miner.client.startmenu;
 
 import name.martingeisse.miner.common.Faction;
-import name.martingeisse.miner.client.gui.Gui;
-import name.martingeisse.miner.client.gui.element.Spacer;
-import name.martingeisse.miner.client.gui.element.VerticalLayout;
+import name.martingeisse.miner.client.util.gui.Gui;
+import name.martingeisse.miner.client.util.gui.element.Spacer;
+import name.martingeisse.miner.client.util.gui.element.VerticalLayout;
 
 /**
  * The "choose your faction" menu page.

@@ -8,7 +8,7 @@ package name.martingeisse.miner.client.ingame.network;
 
 import name.martingeisse.miner.client.ingame.IngameHandler;
 import name.martingeisse.miner.client.ingame.player.Player;
-import name.martingeisse.miner.client.frame.AbstractIntervalFrameHandler;
+import name.martingeisse.miner.client.util.frame.AbstractIntervalFrameHandler;
 
 /**
  * This frame handler sends the player's position to the server.

@@ -6,9 +6,9 @@
 
 package name.martingeisse.miner.client.network;
 
-import name.martingeisse.miner.client.engine.CollidingSection;
-import name.martingeisse.miner.client.engine.RenderableSection;
-import name.martingeisse.miner.client.engine.WorldWorkingSet;
+import name.martingeisse.miner.client.ingame.engine.CollidingSection;
+import name.martingeisse.miner.client.ingame.engine.RenderableSection;
+import name.martingeisse.miner.client.ingame.engine.WorldWorkingSet;
 import name.martingeisse.miner.common.collision.CubeArrayClusterCollider;
 import name.martingeisse.miner.common.collision.IAxisAlignedCollider;
 import name.martingeisse.miner.common.cubes.Cubes;

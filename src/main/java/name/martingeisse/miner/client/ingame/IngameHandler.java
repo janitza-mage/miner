@@ -7,11 +7,15 @@
 package name.martingeisse.miner.client.ingame;
 
 import name.martingeisse.miner.client.Main;
-import name.martingeisse.miner.client.frame.AbstractFrameHandler;
-import name.martingeisse.miner.client.frame.BreakFrameLoopException;
-import name.martingeisse.miner.client.frame.handlers.*;
-import name.martingeisse.miner.client.gamegui.GameMenuHandler;
-import name.martingeisse.miner.client.glworker.GlWorkerLoop;
+import name.martingeisse.miner.client.util.frame.AbstractFrameHandler;
+import name.martingeisse.miner.client.util.frame.BreakFrameLoopException;
+import name.martingeisse.miner.client.util.frame.HandlerList;
+import name.martingeisse.miner.client.util.frame.SwappableHandler;
+import name.martingeisse.miner.client.ingame.frame.FlashMessageHandler;
+import name.martingeisse.miner.client.ingame.frame.FpsPanel;
+import name.martingeisse.miner.client.ingame.frame.SelectedCubeHud;
+import name.martingeisse.miner.client.ingame.gui.GameMenuHandler;
+import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
 import name.martingeisse.miner.client.ingame.network.PlayerResumedMessage;
 import name.martingeisse.miner.client.ingame.network.SendPositionToServerHandler;
 import name.martingeisse.miner.client.ingame.player.PlayerProxy;

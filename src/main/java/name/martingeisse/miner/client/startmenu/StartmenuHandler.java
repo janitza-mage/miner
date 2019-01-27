@@ -7,12 +7,12 @@
 package name.martingeisse.miner.client.startmenu;
 
 import name.martingeisse.launcher.assets.LauncherAssets;
-import name.martingeisse.miner.client.frame.BreakFrameLoopException;
-import name.martingeisse.miner.client.frame.handlers.ExitHandler;
-import name.martingeisse.miner.client.frame.handlers.HandlerList;
-import name.martingeisse.miner.client.gui.GuiFrameHandler;
-import name.martingeisse.miner.client.system.FixedWidthFont;
-import name.martingeisse.miner.client.util.ResourceLoader;
+import name.martingeisse.miner.client.util.frame.BreakFrameLoopException;
+import name.martingeisse.miner.client.util.frame.ExitHandler;
+import name.martingeisse.miner.client.util.frame.HandlerList;
+import name.martingeisse.miner.client.util.gui.GuiFrameHandler;
+import name.martingeisse.miner.client.util.lwjgl.FixedWidthFont;
+import name.martingeisse.miner.client.util.lwjgl.ResourceLoader;
 
 /**
  * The handler for the start menu. This menu does not run in parallel with the

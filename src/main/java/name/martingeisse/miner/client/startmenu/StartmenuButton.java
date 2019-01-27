@@ -6,9 +6,9 @@
 
 package name.martingeisse.miner.client.startmenu;
 
-import name.martingeisse.miner.client.gui.control.Button;
-import name.martingeisse.miner.client.gui.element.FillColor;
-import name.martingeisse.miner.client.gui.util.Color;
+import name.martingeisse.miner.client.util.gui.control.Button;
+import name.martingeisse.miner.client.util.gui.element.FillColor;
+import name.martingeisse.miner.client.util.gui.util.Color;
 
 /**
  * A button styled for the start menu.

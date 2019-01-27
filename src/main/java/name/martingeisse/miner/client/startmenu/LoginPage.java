@@ -8,12 +8,9 @@ package name.martingeisse.miner.client.startmenu;
 
 import java.util.prefs.Preferences;
 
-import name.martingeisse.miner.client.gui.Gui;
-import name.martingeisse.miner.client.gui.GuiElement;
-import name.martingeisse.miner.client.gui.control.Button;
-import name.martingeisse.miner.client.gui.element.Grid;
-import name.martingeisse.miner.client.gui.element.Spacer;
-import name.martingeisse.miner.client.gui.element.VerticalLayout;
+import name.martingeisse.miner.client.util.gui.Gui;
+import name.martingeisse.miner.client.util.gui.element.Spacer;
+import name.martingeisse.miner.client.util.gui.element.VerticalLayout;
 import name.martingeisse.miner.client.util.UserVisibleMessageException;
 
 /**

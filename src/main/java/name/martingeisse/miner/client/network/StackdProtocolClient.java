@@ -11,7 +11,7 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import name.martingeisse.miner.client.frame.handlers.FlashMessageHandler;
+import name.martingeisse.miner.client.ingame.frame.FlashMessageHandler;
 import name.martingeisse.miner.client.ingame.IngameHandler;
 import name.martingeisse.miner.client.ingame.network.PlayerResumedMessage;
 import name.martingeisse.miner.client.ingame.player.PlayerProxy;

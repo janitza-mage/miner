@@ -6,11 +6,11 @@
 
 package name.martingeisse.miner.client.tools;
 
-import name.martingeisse.miner.client.frame.AbstractFrameHandler;
-import name.martingeisse.miner.client.frame.BreakFrameLoopException;
-import name.martingeisse.miner.client.frame.FrameLoop;
-import name.martingeisse.miner.client.util.LwjglNativeLibraryHelper;
-import name.martingeisse.miner.client.util.MouseUtil;
+import name.martingeisse.miner.client.util.frame.AbstractFrameHandler;
+import name.martingeisse.miner.client.util.frame.BreakFrameLoopException;
+import name.martingeisse.miner.client.util.frame.FrameLoop;
+import name.martingeisse.miner.client.util.lwjgl.LwjglNativeLibraryHelper;
+import name.martingeisse.miner.client.util.lwjgl.MouseUtil;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;

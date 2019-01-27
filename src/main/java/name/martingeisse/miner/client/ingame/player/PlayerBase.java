@@ -6,7 +6,7 @@
 
 package name.martingeisse.miner.client.ingame.player;
 
-import name.martingeisse.miner.client.engine.WorldWorkingSet;
+import name.martingeisse.miner.client.ingame.engine.WorldWorkingSet;
 import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.miner.common.geometry.angle.MutableEulerAngles;

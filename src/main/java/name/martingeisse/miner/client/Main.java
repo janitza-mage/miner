@@ -6,14 +6,14 @@
 
 package name.martingeisse.miner.client;
 
-import name.martingeisse.miner.client.frame.FrameLoop;
-import name.martingeisse.miner.client.glworker.GlWorkerLoop;
+import name.martingeisse.miner.client.util.frame.FrameLoop;
+import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
 import name.martingeisse.miner.client.ingame.IngameHandler;
 import name.martingeisse.miner.client.ingame.MinerResources;
 import name.martingeisse.miner.client.startmenu.AccountApiClient;
 import name.martingeisse.miner.client.startmenu.StartmenuHandler;
-import name.martingeisse.miner.client.util.LwjglNativeLibraryHelper;
-import name.martingeisse.miner.client.util.MouseUtil;
+import name.martingeisse.miner.client.util.lwjgl.LwjglNativeLibraryHelper;
+import name.martingeisse.miner.client.util.lwjgl.MouseUtil;
 import name.martingeisse.miner.common.task.Task;
 import name.martingeisse.miner.common.task.TaskBarrier;
 import name.martingeisse.miner.common.task.TaskSystem;
