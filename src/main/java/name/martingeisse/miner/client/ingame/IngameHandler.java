@@ -22,7 +22,9 @@ import name.martingeisse.miner.client.util.frame.HandlerList;
 import name.martingeisse.miner.client.util.frame.SwappableHandler;
 import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
 import name.martingeisse.miner.client.util.gui.GuiFrameHandler;
+import name.martingeisse.miner.client.util.gui.control.Page;
 import name.martingeisse.miner.client.util.lwjgl.FixedWidthFont;
+import name.martingeisse.miner.client.util.lwjgl.MouseUtil;
 import name.martingeisse.miner.client.util.lwjgl.ResourceLoader;
 
 import java.util.List;
@@ -70,12 +72,12 @@ public class IngameHandler extends HandlerList {
 	/**
 	 * the gameMenuHandler
 	 */
-	public static GuiFrameHandler gameMenuHandler;
+	private static GuiFrameHandler gameMenuHandler;
 
 	/**
 	 * the ingameMenuHandlerWrapper
 	 */
-	public static SwappableHandler gameMenuHandlerWrapper;
+	private static SwappableHandler gameMenuHandlerWrapper;
 
 	/**
 	 * Constructor.
@@ -171,7 +173,6 @@ public class IngameHandler extends HandlerList {
 			// TODO share resources properly
 			gameMenuHandler = new GuiFrameHandler();
 			gameMenuHandler.getGui().setDefaultFont(new FixedWidthFont(ResourceLoader.loadAwtImage(LauncherAssets.class, "font.png"), 8, 16));
-			gameMenuHandler.getGui().setRootElement(new MainMenuPage());
 		}
 		gameMenuHandlerWrapper = new SwappableHandler();
 		add(gameMenuHandlerWrapper);
@@ -180,6 +181,21 @@ public class IngameHandler extends HandlerList {
 		protocolClient.setFlashMessageHandler(flashMessageHandler);
 		protocolClient.waitUntilReady();
 
+	}
+
+	public static void openGui(Page page) {
+		gameMenuHandlerWrapper.setWrappedHandler(gameMenuHandler);
+		gameMenuHandler.getGui().setRootElement(page);
+		MouseUtil.ungrab();
+	}
+
+	public static void closeGui() {
+		gameMenuHandlerWrapper.setWrappedHandler(null);
+		MouseUtil.grab();
+	}
+
+	public static boolean isGuiOpen() {
+		return gameMenuHandlerWrapper.getWrappedHandler() != null;
 	}
 
 }

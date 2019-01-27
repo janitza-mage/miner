@@ -11,6 +11,7 @@ import name.martingeisse.miner.client.ingame.engine.EngineParameters;
 import name.martingeisse.miner.client.ingame.engine.FrameRenderParameters;
 import name.martingeisse.miner.client.ingame.engine.WorldWorkingSet;
 import name.martingeisse.miner.client.ingame.engine.renderer.DefaultSectionRenderer;
+import name.martingeisse.miner.client.ingame.gui.MainMenuPage;
 import name.martingeisse.miner.client.util.frame.AbstractIntervalFrameHandler;
 import name.martingeisse.miner.client.util.frame.FrameDurationSensor;
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
@@ -286,8 +287,8 @@ public class CubeWorldHandler {
 	 * 
 	 */
 	public void step() {
-		final boolean keysEnabled = IngameHandler.gameMenuHandlerWrapper.getWrappedHandler() == null;
-		final boolean mouseMovementEnabled = IngameHandler.gameMenuHandlerWrapper.getWrappedHandler() == null;
+		final boolean keysEnabled = !IngameHandler.isGuiOpen();
+		final boolean mouseMovementEnabled = !IngameHandler.isGuiOpen();
 
 		// first, handle the stuff that already works without the world being loaded "enough"
 		frameDurationSensor.tick();
@@ -346,8 +347,7 @@ public class CubeWorldHandler {
 		if (keysEnabled) {
 			while (Keyboard.next()) {
 				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE && Keyboard.getEventKeyState()) {
-					IngameHandler.gameMenuHandlerWrapper.setWrappedHandler(IngameHandler.gameMenuHandler);
-					MouseUtil.ungrab();
+					IngameHandler.openGui(new MainMenuPage());
 				}
 			}
 		}

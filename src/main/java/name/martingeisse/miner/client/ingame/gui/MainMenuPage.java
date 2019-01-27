@@ -27,8 +27,7 @@ public class MainMenuPage extends AbstractGameGuiPage {
 		menu.addElement(new GameGuiButton("Resume Game") {
 			@Override
 			protected void onClick() {
-				IngameHandler.gameMenuHandlerWrapper.setWrappedHandler(null);
-				MouseUtil.grab();
+				IngameHandler.closeGui();
 			}
 		});
 		menu.addElement(new Spacer(2 * Gui.GRID));
