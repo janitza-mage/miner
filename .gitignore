@@ -5,6 +5,7 @@
 client.log
 hs_err_pid*.log
 
+/miner.iml
 /common/common.iml
 /common/out
 /common/build
