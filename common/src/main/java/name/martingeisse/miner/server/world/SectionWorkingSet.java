@@ -19,7 +19,7 @@ import name.martingeisse.miner.server.world.entry.SectionCubesCacheEntry;
 import name.martingeisse.miner.server.world.entry.SectionDataCacheEntry;
 import name.martingeisse.miner.server.world.storage.AbstractSectionStorage;
 import org.apache.commons.collections.iterators.ArrayIterator;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -257,7 +257,7 @@ public final class SectionWorkingSet {
 			return new InteractiveSectionImageCacheEntry(this, sectionDataId, null);
 
 		case VIEW_LOD_0:
-			throw new NotImplementedException();
+			throw new NotImplementedException("LOD0 not implemented");
 
 		default:
 			throw new IllegalArgumentException("invalid section data type in: " + sectionDataId);
@@ -284,7 +284,7 @@ public final class SectionWorkingSet {
 			return new InteractiveSectionImageCacheEntry(this, sectionDataId, data);
 
 		case VIEW_LOD_0:
-			throw new NotImplementedException();
+			throw new NotImplementedException("LOD0 not implemented");
 
 		default:
 			throw new IllegalArgumentException("invalid section data type in: " + sectionDataId);
