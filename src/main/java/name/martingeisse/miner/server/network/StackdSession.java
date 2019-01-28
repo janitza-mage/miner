@@ -6,24 +6,27 @@
 
 package name.martingeisse.miner.server.network;
 
+import com.google.common.collect.ImmutableList;
 import name.martingeisse.common.SecurityTokenUtil;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.c2s.*;
-import name.martingeisse.miner.common.network.s2c.FlashMessage;
-import name.martingeisse.miner.common.network.s2c.InteractiveSectionDataResponse;
-import name.martingeisse.miner.common.network.s2c.PlayerResumed;
-import name.martingeisse.miner.common.network.s2c.UpdateCoins;
+import name.martingeisse.miner.common.network.s2c.*;
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.common.section.SectionId;
 import name.martingeisse.miner.server.MinerServerSecurityConstants;
+import name.martingeisse.miner.server.entities.PlayerInventorySlot;
 import name.martingeisse.miner.server.game.DigUtil;
+import name.martingeisse.miner.server.game.ItemType;
 import name.martingeisse.miner.server.game.PlayerAccess;
+import name.martingeisse.miner.server.game.PlayerListener;
 import name.martingeisse.miner.server.world.WorldSubsystem;
 import org.apache.log4j.Logger;
 import org.joda.time.Instant;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -64,7 +67,7 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 			throw new IllegalStateException("cannot select player -- avatar exists (state inconsistent)");
 		}
 		playerAccess = new PlayerAccess(playerId);
-		playerAccess.add(new PlayerAccess.Listener() {
+		playerAccess.add(new PlayerListener() {
 
 			@Override
 			public void onCoinsChanged() {
@@ -74,6 +77,11 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 			@Override
 			public void onFlashMessage(String message) {
 				sendFlashMessage(message);
+			}
+
+			@Override
+			public void onInventoryChanged() {
+				sendInventoryUpdate();
 			}
 
 		});
@@ -143,6 +151,19 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 	 */
 	public void sendCoinsUpdate() {
 		send(new UpdateCoins(playerAccess == null ? 0 : playerAccess.getCoins()));
+	}
+
+	public void sendInventoryUpdate() {
+		if (playerAccess == null) {
+			return;
+		}
+		List<PlayerInventorySlot> slots = playerAccess.getInventoryAccess().listAll();
+		List<UpdateInventory.Element> updateElements = new ArrayList<>();
+		for (PlayerInventorySlot slot : slots) {
+			String name = ItemType.values()[slot.getType()].name();
+			updateElements.add(new UpdateInventory.Element(slot.getId(), name, slot.getQuantity()));
+		}
+		send(new UpdateInventory(ImmutableList.copyOf(updateElements)));
 	}
 
 	@Override

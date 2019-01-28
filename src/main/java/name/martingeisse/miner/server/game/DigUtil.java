@@ -33,6 +33,8 @@ public final class DigUtil {
 
 			case 16:
 				oreFound(playerAccess, "coal", 2);
+				playerAccess.getInventoryAccess().add(ItemType.FOO);
+				playerAccess.sendFlashMessage("inventory item added");
 				break;
 
 			case 10:

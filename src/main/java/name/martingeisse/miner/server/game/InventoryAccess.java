@@ -22,30 +22,30 @@ import java.util.List;
 
 /**
  * Database utility class to deal with players' inventories.
+ *
+ * TODO consider removing the "index" field. I will likely not use it because there is no intrinsic order in items,
+ * and sorting will probably happen client-side only so there is no need to save it to the database.
  */
 public final class InventoryAccess {
 
-	/**
-	 * the playerId
-	 */
+	private final PlayerAccess playerAccess;
 	private final long playerId;
 
 	/**
-	 * Constructor.
-	 *
-	 * @param playerId the ID of the player whose inventory shall be accessed
+	 * You MUST invoke this constructor with the "real" PlayerAccess to make sure the real one gets its listeners
+	 * notified about changes.
 	 */
-	public InventoryAccess(long playerId) {
-		this.playerId = playerId;
+	InventoryAccess(PlayerAccess playerAccess) {
+		this.playerAccess = playerAccess;
+		this.playerId = playerAccess.getId();
 	}
 
-	/**
-	 * Getter method for the playerId.
-	 *
-	 * @return the playerId
-	 */
 	public long getPlayerId() {
 		return playerId;
+	}
+
+	public PlayerAccess getPlayerAccess() {
+		return playerAccess;
 	}
 
 	/**
@@ -75,6 +75,7 @@ public final class InventoryAccess {
 			insert.set(qpis.quantity, quantity);
 			insert.execute();
 		}
+		getPlayerAccess().notifyListeners(PlayerListener::onInventoryChanged);
 	}
 
 	/**
@@ -128,6 +129,7 @@ public final class InventoryAccess {
 			delete.execute();
 			renumber(false);
 		}
+		getPlayerAccess().notifyListeners(PlayerListener::onInventoryChanged);
 	}
 
 	/**
@@ -143,6 +145,7 @@ public final class InventoryAccess {
 			delete.execute();
 			renumber(true);
 		}
+		getPlayerAccess().notifyListeners(PlayerListener::onInventoryChanged);
 	}
 
 	/**
@@ -160,6 +163,7 @@ public final class InventoryAccess {
 			renumber(false);
 			renumber(true);
 		}
+		getPlayerAccess().notifyListeners(PlayerListener::onInventoryChanged);
 	}
 
 	/**
@@ -177,6 +181,7 @@ public final class InventoryAccess {
 			renumber(false);
 			renumber(true);
 		}
+		getPlayerAccess().notifyListeners(PlayerListener::onInventoryChanged);
 	}
 
 	/**

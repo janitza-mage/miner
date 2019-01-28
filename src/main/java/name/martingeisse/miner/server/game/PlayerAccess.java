@@ -7,7 +7,6 @@ package name.martingeisse.miner.server.game;
 import com.querydsl.core.QueryException;
 import com.querydsl.sql.dml.SQLInsertClause;
 import com.querydsl.sql.dml.SQLUpdateClause;
-import io.netty.util.internal.ConcurrentSet;
 import name.martingeisse.miner.common.geometry.angle.EulerAngles;
 import name.martingeisse.miner.common.geometry.vector.Vector3d;
 import name.martingeisse.miner.common.network.Message;
@@ -30,15 +29,20 @@ import java.util.function.Consumer;
 public final class PlayerAccess {
 
 	private final long id;
-	private final ConcurrentMap<Listener, Listener> listeners = new ConcurrentHashMap<>();
+	private final ConcurrentMap<PlayerListener, PlayerListener> listeners = new ConcurrentHashMap<>();
+	private final InventoryAccess inventoryAccess;
 
 	/**
 	 * TODO use repository pattern and prevent multiple instances from being created. Rather, re-use an existing instance.
-	 * @param id
+	 *
+	 * TODO Creating a new instance for the same player also has a bug: the listeners of the original one won't get
+	 * notified. Solve by moving notification to a separate PlayerNotificationHub (or -service) which gets injected
+	 * by Guice.
 	 */
 	public PlayerAccess(long id) {
 		this.id = id;
 		loadPlayerRow();
+		this.inventoryAccess = new InventoryAccess(this);
 	}
 
 	private Player loadPlayerRow() {
@@ -60,21 +64,16 @@ public final class PlayerAccess {
 	// ------------------------------------------------------------------------------------------------------------
 	//
 
-	public interface Listener {
-		void onCoinsChanged();
-		void onFlashMessage(String message);
-	}
-
-	public void add(Listener listener) {
+	public void add(PlayerListener listener) {
 		listeners.put(listener, listener);
 	}
 
-	public void remove(Listener listener) {
+	public void remove(PlayerListener listener) {
 		listeners.remove(listener);
 	}
 
-	private void notifyListeners(Consumer<Listener> function) {
-		for (Listener listener : listeners.keySet()) {
+	void notifyListeners(Consumer<PlayerListener> function) {
+		for (PlayerListener listener : listeners.keySet()) {
 			function.accept(listener);
 		}
 	}
@@ -119,7 +118,7 @@ public final class PlayerAccess {
 			success = (update.execute() > 0);
 		}
 		if (success) {
-			notifyListeners(Listener::onCoinsChanged);
+			notifyListeners(PlayerListener::onCoinsChanged);
 		}
 		return success;
 	}
@@ -132,7 +131,7 @@ public final class PlayerAccess {
 	}
 
 	public InventoryAccess getInventoryAccess() {
-		return new InventoryAccess(id);
+		return inventoryAccess;
 	}
 
 	public void loadAvatar(Avatar avatar) {

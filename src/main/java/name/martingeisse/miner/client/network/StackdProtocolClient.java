@@ -32,6 +32,7 @@ import java.nio.channels.ClosedChannelException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * This class handles the connection to the server. Applications are
@@ -48,6 +49,9 @@ public class StackdProtocolClient {
 	private List<PlayerProxy> updatedPlayerProxies;
 	private PlayerResumedMessage playerResumedMessage;
 	private volatile long coins = 0;
+
+	// TODO move everything to this queue that must be consumed by the game thread
+	private final ConcurrentLinkedQueue<Message> messages = new ConcurrentLinkedQueue<>();
 
 	/**
 	 * Constructor.
@@ -90,6 +94,10 @@ public class StackdProtocolClient {
 		while (!isReady()) {
 			Thread.sleep(10);
 		}
+	}
+
+	public ConcurrentLinkedQueue<Message> getMessages() {
+		return messages;
 	}
 
 	/**
@@ -239,6 +247,8 @@ public class StackdProtocolClient {
 			coins = message.getCoins();
 			logger.info("update coins: " + coins);
 
+		} else if (untypedMessage instanceof UpdateInventory) {
+			messages.add(untypedMessage);
 		} else {
 			logger.error("client received unexpected message: " + untypedMessage);
 		}

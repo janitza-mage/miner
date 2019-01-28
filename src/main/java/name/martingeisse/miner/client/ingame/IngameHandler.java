@@ -6,12 +6,15 @@
 
 package name.martingeisse.miner.client.ingame;
 
+import com.google.common.collect.ImmutableList;
 import name.martingeisse.launcher.assets.LauncherAssets;
 import name.martingeisse.miner.client.Main;
 import name.martingeisse.miner.client.ingame.frame.FlashMessageHandler;
 import name.martingeisse.miner.client.ingame.frame.FpsPanel;
 import name.martingeisse.miner.client.ingame.frame.SelectedCubeHud;
 import name.martingeisse.miner.client.ingame.gui.MainMenuPage;
+import name.martingeisse.miner.client.ingame.logic.Inventory;
+import name.martingeisse.miner.client.ingame.logic.Item;
 import name.martingeisse.miner.client.ingame.network.PlayerResumedMessage;
 import name.martingeisse.miner.client.ingame.network.SendPositionToServerHandler;
 import name.martingeisse.miner.client.ingame.player.PlayerProxy;
@@ -26,13 +29,20 @@ import name.martingeisse.miner.client.util.gui.control.Page;
 import name.martingeisse.miner.client.util.lwjgl.FixedWidthFont;
 import name.martingeisse.miner.client.util.lwjgl.MouseUtil;
 import name.martingeisse.miner.client.util.lwjgl.ResourceLoader;
+import name.martingeisse.miner.common.network.Message;
+import name.martingeisse.miner.common.network.s2c.UpdateInventory;
+import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * The in-game frame handler
  */
 public class IngameHandler extends HandlerList {
+
+	private static Logger logger = Logger.getLogger(IngameHandler.class);
 
 	/**
 	 * the cubeWorldHandler
@@ -164,6 +174,28 @@ public class IngameHandler extends HandlerList {
 					cubeWorldHandler.getPlayer().getOrientation().copyFrom(playerResumedMessage.getOrientation());
 					protocolClient.getSectionGridLoader().setViewerPosition(cubeWorldHandler.getPlayer().getSectionId());
 				}
+				final ConcurrentLinkedQueue<Message> messages = protocolClient.getMessages();
+				while (true) {
+					Message untypedMessage = messages.poll();
+					if (untypedMessage == null) {
+						break;
+					} else if (untypedMessage instanceof UpdateInventory) {
+
+						System.out.println("*** updating inventory");
+
+						UpdateInventory message = (UpdateInventory)untypedMessage;
+						List<Item> items = new ArrayList<>();
+						for (UpdateInventory.Element element : message.getElements()) {
+							items.add(new Item(element.getId() + ": " + element.getName() + " (" + element.getQuantity() + ")"));
+						}
+						Inventory.INSTANCE.setItems(ImmutableList.copyOf(items));
+
+					} else {
+						logger.error("client received unexpected message: " + untypedMessage);
+					}
+
+				}
+
 			}
 		});
 		add(flashMessageHandler);
