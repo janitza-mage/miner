@@ -34,7 +34,7 @@ sourceSets {
 processResources.doFirst {
 	exec {
 		commandLine 'git', 'log', '-n', '1'
-		standardOutput = new FileOutputStream('src/main/resources/version.txt')
+		standardOutput = new FileOutputStream('common/src/main/resources/version.txt')
 	}
 }
 

@@ -7,9 +7,13 @@ hs_err_pid*.log
 
 /common/common.iml
 /common/out
+/common/build
 /client/client.iml
 /client/out
+/client/build
 /server/server.iml
 /server/out
+/server/build
 /all/all.iml
 /all/out
+/all/build
