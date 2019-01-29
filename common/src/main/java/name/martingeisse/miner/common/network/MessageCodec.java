@@ -13,11 +13,14 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import org.apache.log4j.Logger;
 
 /**
  * Netty handler that decodes and encodes between {@link Message}s and raw buffers. Other payloads are ignored.
  */
 public class MessageCodec extends ChannelDuplexHandler {
+
+	private static Logger logger = Logger.getLogger(MessageCodec.class);
 
 	/**
 	 * The number of bytes for the header.
@@ -51,17 +54,22 @@ public class MessageCodec extends ChannelDuplexHandler {
 			ByteBuf buffer = (ByteBuf)payload;
 			buffer.setIndex(2, buffer.capacity());
 			int messageTypeCode = buffer.readUnsignedShort();
+			logger.debug("received message of type: " + messageTypeCode);
 			Message message = MessageTypeRegistry.INSTANCE.decodePacket(messageTypeCode, buffer);
 			buffer.release();
+			logger.debug("message object: " + message);
 			context.fireChannelRead(message);
 		} else {
+			logger.debug("received message: " + payload);
 			context.fireChannelRead(payload);
 		}
 	}
 
 	@Override
 	public void write(ChannelHandlerContext context, Object payload, ChannelPromise promise) throws Exception {
+		logger.debug("sending message: " + payload);
 		if (payload instanceof Message) {
+
 
 			// analyze message
 			Message message = (Message)payload;
