@@ -6,10 +6,10 @@
 
 package name.martingeisse.miner.client.ingame.engine;
 
-import java.util.Arrays;
-import name.martingeisse.miner.client.ingame.engine.renderer.ISectionRenderer;
 import name.martingeisse.miner.client.util.lwjgl.StackdTexture;
 import name.martingeisse.miner.common.cubetype.CubeType;
+
+import java.util.Arrays;
 
 /**
  * Static parameters for the engine, such as various strategies.
@@ -19,7 +19,7 @@ public final class EngineParameters {
 	/**
 	 * the sectionRenderer
 	 */
-	private final ISectionRenderer sectionRenderer;
+	private final SectionRenderer sectionRenderer;
 
 	/**
 	 * the cubeTextures
@@ -37,7 +37,7 @@ public final class EngineParameters {
 	 * @param cubeTextures the cube textures
 	 * @param cubeTypes defines how different cubes behave
 	 */
-	public EngineParameters(final ISectionRenderer sectionRenderer, final StackdTexture[] cubeTextures, final CubeType[] cubeTypes) {
+	public EngineParameters(final SectionRenderer sectionRenderer, final StackdTexture[] cubeTextures, final CubeType[] cubeTypes) {
 		this.sectionRenderer = sectionRenderer;
 		this.cubeTextures = cubeTextures;
 		this.cubeTypes = cubeTypes;
@@ -47,7 +47,7 @@ public final class EngineParameters {
 	 * Getter method for the sectionRenderer.
 	 * @return the sectionRenderer
 	 */
-	public ISectionRenderer getSectionRenderer() {
+	public SectionRenderer getSectionRenderer() {
 		return sectionRenderer;
 	}
 

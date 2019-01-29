@@ -10,7 +10,7 @@ import name.martingeisse.common.util.ThreadUtil;
 import name.martingeisse.miner.client.ingame.engine.EngineParameters;
 import name.martingeisse.miner.client.ingame.engine.FrameRenderParameters;
 import name.martingeisse.miner.client.ingame.engine.WorldWorkingSet;
-import name.martingeisse.miner.client.ingame.engine.renderer.DefaultSectionRenderer;
+import name.martingeisse.miner.client.ingame.engine.SectionRenderer;
 import name.martingeisse.miner.client.ingame.gui.InventoryPage;
 import name.martingeisse.miner.client.ingame.gui.MainMenuPage;
 import name.martingeisse.miner.client.util.frame.AbstractIntervalFrameHandler;
@@ -209,7 +209,7 @@ public class CubeWorldHandler {
 		this.resources = resources;
 
 		// the world
-		final DefaultSectionRenderer sectionRenderer = new DefaultSectionRenderer();
+		final SectionRenderer sectionRenderer = new SectionRenderer();
 		sectionRenderer.prepareForTextures(resources.getCubeTextures());
 		final EngineParameters engineParameters = new EngineParameters(sectionRenderer, resources.getCubeTextures(), CubeTypes.CUBE_TYPES);
 		workingSet = new WorldWorkingSet(engineParameters, Constants.SECTION_SIZE);
@@ -522,7 +522,7 @@ public class CubeWorldHandler {
 		final int playerZ = (int)(Math.floor(player.getPosition().getZ()));
 
 		// set the GL worker loop for the section renderer
-		((DefaultSectionRenderer)workingSet.getEngineParameters().getSectionRenderer()).setGlWorkerLoop(glWorkerLoop);
+		((SectionRenderer)workingSet.getEngineParameters().getSectionRenderer()).setGlWorkerLoop(glWorkerLoop);
 
 		// run preparation code in the OpenGL worker thread
 		glWorkerLoop.schedule(new GlWorkUnit() {
@@ -552,9 +552,9 @@ public class CubeWorldHandler {
 				// some more preparation
 				glDepthFunc(GL_LESS);
 				glEnable(GL_DEPTH_TEST);
-				((DefaultSectionRenderer)workingSet.getEngineParameters().getSectionRenderer()).setWireframe(wireframe);
-				((DefaultSectionRenderer)workingSet.getEngineParameters().getSectionRenderer()).setTexturing(IngameHandler.enableTexturing);
-				((DefaultSectionRenderer)workingSet.getEngineParameters().getSectionRenderer()).setTextureCoordinateGeneration(IngameHandler.enableTexGen);
+				((SectionRenderer)workingSet.getEngineParameters().getSectionRenderer()).setWireframe(wireframe);
+				((SectionRenderer)workingSet.getEngineParameters().getSectionRenderer()).setTexturing(IngameHandler.enableTexturing);
+				((SectionRenderer)workingSet.getEngineParameters().getSectionRenderer()).setTextureCoordinateGeneration(IngameHandler.enableTexGen);
 
 				// scale by the inverse detail factor for drawing the cubes, but prepare for scaling back
 				glPushMatrix();

@@ -6,11 +6,9 @@
 
 package name.martingeisse.miner.client.ingame.engine;
 
-import java.util.Arrays;
 import name.martingeisse.miner.client.ingame.engine.prepare.EmptyWrapPlane;
 import name.martingeisse.miner.client.ingame.engine.prepare.IWrapPlane;
 import name.martingeisse.miner.client.ingame.engine.prepare.MeshBuilder;
-import name.martingeisse.miner.client.ingame.engine.renderer.ISectionRenderer;
 import name.martingeisse.miner.client.util.lwjgl.SystemResourceNode;
 import name.martingeisse.miner.common.cubes.Cubes;
 import name.martingeisse.miner.common.cubetype.CubeType;
@@ -19,6 +17,8 @@ import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.miner.common.geometry.RectangularRegion;
 import name.martingeisse.miner.common.section.SectionId;
 import org.apache.log4j.Logger;
+
+import java.util.Arrays;
 
 /**
  * This class wraps a {@link Cubes} object and augments it with
@@ -143,7 +143,7 @@ public final class RenderableSection {
 	 * 
 	 * @param renderer the section renderer
 	 */
-	public void prepare(final ISectionRenderer renderer) {
+	public void prepare(final SectionRenderer renderer) {
 		if (renderUnits != null) {
 			return;
 		}

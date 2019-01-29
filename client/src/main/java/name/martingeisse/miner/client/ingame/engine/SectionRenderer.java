@@ -4,35 +4,8 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.ingame.engine.renderer;
+package name.martingeisse.miner.client.ingame.engine;
 
-import static org.lwjgl.opengl.GL11.GL_ALPHA_TEST;
-import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
-import static org.lwjgl.opengl.GL11.GL_NOTEQUAL;
-import static org.lwjgl.opengl.GL11.GL_OBJECT_LINEAR;
-import static org.lwjgl.opengl.GL11.GL_OBJECT_PLANE;
-import static org.lwjgl.opengl.GL11.GL_S;
-import static org.lwjgl.opengl.GL11.GL_T;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_GEN_MODE;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_GEN_Q;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_GEN_R;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_GEN_S;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_GEN_T;
-import static org.lwjgl.opengl.GL11.GL_VERTEX_ARRAY;
-import static org.lwjgl.opengl.GL11.glAlphaFunc;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glDepthMask;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glEnableClientState;
-import static org.lwjgl.opengl.GL11.glPolygonMode;
-import static org.lwjgl.opengl.GL11.glTexGeni;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-import name.martingeisse.miner.client.ingame.engine.FrameRenderParameters;
-import name.martingeisse.miner.client.ingame.engine.WorldWorkingSet;
 import name.martingeisse.miner.client.util.glworker.EnumWorkUnits;
 import name.martingeisse.miner.client.util.glworker.FixedSubjectsWorkUnits;
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
@@ -42,11 +15,16 @@ import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.TextureImpl;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+
+import static org.lwjgl.opengl.GL11.*;
+
 /**
- * The default implementation of {@link ISectionRenderer} that
- * supports all features, possibly at a performance cost.
+ * This class is used to actually render sections by passing work units to the GL worker loop.
  */
-public class DefaultSectionRenderer implements ISectionRenderer {
+public class SectionRenderer {
 
 	/**
 	 * the glWorkerLoop
@@ -189,16 +167,16 @@ public class DefaultSectionRenderer implements ISectionRenderer {
 	/**
 	 * Constructor.
 	 */
-	public DefaultSectionRenderer() {
+	public SectionRenderer() {
 		this.sunlightAmbient = 0.6f;
 		this.sunlightDiffuse = 0.4f;
 		setSunlightDirection(2.0f, -1.0f, 0.5f);
 	}
-	
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.client.engine.renderer.ISectionRenderer#getGlWorkerLoop()
+
+	/**
+	 * Getter method for the OpenGL worker loop.
+	 * @return the GL worker loop
 	 */
-	@Override
 	public GlWorkerLoop getGlWorkerLoop() {
 		return glWorkerLoop;
 	}
@@ -342,26 +320,28 @@ public class DefaultSectionRenderer implements ISectionRenderer {
 		};
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.client.engine.renderer.ISectionRenderer#onBeforeRenderWorkingSet(name.martingeisse.stackd.client.engine.WorldWorkingSet, name.martingeisse.stackd.client.engine.FrameRenderParameters)
+	/**
+	 * Called just before drawing the working set.
+	 * @param workingSet the working set being drawn
+	 * @param frameRenderParameters per-frame rendering parameters
 	 */
-	@Override
 	public void onBeforeRenderWorkingSet(final WorldWorkingSet workingSet, final FrameRenderParameters frameRenderParameters) {
 		glWorkerLoop.schedule(preparationWorkUnit);
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.client.engine.renderer.ISectionRenderer#onAfterRenderWorkingSet(name.martingeisse.stackd.client.engine.WorldWorkingSet, name.martingeisse.stackd.client.engine.FrameRenderParameters)
+	/**
+	 * Called just after drawing the working set.
+	 * @param workingSet the working set being drawn
+	 * @param frameRenderParameters per-frame rendering parameters
 	 */
-	@Override
 	public void onAfterRenderWorkingSet(final WorldWorkingSet workingSet, final FrameRenderParameters frameRenderParameters) {
 		glWorkerLoop.schedule(cleanupWorkUnit);
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.client.engine.renderer.ISectionRenderer#prepareForTexture(name.martingeisse.stackd.client.system.StackdTexture)
+	/**
+	 * Prepares for drawing with the specified texture.
+	 * @param texture the texture to work with
 	 */
-	@Override
 	public void prepareForTexture(final StackdTexture texture) {
 		if (texturing) {
 			if (texturePreparationWorkUnits == null) {
@@ -371,10 +351,11 @@ public class DefaultSectionRenderer implements ISectionRenderer {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.client.engine.renderer.ISectionRenderer#prepareForDirection(name.martingeisse.stackd.common.geometry.AxisAlignedDirection)
+	/**
+	 * Prepares for drawing faces that are facing the specified direction.
+	 * This usually configures texture coordinate generation.
+	 * @param direction the direction
 	 */
-	@Override
 	public void prepareForDirection(AxisAlignedDirection direction) {
 		directionPreparationWorkUnits.schedule(glWorkerLoop, direction);
 	}
