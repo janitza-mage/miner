@@ -9,7 +9,6 @@ package name.martingeisse.miner.client.ingame;
 import name.martingeisse.common.util.ThreadUtil;
 import name.martingeisse.miner.client.ingame.engine.EngineParameters;
 import name.martingeisse.miner.client.ingame.engine.FrameRenderParameters;
-import name.martingeisse.miner.client.ingame.engine.SectionRenderer;
 import name.martingeisse.miner.client.ingame.engine.WorldWorkingSet;
 import name.martingeisse.miner.client.ingame.gui.InventoryPage;
 import name.martingeisse.miner.client.ingame.gui.MainMenuPage;
@@ -205,10 +204,9 @@ public class CubeWorldHandler {
 		this.resources = resources;
 
 		// the world
-		final SectionRenderer sectionRenderer = new SectionRenderer();
-		sectionRenderer.prepareForTextures(resources.getCubeTextures());
-		final EngineParameters engineParameters = new EngineParameters(sectionRenderer, resources.getCubeTextures(), CubeTypes.CUBE_TYPES);
+		final EngineParameters engineParameters = new EngineParameters(resources.getCubeTextures(), CubeTypes.CUBE_TYPES);
 		workingSet = new WorldWorkingSet(engineParameters, Constants.SECTION_SIZE);
+		workingSet.getSectionRenderer().prepareForTextures(resources.getCubeTextures());
 
 		// the player
 		player = new Player(workingSet);
@@ -518,7 +516,7 @@ public class CubeWorldHandler {
 		final int playerZ = (int)(Math.floor(player.getPosition().getZ()));
 
 		// set the GL worker loop for the section renderer
-		((SectionRenderer)workingSet.getEngineParameters().getSectionRenderer()).setGlWorkerLoop(glWorkerLoop);
+		workingSet.getSectionRenderer().setGlWorkerLoop(glWorkerLoop);
 
 		// run preparation code in the OpenGL worker thread
 		glWorkerLoop.schedule(new GlWorkUnit() {
@@ -548,7 +546,7 @@ public class CubeWorldHandler {
 				// some more preparation
 				glDepthFunc(GL_LESS);
 				glEnable(GL_DEPTH_TEST);
-				workingSet.getEngineParameters().getSectionRenderer().setWireframe(wireframe);
+				workingSet.getSectionRenderer().setWireframe(wireframe);
 
 				// scale by the inverse detail factor for drawing the cubes, but prepare for scaling back
 				glPushMatrix();

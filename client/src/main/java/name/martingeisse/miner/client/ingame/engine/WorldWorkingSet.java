@@ -6,19 +6,15 @@
 
 package name.martingeisse.miner.client.ingame.engine;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import name.martingeisse.miner.client.util.lwjgl.SystemResourceNode;
 import name.martingeisse.miner.common.collision.CompositeCollider;
 import name.martingeisse.miner.common.collision.IAxisAlignedCollider;
 import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.miner.common.section.SectionId;
 import org.apache.log4j.Logger;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Represents the "working set" (i.e. currently visible sections) of a potentially huge
@@ -34,7 +30,9 @@ public final class WorldWorkingSet {
 	 * the logger
 	 */
 	private static Logger logger = Logger.getLogger(WorldWorkingSet.class);
-	
+
+	private final SectionRenderer sectionRenderer;
+
 	/**
 	 * the engineParameters
 	 */
@@ -86,6 +84,7 @@ public final class WorldWorkingSet {
 	 * @param clusterSize the cluster size
 	 */
 	public WorldWorkingSet(final EngineParameters engineParameters, final ClusterSize clusterSize) {
+		this.sectionRenderer = new SectionRenderer();
 		this.engineParameters = engineParameters;
 		this.systemResourceNode = new SystemResourceNode();
 		this.clusterSize = clusterSize;
@@ -95,6 +94,10 @@ public final class WorldWorkingSet {
 		this.collidingSectionsLoadedQueue = new ConcurrentLinkedQueue<CollidingSection>();
 		this.compositeCollider = new CompositeCollider(collidingSections.values());
 		this.renderUnits = null;
+	}
+
+	public SectionRenderer getSectionRenderer() {
+		return sectionRenderer;
 	}
 
 	/**
@@ -173,7 +176,7 @@ public final class WorldWorkingSet {
 		if (renderUnits == null) {
 			List<RenderUnit> renderUnitList = new ArrayList<>();
 			for (final RenderableSection renderableSection : renderableSections.values()) {
-				renderableSection.prepare(engineParameters.getSectionRenderer());
+				renderableSection.prepare(sectionRenderer);
 				for (RenderUnit renderUnit : renderableSection.getRenderUnits()) {
 					renderUnitList.add(renderUnit);
 				}
@@ -204,11 +207,11 @@ public final class WorldWorkingSet {
 		}
 		
 		// render
-		engineParameters.getSectionRenderer().onBeforeRenderWorkingSet(this, frameRenderParameters);
+		sectionRenderer.onBeforeRenderWorkingSet(this, frameRenderParameters);
 		for (RenderUnit renderUnit : renderUnits) {
-			renderUnit.draw(engineParameters, frameRenderParameters, engineParameters.getSectionRenderer().getGlWorkerLoop());
+			renderUnit.draw(sectionRenderer, engineParameters, frameRenderParameters, sectionRenderer.getGlWorkerLoop());
 		}
-		engineParameters.getSectionRenderer().onAfterRenderWorkingSet(this, frameRenderParameters);
+		sectionRenderer.onAfterRenderWorkingSet(this, frameRenderParameters);
 		
 	}
 

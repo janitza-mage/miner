@@ -12,14 +12,10 @@ import name.martingeisse.miner.common.cubetype.CubeType;
 import java.util.Arrays;
 
 /**
- * Static parameters for the engine, such as various strategies.
+ * Static parameters for the engine, such as various strategies. TODO replace references to this by references to
+ * cube type singletons / injected, then remove this class.
  */
 public final class EngineParameters {
-
-	/**
-	 * the sectionRenderer
-	 */
-	private final SectionRenderer sectionRenderer;
 
 	/**
 	 * the cubeTextures
@@ -33,22 +29,12 @@ public final class EngineParameters {
 
 	/**
 	 * Constructor.
-	 * @param sectionRenderer the renderer for sections
 	 * @param cubeTextures the cube textures
 	 * @param cubeTypes defines how different cubes behave
 	 */
-	public EngineParameters(final SectionRenderer sectionRenderer, final StackdTexture[] cubeTextures, final CubeType[] cubeTypes) {
-		this.sectionRenderer = sectionRenderer;
+	public EngineParameters(final StackdTexture[] cubeTextures, final CubeType[] cubeTypes) {
 		this.cubeTextures = cubeTextures;
 		this.cubeTypes = cubeTypes;
-	}
-
-	/**
-	 * Getter method for the sectionRenderer.
-	 * @return the sectionRenderer
-	 */
-	public SectionRenderer getSectionRenderer() {
-		return sectionRenderer;
 	}
 
 	/**

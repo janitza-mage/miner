@@ -172,7 +172,7 @@ public final class RenderUnit extends GlWorkUnit {
 	 * @param frameRenderParameters the per-frame rendering parameters
 	 * @param glWorkerLoop the GL worker loop to use to schedule GL work units
 	 */
-	public void draw(final EngineParameters engineParameters, final FrameRenderParameters frameRenderParameters, final GlWorkerLoop glWorkerLoop) {
+	public void draw(final SectionRenderer sectionRenderer, final EngineParameters engineParameters, final FrameRenderParameters frameRenderParameters, final GlWorkerLoop glWorkerLoop) {
 
 		// backface culling
 		if (backfaceCullingDirection != null) {
@@ -204,8 +204,8 @@ public final class RenderUnit extends GlWorkUnit {
 
 		// this render unit must actually be drawn
 		// TODO don't set the texture / tex coords twice 
-		engineParameters.getSectionRenderer().prepareForTexture(engineParameters.getCubeTexture(textureIndex));
-		engineParameters.getSectionRenderer().prepareForDirection(textureCoordinateGenerationDirection);
+		sectionRenderer.prepareForTexture(engineParameters.getCubeTexture(textureIndex));
+		sectionRenderer.prepareForDirection(textureCoordinateGenerationDirection);
 		glWorkerLoop.schedule(this);
 
 	}
