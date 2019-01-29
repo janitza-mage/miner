@@ -33,6 +33,7 @@ final class MessageTypeRegistry {
 		register(SingleSectionModificationEvent.class, SingleSectionModificationEvent::decodeBody);
 		register(UpdateCoins.class, UpdateCoins::decodeBody);
 		register(InteractiveSectionDataResponse.class, InteractiveSectionDataResponse::decodeBody);
+		register(UpdateInventory.class, UpdateInventory::decodeBody);
 
 	}
 
