@@ -86,4 +86,9 @@ dependencies {
 	// Cassandra DB
 	compile group: 'com.datastax.cassandra', name: 'cassandra-driver-core', version: '3.6.0'
 
+	// subprojects
+	compile project(':client')
+	compile project(':server')
+	compile project(':common')
+
 }
