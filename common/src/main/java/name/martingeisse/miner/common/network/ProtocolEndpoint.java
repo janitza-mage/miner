@@ -37,7 +37,14 @@ public abstract class ProtocolEndpoint {
 		if (channel == null) {
 			logger.error("trying to send packet while not connected");
 		} else {
-			channel.writeAndFlush(message);
+			// Note: exceptionCaught() is only called for inbound messages. For outbound messages, we have
+			// to add a listener explicitly.
+			channel.writeAndFlush(message).addListener(future -> {
+				if (!future.isSuccess()) {
+					logger.error("exception while sending network message", future.cause());
+				}
+			});
+
 		}
 	}
 
@@ -64,6 +71,7 @@ public abstract class ProtocolEndpoint {
 
 		@Override
 		public void exceptionCaught(ChannelHandlerContext context, Throwable cause) throws Exception {
+			logger.error("unexpected exception in Netty thread", cause);
 			if (context.channel().isActive()) {
 				context.channel().disconnect();
 				logger.error(getClass().getSimpleName() + " got unexpected exception", cause);
