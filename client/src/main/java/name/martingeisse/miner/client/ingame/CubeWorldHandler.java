@@ -9,23 +9,19 @@ package name.martingeisse.miner.client.ingame;
 import name.martingeisse.common.util.ThreadUtil;
 import name.martingeisse.miner.client.ingame.engine.EngineParameters;
 import name.martingeisse.miner.client.ingame.engine.FrameRenderParameters;
-import name.martingeisse.miner.client.ingame.engine.WorldWorkingSet;
 import name.martingeisse.miner.client.ingame.engine.SectionRenderer;
+import name.martingeisse.miner.client.ingame.engine.WorldWorkingSet;
 import name.martingeisse.miner.client.ingame.gui.InventoryPage;
 import name.martingeisse.miner.client.ingame.gui.MainMenuPage;
-import name.martingeisse.miner.client.util.frame.AbstractIntervalFrameHandler;
-import name.martingeisse.miner.client.util.frame.FrameDurationSensor;
-import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
-import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
 import name.martingeisse.miner.client.ingame.player.Player;
 import name.martingeisse.miner.client.ingame.player.PlayerProxy;
 import name.martingeisse.miner.client.ingame.visual.OtherPlayerVisualTemplate;
 import name.martingeisse.miner.client.network.SectionGridLoader;
-import name.martingeisse.miner.client.util.lwjgl.RegularSound;
-import name.martingeisse.miner.client.util.lwjgl.Font;
-import name.martingeisse.miner.client.util.lwjgl.MouseUtil;
-import name.martingeisse.miner.client.util.lwjgl.RayAction;
-import name.martingeisse.miner.client.util.lwjgl.RayActionSupport;
+import name.martingeisse.miner.client.util.frame.AbstractIntervalFrameHandler;
+import name.martingeisse.miner.client.util.frame.FrameDurationSensor;
+import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
+import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
+import name.martingeisse.miner.client.util.lwjgl.*;
 import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
@@ -552,9 +548,7 @@ public class CubeWorldHandler {
 				// some more preparation
 				glDepthFunc(GL_LESS);
 				glEnable(GL_DEPTH_TEST);
-				((SectionRenderer)workingSet.getEngineParameters().getSectionRenderer()).setWireframe(wireframe);
-				((SectionRenderer)workingSet.getEngineParameters().getSectionRenderer()).setTexturing(IngameHandler.enableTexturing);
-				((SectionRenderer)workingSet.getEngineParameters().getSectionRenderer()).setTextureCoordinateGeneration(IngameHandler.enableTexGen);
+				workingSet.getEngineParameters().getSectionRenderer().setWireframe(wireframe);
 
 				// scale by the inverse detail factor for drawing the cubes, but prepare for scaling back
 				glPushMatrix();

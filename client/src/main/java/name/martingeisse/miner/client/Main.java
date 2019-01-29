@@ -88,10 +88,6 @@ public class Main {
 			for (final String arg : args) {
 				if (arg.equals("-fs")) {
 					fullscreen = true;
-				} else if (arg.equals("-ntg")) {
-					IngameHandler.enableTexGen = false;
-				} else if (arg.equals("-nt")) {
-					IngameHandler.enableTexturing = false;
 				} else if (arg.equals("-6")) {
 					screenWidth = 640;
 					screenHeight = 480;

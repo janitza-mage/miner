@@ -60,16 +60,6 @@ public class IngameHandler extends HandlerList {
 	public static String serverName;
 
 	/**
-	 * the enableTexGen
-	 */
-	public static boolean enableTexGen = true;
-
-	/**
-	 * the enableTexturing
-	 */
-	public static boolean enableTexturing = true;
-
-	/**
 	 * the protocolClient
 	 */
 	public static StackdProtocolClient protocolClient;

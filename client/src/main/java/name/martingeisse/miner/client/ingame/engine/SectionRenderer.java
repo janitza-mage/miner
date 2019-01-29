@@ -37,16 +37,6 @@ public class SectionRenderer {
 	private boolean wireframe = false;
 
 	/**
-	 * the textureCoordinateGeneration
-	 */
-	private boolean textureCoordinateGeneration = true;
-	
-	/**
-	 * the texturing
-	 */
-	private boolean texturing = true;
-	
-	/**
 	 * the sunlightDirectionX
 	 */
 	private float sunlightDirectionX;
@@ -91,22 +81,16 @@ public class SectionRenderer {
 			// wireframe or solid polygons
 			glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL11.GL_LINE : GL11.GL_FILL);
 			
-			// texturing or not
-			if (texturing) {
-				TextureImpl.unbind(); // TODO this nonsense alone is a good reason to get rid of Slick textures
-				glEnable(GL_TEXTURE_2D);
-			} else {
-				glDisable(GL_TEXTURE_2D);
-			}
-			
+			// texturing
+			TextureImpl.unbind(); // TODO this nonsense alone is a good reason to get rid of Slick textures
+			glEnable(GL_TEXTURE_2D);
+
 			// texture coordinate generation
-			if (textureCoordinateGeneration) {
-				glEnable(GL_TEXTURE_GEN_S);
-				glEnable(GL_TEXTURE_GEN_T);
-				glDisable(GL_TEXTURE_GEN_Q);
-				glDisable(GL_TEXTURE_GEN_R);
-			}
-			
+			glEnable(GL_TEXTURE_GEN_S);
+			glEnable(GL_TEXTURE_GEN_T);
+			glDisable(GL_TEXTURE_GEN_Q);
+			glDisable(GL_TEXTURE_GEN_R);
+
 			// key color support
 			glEnable(GL_ALPHA_TEST);
 			glAlphaFunc(GL_NOTEQUAL, 0);
@@ -203,38 +187,6 @@ public class SectionRenderer {
 	 */
 	public void setWireframe(final boolean wireframe) {
 		this.wireframe = wireframe;
-	}
-
-	/**
-	 * Getter method for the textureCoordinateGeneration.
-	 * @return the textureCoordinateGeneration
-	 */
-	public boolean isTextureCoordinateGeneration() {
-		return textureCoordinateGeneration;
-	}
-
-	/**
-	 * Setter method for the textureCoordinateGeneration.
-	 * @param textureCoordinateGeneration the textureCoordinateGeneration to set
-	 */
-	public void setTextureCoordinateGeneration(final boolean textureCoordinateGeneration) {
-		this.textureCoordinateGeneration = textureCoordinateGeneration;
-	}
-
-	/**
-	 * Getter method for the texturing.
-	 * @return the texturing
-	 */
-	public boolean isTexturing() {
-		return texturing;
-	}
-
-	/**
-	 * Setter method for the texturing.
-	 * @param texturing the texturing to set
-	 */
-	public void setTexturing(final boolean texturing) {
-		this.texturing = texturing;
 	}
 
 	/**
@@ -343,12 +295,10 @@ public class SectionRenderer {
 	 * @param texture the texture to work with
 	 */
 	public void prepareForTexture(final StackdTexture texture) {
-		if (texturing) {
-			if (texturePreparationWorkUnits == null) {
-				throw new IllegalStateException("textures not prepared");
-			}
-			texturePreparationWorkUnits.schedule(glWorkerLoop, texture);
+		if (texturePreparationWorkUnits == null) {
+			throw new IllegalStateException("textures not prepared");
 		}
+		texturePreparationWorkUnits.schedule(glWorkerLoop, texture);
 	}
 
 	/**
