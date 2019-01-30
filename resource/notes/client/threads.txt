@@ -1,0 +1,18 @@
+
+TODO incomplete, esp. with respect to section loading and also WRT using worker threads
+
+The client uses the following threads:
+
+Game thread: Runs both game logic and high-level drawing operations
+
+OpenGL worker thread: Receives work units from the game thread and executes them. This thread is the only one calling
+OpenGL functions.
+
+Netty threads: React to incoming network messages. TODO document the interaction with other threads, as soon as
+it is well-defined.
+
+---
+
+Startup: To make sure that OpenGL calls work as expected, the initial thread -- the one that calls the main() method --
+becomes the OpenGL worker thread. The game thread is started by that thread manually; Netty worker threads are
+started implicitly by Netty. Worker threads are created by the task system using a thread pool executor.

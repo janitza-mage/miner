@@ -1,0 +1,24 @@
+
+Network messages are received by Netty and handled in Netty threads.
+
+Whenever possible, these threads call into other subsystems directly, triggering asynchronous actions. The result of
+these actions is handled by subsystem threads, e.g. Cassandra response threads.
+
+Sometimes, these threads call into other subsystems directly and trigger blocking actions, e.g. PostgreSQL queries.
+This should be done with care since Netty has a limited amount of threads.
+
+If asynchronous actions are not possible or too complicated, the task system can be used to offload work to worker
+threads. These can then perform blocking actions. It is unclear whether this is actually better than just increasing
+the number of Netty threads.
+
+There is no mechanism that passes network messages to worker threads or thread-safe subsystem queues by default:
+- worker threads must be invoked manually. This is done because we don't want to invoke a worker thread just to
+	trigger an asynchronous action -- this can be done by a Netty thread without any disadvantages. OTOH, passing
+	work to a worker thread causes an additional delay.
+- subsystem queues are pointless because subsystems don't have their "own" threads which could consume those queues.
+	While subsystems can have subsystem-specific threads, those are specialized threads such as those from the
+	Cassandra client and they are not ready to just pull work from subsystem queues.
+
+TODO: Currently, the server also runs an HTTP server which has HTTP handling threads. This part is going to disappear.
+The HTTP services are then provided via Netty and the actions performed by those services will be performed in Netty
+threads.
