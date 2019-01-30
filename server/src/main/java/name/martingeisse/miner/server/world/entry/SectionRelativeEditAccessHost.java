@@ -6,6 +6,7 @@
 
 package name.martingeisse.miner.server.world.entry;
 
+import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.edit.IEditAccessHost;
 import name.martingeisse.miner.common.geometry.RectangularRegion;
 
@@ -33,7 +34,7 @@ final class SectionRelativeEditAccessHost implements IEditAccessHost {
 	 */
 	@Override
 	public boolean containsPosition(int x, int y, int z) {
-		int size = cacheEntry.getClusterSize().getSize();
+		int size = Constants.SECTION_SIZE.getSize();
 		return (x >= 0 && y >= 0 && z >= 0 && x < size && y < size && z < size);
 	}
 
@@ -42,7 +43,7 @@ final class SectionRelativeEditAccessHost implements IEditAccessHost {
 	 */
 	@Override
 	public RectangularRegion getRegion() {
-		int size = cacheEntry.getClusterSize().getSize();
+		int size = Constants.SECTION_SIZE.getSize();
 		return new RectangularRegion(0, 0, 0, size, size, size);
 	}
 	

@@ -10,10 +10,10 @@ import name.martingeisse.miner.client.ingame.engine.prepare.EmptyWrapPlane;
 import name.martingeisse.miner.client.ingame.engine.prepare.IWrapPlane;
 import name.martingeisse.miner.client.ingame.engine.prepare.MeshBuilder;
 import name.martingeisse.miner.client.util.lwjgl.SystemResourceNode;
+import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.cubes.Cubes;
 import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
-import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.miner.common.geometry.RectangularRegion;
 import name.martingeisse.miner.common.section.SectionId;
 import org.apache.log4j.Logger;
@@ -36,11 +36,6 @@ public final class RenderableSection {
 	 * the workingSet
 	 */
 	private final WorldWorkingSet workingSet;
-
-	/**
-	 * the clusterSize
-	 */
-	private final ClusterSize clusterSize;
 
 	/**
 	 * the sectionId
@@ -75,9 +70,8 @@ public final class RenderableSection {
 	 */
 	public RenderableSection(final WorldWorkingSet workingSet, final SectionId sectionId, final Cubes cubes) {
 		this.workingSet = workingSet;
-		this.clusterSize = workingSet.getClusterSize();
 		this.sectionId = sectionId;
-		this.region = new RectangularRegion(sectionId.getX(), sectionId.getY(), sectionId.getZ()).multiply(clusterSize);
+		this.region = new RectangularRegion(sectionId.getX(), sectionId.getY(), sectionId.getZ()).multiply(Constants.SECTION_SIZE);
 		this.cubes = cubes;
 		this.systemResourceNode = null;
 		this.renderUnits = null;
@@ -89,14 +83,6 @@ public final class RenderableSection {
 	 */
 	public WorldWorkingSet getWorkingSet() {
 		return workingSet;
-	}
-
-	/**
-	 * Getter method for the clusterSize.
-	 * @return the clusterSize
-	 */
-	public ClusterSize getClusterSize() {
-		return clusterSize;
 	}
 
 	/**
@@ -167,7 +153,7 @@ public final class RenderableSection {
 	 * @param meshBuilder the mesh builder
 	 */
 	private void buildMesh(MeshBuilder meshBuilder) {
-		int size = clusterSize.getSize();
+		int size = Constants.SECTION_SIZE.getSize();
 		CubeType[] cubeTypes = getWorkingSet().getEngineParameters().getCubeTypes();
 		
 		// build cube faces
@@ -193,7 +179,7 @@ public final class RenderableSection {
 							final int x = direction.selectByAxis(plane, u, v);
 							final int y = direction.selectByAxis(v, plane, u);
 							final int z = direction.selectByAxis(u, v, plane);
-							final int cubeTypeCode = cubes.getCubeRelative(clusterSize, x, y, z) & 0xff;
+							final int cubeTypeCode = cubes.getCubeRelative(Constants.SECTION_SIZE, x, y, z) & 0xff;
 							final CubeType cubeType = cubeTypes[cubeTypeCode];
 							if (cubeTypeCode != 255) {
 								final int textureIndex = cubeType.getCubeFaceTextureIndex(direction);
@@ -203,13 +189,13 @@ public final class RenderableSection {
 										final int nx = x + direction.getSignX();
 										final int ny = y + direction.getSignY();
 										final int nz = z + direction.getSignZ();
-										final int neighborCubeTypeCode = cubes.getCubeRelative(clusterSize, nx, ny, nz) & 0xff;
+										final int neighborCubeTypeCode = cubes.getCubeRelative(Constants.SECTION_SIZE, nx, ny, nz) & 0xff;
 										if (neighborCubeTypeCode == 255) {
 											continue;
 										}
 										neighborCubeType = cubeTypes[neighborCubeTypeCode];
 									} else {
-										neighborCubeType = wrapPlane.getCubeType(clusterSize, direction, u, v, cubeTypes);
+										neighborCubeType = wrapPlane.getCubeType(direction, u, v, cubeTypes);
 									}
 									if (!neighborCubeType.obscuresNeighbor(direction.getOpposite())) {
 										cubeFaceTextureIndexPlane[v * size + u] = (byte)textureIndex;
@@ -309,7 +295,7 @@ public final class RenderableSection {
 		for (int x=0; x<size; x++) {
 			for (int y=0; y<size; y++) {
 				for (int z=0; z<size; z++) {
-					final int cubeTypeCode = cubes.getCubeRelative(clusterSize, x, y, z) & 0xff;
+					final int cubeTypeCode = cubes.getCubeRelative(Constants.SECTION_SIZE, x, y, z) & 0xff;
 					if (cubeTypeCode != 255) {
 						final CubeType cubeType = cubeTypes[cubeTypeCode];
 						final int scaledX = (region.getStartX() + x) << 3;

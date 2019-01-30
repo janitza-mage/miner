@@ -11,7 +11,6 @@ import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.querybuilder.Clause;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
-import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.miner.common.section.SectionDataId;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -43,12 +42,10 @@ public final class CassandraSectionStorage extends AbstractSectionStorage {
 
 	/**
 	 * Constructor.
-	 * @param clusterSize the cluster-size of sections
 	 * @param cassandrasSession the cassandra {@link Session} object used to access the database
 	 * @param tableName the name of the section table
 	 */
-	public CassandraSectionStorage(final ClusterSize clusterSize, final Session cassandrasSession, final String tableName) {
-		super(clusterSize);
+	public CassandraSectionStorage(final Session cassandrasSession, final String tableName) {
 		this.cassandrasSession = cassandrasSession;
 		this.tableName = tableName;
 	}

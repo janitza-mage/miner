@@ -6,7 +6,6 @@
 
 package name.martingeisse.miner.server.world.storage;
 
-import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.miner.common.section.SectionDataId;
 
 import java.util.Collection;
@@ -23,15 +22,7 @@ public final class MemorySectionStorage extends AbstractSectionStorage {
 	/**
 	 * the storageMap
 	 */
-	private final ConcurrentMap<SectionDataId, byte[]> storageMap = new ConcurrentHashMap<SectionDataId, byte[]>();
-
-	/**
-	 * Constructor.
-	 * @param clusterSize the cluster size of sections
-	 */
-	public MemorySectionStorage(final ClusterSize clusterSize) {
-		super(clusterSize);
-	}
+	private final ConcurrentMap<SectionDataId, byte[]> storageMap = new ConcurrentHashMap<>();
 
 	@Override
 	public byte[] loadSectionRelatedObject(final SectionDataId id) {
@@ -40,7 +31,7 @@ public final class MemorySectionStorage extends AbstractSectionStorage {
 
 	@Override
 	public Map<SectionDataId, byte[]> loadSectionRelatedObjects(final Collection<? extends SectionDataId> ids) {
-		final Map<SectionDataId, byte[]> result = new HashMap<SectionDataId, byte[]>();
+		final Map<SectionDataId, byte[]> result = new HashMap<>();
 		for (final SectionDataId id : ids) {
 			result.put(id, storageMap.get(id));
 		}

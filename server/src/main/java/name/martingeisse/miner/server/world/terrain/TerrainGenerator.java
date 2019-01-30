@@ -201,7 +201,7 @@ public final class TerrainGenerator {
 		logger.debug("generating random terrain for section column at " + sectionX + ", " + sectionZ);
 		
 		// some common values
-		final int size = storage.getClusterSize().getSize();
+		final int size = Constants.SECTION_SIZE.getSize();
 		final int baseX = sectionX * size;
 		final int baseZ = sectionZ * size;
 		

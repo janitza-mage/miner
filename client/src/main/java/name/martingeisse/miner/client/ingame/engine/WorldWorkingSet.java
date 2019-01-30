@@ -9,7 +9,6 @@ package name.martingeisse.miner.client.ingame.engine;
 import name.martingeisse.miner.client.util.lwjgl.SystemResourceNode;
 import name.martingeisse.miner.common.collision.CompositeCollider;
 import name.martingeisse.miner.common.collision.IAxisAlignedCollider;
-import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.miner.common.section.SectionId;
 import org.apache.log4j.Logger;
 
@@ -44,11 +43,6 @@ public final class WorldWorkingSet {
 	private final SystemResourceNode systemResourceNode;
 
 	/**
-	 * the clusterSize
-	 */
-	private final ClusterSize clusterSize;
-
-	/**
 	 * the renderableSections
 	 */
 	private final Map<SectionId, RenderableSection> renderableSections;
@@ -81,13 +75,11 @@ public final class WorldWorkingSet {
 	/**
 	 * Constructor.
 	 * @param engineParameters static engine parameters, such as strategies
-	 * @param clusterSize the cluster size
 	 */
-	public WorldWorkingSet(final EngineParameters engineParameters, final ClusterSize clusterSize) {
+	public WorldWorkingSet(final EngineParameters engineParameters) {
 		this.sectionRenderer = new SectionRenderer();
 		this.engineParameters = engineParameters;
 		this.systemResourceNode = new SystemResourceNode();
-		this.clusterSize = clusterSize;
 		this.renderableSections = new HashMap<SectionId, RenderableSection>();
 		this.renderableSectionsLoadedQueue = new ConcurrentLinkedQueue<RenderableSection>();
 		this.collidingSections = new HashMap<SectionId, CollidingSection>();
@@ -114,14 +106,6 @@ public final class WorldWorkingSet {
 	 */
 	public SystemResourceNode getSystemResourceNode() {
 		return systemResourceNode;
-	}
-
-	/**
-	 * Getter method for the clusterSize.
-	 * @return the clusterSize
-	 */
-	public ClusterSize getClusterSize() {
-		return clusterSize;
 	}
 
 	/**

@@ -44,7 +44,7 @@ public final class WorldSubsystem {
 	private final Set<WorldModificationListener> modificationListeners = new HashSet<>();
 
 	public WorldSubsystem() {
-		this.workingSet = new SectionWorkingSet(new CassandraSectionStorage(Constants.SECTION_SIZE, Databases.world, "section_data"));
+		this.workingSet = new SectionWorkingSet(new CassandraSectionStorage(Databases.world, "section_data"));
 		this.jobQueue = new LinkedBlockingQueue<>();
 		this.handleAllJobsTask = new HandleAllJobsTask();
 	}
@@ -175,7 +175,7 @@ public final class WorldSubsystem {
 	 * and digging
 	 */
 	public byte getCube(Vector3i position) {
-		int shiftBits = workingSet.getClusterSize().getShiftBits();
+		int shiftBits = Constants.SECTION_SIZE.getShiftBits();
 		int x = position.x, sectionX = (x >> shiftBits);
 		int y = position.y, sectionY = (y >> shiftBits);
 		int z = position.z, sectionZ = (z >> shiftBits);

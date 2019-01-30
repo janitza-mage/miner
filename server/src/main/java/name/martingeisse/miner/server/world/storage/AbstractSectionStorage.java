@@ -6,37 +6,16 @@
 
 package name.martingeisse.miner.server.world.storage;
 
+import name.martingeisse.miner.common.section.SectionDataId;
+
 import java.util.Collection;
 import java.util.Map;
-import name.martingeisse.miner.common.geometry.ClusterSize;
-import name.martingeisse.miner.common.section.SectionDataId;
 
 /**
  * Base class for section storage implementations that are responsible
  * for actually storing section-related objects.
  */
 public abstract class AbstractSectionStorage {
-
-	/**
-	 * the clusterSize
-	 */
-	private final ClusterSize clusterSize;
-
-	/**
-	 * Constructor.
-	 * @param clusterSize the cluster-size of sections
-	 */
-	public AbstractSectionStorage(final ClusterSize clusterSize) {
-		this.clusterSize = clusterSize;
-	}
-
-	/**
-	 * Getter method for the clusterSize.
-	 * @return the clusterSize
-	 */
-	public final ClusterSize getClusterSize() {
-		return clusterSize;
-	}
 
 	/**
 	 * Loads a single section-related object.

@@ -205,7 +205,7 @@ public class CubeWorldHandler {
 
 		// the world
 		final EngineParameters engineParameters = new EngineParameters(resources.getCubeTextures(), CubeTypes.CUBE_TYPES);
-		workingSet = new WorldWorkingSet(engineParameters, Constants.SECTION_SIZE);
+		workingSet = new WorldWorkingSet(engineParameters);
 		workingSet.getSectionRenderer().prepareForTextures(resources.getCubeTextures());
 
 		// the player

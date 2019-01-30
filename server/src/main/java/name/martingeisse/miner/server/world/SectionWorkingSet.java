@@ -10,9 +10,9 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
+import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.cubes.Cubes;
 import name.martingeisse.miner.common.cubes.UniformCubes;
-import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.server.world.entry.InteractiveSectionImageCacheEntry;
 import name.martingeisse.miner.server.world.entry.SectionCubesCacheEntry;
@@ -81,14 +81,6 @@ public final class SectionWorkingSet {
 			}
 
 		});
-	}
-
-	/**
-	 * Getter method for the clusterSize.
-	 * @return the clusterSize
-	 */
-	public ClusterSize getClusterSize() {
-		return storage.getClusterSize();
 	}
 
 	/**
@@ -276,7 +268,7 @@ public final class SectionWorkingSet {
 		switch (sectionDataId.getType()) {
 
 		case DEFINITIVE: {
-			final Cubes sectionCubes = Cubes.createFromCompressedData(this.getClusterSize(), data);
+			final Cubes sectionCubes = Cubes.createFromCompressedData(Constants.SECTION_SIZE, data);
 			return new SectionCubesCacheEntry(this, sectionDataId, sectionCubes);
 		}
 

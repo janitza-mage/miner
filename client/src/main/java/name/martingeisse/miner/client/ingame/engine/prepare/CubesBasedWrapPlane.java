@@ -6,10 +6,10 @@
 
 package name.martingeisse.miner.client.ingame.engine.prepare;
 
+import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.cubes.Cubes;
 import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
-import name.martingeisse.miner.common.geometry.ClusterSize;
 
 /**
  * {@link IWrapPlane} implementation based on the {@link Cubes}
@@ -17,33 +17,26 @@ import name.martingeisse.miner.common.geometry.ClusterSize;
  */
 public abstract class CubesBasedWrapPlane implements IWrapPlane {
 
-	/**
-	 * the cubes
-	 */
 	private Cubes cubes;
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.common.rendermodel.builder.ISectionRenderModelBuilderWrapPlane#getCubeType(name.martingeisse.stackd.common.geometry.ClusterSize, name.martingeisse.stackd.common.geometry.AxisAlignedDirection, int, int, name.martingeisse.stackd.common.cubetype.CubeType[])
-	 */
 	@Override
-	public CubeType getCubeType(ClusterSize clusterSize, AxisAlignedDirection direction, int u, int v, CubeType[] cubeTypes) {
+	public CubeType getCubeType(AxisAlignedDirection direction, int u, int v, CubeType[] cubeTypes) {
 		if (cubes == null) {
-			cubes = fetchCubes(clusterSize, direction);
+			cubes = fetchCubes(direction);
 		}
-		final int plane = (direction.isNegative() ? clusterSize.getSize() - 1 : 0);
+		final int plane = (direction.isNegative() ? Constants.SECTION_SIZE.getSize() - 1 : 0);
 		final int x = direction.selectByAxis(plane, u, v);
 		final int y = direction.selectByAxis(v, plane, u);
 		final int z = direction.selectByAxis(u, v, plane);
-		final int cubeTypeCode = (cubes.getCubeRelative(clusterSize, x, y, z) & 0xff);
+		final int cubeTypeCode = (cubes.getCubeRelative(Constants.SECTION_SIZE, x, y, z) & 0xff);
 		return cubeTypes[cubeTypeCode];
 	}
 	
 	/**
 	 * Fetches the {@link Cubes} for the neighbor section.
-	 * @param clusterSize the cluster size
 	 * @param direction the direction that points from the current section to the neighbor section
 	 * @return the cubes
 	 */
-	protected abstract Cubes fetchCubes(ClusterSize clusterSize, AxisAlignedDirection direction);
+	protected abstract Cubes fetchCubes(AxisAlignedDirection direction);
 	
 }

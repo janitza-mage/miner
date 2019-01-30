@@ -6,8 +6,8 @@
 
 package name.martingeisse.miner.client.ingame.engine;
 
+import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.collision.IAxisAlignedCollider;
-import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.miner.common.geometry.RectangularRegion;
 import name.martingeisse.miner.common.section.SectionId;
 
@@ -21,11 +21,6 @@ public final class CollidingSection implements IAxisAlignedCollider {
 	 * the workingSet
 	 */
 	private final WorldWorkingSet workingSet;
-
-	/**
-	 * the clusterSize
-	 */
-	private final ClusterSize clusterSize;
 
 	/**
 	 * the sectionId
@@ -50,9 +45,8 @@ public final class CollidingSection implements IAxisAlignedCollider {
 	 */
 	public CollidingSection(final WorldWorkingSet workingSet, final SectionId sectionId, final IAxisAlignedCollider collider) {
 		this.workingSet = workingSet;
-		this.clusterSize = workingSet.getClusterSize();
 		this.sectionId = sectionId;
-		this.region = new RectangularRegion(sectionId.getX(), sectionId.getY(), sectionId.getZ()).multiply(clusterSize);
+		this.region = new RectangularRegion(sectionId.getX(), sectionId.getY(), sectionId.getZ()).multiply(Constants.SECTION_SIZE);
 		this.collider = collider;
 	}
 
@@ -62,14 +56,6 @@ public final class CollidingSection implements IAxisAlignedCollider {
 	 */
 	public WorldWorkingSet getWorkingSet() {
 		return workingSet;
-	}
-
-	/**
-	 * Getter method for the clusterSize.
-	 * @return the clusterSize
-	 */
-	public ClusterSize getClusterSize() {
-		return clusterSize;
 	}
 
 	/**

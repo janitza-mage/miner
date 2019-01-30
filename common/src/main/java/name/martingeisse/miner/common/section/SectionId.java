@@ -9,7 +9,6 @@ package name.martingeisse.miner.common.section;
 import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
-import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.miner.common.geometry.vector.ReadableVector3d;
 import name.martingeisse.miner.common.geometry.vector.ReadableVector3i;
 import name.martingeisse.miner.common.geometry.vector.Vector3i;

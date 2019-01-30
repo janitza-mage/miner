@@ -9,15 +9,15 @@ package name.martingeisse.miner.client.ingame.network;
 import name.martingeisse.miner.client.ingame.engine.CollidingSection;
 import name.martingeisse.miner.client.ingame.engine.RenderableSection;
 import name.martingeisse.miner.client.ingame.engine.WorldWorkingSet;
+import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.collision.CubeArrayClusterCollider;
 import name.martingeisse.miner.common.collision.IAxisAlignedCollider;
 import name.martingeisse.miner.common.cubes.Cubes;
 import name.martingeisse.miner.common.cubetype.CubeType;
-import name.martingeisse.miner.common.geometry.ClusterSize;
-import name.martingeisse.miner.common.section.SectionId;
 import name.martingeisse.miner.common.network.c2s.InteractiveSectionDataRequest;
 import name.martingeisse.miner.common.network.s2c.InteractiveSectionDataResponse;
 import name.martingeisse.miner.common.network.s2c.SingleSectionModificationEvent;
+import name.martingeisse.miner.common.section.SectionId;
 import name.martingeisse.miner.common.task.Task;
 import org.apache.log4j.Logger;
 
@@ -193,7 +193,7 @@ public final class SectionGridLoader {
 		final SectionId sectionId = response.getSectionId();
 		logger.debug("received interactive section image for section " + sectionId);
 		byte[] data = response.getData();
-		final Cubes cubes = Cubes.createFromCompressedData(workingSet.getClusterSize(), data);
+		final Cubes cubes = Cubes.createFromCompressedData(Constants.SECTION_SIZE, data);
 		logger.debug("created Cubes instance for section " + sectionId);
 		
 		// add a renderable section
@@ -208,18 +208,17 @@ public final class SectionGridLoader {
 				@Override
 				public void run() {
 					logger.debug("building collider for section " + sectionId);
-					ClusterSize clusterSize = workingSet.getClusterSize();
 					CubeType[] cubeTypes = workingSet.getEngineParameters().getCubeTypes();
-					int size = clusterSize.getSize();
+					int size = Constants.SECTION_SIZE.getSize();
 					byte[] colliderCubes = new byte[size * size * size];
 					for (int x=0; x<size; x++) {
 						for (int y=0; y<size; y++) {
 							for (int z=0; z<size; z++) {
-								colliderCubes[x * size * size + y * size + z] = cubes.getCubeRelative(clusterSize, x, y, z);
+								colliderCubes[x * size * size + y * size + z] = cubes.getCubeRelative(Constants.SECTION_SIZE, x, y, z);
 							}
 						}
 					}
-					final IAxisAlignedCollider collider = new CubeArrayClusterCollider(clusterSize, sectionId, colliderCubes, cubeTypes);
+					final IAxisAlignedCollider collider = new CubeArrayClusterCollider(Constants.SECTION_SIZE, sectionId, colliderCubes, cubeTypes);
 					final CollidingSection collidingSection = new CollidingSection(workingSet, sectionId, collider);
 					workingSet.getCollidingSectionsLoadedQueue().add(collidingSection);
 					logger.debug("collider registered for section " + sectionId);

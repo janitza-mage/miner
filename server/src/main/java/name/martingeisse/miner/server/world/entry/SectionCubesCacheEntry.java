@@ -6,25 +6,20 @@
 
 package name.martingeisse.miner.server.world.entry;
 
+import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.cubes.Cubes;
 import name.martingeisse.miner.common.edit.EditAccess;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
-import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.miner.common.geometry.RectangularRegion;
-import name.martingeisse.miner.common.section.SectionId;
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
+import name.martingeisse.miner.common.section.SectionId;
 import name.martingeisse.miner.server.world.SectionWorkingSet;
 
 /**
  * A section cache entry for the section data.
  */
 public final class SectionCubesCacheEntry extends SectionDataCacheEntry {
-
-	/**
-	 * the clusterSize
-	 */
-	private final ClusterSize clusterSize;
 
 	/**
 	 * the region
@@ -45,17 +40,8 @@ public final class SectionCubesCacheEntry extends SectionDataCacheEntry {
 	public SectionCubesCacheEntry(final SectionWorkingSet sectionWorkingSet, final SectionDataId sectionDataId, final Cubes sectionCubes) {
 		super(sectionWorkingSet, sectionDataId);
 		SectionId sectionId = sectionDataId.getSectionId();
-		this.clusterSize = sectionWorkingSet.getClusterSize();
-		this.region = new RectangularRegion(sectionId.getX(), sectionId.getY(), sectionId.getZ()).multiply(clusterSize);
+		this.region = new RectangularRegion(sectionId.getX(), sectionId.getY(), sectionId.getZ()).multiply(Constants.SECTION_SIZE);
 		this.sectionCubes = sectionCubes;
-	}
-
-	/**
-	 * Getter method for the clusterSize.
-	 * @return the clusterSize
-	 */
-	public ClusterSize getClusterSize() {
-		return clusterSize;
 	}
 
 	/**
@@ -79,7 +65,7 @@ public final class SectionCubesCacheEntry extends SectionDataCacheEntry {
 	 */
 	@Override
 	protected byte[] serializeForSave() {
-		return sectionCubes.compressToByteArray(getSectionWorkingSet().getClusterSize());
+		return sectionCubes.compressToByteArray(Constants.SECTION_SIZE);
 	}
 
 	/**
@@ -103,7 +89,7 @@ public final class SectionCubesCacheEntry extends SectionDataCacheEntry {
 	 * @return the cube value
 	 */
 	public final byte getCubeRelative(final int x, final int y, final int z) {
-		return sectionCubes.getCubeRelative(clusterSize, x, y, z);
+		return sectionCubes.getCubeRelative(Constants.SECTION_SIZE, x, y, z);
 	}
 
 	/**
@@ -127,7 +113,7 @@ public final class SectionCubesCacheEntry extends SectionDataCacheEntry {
 	 * @param value the cube value to set
 	 */
 	public final void setCubeRelative(final int x, final int y, final int z, final byte value) {
-		this.sectionCubes = sectionCubes.setCubeRelative(clusterSize, x, y, z, value);
+		this.sectionCubes = sectionCubes.setCubeRelative(Constants.SECTION_SIZE, x, y, z, value);
 		markCubeModifiedRelative(x, y, z);
 	}
 
@@ -158,7 +144,7 @@ public final class SectionCubesCacheEntry extends SectionDataCacheEntry {
 		
 		// mark neighbor sections modified if this cube is on the border
 		SectionDataId sectionDataId = getSectionDataId();
-		for (AxisAlignedDirection neighborDirection : clusterSize.getBorderDirections(x, y, z)) {
+		for (AxisAlignedDirection neighborDirection : Constants.SECTION_SIZE.getBorderDirections(x, y, z)) {
 			// TODO there should be a way to do this without loading the to-be-invalidated object from storage
 			
 			SectionDataId neighborInteractiveDataId = sectionDataId.getNeighbor(neighborDirection, SectionDataType.INTERACTIVE);

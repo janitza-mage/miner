@@ -6,11 +6,11 @@
 
 package name.martingeisse.miner.server.world.entry;
 
+import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.cubes.Cubes;
 import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
-import name.martingeisse.miner.common.geometry.ClusterSize;
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.server.world.SectionWorkingSet;
@@ -51,8 +51,7 @@ public final class InteractiveSectionImageCacheEntry extends SectionDataCacheEnt
 			SectionCubesCacheEntry definitiveEntry = (SectionCubesCacheEntry)workingSet.get(cubeDataId);
 			Cubes originalCubes = definitiveEntry.getSectionCubes();
 			Cubes clonedCubes = originalCubes.clone();
-			ClusterSize clusterSize = workingSet.getClusterSize();
-			int size = clusterSize.getSize();
+			int size = Constants.SECTION_SIZE.getSize();
 			CubeType[] cubeTypes = CubeTypes.CUBE_TYPES;
 			AxisAlignedDirection[] directions = AxisAlignedDirection.values();
 			for (int x=0; x<size; x++) {
@@ -70,20 +69,20 @@ public final class InteractiveSectionImageCacheEntry extends SectionDataCacheEnt
 								SectionDataId neighborCubeDataId = cubeDataId.getNeighbor(direction);
 								SectionCubesCacheEntry neighborEntry = (SectionCubesCacheEntry)workingSet.get(neighborCubeDataId);
 								Cubes neighborCubes = neighborEntry.getSectionCubes();
-								neighborCubeType = cubeTypes[neighborCubes.getCubeRelative(clusterSize, x2, y2, z2) & 0xff];
+								neighborCubeType = cubeTypes[neighborCubes.getCubeRelative(Constants.SECTION_SIZE, x2, y2, z2) & 0xff];
 							} else {
-								neighborCubeType = cubeTypes[originalCubes.getCubeRelative(clusterSize, x2, y2, z2) & 0xff];
+								neighborCubeType = cubeTypes[originalCubes.getCubeRelative(Constants.SECTION_SIZE, x2, y2, z2) & 0xff];
 							}
 							AxisAlignedDirection directionTowardsOriginal = direction.getOpposite();
 							if (!neighborCubeType.obscuresNeighbor(directionTowardsOriginal) || !neighborCubeType.blocksMovementToNeighbor(directionTowardsOriginal)) {
 								continue zloop;
 							}
 						}
-						clonedCubes = clonedCubes.setCubeRelative(clusterSize, x, y, z, (byte)255);
+						clonedCubes = clonedCubes.setCubeRelative(Constants.SECTION_SIZE, x, y, z, (byte)255);
 					}
 				}
 			}
-			this.imageData = clonedCubes.compressToByteArray(workingSet.getClusterSize());
+			this.imageData = clonedCubes.compressToByteArray(Constants.SECTION_SIZE);
 			markModified();
 		}
 		return imageData;
