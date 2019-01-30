@@ -8,36 +8,52 @@ package name.martingeisse.miner.client.network;
 
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.ProtocolEndpoint;
+import org.apache.log4j.Logger;
+
+import java.nio.channels.ClosedChannelException;
 
 /**
  *
  */
-final class ClientEndpoint extends ProtocolEndpoint {
+final class ClientEndpoint extends ProtocolEndpoint implements MessageSender {
 
-	private final StackdProtocolClient protocolClient;
+	private static Logger logger = Logger.getLogger(ClientEndpoint.class);
 
-	public ClientEndpoint(StackdProtocolClient protocolClient) {
-		this.protocolClient = protocolClient;
+	private final MessageConsumer messageConsumer;
+
+	public ClientEndpoint(MessageConsumer messageConsumer) {
+		this.messageConsumer = messageConsumer;
 	}
 
 	@Override
 	protected void onConnect() {
-		protocolClient.setEndpoint(this);
+		messageConsumer.setMessageSender(this);
 	}
 
 	@Override
 	protected void onDisconnect() {
-		protocolClient.setEndpoint(null);
+		messageConsumer.setMessageSender(null);
 	}
 
 	@Override
-	protected void onDisconnectAfterException(Throwable t) {
-		protocolClient.onException(t);
+	protected void onDisconnectAfterException(Throwable originalException) {
+		// should handle this more gracefully in the future
+		Throwable t = originalException;
+		while (true) {
+			if (t instanceof ClosedChannelException) {
+				logger.error("lost connection to server");
+				System.exit(0);
+			}
+			if (t.getCause() == t || t.getCause() == null) {
+				throw new RuntimeException(originalException);
+			}
+			t = t.getCause();
+		}
 	}
 
 	@Override
 	protected void onMessage(Message message) {
-		protocolClient.onMessageReceived(message);
+		messageConsumer.consume(message);
 	}
 
 }

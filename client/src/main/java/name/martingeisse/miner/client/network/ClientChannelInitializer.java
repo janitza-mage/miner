@@ -12,15 +12,15 @@ import name.martingeisse.miner.common.network.ProtocolChannelInitializer;
  */
 public final class ClientChannelInitializer extends ProtocolChannelInitializer {
 
-	private final StackdProtocolClient protocolClient;
+	private final MessageConsumer messageConsumer;
 
-	public ClientChannelInitializer(StackdProtocolClient protocolClient) {
-		this.protocolClient = protocolClient;
+	public ClientChannelInitializer(MessageConsumer messageConsumer) {
+		this.messageConsumer = messageConsumer;
 	}
 
 	@Override
 	protected ProtocolEndpoint createProtocolEndpoint() {
-		return new ClientEndpoint(protocolClient);
+		return new ClientEndpoint(messageConsumer);
 	}
 
 }

@@ -15,7 +15,7 @@ import name.martingeisse.miner.client.ingame.gui.MainMenuPage;
 import name.martingeisse.miner.client.ingame.player.Player;
 import name.martingeisse.miner.client.ingame.player.PlayerProxy;
 import name.martingeisse.miner.client.ingame.visual.OtherPlayerVisualTemplate;
-import name.martingeisse.miner.client.network.SectionGridLoader;
+import name.martingeisse.miner.client.ingame.network.SectionGridLoader;
 import name.martingeisse.miner.client.util.frame.AbstractIntervalFrameHandler;
 import name.martingeisse.miner.client.util.frame.FrameDurationSensor;
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;

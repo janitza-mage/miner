@@ -4,17 +4,19 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.network;
+package name.martingeisse.miner.client.ingame.network;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import name.martingeisse.miner.client.ingame.frame.FlashMessageHandler;
 import name.martingeisse.miner.client.ingame.IngameHandler;
-import name.martingeisse.miner.client.ingame.network.PlayerResumedMessage;
+import name.martingeisse.miner.client.ingame.frame.FlashMessageHandler;
 import name.martingeisse.miner.client.ingame.player.PlayerProxy;
+import name.martingeisse.miner.client.network.ClientChannelInitializer;
+import name.martingeisse.miner.client.network.MessageConsumer;
+import name.martingeisse.miner.client.network.MessageSender;
 import name.martingeisse.miner.client.startmenu.AccountApiClient;
 import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.geometry.angle.ReadableEulerAngles;
@@ -28,7 +30,6 @@ import name.martingeisse.miner.common.network.s2c.*;
 import org.apache.log4j.Logger;
 
 import java.net.InetSocketAddress;
-import java.nio.channels.ClosedChannelException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +40,11 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * free to create subclasses that add application-specific message
  * types.
  */
-public class StackdProtocolClient {
+public class StackdProtocolClient implements MessageConsumer {
 
 	private static Logger logger = Logger.getLogger(StackdProtocolClient.class);
 
-	private ClientEndpoint endpoint;
+	private MessageSender messageSender;
 	private FlashMessageHandler flashMessageHandler;
 	private SectionGridLoader sectionGridLoader;
 	private List<PlayerProxy> updatedPlayerProxies;
@@ -71,9 +72,9 @@ public class StackdProtocolClient {
 		bootstrap.connect(new InetSocketAddress(host, port));
 	}
 
-	public void setEndpoint(ClientEndpoint endpoint) {
-		this.endpoint = endpoint;
-		if (endpoint != null) {
+	public void setMessageSender(MessageSender messageSender) {
+		this.messageSender = messageSender;
+		if (messageSender != null) {
 			send(new ResumePlayer(AccountApiClient.getInstance().getPlayerAccessToken().getBytes(StandardCharsets.UTF_8)));
 		}
 	}
@@ -82,7 +83,7 @@ public class StackdProtocolClient {
 	 * @return true if ready, false if still connecting
 	 */
 	public final boolean isReady() {
-		return (endpoint != null);
+		return (messageSender != null);
 	}
 
 	/**
@@ -137,7 +138,7 @@ public class StackdProtocolClient {
 	}
 
 	public final void send(Message message) {
-		endpoint.send(message);
+		messageSender.send(message);
 	}
 
 	/**
@@ -152,29 +153,6 @@ public class StackdProtocolClient {
 			// TODO: this happens in another thread, posibly causing a ConcurrentModificationException
 			// -> use a concurrent queue for *all* messages including flash messages!
 			flashMessageHandler.addMessage(message);
-		}
-	}
-
-	/**
-	 * Invoked when the networking code throws an exception.
-	 * <p>
-	 * NOTE: This method gets invoked by the Netty thread, asynchronous
-	 * to the main game thread!
-	 *
-	 * @param e the exception
-	 */
-	protected void onException(Throwable e) {
-		// should handle this more gracefully in the future
-		Throwable t = e;
-		while (true) {
-			if (t instanceof ClosedChannelException) {
-				logger.error("lost connection to server");
-				System.exit(0);
-			}
-			if (t.getCause() == t || t.getCause() == null) {
-				throw new RuntimeException(e);
-			}
-			t = t.getCause();
 		}
 	}
 
@@ -195,7 +173,7 @@ public class StackdProtocolClient {
 	 * NOTE: This method gets invoked by the Netty thread, asynchronous
 	 * to the main game thread!
 	 */
-	protected void onMessageReceived(Message untypedMessage) {
+	public void consume(Message untypedMessage) {
 		if (untypedMessage instanceof FlashMessage) {
 
 			FlashMessage message = (FlashMessage) untypedMessage;
