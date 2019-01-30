@@ -15,7 +15,7 @@ import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.common.section.SectionId;
 import name.martingeisse.miner.server.MinerServerSecurityConstants;
-import name.martingeisse.miner.server.entities.PlayerInventorySlot;
+import name.martingeisse.miner.server.postgres_entities.PlayerInventorySlotRow;
 import name.martingeisse.miner.server.game.DigUtil;
 import name.martingeisse.miner.server.game.ItemType;
 import name.martingeisse.miner.server.game.PlayerAccess;
@@ -157,11 +157,10 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 		if (playerAccess == null) {
 			return;
 		}
-		List<PlayerInventorySlot> slots = playerAccess.getInventoryAccess().listAll();
+		List<PlayerInventorySlotRow> slots = playerAccess.getInventoryAccess().listAll();
 		List<UpdateInventory.Element> updateElements = new ArrayList<>();
-		for (PlayerInventorySlot slot : slots) {
-			String name = ItemType.values()[slot.getType()].name();
-			updateElements.add(new UpdateInventory.Element(slot.getId(), name, slot.getQuantity()));
+		for (PlayerInventorySlotRow slot : slots) {
+			updateElements.add(new UpdateInventory.Element(slot.getId(), slot.getType(), slot.getQuantity()));
 		}
 		send(new UpdateInventory(ImmutableList.copyOf(updateElements)));
 	}

@@ -11,9 +11,9 @@ import name.martingeisse.common.SecurityTokenUtil;
 import name.martingeisse.common.javascript.analyze.JsonAnalyzer;
 import name.martingeisse.miner.server.Databases;
 import name.martingeisse.miner.server.MinerServerSecurityConstants;
-import name.martingeisse.miner.server.entities.Player;
-import name.martingeisse.miner.server.entities.QPlayer;
-import name.martingeisse.miner.server.entities.UserAccount;
+import name.martingeisse.miner.server.postgres_entities.PlayerRow;
+import name.martingeisse.miner.server.postgres_entities.QPlayerRow;
+import name.martingeisse.miner.server.postgres_entities.UserAccountRow;
 import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
 import org.joda.time.Instant;
 
@@ -55,11 +55,11 @@ final class AccountApiUtil {
 	 * @param userAccount the user's account
 	 * @return the player
 	 */
-	public static Player fetchPlayer(JsonAnalyzer input, UserAccount userAccount) {
+	public static PlayerRow fetchPlayer(JsonAnalyzer input, UserAccountRow userAccount) {
 		final long playerId = input.analyzeMapElement("playerId").expectLong();
-		final QPlayer qp = QPlayer.Player;
+		final QPlayerRow qp = QPlayerRow.Player;
 		try (PostgresConnection connection = Databases.main.newConnection()) {
-			Player player = connection.query().select(qp).from(qp).where(qp.id.eq(playerId), qp.userAccountId.eq(userAccount.getId()), qp.deleted.isFalse()).fetchOne();
+			PlayerRow player = connection.query().select(qp).from(qp).where(qp.id.eq(playerId), qp.userAccountId.eq(userAccount.getId()), qp.deleted.isFalse()).fetchOne();
 			if (player == null) {
 				throw new JsonApiException(1, "player not found");
 			}

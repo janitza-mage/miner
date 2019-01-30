@@ -10,8 +10,8 @@ import name.martingeisse.api.request.ApiRequestCycle;
 import name.martingeisse.common.javascript.analyze.JsonAnalyzer;
 import name.martingeisse.common.javascript.jsonbuilder.JsonObjectBuilder;
 import name.martingeisse.common.javascript.jsonbuilder.JsonValueBuilder;
-import name.martingeisse.miner.server.entities.Player;
-import name.martingeisse.miner.server.entities.UserAccount;
+import name.martingeisse.miner.server.postgres_entities.PlayerRow;
+import name.martingeisse.miner.server.postgres_entities.UserAccountRow;
 
 /**
  * This handler creates a player access token for one of the logged-in
@@ -23,8 +23,8 @@ public final class AccessPlayerHandler extends AbstractLoggedInHandler {
 	 * @see name.martingeisse.miner.server.api.account.AbstractLoggedInHandler#handle(name.martingeisse.api.request.RequestCycle, name.martingeisse.common.javascript.analyze.JsonAnalyzer, name.martingeisse.common.javascript.jsonbuilder.JsonValueBuilder, name.martingeisse.webide.entity.UserAccount)
 	 */
 	@Override
-	protected void handle(ApiRequestCycle requestCycle, JsonAnalyzer input, JsonValueBuilder<?> output, UserAccount userAccount) throws Exception {
-		Player player = AccountApiUtil.fetchPlayer(input, userAccount);
+	protected void handle(ApiRequestCycle requestCycle, JsonAnalyzer input, JsonValueBuilder<?> output, UserAccountRow userAccount) throws Exception {
+		PlayerRow player = AccountApiUtil.fetchPlayer(input, userAccount);
 		String token = AccountApiUtil.createPlayerAccessToken(player.getId());
 		JsonObjectBuilder<?> objectBuilder = output.object();
 		objectBuilder.property("playerAccessToken").string(token);

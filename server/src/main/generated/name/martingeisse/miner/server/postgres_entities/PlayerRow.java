@@ -1,19 +1,21 @@
 /*
  * This file was generated from the database schema.
  */
-package name.martingeisse.miner.server.entities;
+package name.martingeisse.miner.server.postgres_entities;
 
+import com.querydsl.sql.dml.SQLInsertClause;
+import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
 import java.io.Serializable;
 
 /**
  * This class represents rows from table 'Player'.
  */
-public class Player implements Serializable {
+public class PlayerRow implements Serializable {
 
     /**
      * Constructor.
      */
-    public Player() {
+    public PlayerRow() {
     }
 
     /**
@@ -269,12 +271,46 @@ public class Player implements Serializable {
         this.z = z;
     }
 
+    /**
+     * Loads the instance with the specified ID.
+     * 
+     * @param connection the database connection
+     * @param id the ID of the instance to load
+     * @return the loaded instance
+     */
+    public static PlayerRow loadById(PostgresConnection connection, Long id) {
+        QPlayerRow q = QPlayerRow.Player;
+        return connection.query().select(q).from(q).where(q.id.eq(id)).fetchFirst();
+    }
+
+    /**
+     * Inserts this instance into the database. This object must not have an ID yet.
+     */
+    public void insert(PostgresConnection connection) {
+        if (id != null) {
+        	throw new IllegalStateException("this object already has an id: " + id);
+        }
+        QPlayerRow q = QPlayerRow.Player;
+        SQLInsertClause insert = connection.insert(q);
+        insert.set(q.coins, coins);
+        insert.set(q.deleted, deleted);
+        insert.set(q.factionId, factionId);
+        insert.set(q.leftAngle, leftAngle);
+        insert.set(q.name, name);
+        insert.set(q.upAngle, upAngle);
+        insert.set(q.userAccountId, userAccountId);
+        insert.set(q.x, x);
+        insert.set(q.y, y);
+        insert.set(q.z, z);
+        id = insert.executeWithKey(Long.class);
+    }
+
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return "{Player. coins = " + coins + ", deleted = " + deleted + ", factionId = " + factionId + ", id = " + id + ", leftAngle = " + leftAngle + ", name = " + name + ", upAngle = " + upAngle + ", userAccountId = " + userAccountId + ", x = " + x + ", y = " + y + ", z = " + z + "}";
+        return "{PlayerRow. coins = " + coins + ", deleted = " + deleted + ", factionId = " + factionId + ", id = " + id + ", leftAngle = " + leftAngle + ", name = " + name + ", upAngle = " + upAngle + ", userAccountId = " + userAccountId + ", x = " + x + ", y = " + y + ", z = " + z + "}";
     }
 
 }

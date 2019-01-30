@@ -14,8 +14,8 @@ import name.martingeisse.common.javascript.jsonbuilder.JsonObjectBuilder;
 import name.martingeisse.common.javascript.jsonbuilder.JsonValueBuilder;
 import name.martingeisse.miner.common.Faction;
 import name.martingeisse.miner.server.Databases;
-import name.martingeisse.miner.server.entities.QPlayer;
-import name.martingeisse.miner.server.entities.UserAccount;
+import name.martingeisse.miner.server.postgres_entities.QPlayerRow;
+import name.martingeisse.miner.server.postgres_entities.UserAccountRow;
 import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
 
 import java.math.BigDecimal;
@@ -29,7 +29,7 @@ public final class CreatePlayerHandler extends AbstractLoggedInHandler {
 	 * @see name.martingeisse.miner.server.api.account.AbstractLoggedInHandler#handle(name.martingeisse.api.request.RequestCycle, name.martingeisse.common.javascript.analyze.JsonAnalyzer, name.martingeisse.common.javascript.jsonbuilder.JsonValueBuilder, name.martingeisse.webide.entity.UserAccount)
 	 */
 	@Override
-	protected void handle(ApiRequestCycle requestCycle, JsonAnalyzer input, JsonValueBuilder<?> output, UserAccount userAccount) throws Exception {
+	protected void handle(ApiRequestCycle requestCycle, JsonAnalyzer input, JsonValueBuilder<?> output, UserAccountRow userAccount) throws Exception {
 
 		// analyze request data
 		int factionIndex = input.analyzeMapElement("faction").expectInteger();
@@ -45,17 +45,17 @@ public final class CreatePlayerHandler extends AbstractLoggedInHandler {
 		// create the player character
 		long playerId;
 		try (PostgresConnection connection = Databases.main.newConnection()) {
-			final QPlayer qp = QPlayer.Player;
+			final QPlayerRow qp = QPlayerRow.Player;
 			final SQLInsertClause insert = connection.insert(qp);
-			insert.set(QPlayer.Player.userAccountId, userAccount.getId());
-			insert.set(QPlayer.Player.coins, 0L);
-			insert.set(QPlayer.Player.name, name);
-			insert.set(QPlayer.Player.factionId, (long) (factionIndex + 1));
-			insert.set(QPlayer.Player.x, BigDecimal.ZERO);
-			insert.set(QPlayer.Player.y, BigDecimal.ONE.add(BigDecimal.ONE));
-			insert.set(QPlayer.Player.z, BigDecimal.ZERO);
-			insert.set(QPlayer.Player.leftAngle, BigDecimal.ZERO);
-			insert.set(QPlayer.Player.upAngle, BigDecimal.ZERO);
+			insert.set(qp.userAccountId, userAccount.getId());
+			insert.set(qp.coins, 0L);
+			insert.set(qp.name, name);
+			insert.set(qp.factionId, (long) (factionIndex + 1));
+			insert.set(qp.x, BigDecimal.ZERO);
+			insert.set(qp.y, BigDecimal.ONE.add(BigDecimal.ONE));
+			insert.set(qp.z, BigDecimal.ZERO);
+			insert.set(qp.leftAngle, BigDecimal.ZERO);
+			insert.set(qp.upAngle, BigDecimal.ZERO);
 			playerId = insert.executeWithKey(Long.class);
 		}
 

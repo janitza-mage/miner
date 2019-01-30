@@ -11,9 +11,9 @@ import name.martingeisse.miner.common.geometry.angle.EulerAngles;
 import name.martingeisse.miner.common.geometry.vector.Vector3d;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.server.Databases;
-import name.martingeisse.miner.server.entities.Player;
-import name.martingeisse.miner.server.entities.QPlayer;
-import name.martingeisse.miner.server.entities.QPlayerAwardedAchievement;
+import name.martingeisse.miner.server.postgres_entities.PlayerRow;
+import name.martingeisse.miner.server.postgres_entities.QPlayerRow;
+import name.martingeisse.miner.server.postgres_entities.QPlayerAwardedAchievementRow;
 import name.martingeisse.miner.server.network.Avatar;
 import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
 import name.martingeisse.miner.server.util.database.postgres.PostgresUtil;
@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.function.Consumer;
 
 /**
- * TODO rename {@link Player} to PlayerRow and rename this class to Player.
+ * TODO rename this class to Player.
  */
 public final class PlayerAccess {
 
@@ -45,10 +45,10 @@ public final class PlayerAccess {
 		this.inventoryAccess = new InventoryAccess(this);
 	}
 
-	private Player loadPlayerRow() {
+	private PlayerRow loadPlayerRow() {
 		try (PostgresConnection connection = Databases.main.newConnection()) {
-			QPlayer qp = QPlayer.Player;
-			Player player = connection.query().select(qp).from(qp).where(qp.id.eq(id)).fetchOne();
+			QPlayerRow qp = QPlayerRow.Player;
+			PlayerRow player = connection.query().select(qp).from(qp).where(qp.id.eq(id)).fetchOne();
 			if (player == null) {
 				throw new RuntimeException("player not found, id: " + id);
 			}
@@ -91,7 +91,7 @@ public final class PlayerAccess {
 	//
 
 	public boolean addAchievement(String achievementCode) {
-		QPlayerAwardedAchievement qpaa = QPlayerAwardedAchievement.PlayerAwardedAchievement;
+		QPlayerAwardedAchievementRow qpaa = QPlayerAwardedAchievementRow.PlayerAwardedAchievement;
 		try (PostgresConnection connection = Databases.main.newConnection()) {
 			SQLInsertClause insert = connection.insert(qpaa);
 			insert.set(qpaa.playerId, id);
@@ -109,7 +109,7 @@ public final class PlayerAccess {
 	}
 
 	public boolean addCoins(long amount) {
-		QPlayer qp = QPlayer.Player;
+		QPlayerRow qp = QPlayerRow.Player;
 		boolean success;
 		try (PostgresConnection connection = Databases.main.newConnection()) {
 			SQLUpdateClause update = connection.update(qp);
@@ -124,7 +124,7 @@ public final class PlayerAccess {
 	}
 
 	public long getCoins() {
-		QPlayer qp = QPlayer.Player;
+		QPlayerRow qp = QPlayerRow.Player;
 		try (PostgresConnection connection = Databases.main.newConnection()) {
 			return connection.query().select(qp.coins).from(qp).where(qp.id.eq(id)).fetchFirst();
 		}
@@ -135,14 +135,14 @@ public final class PlayerAccess {
 	}
 
 	public void loadAvatar(Avatar avatar) {
-		Player row = loadPlayerRow();
+		PlayerRow row = loadPlayerRow();
 		avatar.setPosition(new Vector3d(row.getX().doubleValue(), row.getY().doubleValue(), row.getZ().doubleValue()));
 		avatar.setOrientation(new EulerAngles(row.getLeftAngle().doubleValue(), row.getUpAngle().doubleValue(), 0));
 		avatar.setName(row.getName());
 	}
 
 	public void saveAvatar(Avatar avatar) {
-		QPlayer qp = QPlayer.Player;
+		QPlayerRow qp = QPlayerRow.Player;
 		try (PostgresConnection connection = Databases.main.newConnection()) {
 			SQLUpdateClause update = connection.update(qp);
 			update.where(qp.id.eq(id));

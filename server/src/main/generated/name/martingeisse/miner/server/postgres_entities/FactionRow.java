@@ -1,19 +1,21 @@
 /*
  * This file was generated from the database schema.
  */
-package name.martingeisse.miner.server.entities;
+package name.martingeisse.miner.server.postgres_entities;
 
+import com.querydsl.sql.dml.SQLInsertClause;
+import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
 import java.io.Serializable;
 
 /**
  * This class represents rows from table 'Faction'.
  */
-public class Faction implements Serializable {
+public class FactionRow implements Serializable {
 
     /**
      * Constructor.
      */
-    public Faction() {
+    public FactionRow() {
     }
 
     /**
@@ -85,12 +87,38 @@ public class Faction implements Serializable {
         this.score = score;
     }
 
+    /**
+     * Loads the instance with the specified ID.
+     * 
+     * @param connection the database connection
+     * @param id the ID of the instance to load
+     * @return the loaded instance
+     */
+    public static FactionRow loadById(PostgresConnection connection, Long id) {
+        QFactionRow q = QFactionRow.Faction;
+        return connection.query().select(q).from(q).where(q.id.eq(id)).fetchFirst();
+    }
+
+    /**
+     * Inserts this instance into the database. This object must not have an ID yet.
+     */
+    public void insert(PostgresConnection connection) {
+        if (id != null) {
+        	throw new IllegalStateException("this object already has an id: " + id);
+        }
+        QFactionRow q = QFactionRow.Faction;
+        SQLInsertClause insert = connection.insert(q);
+        insert.set(q.divinePower, divinePower);
+        insert.set(q.score, score);
+        id = insert.executeWithKey(Long.class);
+    }
+
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return "{Faction. divinePower = " + divinePower + ", id = " + id + ", score = " + score + "}";
+        return "{FactionRow. divinePower = " + divinePower + ", id = " + id + ", score = " + score + "}";
     }
 
 }

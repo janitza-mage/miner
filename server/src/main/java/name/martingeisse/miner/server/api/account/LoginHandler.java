@@ -15,8 +15,8 @@ import name.martingeisse.common.javascript.analyze.JsonAnalyzer;
 import name.martingeisse.common.javascript.jsonbuilder.JsonValueBuilder;
 import name.martingeisse.miner.server.Databases;
 import name.martingeisse.miner.server.MinerServerSecurityConstants;
-import name.martingeisse.miner.server.entities.QUserAccount;
-import name.martingeisse.miner.server.entities.UserAccount;
+import name.martingeisse.miner.server.postgres_entities.QUserAccountRow;
+import name.martingeisse.miner.server.postgres_entities.UserAccountRow;
 import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
 import org.joda.time.Instant;
 
@@ -43,9 +43,9 @@ public final class LoginHandler extends AbstractJsonApiHandler {
 
 		// fetch the user record
 		String username = input.analyzeMapElement("username").expectString();
-		UserAccount userAccount;
+		UserAccountRow userAccount;
 		try (PostgresConnection connection = Databases.main.newConnection()) {
-			QUserAccount qua = QUserAccount.UserAccount;
+			QUserAccountRow qua = QUserAccountRow.UserAccount;
 			userAccount = connection.query().select(qua).from(qua).where(qua.username.eq(username)).fetchOne();
 		}
 

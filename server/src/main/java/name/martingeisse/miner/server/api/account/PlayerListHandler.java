@@ -12,9 +12,9 @@ import name.martingeisse.common.javascript.jsonbuilder.JsonListBuilder;
 import name.martingeisse.common.javascript.jsonbuilder.JsonObjectBuilder;
 import name.martingeisse.common.javascript.jsonbuilder.JsonValueBuilder;
 import name.martingeisse.miner.server.Databases;
-import name.martingeisse.miner.server.entities.Player;
-import name.martingeisse.miner.server.entities.QPlayer;
-import name.martingeisse.miner.server.entities.UserAccount;
+import name.martingeisse.miner.server.postgres_entities.PlayerRow;
+import name.martingeisse.miner.server.postgres_entities.QPlayerRow;
+import name.martingeisse.miner.server.postgres_entities.UserAccountRow;
 import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
 
 import java.util.List;
@@ -28,13 +28,13 @@ public final class PlayerListHandler extends AbstractLoggedInHandler {
 	 * @see name.martingeisse.miner.server.api.account.AbstractLoggedInHandler#handle(name.martingeisse.api.request.RequestCycle, name.martingeisse.common.javascript.analyze.JsonAnalyzer, name.martingeisse.common.javascript.jsonbuilder.JsonValueBuilder, name.martingeisse.webide.entity.UserAccount)
 	 */
 	@Override
-	protected void handle(ApiRequestCycle requestCycle, JsonAnalyzer input, JsonValueBuilder<?> output, UserAccount userAccount) throws Exception {
-		final QPlayer qp = QPlayer.Player;
+	protected void handle(ApiRequestCycle requestCycle, JsonAnalyzer input, JsonValueBuilder<?> output, UserAccountRow userAccount) throws Exception {
+		final QPlayerRow qp = QPlayerRow.Player;
 		try (PostgresConnection connection = Databases.main.newConnection()) {
-			final List<Player> players = connection.query().select(qp).from(qp).where(qp.userAccountId.eq(userAccount.getId()), qp.deleted.isFalse()).fetch();
+			final List<PlayerRow> players = connection.query().select(qp).from(qp).where(qp.userAccountId.eq(userAccount.getId()), qp.deleted.isFalse()).fetch();
 			JsonObjectBuilder<?> objectBuilder = output.object();
 			JsonListBuilder<?> listBuilder = objectBuilder.property("players").list();
-			for (Player player : players) {
+			for (PlayerRow player : players) {
 				JsonObjectBuilder<?> playerBuilder = listBuilder.element().object();
 				playerBuilder.property("id").number(player.getId());
 				playerBuilder.property("name").string(player.getName());

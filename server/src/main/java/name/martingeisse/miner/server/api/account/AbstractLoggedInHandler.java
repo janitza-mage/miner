@@ -14,8 +14,8 @@ import name.martingeisse.common.javascript.analyze.JsonAnalyzer;
 import name.martingeisse.common.javascript.jsonbuilder.JsonValueBuilder;
 import name.martingeisse.miner.server.Databases;
 import name.martingeisse.miner.server.MinerServerSecurityConstants;
-import name.martingeisse.miner.server.entities.QUserAccount;
-import name.martingeisse.miner.server.entities.UserAccount;
+import name.martingeisse.miner.server.postgres_entities.QUserAccountRow;
+import name.martingeisse.miner.server.postgres_entities.UserAccountRow;
 import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
 import name.martingeisse.miner.server.util.database.postgres.PostgresService;
 import org.joda.time.Instant;
@@ -59,9 +59,9 @@ public abstract class AbstractLoggedInHandler extends AbstractJsonApiHandler {
 		}
 
 		// load the user account
-		final UserAccount userAccount;
+		final UserAccountRow userAccount;
 		try (PostgresConnection connection = Databases.main.newConnection()) {
-			final QUserAccount qua = QUserAccount.UserAccount;
+			final QUserAccountRow qua = QUserAccountRow.UserAccount;
 			userAccount = connection.query().select(qua).from(qua).where(qua.username.eq(username)).fetchOne();
 		}
 
@@ -80,6 +80,6 @@ public abstract class AbstractLoggedInHandler extends AbstractJsonApiHandler {
 	 * @param userAccount the user's account
 	 * @throws Exception on errors
 	 */
-	protected abstract void handle(ApiRequestCycle requestCycle, JsonAnalyzer input, JsonValueBuilder<?> output, UserAccount userAccount) throws Exception;
+	protected abstract void handle(ApiRequestCycle requestCycle, JsonAnalyzer input, JsonValueBuilder<?> output, UserAccountRow userAccount) throws Exception;
 
 }

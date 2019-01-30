@@ -27,14 +27,14 @@ public class PostgresQueryDslCodeGeneratorMain {
 
 		PGSimpleDataSource source = new PGSimpleDataSource();
 		source.setServerName("localhost");
-		source.setDatabaseName("trading_game");
+		source.setDatabaseName("miner");
 		source.setUser("postgres");
 		source.setPassword("postgres");
 
 		try (Connection connection = source.getConnection()) {
 			MetaDataExporter exporter = new MetaDataExporter();
-			exporter.setTargetFolder(new File("src/main/generated"));
-			exporter.setPackageName("name.martingeisse.trading_game.postgres_entities");
+			exporter.setTargetFolder(new File("server/src/main/generated"));
+			exporter.setPackageName("name.martingeisse.miner.server.postgres_entities");
 			exporter.setSerializerClass(MyMetaDataSerializer.class);
 			exporter.setBeanSerializerClass(BeanSerializer.class);
 			exporter.setConfiguration(MyPostgresConfiguration.CONFIGURATION);

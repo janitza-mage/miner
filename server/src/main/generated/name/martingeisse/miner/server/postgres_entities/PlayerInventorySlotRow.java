@@ -1,19 +1,21 @@
 /*
  * This file was generated from the database schema.
  */
-package name.martingeisse.miner.server.entities;
+package name.martingeisse.miner.server.postgres_entities;
 
+import com.querydsl.sql.dml.SQLInsertClause;
+import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
 import java.io.Serializable;
 
 /**
  * This class represents rows from table 'PlayerInventorySlot'.
  */
-public class PlayerInventorySlot implements Serializable {
+public class PlayerInventorySlotRow implements Serializable {
 
     /**
      * Constructor.
      */
-    public PlayerInventorySlot() {
+    public PlayerInventorySlotRow() {
     }
 
     /**
@@ -25,11 +27,6 @@ public class PlayerInventorySlot implements Serializable {
      * the id
      */
     private Long id;
-
-    /**
-     * the index
-     */
-    private Integer index;
 
     /**
      * the playerId
@@ -44,7 +41,7 @@ public class PlayerInventorySlot implements Serializable {
     /**
      * the type
      */
-    private Integer type;
+    private String type;
 
     /**
      * Getter method for the equipped.
@@ -80,24 +77,6 @@ public class PlayerInventorySlot implements Serializable {
      */
     public void setId(Long id) {
         this.id = id;
-    }
-
-    /**
-     * Getter method for the index.
-     * 
-     * @return the index
-     */
-    public Integer getIndex() {
-        return index;
-    }
-
-    /**
-     * Setter method for the index.
-     * 
-     * @param index the index to set
-     */
-    public void setIndex(Integer index) {
-        this.index = index;
     }
 
     /**
@@ -141,7 +120,7 @@ public class PlayerInventorySlot implements Serializable {
      * 
      * @return the type
      */
-    public Integer getType() {
+    public String getType() {
         return type;
     }
 
@@ -150,8 +129,36 @@ public class PlayerInventorySlot implements Serializable {
      * 
      * @param type the type to set
      */
-    public void setType(Integer type) {
+    public void setType(String type) {
         this.type = type;
+    }
+
+    /**
+     * Loads the instance with the specified ID.
+     * 
+     * @param connection the database connection
+     * @param id the ID of the instance to load
+     * @return the loaded instance
+     */
+    public static PlayerInventorySlotRow loadById(PostgresConnection connection, Long id) {
+        QPlayerInventorySlotRow q = QPlayerInventorySlotRow.PlayerInventorySlot;
+        return connection.query().select(q).from(q).where(q.id.eq(id)).fetchFirst();
+    }
+
+    /**
+     * Inserts this instance into the database. This object must not have an ID yet.
+     */
+    public void insert(PostgresConnection connection) {
+        if (id != null) {
+        	throw new IllegalStateException("this object already has an id: " + id);
+        }
+        QPlayerInventorySlotRow q = QPlayerInventorySlotRow.PlayerInventorySlot;
+        SQLInsertClause insert = connection.insert(q);
+        insert.set(q.equipped, equipped);
+        insert.set(q.playerId, playerId);
+        insert.set(q.quantity, quantity);
+        insert.set(q.type, type);
+        id = insert.executeWithKey(Long.class);
     }
 
     /* (non-Javadoc)
@@ -159,7 +166,7 @@ public class PlayerInventorySlot implements Serializable {
      */
     @Override
     public String toString() {
-        return "{PlayerInventorySlot. equipped = " + equipped + ", id = " + id + ", index = " + index + ", playerId = " + playerId + ", quantity = " + quantity + ", type = " + type + "}";
+        return "{PlayerInventorySlotRow. equipped = " + equipped + ", id = " + id + ", playerId = " + playerId + ", quantity = " + quantity + ", type = " + type + "}";
     }
 
 }

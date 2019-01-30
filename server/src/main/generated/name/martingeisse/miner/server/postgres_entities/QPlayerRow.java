@@ -1,4 +1,4 @@
-package name.martingeisse.miner.server.entities;
+package name.martingeisse.miner.server.postgres_entities;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -15,15 +15,15 @@ import java.sql.Types;
 
 
 /**
- * QPlayer is a Querydsl query type for Player
+ * QPlayerRow is a Querydsl query type for PlayerRow
  */
-@Generated("de.servicereisen.companion.tools.sql.MyMetaDataSerializer")
+@Generated("name.martingeisse.miner.server.tools.codegen.MyMetaDataSerializer")
 @SuppressWarnings("all")
-public class QPlayer extends com.querydsl.sql.RelationalPathBase<Player> {
+public class QPlayerRow extends com.querydsl.sql.RelationalPathBase<PlayerRow> {
 
-    private static final long serialVersionUID = -162185961;
+    private static final long serialVersionUID = 692489964;
 
-    public static final QPlayer Player = new QPlayer("Player");
+    public static final QPlayerRow Player = new QPlayerRow("Player");
 
     public final NumberPath<Long> coins = createNumber("coins", Long.class);
 
@@ -47,33 +47,33 @@ public class QPlayer extends com.querydsl.sql.RelationalPathBase<Player> {
 
     public final NumberPath<java.math.BigDecimal> z = createNumber("z", java.math.BigDecimal.class);
 
-    public final com.querydsl.sql.PrimaryKey<Player> playerPkey = createPrimaryKey(id);
+    public final com.querydsl.sql.PrimaryKey<PlayerRow> playerPkey = createPrimaryKey(id);
 
-    public final com.querydsl.sql.ForeignKey<UserAccount> playerUserAccountIdFkey = createForeignKey(userAccountId, "id");
+    public final com.querydsl.sql.ForeignKey<UserAccountRow> playerUserAccountIdFkey = createForeignKey(userAccountId, "id");
 
-    public final com.querydsl.sql.ForeignKey<Faction> playerFactionIdFkey = createForeignKey(factionId, "id");
+    public final com.querydsl.sql.ForeignKey<FactionRow> playerFactionIdFkey = createForeignKey(factionId, "id");
 
-    public final com.querydsl.sql.ForeignKey<PlayerInventorySlot> _playerInventorySlotPlayerIdFkey = createInvForeignKey(id, "playerId");
+    public final com.querydsl.sql.ForeignKey<PlayerInventorySlotRow> _playerInventorySlotPlayerIdFkey = createInvForeignKey(id, "playerId");
 
-    public final com.querydsl.sql.ForeignKey<PlayerAwardedAchievement> _playerAwardedAchievementPlayerIdFkey = createInvForeignKey(id, "playerId");
+    public final com.querydsl.sql.ForeignKey<PlayerAwardedAchievementRow> _playerAwardedAchievementPlayerIdFkey = createInvForeignKey(id, "playerId");
 
-    public QPlayer(String variable) {
-        super(Player.class, forVariable(variable), "miner", "Player");
+    public QPlayerRow(String variable) {
+        super(PlayerRow.class, forVariable(variable), "miner", "Player");
         addMetadata();
     }
 
-    public QPlayer(String variable, String schema, String table) {
-        super(Player.class, forVariable(variable), schema, table);
+    public QPlayerRow(String variable, String schema, String table) {
+        super(PlayerRow.class, forVariable(variable), schema, table);
         addMetadata();
     }
 
-    public QPlayer(Path<? extends Player> path) {
+    public QPlayerRow(Path<? extends PlayerRow> path) {
         super(path.getType(), path.getMetadata(), "miner", "Player");
         addMetadata();
     }
 
-    public QPlayer(PathMetadata metadata) {
-        super(Player.class, metadata, "miner", "Player");
+    public QPlayerRow(PathMetadata metadata) {
+        super(PlayerRow.class, metadata, "miner", "Player");
         addMetadata();
     }
 

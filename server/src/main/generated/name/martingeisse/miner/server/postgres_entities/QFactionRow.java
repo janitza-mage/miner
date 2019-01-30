@@ -1,4 +1,4 @@
-package name.martingeisse.miner.server.entities;
+package name.martingeisse.miner.server.postgres_entities;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -15,15 +15,15 @@ import java.sql.Types;
 
 
 /**
- * QFaction is a Querydsl query type for Faction
+ * QFactionRow is a Querydsl query type for FactionRow
  */
-@Generated("de.servicereisen.companion.tools.sql.MyMetaDataSerializer")
+@Generated("name.martingeisse.miner.server.tools.codegen.MyMetaDataSerializer")
 @SuppressWarnings("all")
-public class QFaction extends com.querydsl.sql.RelationalPathBase<Faction> {
+public class QFactionRow extends com.querydsl.sql.RelationalPathBase<FactionRow> {
 
-    private static final long serialVersionUID = -1331118426;
+    private static final long serialVersionUID = -474695477;
 
-    public static final QFaction Faction = new QFaction("Faction");
+    public static final QFactionRow Faction = new QFactionRow("Faction");
 
     public final NumberPath<Long> divinePower = createNumber("divinePower", Long.class);
 
@@ -31,27 +31,27 @@ public class QFaction extends com.querydsl.sql.RelationalPathBase<Faction> {
 
     public final NumberPath<Long> score = createNumber("score", Long.class);
 
-    public final com.querydsl.sql.PrimaryKey<Faction> factionPkey = createPrimaryKey(id);
+    public final com.querydsl.sql.PrimaryKey<FactionRow> factionPkey = createPrimaryKey(id);
 
-    public final com.querydsl.sql.ForeignKey<Player> _playerFactionIdFkey = createInvForeignKey(id, "factionId");
+    public final com.querydsl.sql.ForeignKey<PlayerRow> _playerFactionIdFkey = createInvForeignKey(id, "factionId");
 
-    public QFaction(String variable) {
-        super(Faction.class, forVariable(variable), "miner", "Faction");
+    public QFactionRow(String variable) {
+        super(FactionRow.class, forVariable(variable), "miner", "Faction");
         addMetadata();
     }
 
-    public QFaction(String variable, String schema, String table) {
-        super(Faction.class, forVariable(variable), schema, table);
+    public QFactionRow(String variable, String schema, String table) {
+        super(FactionRow.class, forVariable(variable), schema, table);
         addMetadata();
     }
 
-    public QFaction(Path<? extends Faction> path) {
+    public QFactionRow(Path<? extends FactionRow> path) {
         super(path.getType(), path.getMetadata(), "miner", "Faction");
         addMetadata();
     }
 
-    public QFaction(PathMetadata metadata) {
-        super(Faction.class, metadata, "miner", "Faction");
+    public QFactionRow(PathMetadata metadata) {
+        super(FactionRow.class, metadata, "miner", "Faction");
         addMetadata();
     }
 

@@ -1,4 +1,4 @@
-package name.martingeisse.miner.server.entities;
+package name.martingeisse.miner.server.postgres_entities;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -15,15 +15,15 @@ import java.sql.Types;
 
 
 /**
- * QUserAccount is a Querydsl query type for UserAccount
+ * QUserAccountRow is a Querydsl query type for UserAccountRow
  */
-@Generated("de.servicereisen.companion.tools.sql.MyMetaDataSerializer")
+@Generated("name.martingeisse.miner.server.tools.codegen.MyMetaDataSerializer")
 @SuppressWarnings("all")
-public class QUserAccount extends com.querydsl.sql.RelationalPathBase<UserAccount> {
+public class QUserAccountRow extends com.querydsl.sql.RelationalPathBase<UserAccountRow> {
 
-    private static final long serialVersionUID = -2118534292;
+    private static final long serialVersionUID = 1866574533;
 
-    public static final QUserAccount UserAccount = new QUserAccount("UserAccount");
+    public static final QUserAccountRow UserAccount = new QUserAccountRow("UserAccount");
 
     public final BooleanPath deleted = createBoolean("deleted");
 
@@ -33,27 +33,27 @@ public class QUserAccount extends com.querydsl.sql.RelationalPathBase<UserAccoun
 
     public final StringPath username = createString("username");
 
-    public final com.querydsl.sql.PrimaryKey<UserAccount> userAccountPkey = createPrimaryKey(id);
+    public final com.querydsl.sql.PrimaryKey<UserAccountRow> userAccountPkey = createPrimaryKey(id);
 
-    public final com.querydsl.sql.ForeignKey<Player> _playerUserAccountIdFkey = createInvForeignKey(id, "userAccountId");
+    public final com.querydsl.sql.ForeignKey<PlayerRow> _playerUserAccountIdFkey = createInvForeignKey(id, "userAccountId");
 
-    public QUserAccount(String variable) {
-        super(UserAccount.class, forVariable(variable), "miner", "UserAccount");
+    public QUserAccountRow(String variable) {
+        super(UserAccountRow.class, forVariable(variable), "miner", "UserAccount");
         addMetadata();
     }
 
-    public QUserAccount(String variable, String schema, String table) {
-        super(UserAccount.class, forVariable(variable), schema, table);
+    public QUserAccountRow(String variable, String schema, String table) {
+        super(UserAccountRow.class, forVariable(variable), schema, table);
         addMetadata();
     }
 
-    public QUserAccount(Path<? extends UserAccount> path) {
+    public QUserAccountRow(Path<? extends UserAccountRow> path) {
         super(path.getType(), path.getMetadata(), "miner", "UserAccount");
         addMetadata();
     }
 
-    public QUserAccount(PathMetadata metadata) {
-        super(UserAccount.class, metadata, "miner", "UserAccount");
+    public QUserAccountRow(PathMetadata metadata) {
+        super(UserAccountRow.class, metadata, "miner", "UserAccount");
         addMetadata();
     }
 
