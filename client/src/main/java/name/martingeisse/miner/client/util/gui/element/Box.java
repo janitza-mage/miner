@@ -39,7 +39,7 @@ public final class Box extends AbstractWrapperElement {
 				int x1a = getAbsoluteX() + margin.getLeft();
 				int x1b = x1a + border.getLeft();
 				int y1a = getAbsoluteY() + margin.getTop();
-				int y1b = y1a - border.getTop();
+				int y1b = y1a + border.getTop();
 				int x2a = getAbsoluteX() + getWidth() - margin.getRight();
 				int x2b = x2a - border.getRight();
 				int y2a = getAbsoluteY() + getHeight() - margin.getBottom();
