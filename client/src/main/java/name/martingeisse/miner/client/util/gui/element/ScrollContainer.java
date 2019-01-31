@@ -3,9 +3,8 @@ package name.martingeisse.miner.client.util.gui.element;
 import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiEvent;
-import name.martingeisse.miner.client.util.gui.util.AreaAlignment;
+import name.martingeisse.miner.client.util.gui.element.fill.FillColor;
 import name.martingeisse.miner.client.util.gui.util.Color;
-import org.lwjgl.input.Mouse;
 
 /**
  * This container always uses the size requested from outside. The same size, minus the space needed for
@@ -27,6 +26,7 @@ public class ScrollContainer extends GuiElement {
 
 	private final Peephole contentWrapper;
 	private final Peephole scrollBar;
+	private final Peephole knobRail;
 	private final GuiElement knob;
 	private boolean knobGrabbed = false;
 
@@ -34,12 +34,13 @@ public class ScrollContainer extends GuiElement {
 		contentWrapper = new Peephole(new FillColor(Color.RED));
 		contentWrapper.notifyNewParent(this);
 
-		knob = new Sizer(new FillColor(Color.WHITE), SCROLL_BAR_WIDTH, SCROLL_KNOB_SIZE);
+		knob = new FillColor(Color.WHITE);
+		knobRail = new Peephole(knob);
+		knobRail.setInnerHeightRequest(SCROLL_KNOB_SIZE);
 
 		OverlayStack scrollBarStack = new OverlayStack();
 		scrollBarStack.addElement(new FillColor(new Color(128, 128, 128)));
-		scrollBarStack.addElement(knob);
-		scrollBarStack.setAlignment(AreaAlignment.TOP_LEFT); // TODO does not work
+		scrollBarStack.addElement(knobRail);
 		scrollBar = new Peephole(scrollBarStack);
 		scrollBar.notifyNewParent(this);
 	}
@@ -78,14 +79,25 @@ public class ScrollContainer extends GuiElement {
 		}
 		if (event == GuiEvent.MOUSE_MOVED && knobGrabbed) {
 			// TODO should actually measure the displacement compared to the original grabbing position
-			int displacement = getGui().getMouseY() - (SCROLL_KNOB_SIZE / 2) - getAbsoluteY();
-			if (displacement < 0) {
-				displacement = 0;
+			int height = getHeight();
+			int contentHeight = contentWrapper.getWrappedElement().getHeight();
+
+			// handle knob
+			int knobDisplacement = getGui().getMouseY() - (SCROLL_KNOB_SIZE / 2) - getAbsoluteY();
+			if (knobDisplacement < 0) {
+				knobDisplacement = 0;
 			}
-			if (displacement + SCROLL_KNOB_SIZE > getHeight()) {
-				displacement = getHeight() - SCROLL_KNOB_SIZE;
+			if (knobDisplacement + SCROLL_KNOB_SIZE > height) {
+				knobDisplacement = height - SCROLL_KNOB_SIZE;
 			}
-			scrollBar.setDisplacement(0, displacement);
+			knobRail.setDisplacement(0, knobDisplacement);
+
+			// handle content
+			int maxKnobDisplacement = height - SCROLL_KNOB_SIZE;
+			int maxContentDisplacement = contentHeight - height;
+			int contentDisplacement = (knobDisplacement * maxContentDisplacement / maxKnobDisplacement);
+			contentWrapper.setDisplacement(0, -contentDisplacement);
+
 			requestLayout();
 		}
 	}

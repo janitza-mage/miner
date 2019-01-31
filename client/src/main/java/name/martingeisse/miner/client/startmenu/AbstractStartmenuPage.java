@@ -14,7 +14,7 @@ import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiEvent;
 import name.martingeisse.miner.client.util.gui.control.MessageBox;
 import name.martingeisse.miner.client.util.gui.control.Page;
-import name.martingeisse.miner.client.util.gui.element.FillTexture;
+import name.martingeisse.miner.client.util.gui.element.fill.FillTexture;
 import name.martingeisse.miner.client.util.gui.element.Margin;
 import name.martingeisse.miner.client.util.lwjgl.StackdTexture;
 import org.lwjgl.input.Keyboard;

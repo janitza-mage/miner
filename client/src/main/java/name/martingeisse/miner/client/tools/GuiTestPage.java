@@ -9,6 +9,8 @@ package name.martingeisse.miner.client.tools;
 import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.control.Page;
 import name.martingeisse.miner.client.util.gui.element.*;
+import name.martingeisse.miner.client.util.gui.element.fill.FillColor;
+import name.martingeisse.miner.client.util.gui.element.text.TextLine;
 import name.martingeisse.miner.client.util.gui.util.Color;
 
 /**
@@ -43,6 +45,36 @@ public class GuiTestPage extends Page {
 		*/
 
 		VerticalLayout content = new VerticalLayout();
+		content.addElement(textLine("ewogihjewoihweiouhjg"));
+		content.addElement(textLine("gregregerg"));
+		content.addElement(textLine("hreehrhreherhre"));
+		content.addElement(textLine("ewogihjewoihweiouhjg"));
+		content.addElement(textLine("gregregerg"));
+		content.addElement(textLine("hreehrhreherhre"));
+		content.addElement(textLine("ewogihjewoihweiouhjg"));
+		content.addElement(textLine("gregregerg"));
+		content.addElement(textLine("hreehrhreherhre"));
+		content.addElement(textLine("ewogihjewoihweiouhjg"));
+		content.addElement(textLine("gregregerg"));
+		content.addElement(textLine("hreehrhreherhre"));
+		content.addElement(textLine("ewogihjewoihweiouhjg"));
+		content.addElement(textLine("gregregerg"));
+		content.addElement(textLine("hreehrhreherhre"));
+		content.addElement(textLine("ewogihjewoihweiouhjg"));
+		content.addElement(textLine("gregregerg"));
+		content.addElement(textLine("hreehrhreherhre"));
+		content.addElement(textLine("ewogihjewoihweiouhjg"));
+		content.addElement(textLine("gregregerg"));
+		content.addElement(textLine("hreehrhreherhre"));
+		content.addElement(textLine("ewogihjewoihweiouhjg"));
+		content.addElement(textLine("gregregerg"));
+		content.addElement(textLine("hreehrhreherhre"));
+		content.addElement(textLine("ewogihjewoihweiouhjg"));
+		content.addElement(textLine("gregregerg"));
+		content.addElement(textLine("hreehrhreherhre"));
+		content.addElement(textLine("ewogihjewoihweiouhjg"));
+		content.addElement(textLine("gregregerg"));
+		content.addElement(textLine("hreehrhreherhre"));
 		content.addElement(textLine("ewogihjewoihweiouhjg"));
 		content.addElement(textLine("gregregerg"));
 		content.addElement(textLine("hreehrhreherhre"));

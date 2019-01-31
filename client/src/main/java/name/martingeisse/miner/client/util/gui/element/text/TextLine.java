@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util.gui.element;
+package name.martingeisse.miner.client.util.gui.element.text;
 
 import name.martingeisse.common.util.ParameterUtil;
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;

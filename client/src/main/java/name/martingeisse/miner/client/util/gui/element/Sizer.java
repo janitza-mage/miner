@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -10,36 +10,28 @@ import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.util.AreaAlignment;
 
 /**
- * This element works somewhat similar to a {@link Margin}. However, instead of
- * specifying the amount to move inwards from the enclosing element, this
- * element specifies the size and alignment of the inner element directly.
- * 
- * The size along either axis can be negative to disable the sizer's effect
- * and pass the requested size from the enclosing element down to the wrapped
- * element.
+ * This element requests a specific configurable size from its wrapped element, or the size requested from the outside
+ * (per-axis; specify a negative size to use the outside size). If the wrapped element turns out to be bigger, and
+ * growing is enabled, this sizer will also grow. Otherwise (smaller wrapped element and/or growing disabled), this
+ * sizer will fill the remaining space up to the requested size. The wrapped element can be positioned inside the sizer
+ * using an {@link AreaAlignment}.
+ * <p>
+ * Growing is enabled for both axes by default.
  */
 public final class Sizer extends AbstractWrapperElement {
 
-	/**
-	 * the alignment
-	 */
+	private int innerWidthRequest;
+	private int innerHeightRequest;
 	private AreaAlignment alignment;
-
-	/**
-	 * the innerWidth
-	 */
-	private int innerWidth;
-
-	/**
-	 * the innerHeight
-	 */
-	private int innerHeight;
+	private boolean growWidth = true;
+	private boolean growHeight = true;
 
 	/**
 	 * Constructor using center alignment.
+	 *
 	 * @param wrappedElement the sized element
-	 * @param innerWidth the width of the inner element
-	 * @param innerHeight the height of the inner element
+	 * @param innerWidth     the width of the inner element
+	 * @param innerHeight    the height of the inner element
 	 */
 	public Sizer(final GuiElement wrappedElement, final int innerWidth, final int innerHeight) {
 		this(wrappedElement, innerWidth, innerHeight, AreaAlignment.CENTER);
@@ -47,20 +39,22 @@ public final class Sizer extends AbstractWrapperElement {
 
 	/**
 	 * Constructor.
-	 * @param wrappedElement the sized element
-	 * @param innerWidth the width of the inner element
-	 * @param innerHeight the height of the inner element
-	 * @param alignment the alignment of the inner element within the outer one
+	 *
+	 * @param wrappedElement     the sized element
+	 * @param innerWidthRequest  the width to request from the inner element
+	 * @param innerHeightRequest the height to request from the inner element
+	 * @param alignment          the alignment of the inner element within the outer one
 	 */
-	public Sizer(final GuiElement wrappedElement, final int innerWidth, final int innerHeight, final AreaAlignment alignment) {
+	public Sizer(final GuiElement wrappedElement, final int innerWidthRequest, final int innerHeightRequest, final AreaAlignment alignment) {
 		super(wrappedElement);
-		this.innerWidth = innerWidth;
-		this.innerHeight = innerHeight;
+		this.innerWidthRequest = innerWidthRequest;
+		this.innerHeightRequest = innerHeightRequest;
 		this.alignment = alignment;
 	}
 
 	/**
 	 * Getter method for the alignment.
+	 *
 	 * @return the alignment
 	 */
 	public AreaAlignment getAlignment() {
@@ -69,6 +63,7 @@ public final class Sizer extends AbstractWrapperElement {
 
 	/**
 	 * Setter method for the alignment.
+	 *
 	 * @param alignment the alignment to set
 	 * @return this for chaining
 	 */
@@ -77,62 +72,70 @@ public final class Sizer extends AbstractWrapperElement {
 		return this;
 	}
 
-	/**
-	 * Getter method for the innerWidth.
-	 * @return the innerWidth
-	 */
-	public int getInnerWidth() {
-		return innerWidth;
+	public int getInnerWidthRequest() {
+		return innerWidthRequest;
 	}
 
-	/**
-	 * Setter method for the innerWidth.
-	 * @param innerWidth the innerWidth to set
-	 * @return this for chaining
-	 */
-	public Sizer setInnerWidth(final int innerWidth) {
-		this.innerWidth = innerWidth;
+	public Sizer setInnerWidthRequest(int innerWidthRequest) {
+		this.innerWidthRequest = innerWidthRequest;
+		requestLayout();
 		return this;
 	}
 
-	/**
-	 * Getter method for the innerHeight.
-	 * @return the innerHeight
-	 */
-	public int getInnerHeight() {
-		return innerHeight;
+	public int getInnerHeightRequest() {
+		return innerHeightRequest;
 	}
 
-	/**
-	 * Setter method for the innerHeight.
-	 * @param innerHeight the innerHeight to set
-	 * @return this for chaining
-	 */
-	public Sizer setInnerHeight(final int innerHeight) {
-		this.innerHeight = innerHeight;
+	public Sizer setInnerHeightRequest(int innerHeightRequest) {
+		this.innerHeightRequest = innerHeightRequest;
+		requestLayout();
 		return this;
 	}
 
-	public Sizer setInnerSize(int innerWidth, int innerHeight) {
-		this.innerWidth = innerWidth;
-		this.innerHeight = innerHeight;
+	public Sizer setInnerSize(int innerWidthRequest, int innerHeightRequest) {
+		this.innerWidthRequest = innerWidthRequest;
+		this.innerHeightRequest = innerHeightRequest;
 		return this;
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.client.gui.GuiElement#finishLayout(int, int)
-	 */
+	public boolean isGrowWidth() {
+		return growWidth;
+	}
+
+	public Sizer setGrowWidth(boolean growWidth) {
+		this.growWidth = growWidth;
+		requestLayout();
+		return this;
+	}
+
+	public boolean isGrowHeight() {
+		return growHeight;
+	}
+
+	public Sizer setGrowHeight(boolean growHeight) {
+		this.growHeight = growHeight;
+		requestLayout();
+		return this;
+	}
+
+	public Sizer setGrow(boolean grow) {
+		this.growWidth = grow;
+		this.growHeight = grow;
+		requestLayout();
+		return this;
+	}
+
 	@Override
 	public void requestSize(final int width, final int height) {
 		requireWrappedElement();
 		final GuiElement wrappedElement = getWrappedElement();
-		wrappedElement.requestSize(innerWidth < 0 ? width : innerWidth, innerHeight < 0 ? height : innerHeight);
-		setSize(Math.max(wrappedElement.getWidth(), width), Math.max(wrappedElement.getHeight(), height));
+		wrappedElement.requestSize(innerWidthRequest < 0 ? width : innerWidthRequest, innerHeightRequest < 0 ? height : innerHeightRequest);
+		setSize(
+			growWidth ? Math.max(wrappedElement.getWidth(), width) : width,
+			growHeight ? Math.max(wrappedElement.getHeight(), height) : height
+		);
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.client.gui.GuiElement#setChildrenLayoutPosition(int, int)
-	 */
 	@Override
 	protected void setChildrenLayoutPosition(final int absoluteX, final int absoluteY) {
 		requireWrappedElement();

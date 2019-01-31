@@ -7,7 +7,7 @@
 package name.martingeisse.miner.client.ingame.gui;
 
 import name.martingeisse.miner.client.util.gui.control.Button;
-import name.martingeisse.miner.client.util.gui.element.FillColor;
+import name.martingeisse.miner.client.util.gui.element.fill.FillColor;
 import name.martingeisse.miner.client.util.gui.util.Color;
 
 /**

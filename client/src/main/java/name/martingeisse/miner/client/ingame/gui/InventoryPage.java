@@ -15,7 +15,6 @@ import name.martingeisse.miner.client.util.gui.control.Button;
 import name.martingeisse.miner.client.util.gui.control.ListView;
 import name.martingeisse.miner.client.util.gui.element.Margin;
 import name.martingeisse.miner.client.util.gui.element.Spacer;
-import name.martingeisse.miner.client.util.gui.element.TextLine;
 import name.martingeisse.miner.client.util.gui.element.VerticalLayout;
 
 /**

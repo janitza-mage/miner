@@ -6,6 +6,8 @@
 
 package name.martingeisse.miner.client.util.gui.element;
 
+import name.martingeisse.miner.client.util.gui.element.fill.AbstractFillElement;
+
 /**
  * An invisible element that does nothing. This can be used as a
  * placeholder within controls for a place where other elements
