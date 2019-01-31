@@ -7,6 +7,7 @@
 package name.martingeisse.miner.client.ingame.engine.prepare;
 
 import name.martingeisse.miner.common.cubetype.CubeType;
+import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 
 /**
@@ -17,8 +18,8 @@ import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 public final class EmptyWrapPlane implements IWrapPlane {
 
 	@Override
-	public CubeType getCubeType(AxisAlignedDirection direction, int u, int v, CubeType[] cubeTypes) {
-		return cubeTypes[0];
+	public CubeType getCubeType(AxisAlignedDirection direction, int u, int v) {
+		return CubeTypes.CUBE_TYPES[0];
 	}
 
 }

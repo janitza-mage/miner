@@ -10,10 +10,10 @@ import name.martingeisse.miner.client.ingame.engine.CollidingSection;
 import name.martingeisse.miner.client.ingame.engine.RenderableSection;
 import name.martingeisse.miner.client.ingame.engine.WorldWorkingSet;
 import name.martingeisse.miner.common.Constants;
-import name.martingeisse.miner.common.collision.SectionCollider;
 import name.martingeisse.miner.common.collision.IAxisAlignedCollider;
+import name.martingeisse.miner.common.collision.SectionCollider;
 import name.martingeisse.miner.common.cubes.Cubes;
-import name.martingeisse.miner.common.cubetype.CubeType;
+import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.common.network.c2s.InteractiveSectionDataRequest;
 import name.martingeisse.miner.common.network.s2c.InteractiveSectionDataResponse;
 import name.martingeisse.miner.common.network.s2c.SingleSectionModificationEvent;
@@ -208,7 +208,6 @@ public final class SectionGridLoader {
 				@Override
 				public void run() {
 					logger.debug("building collider for section " + sectionId);
-					CubeType[] cubeTypes = workingSet.getEngineParameters().getCubeTypes();
 					int size = Constants.SECTION_SIZE.getSize();
 					byte[] colliderCubes = new byte[size * size * size];
 					for (int x=0; x<size; x++) {
@@ -218,7 +217,7 @@ public final class SectionGridLoader {
 							}
 						}
 					}
-					final IAxisAlignedCollider collider = new SectionCollider(sectionId, colliderCubes, cubeTypes);
+					final IAxisAlignedCollider collider = new SectionCollider(sectionId, colliderCubes, CubeTypes.CUBE_TYPES);
 					final CollidingSection collidingSection = new CollidingSection(workingSet, sectionId, collider);
 					workingSet.getCollidingSectionsLoadedQueue().add(collidingSection);
 					logger.debug("collider registered for section " + sectionId);

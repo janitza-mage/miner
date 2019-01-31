@@ -16,8 +16,8 @@ import name.martingeisse.miner.client.ingame.logic.Inventory;
 import name.martingeisse.miner.client.ingame.logic.Item;
 import name.martingeisse.miner.client.ingame.network.PlayerResumedMessage;
 import name.martingeisse.miner.client.ingame.network.SendPositionToServerHandler;
-import name.martingeisse.miner.client.ingame.player.PlayerProxy;
 import name.martingeisse.miner.client.ingame.network.StackdProtocolClient;
+import name.martingeisse.miner.client.ingame.player.PlayerProxy;
 import name.martingeisse.miner.client.util.frame.AbstractFrameHandler;
 import name.martingeisse.miner.client.util.frame.BreakFrameLoopException;
 import name.martingeisse.miner.client.util.frame.HandlerList;
@@ -137,7 +137,7 @@ public class IngameHandler extends HandlerList {
 
 		});
 		add(new FpsPanel(resources.getFont()));
-		final SelectedCubeHud selectedCubeHud = new SelectedCubeHud(cubeWorldHandler.getResources().getCubeTextures(), cubeWorldHandler.getWorkingSet().getEngineParameters().getCubeTypes());
+		final SelectedCubeHud selectedCubeHud = new SelectedCubeHud(cubeWorldHandler.getResources().getCubeTextures());
 		add(selectedCubeHud);
 		add(new AbstractFrameHandler() {
 			@Override

@@ -6,23 +6,15 @@
 
 package name.martingeisse.miner.client.ingame.frame;
 
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_PROJECTION;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glTexCoord2f;
-import static org.lwjgl.opengl.GL11.glVertex2d;
 import name.martingeisse.miner.client.util.frame.AbstractFrameHandler;
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
 import name.martingeisse.miner.client.util.lwjgl.StackdTexture;
 import name.martingeisse.miner.common.cubetype.CubeType;
+import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
+
+import static org.lwjgl.opengl.GL11.*;
 
 /**
  * Draws a HUD element that shows a "selected" cube, whatever that
@@ -35,11 +27,6 @@ public final class SelectedCubeHud extends AbstractFrameHandler {
 	 */
 	private final StackdTexture[] textures;
 	
-	/**
-	 * the cubeTypes
-	 */
-	private final CubeType[] cubeTypes;
-
 	/**
 	 * the cubeTypeIndex
 	 */
@@ -65,7 +52,7 @@ public final class SelectedCubeHud extends AbstractFrameHandler {
 			h *= scale;
 			d *= scale;
 			
-			CubeType cubeType = cubeTypes[cubeTypeIndex];
+			CubeType cubeType = CubeTypes.CUBE_TYPES[cubeTypeIndex];
 
 			textures[cubeType.getCubeFaceTextureIndex(AxisAlignedDirection.POSITIVE_Z)].glBindTexture();
 			glBegin(GL_QUADS);
@@ -109,11 +96,9 @@ public final class SelectedCubeHud extends AbstractFrameHandler {
 	/**
 	 * Constructor.
 	 * @param textures the textures
-	 * @param cubeTypes the cube types
 	 */
-	public SelectedCubeHud(final StackdTexture[] textures, final CubeType[] cubeTypes) {
+	public SelectedCubeHud(final StackdTexture[] textures) {
 		this.textures = textures;
-		this.cubeTypes = cubeTypes;
 	}
 	
 	/**
@@ -124,14 +109,6 @@ public final class SelectedCubeHud extends AbstractFrameHandler {
 		return textures;
 	}
 	
-	/**
-	 * Getter method for the cubeTypes.
-	 * @return the cubeTypes
-	 */
-	public CubeType[] getCubeTypes() {
-		return cubeTypes;
-	}
-
 	/**
 	 * Getter method for the cubeTypeIndex.
 	 * @return the cubeTypeIndex

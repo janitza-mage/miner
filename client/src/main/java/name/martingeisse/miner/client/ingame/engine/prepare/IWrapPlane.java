@@ -21,9 +21,8 @@ public interface IWrapPlane {
 	 * @param direction the direction that points from the current section to the neighbor section
 	 * @param u the u coordinate of the cube
 	 * @param v the v coordinate of the cube
-	 * @param cubeTypes the cube types
 	 * @return the cube type
 	 */
-	CubeType getCubeType(AxisAlignedDirection direction, int u, int v, CubeType[] cubeTypes);
+	CubeType getCubeType(AxisAlignedDirection direction, int u, int v);
 	
 }

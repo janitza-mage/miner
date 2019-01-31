@@ -9,6 +9,7 @@ package name.martingeisse.miner.client.ingame.engine.prepare;
 import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.cubes.Cubes;
 import name.martingeisse.miner.common.cubetype.CubeType;
+import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 
 /**
@@ -20,7 +21,7 @@ public abstract class CubesBasedWrapPlane implements IWrapPlane {
 	private Cubes cubes;
 
 	@Override
-	public CubeType getCubeType(AxisAlignedDirection direction, int u, int v, CubeType[] cubeTypes) {
+	public CubeType getCubeType(AxisAlignedDirection direction, int u, int v) {
 		if (cubes == null) {
 			cubes = fetchCubes(direction);
 		}
@@ -29,7 +30,7 @@ public abstract class CubesBasedWrapPlane implements IWrapPlane {
 		final int y = direction.selectByAxis(v, plane, u);
 		final int z = direction.selectByAxis(u, v, plane);
 		final int cubeTypeCode = (cubes.getCubeRelative(Constants.SECTION_SIZE, x, y, z) & 0xff);
-		return cubeTypes[cubeTypeCode];
+		return CubeTypes.CUBE_TYPES[cubeTypeCode];
 	}
 	
 	/**

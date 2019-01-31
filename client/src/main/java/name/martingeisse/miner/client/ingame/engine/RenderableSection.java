@@ -13,6 +13,7 @@ import name.martingeisse.miner.client.util.lwjgl.SystemResourceNode;
 import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.cubes.Cubes;
 import name.martingeisse.miner.common.cubetype.CubeType;
+import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.RectangularRegion;
 import name.martingeisse.miner.common.section.SectionId;
@@ -154,8 +155,7 @@ public final class RenderableSection {
 	 */
 	private void buildMesh(MeshBuilder meshBuilder) {
 		int size = Constants.SECTION_SIZE.getSize();
-		CubeType[] cubeTypes = getWorkingSet().getEngineParameters().getCubeTypes();
-		
+
 		// build cube faces
 		{
 			IWrapPlane uniformWrapPlane = new EmptyWrapPlane();
@@ -180,7 +180,7 @@ public final class RenderableSection {
 							final int y = direction.selectByAxis(v, plane, u);
 							final int z = direction.selectByAxis(u, v, plane);
 							final int cubeTypeCode = cubes.getCubeRelative(Constants.SECTION_SIZE, x, y, z) & 0xff;
-							final CubeType cubeType = cubeTypes[cubeTypeCode];
+							final CubeType cubeType = CubeTypes.CUBE_TYPES[cubeTypeCode];
 							if (cubeTypeCode != 255) {
 								final int textureIndex = cubeType.getCubeFaceTextureIndex(direction);
 								if (textureIndex != 0) {
@@ -193,9 +193,9 @@ public final class RenderableSection {
 										if (neighborCubeTypeCode == 255) {
 											continue;
 										}
-										neighborCubeType = cubeTypes[neighborCubeTypeCode];
+										neighborCubeType = CubeTypes.CUBE_TYPES[neighborCubeTypeCode];
 									} else {
-										neighborCubeType = wrapPlane.getCubeType(direction, u, v, cubeTypes);
+										neighborCubeType = wrapPlane.getCubeType(direction, u, v);
 									}
 									if (!neighborCubeType.obscuresNeighbor(direction.getOpposite())) {
 										cubeFaceTextureIndexPlane[v * size + u] = (byte)textureIndex;
@@ -297,7 +297,7 @@ public final class RenderableSection {
 				for (int z=0; z<size; z++) {
 					final int cubeTypeCode = cubes.getCubeRelative(Constants.SECTION_SIZE, x, y, z) & 0xff;
 					if (cubeTypeCode != 255) {
-						final CubeType cubeType = cubeTypes[cubeTypeCode];
+						final CubeType cubeType = CubeTypes.CUBE_TYPES[cubeTypeCode];
 						final int scaledX = (region.getStartX() + x) << 3;
 						final int scaledY = (region.getStartY() + y) << 3;
 						final int scaledZ = (region.getStartZ() + z) << 3;
