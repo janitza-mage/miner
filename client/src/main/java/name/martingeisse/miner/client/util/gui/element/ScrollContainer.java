@@ -5,6 +5,7 @@ import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiEvent;
 import name.martingeisse.miner.client.util.gui.util.AreaAlignment;
 import name.martingeisse.miner.client.util.gui.util.Color;
+import org.lwjgl.input.Mouse;
 
 /**
  * This container always uses the size requested from outside. The same size, minus the space needed for
@@ -26,20 +27,21 @@ public class ScrollContainer extends GuiElement {
 
 	private final Peephole contentWrapper;
 	private final Peephole scrollBar;
+	private final GuiElement knob;
+	private boolean knobGrabbed = false;
 
 	public ScrollContainer() {
 		contentWrapper = new Peephole(new FillColor(Color.RED));
 		contentWrapper.notifyNewParent(this);
-		scrollBar = createScrollBar();
-		scrollBar.notifyNewParent(this);
-	}
 
-	private static Peephole createScrollBar() {
-		OverlayStack stack = new OverlayStack();
-		stack.setAlignment(AreaAlignment.TOP_LEFT); // TODO does not work
-		stack.addElement(new FillColor(new Color(128, 128, 128)));
-		stack.addElement(new Sizer(new FillColor(Color.WHITE), SCROLL_BAR_WIDTH, SCROLL_KNOB_SIZE));
-		return new Peephole(stack);
+		knob = new Sizer(new FillColor(Color.WHITE), SCROLL_BAR_WIDTH, SCROLL_KNOB_SIZE);
+
+		OverlayStack scrollBarStack = new OverlayStack();
+		scrollBarStack.addElement(new FillColor(new Color(128, 128, 128)));
+		scrollBarStack.addElement(knob);
+		scrollBarStack.setAlignment(AreaAlignment.TOP_LEFT); // TODO does not work
+		scrollBar = new Peephole(scrollBarStack);
+		scrollBar.notifyNewParent(this);
 	}
 
 	public GuiElement getWrappedElement() {
@@ -48,6 +50,7 @@ public class ScrollContainer extends GuiElement {
 
 	public void setWrappedElement(GuiElement wrappedElement) {
 		contentWrapper.setWrappedElement(wrappedElement);
+		requestLayout();
 	}
 
 	@Override
@@ -67,6 +70,24 @@ public class ScrollContainer extends GuiElement {
 	public void handleEvent(GuiEvent event) {
 		contentWrapper.handleEvent(event);
 		scrollBar.handleEvent(event);
+		if (event == GuiEvent.MOUSE_BUTTON_PRESSED && knob.isMouseInside()) {
+			knobGrabbed = true;
+		}
+		if (event == GuiEvent.MOUSE_BUTTON_RELEASED) {
+			knobGrabbed = false;
+		}
+		if (event == GuiEvent.MOUSE_MOVED && knobGrabbed) {
+			// TODO should actually measure the displacement compared to the original grabbing position
+			int displacement = getGui().getMouseY() - (SCROLL_KNOB_SIZE / 2) - getAbsoluteY();
+			if (displacement < 0) {
+				displacement = 0;
+			}
+			if (displacement + SCROLL_KNOB_SIZE > getHeight()) {
+				displacement = getHeight() - SCROLL_KNOB_SIZE;
+			}
+			scrollBar.setDisplacement(0, displacement);
+			requestLayout();
+		}
 	}
 
 }
