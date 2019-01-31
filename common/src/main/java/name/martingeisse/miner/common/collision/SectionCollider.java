@@ -13,21 +13,17 @@ import name.martingeisse.miner.common.geometry.RectangularRegion;
 import name.martingeisse.miner.common.section.SectionId;
 
 /**
- * A collider for an array of cubes that represents a cube cluster. This
- * collider is backed by an array that stores a cube type index for each
- * cube in the array. An additional table of cube types looks up the
- * collider logic for individual types.
+ * A collider for the array of cubes of a section.
+ *
+ * This collider is backed by an array that stores a cube type index for each cube in the array. An additional table of
+ * cube types looks up the collider logic for individual types. This table allows to decouple cube type indices from
+ * the global table of cube types.
  * 
  * The collider's size is specified as a {@link ClusterSize} and its
  * position in space is specified by a {@link SectionId} measured in
  * cluster-size units.
  */
-public final class CubeArrayClusterCollider implements IAxisAlignedCollider {
-
-	/**
-	 * the clusterSize
-	 */
-	private final ClusterSize clusterSize;
+public final class SectionCollider implements IAxisAlignedCollider {
 
 	/**
 	 * the region
@@ -46,14 +42,12 @@ public final class CubeArrayClusterCollider implements IAxisAlignedCollider {
 
 	/**
 	 * Constructor.
-	 * @param clusterSize the cluster size of the section
 	 * @param sectionId the section's ID
 	 * @param cubes the array containing the cube type indices
 	 * @param cubeTypes the cube type table
 	 */
-	public CubeArrayClusterCollider(ClusterSize clusterSize, SectionId sectionId, byte[] cubes, CubeType[] cubeTypes) {
-		this.clusterSize = clusterSize;
-		this.region = new RectangularRegion(sectionId.getX(), sectionId.getY(), sectionId.getZ()).multiply(clusterSize);
+	public SectionCollider(SectionId sectionId, byte[] cubes, CubeType[] cubeTypes) {
+		this.region = new RectangularRegion(sectionId.getX(), sectionId.getY(), sectionId.getZ()).multiply(Constants.SECTION_SIZE);
 		this.cubes = cubes;
 		this.cubeTypes = cubeTypes;
 	}
@@ -88,8 +82,8 @@ public final class CubeArrayClusterCollider implements IAxisAlignedCollider {
 		final int x0 = region.getStartX();
 		final int y0 = region.getStartY();
 		final int z0 = region.getStartZ();
-		final int size = clusterSize.getSize();
-		final int size2 = clusterSize.getSquaredSize();
+		final int size = Constants.SECTION_SIZE.getSize();
+		final int size2 = Constants.SECTION_SIZE.getSquaredSize();
 		for (int x = cubeCoordinateIntersection.getStartX(); x < cubeCoordinateIntersection.getEndX(); x++) {
 			final int dx = x - x0;
 			if (dx < 0 || dx >= size) {

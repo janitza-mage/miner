@@ -10,7 +10,7 @@ import name.martingeisse.miner.client.ingame.engine.CollidingSection;
 import name.martingeisse.miner.client.ingame.engine.RenderableSection;
 import name.martingeisse.miner.client.ingame.engine.WorldWorkingSet;
 import name.martingeisse.miner.common.Constants;
-import name.martingeisse.miner.common.collision.CubeArrayClusterCollider;
+import name.martingeisse.miner.common.collision.SectionCollider;
 import name.martingeisse.miner.common.collision.IAxisAlignedCollider;
 import name.martingeisse.miner.common.cubes.Cubes;
 import name.martingeisse.miner.common.cubetype.CubeType;
@@ -218,7 +218,7 @@ public final class SectionGridLoader {
 							}
 						}
 					}
-					final IAxisAlignedCollider collider = new CubeArrayClusterCollider(Constants.SECTION_SIZE, sectionId, colliderCubes, cubeTypes);
+					final IAxisAlignedCollider collider = new SectionCollider(sectionId, colliderCubes, cubeTypes);
 					final CollidingSection collidingSection = new CollidingSection(workingSet, sectionId, collider);
 					workingSet.getCollidingSectionsLoadedQueue().add(collidingSection);
 					logger.debug("collider registered for section " + sectionId);
