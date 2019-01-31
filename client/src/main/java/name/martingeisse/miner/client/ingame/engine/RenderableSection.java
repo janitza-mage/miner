@@ -319,7 +319,11 @@ public final class RenderableSection {
 	
 	/**
 	 * Disposes of this object. This method must be called before dropping the last reference
-	 * to this object.
+	 * to this object. TODO not called!? This probably means that VBOs are never disposed of.
+	 * Currently this doesn't seem to work anyway because the system resource node scheme wants
+	 * to dispose in the main thread, but VBOs must be disposed in the GL thread. Hint:
+	 * Build a separate OpenGL resource management system. These resources will be used in a
+	 * different way anyway.
 	 */
 	public void dispose() {
 		disposeSystemResourceNode();
