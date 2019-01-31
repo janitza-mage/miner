@@ -135,7 +135,7 @@ public final class Glue extends AbstractWrapperElement {
 		final GuiElement wrappedElement = getWrappedElement();
 		final int dx = alignment.getHorizontalAlignment().alignSpan(getWidth(), wrappedElement.getWidth());
 		final int dy = alignment.getVerticalAlignment().alignSpan(getHeight(), wrappedElement.getHeight());
-		wrappedElement.setPosition(absoluteX + dx, absoluteY + dy);
+		wrappedElement.setAbsolutePosition(absoluteX + dx, absoluteY + dy);
 	}
 
 }

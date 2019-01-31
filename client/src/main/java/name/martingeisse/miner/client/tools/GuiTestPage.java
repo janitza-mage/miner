@@ -16,6 +16,9 @@ import name.martingeisse.miner.client.util.gui.util.Color;
  */
 public class GuiTestPage extends Page {
 
+	public static final Color OFF_WHITE = new Color(240, 240, 240);
+	public static final Color OFF_BLACK = new Color(40, 40, 40);
+
 	/**
 	 * Constructor.
 	 */
@@ -23,6 +26,7 @@ public class GuiTestPage extends Page {
 
 		TextLine textLine = new TextLine();
 		textLine.setText("Hello World!");
+		textLine.setColor(OFF_BLACK);
 
 		Box box = new Box(textLine);
 		box.setBorderColor(Color.RED);
@@ -36,7 +40,7 @@ public class GuiTestPage extends Page {
 		ThinBorder mainElement = new ThinBorder(box);
 		mainElement.setColor(new Color(128, 128, 128));
 
-		initializePage(new FillColor(Color.BLACK), new Margin(mainElement, 30 * Gui.GRID, 30 * Gui.GRID));
+		initializePage(new FillColor(OFF_WHITE), new Margin(mainElement, 30 * Gui.GRID, 30 * Gui.GRID));
 	}
 
 }

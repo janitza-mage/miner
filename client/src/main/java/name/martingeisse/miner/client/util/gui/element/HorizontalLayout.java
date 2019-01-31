@@ -69,7 +69,7 @@ public final class HorizontalLayout extends AbstractListElement {
 	protected void setChildrenLayoutPosition(int absoluteX, int absoluteY) {
 		int height = getHeight();
 		for (GuiElement element : getWrappedElements()) {
-			element.setPosition(absoluteX, absoluteY + alignment.alignSpan(height, element.getHeight()));
+			element.setAbsolutePosition(absoluteX, absoluteY + alignment.alignSpan(height, element.getHeight()));
 			absoluteX += element.getWidth();
 		}
 	}

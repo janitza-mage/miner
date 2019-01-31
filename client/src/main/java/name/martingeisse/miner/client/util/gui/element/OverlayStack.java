@@ -75,7 +75,7 @@ public final class OverlayStack extends AbstractListElement {
 		for (GuiElement element : getWrappedElements()) {
 			int dx = alignment.getHorizontalAlignment().alignSpan(getWidth(), element.getWidth());
 			int dy = alignment.getVerticalAlignment().alignSpan(getHeight(), element.getHeight());
-			element.setPosition(absoluteX + dx, absoluteY + dy);
+			element.setAbsolutePosition(absoluteX + dx, absoluteY + dy);
 		}
 	}
 	

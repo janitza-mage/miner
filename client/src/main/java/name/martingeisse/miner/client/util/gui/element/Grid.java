@@ -198,7 +198,7 @@ public abstract class Grid extends GuiElement {
 		int childLayoutHeight = child.getHeight() + thickness;
 		for (int x=0; x<cellCountX; x++) {
 			for (int y=0; y<cellCountY; y++) {
-				children[y * cellCountX + x].setPosition(absoluteX + thickness + x * childLayoutWidth, absoluteY + thickness + y * childLayoutHeight);
+				children[y * cellCountX + x].setAbsolutePosition(absoluteX + thickness + x * childLayoutWidth, absoluteY + thickness + y * childLayoutHeight);
 			}
 		}
 	}

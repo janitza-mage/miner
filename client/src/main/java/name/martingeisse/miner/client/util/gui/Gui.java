@@ -142,7 +142,7 @@ public final class Gui {
 			}
 			if (layoutRequested) {
 				rootElement.requestSize(widthUnits, HEIGHT_UNITS);
-				rootElement.setPosition(0, 0);
+				rootElement.setAbsolutePosition(0, 0);
 				layoutRequested = false;
 			}
 			glWorkerLoop.schedule(initializeFrameWorkUnit);

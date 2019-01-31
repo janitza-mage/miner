@@ -132,7 +132,7 @@ public final class Sizer extends AbstractWrapperElement {
 		requireWrappedElement();
 		final int x = alignment.getHorizontalAlignment().alignSpan(getWidth(), getWrappedElement().getWidth());
 		final int y = alignment.getVerticalAlignment().alignSpan(getHeight(), getWrappedElement().getHeight());
-		getWrappedElement().setPosition(absoluteX + x, absoluteY + y);
+		getWrappedElement().setAbsolutePosition(absoluteX + x, absoluteY + y);
 	}
 
 }

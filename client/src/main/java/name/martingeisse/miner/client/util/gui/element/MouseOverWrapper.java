@@ -47,7 +47,7 @@ public final class MouseOverWrapper extends AbstractWrapperElement {
 	@Override
 	protected void setChildrenLayoutPosition(int absoluteX, int absoluteY) {
 		requireWrappedElement();
-		getWrappedElement().setPosition(absoluteX, absoluteY);
+		getWrappedElement().setAbsolutePosition(absoluteX, absoluteY);
 	}
 
 	/* (non-Javadoc)

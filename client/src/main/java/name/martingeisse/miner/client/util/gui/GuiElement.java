@@ -158,19 +158,19 @@ public abstract class GuiElement {
 	}
 
 	/**
-	 * Recursively sets the position of this element and all its descendants.
+	 * Recursively sets the absolute position of this element and all its descendants.
 	 * 
 	 * @param absoluteX the absolute x position of this element
 	 * @param absoluteY the absolute y position of this element
 	 */
-	public final void setPosition(int absoluteX, int absoluteY) {
+	public final void setAbsolutePosition(int absoluteX, int absoluteY) {
 		this.absoluteX = absoluteX;
 		this.absoluteY = absoluteY;
 		setChildrenLayoutPosition(absoluteX, absoluteY);
 	}
 
 	/**
-	 * Invokes {@link #setPosition(int, int)} on all direct children of this
+	 * Invokes {@link #setAbsolutePosition(int, int)} on all direct children of this
 	 * element after computing their absolute position. The default
 	 * implementation does nothing. Elements with children should override
 	 * this method.

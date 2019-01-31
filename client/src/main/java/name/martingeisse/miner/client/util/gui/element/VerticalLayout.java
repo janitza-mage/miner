@@ -69,7 +69,7 @@ public final class VerticalLayout extends AbstractListElement {
 	protected void setChildrenLayoutPosition(int absoluteX, int absoluteY) {
 		int width = getWidth();
 		for (GuiElement element : getWrappedElements()) {
-			element.setPosition(absoluteX + alignment.alignSpan(width, element.getWidth()), absoluteY);
+			element.setAbsolutePosition(absoluteX + alignment.alignSpan(width, element.getWidth()), absoluteY);
 			absoluteY += element.getHeight();
 		}
 	}

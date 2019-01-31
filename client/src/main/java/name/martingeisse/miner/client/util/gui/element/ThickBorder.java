@@ -129,7 +129,7 @@ public final class ThickBorder extends AbstractWrapperElement {
 	@Override
 	protected void setChildrenLayoutPosition(int absoluteX, int absoluteY) {
 		requireWrappedElement();
-		getWrappedElement().setPosition(absoluteX + thickness, absoluteY + thickness);
+		getWrappedElement().setAbsolutePosition(absoluteX + thickness, absoluteY + thickness);
 	}
 	
 }
