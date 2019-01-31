@@ -62,7 +62,7 @@ public class GuiTestPage extends Page {
 		ScrollContainer mainElement = new ScrollContainer();
 		mainElement.setWrappedElement(content);
 
-		initializePage(new FillColor(OFF_WHITE), new Margin(mainElement, 30 * Gui.GRID, 30 * Gui.GRID));
+		initializePage(new FillColor(OFF_WHITE), new Margin(new ThinBorder(mainElement), 40 * Gui.GRID, 40 * Gui.GRID));
 	}
 
 	private static TextLine textLine(String text) {
