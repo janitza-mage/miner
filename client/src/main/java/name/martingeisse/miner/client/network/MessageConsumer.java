@@ -16,6 +16,9 @@ public interface MessageConsumer {
 	// the client's constructor and this method isn't needed anymore.
 	void setMessageSender(MessageSender messageSender);
 
+	/**
+	 * Consumes an incoming message. This method is called by a Netty thread and should not block for a long time.
+	 */
 	void consume(Message message);
 
 }
