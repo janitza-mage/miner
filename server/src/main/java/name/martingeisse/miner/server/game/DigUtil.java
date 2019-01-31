@@ -31,9 +31,22 @@ public final class DigUtil {
 		// check for ores
 		switch (cubeType) {
 
+			case 1:
+				playerAccess.getInventoryAccess().add(ItemType.STONE);
+				break;
+
+			case 2:
+			case 3:
+				playerAccess.getInventoryAccess().add(ItemType.DIRT);
+				break;
+
+			case 12:
+				playerAccess.getInventoryAccess().add(ItemType.SAND);
+				break;
+
 			case 16:
 				oreFound(playerAccess, "coal", 2);
-				playerAccess.getInventoryAccess().add(ItemType.FOO);
+				playerAccess.getInventoryAccess().add(ItemType.COAL);
 				playerAccess.sendFlashMessage("inventory item added");
 				break;
 
@@ -43,10 +56,6 @@ public final class DigUtil {
 
 			case 11:
 				oreFound(playerAccess, "diamond", 20);
-				break;
-
-			case 12:
-				oreFound(playerAccess, "emerald", 10);
 				break;
 
 			case 13:

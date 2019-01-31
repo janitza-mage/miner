@@ -14,21 +14,11 @@ import java.util.Map;
  */
 public enum ItemType {
 
-	/**
-	 * the FOO
-	 */
-	FOO,
-	
-	/**
-	 * the BAR
-	 */
-	BAR,
-	
-	/**
-	 * the FUPP
-	 */
-	FUPP;
-	
+	STONE,
+	DIRT,
+	COAL,
+	SAND;
+
 	/**
 	 * the typeByDisplayName
 	 */
