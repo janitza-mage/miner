@@ -24,6 +24,7 @@ public class GuiTestPage extends Page {
 	 */
 	public GuiTestPage() {
 
+		/*
 		TextLine textLine = new TextLine();
 		textLine.setText("Hello World!");
 		textLine.setColor(OFF_BLACK);
@@ -39,8 +40,33 @@ public class GuiTestPage extends Page {
 
 		ThinBorder mainElement = new ThinBorder(box);
 		mainElement.setColor(new Color(128, 128, 128));
+		*/
+
+		VerticalLayout content = new VerticalLayout();
+		content.addElement(textLine("ewogihjewoihweiouhjg"));
+		content.addElement(textLine("gregregerg"));
+		content.addElement(textLine("hreehrhreherhre"));
+		content.addElement(textLine("ewogihjewoihweiouhjg"));
+		content.addElement(textLine("gregregerg"));
+		content.addElement(textLine("hreehrhreherhre"));
+		content.addElement(textLine("ewogihjewoihweiouhjg"));
+		content.addElement(textLine("gregregerg"));
+		content.addElement(textLine("hreehrhreherhre"));
+		content.addElement(textLine("ewogihjewoihweiouhjg"));
+		content.addElement(textLine("gregregerg"));
+		content.addElement(textLine("hreehrhreherhre"));
+		content.addElement(textLine("ewogihjewoihweiouhjg"));
+		content.addElement(textLine("gregregerg"));
+		content.addElement(textLine("hreehrhreherhre"));
+
+		ScrollContainer mainElement = new ScrollContainer();
+		mainElement.setWrappedElement(content);
 
 		initializePage(new FillColor(OFF_WHITE), new Margin(mainElement, 30 * Gui.GRID, 30 * Gui.GRID));
+	}
+
+	private static TextLine textLine(String text) {
+		return new TextLine().setText(text).setColor(OFF_BLACK);
 	}
 
 }

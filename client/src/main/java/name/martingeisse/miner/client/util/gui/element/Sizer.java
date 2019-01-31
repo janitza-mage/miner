@@ -113,6 +113,12 @@ public final class Sizer extends AbstractWrapperElement {
 		return this;
 	}
 
+	public Sizer setInnerSize(int innerWidth, int innerHeight) {
+		this.innerWidth = innerWidth;
+		this.innerHeight = innerHeight;
+		return this;
+	}
+
 	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.client.gui.GuiElement#finishLayout(int, int)
 	 */
