@@ -7,8 +7,6 @@
 package name.martingeisse.miner.client.ingame;
 
 import com.google.common.collect.ImmutableList;
-import name.martingeisse.miner.client.Main;
-import name.martingeisse.miner.client.MinerResources;
 import name.martingeisse.miner.client.ingame.hud.FlashMessageHandler;
 import name.martingeisse.miner.client.ingame.hud.FpsPanel;
 import name.martingeisse.miner.client.ingame.hud.SelectedCubeHud;
@@ -21,10 +19,6 @@ import name.martingeisse.miner.client.ingame.player.PlayerProxy;
 import name.martingeisse.miner.client.util.frame.AbstractFrameHandler;
 import name.martingeisse.miner.client.util.frame.BreakFrameLoopException;
 import name.martingeisse.miner.client.util.frame.HandlerList;
-import name.martingeisse.miner.client.util.frame.SwappableHandler;
-import name.martingeisse.miner.client.util.gui.GuiFrameHandler;
-import name.martingeisse.miner.client.util.gui.control.Page;
-import name.martingeisse.miner.client.util.lwjgl.MouseUtil;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.s2c.UpdateInventory;
 import org.apache.log4j.Logger;
@@ -56,17 +50,8 @@ public class IngameHandler extends HandlerList {
 	public static FlashMessageHandler flashMessageHandler;
 
 	/**
-	 * the gameMenuHandler
-	 */
-	private static GuiFrameHandler gameMenuHandler;
-
-	/**
-	 * the ingameMenuHandlerWrapper
-	 */
-	private static SwappableHandler gameMenuHandlerWrapper;
-
-	/**
 	 * Constructor.
+	 *
 	 * @throws Exception on errors
 	 */
 	public IngameHandler() throws Exception {
@@ -102,7 +87,7 @@ public class IngameHandler extends HandlerList {
 
 						System.out.println("*** updating inventory");
 
-						UpdateInventory message = (UpdateInventory)untypedMessage;
+						UpdateInventory message = (UpdateInventory) untypedMessage;
 						List<InventorySlot> slots = new ArrayList<>();
 						for (UpdateInventory.Element element : message.getElements()) {
 							slots.add(new InventorySlot(element.getId() + ": " + element.getName() + " (" + element.getQuantity() + ")"));
@@ -127,28 +112,6 @@ public class IngameHandler extends HandlerList {
 		);
 		add(selectedCubeHud);
 
-		// the in-game menu
-		gameMenuHandler = new GuiFrameHandler();
-		gameMenuHandler.getGui().setDefaultFont(MinerResources.getInstance().getFont());
-		gameMenuHandlerWrapper = new SwappableHandler();
-		add(gameMenuHandlerWrapper);
-
-	}
-
-	public static void openGui(Page page) {
-		gameMenuHandlerWrapper.setWrappedHandler(gameMenuHandler);
-		gameMenuHandler.getGui().setRootElement(page);
-		MouseUtil.ungrab();
-	}
-
-	public static void closeGui() {
-		gameMenuHandlerWrapper.setWrappedHandler(null);
-		MouseUtil.grab();
-		CubeWorldHelper.disableLeftMouseButtonBecauseWeJustClosedTheGui = true;
-	}
-
-	public static boolean isGuiOpen() {
-		return gameMenuHandlerWrapper.getWrappedHandler() != null;
 	}
 
 }

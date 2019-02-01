@@ -5,10 +5,15 @@
 package name.martingeisse.miner.client.ingame;
 
 import name.martingeisse.miner.client.Main;
+import name.martingeisse.miner.client.MinerResources;
 import name.martingeisse.miner.client.ingame.hud.FlashMessageHandler;
 import name.martingeisse.miner.client.ingame.network.StackdProtocolClient;
 import name.martingeisse.miner.client.network.ClientEndpoint;
 import name.martingeisse.miner.client.startmenu.AccountApiClient;
+import name.martingeisse.miner.client.util.frame.SwappableHandler;
+import name.martingeisse.miner.client.util.gui.GuiFrameHandler;
+import name.martingeisse.miner.client.util.gui.control.Page;
+import name.martingeisse.miner.client.util.lwjgl.MouseUtil;
 import name.martingeisse.miner.common.network.c2s.ResumePlayer;
 
 import java.nio.charset.StandardCharsets;
@@ -51,6 +56,8 @@ public final class Ingame {
 	private StackdProtocolClient protocolClient;
 	private CubeWorldHelper cubeWorldHelper;
 	private IngameHandler ingameHandler;
+	private GuiFrameHandler gameMenuHandler;
+	private SwappableHandler gameMenuHandlerWrapper;
 
 	public Ingame() throws Exception {
 
@@ -63,6 +70,12 @@ public final class Ingame {
 		IngameHandler.cubeWorldHelper = cubeWorldHelper;
 
 		ingameHandler = new IngameHandler();
+
+		// the in-game menu
+		gameMenuHandler = new GuiFrameHandler();
+		gameMenuHandler.getGui().setDefaultFont(MinerResources.getInstance().getFont());
+		gameMenuHandlerWrapper = new SwappableHandler();
+		ingameHandler.add(gameMenuHandlerWrapper);
 
 		// Finally, the connected to the server (which we started creating early) must be established before the game
 		// can run, so if we're still not connected, wait for it. We also want to route network messages to the
@@ -119,4 +132,21 @@ public final class Ingame {
 	public void setIngameHandler(IngameHandler ingameHandler) {
 		this.ingameHandler = ingameHandler;
 	}
+
+	public void openGui(Page page) {
+		gameMenuHandlerWrapper.setWrappedHandler(gameMenuHandler);
+		gameMenuHandler.getGui().setRootElement(page);
+		MouseUtil.ungrab();
+	}
+
+	public void closeGui() {
+		gameMenuHandlerWrapper.setWrappedHandler(null);
+		MouseUtil.grab();
+		CubeWorldHelper.disableLeftMouseButtonBecauseWeJustClosedTheGui = true;
+	}
+
+	public boolean isGuiOpen() {
+		return gameMenuHandlerWrapper.getWrappedHandler() != null;
+	}
+
 }

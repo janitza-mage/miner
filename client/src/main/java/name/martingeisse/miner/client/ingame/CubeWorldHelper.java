@@ -283,8 +283,8 @@ public class CubeWorldHelper {
 	 * 
 	 */
 	public void step() {
-		final boolean keysEnabled = !IngameHandler.isGuiOpen();
-		final boolean mouseMovementEnabled = !IngameHandler.isGuiOpen();
+		final boolean keysEnabled = !Ingame.get().isGuiOpen();
+		final boolean mouseMovementEnabled = !Ingame.get().isGuiOpen();
 
 		// first, handle the stuff that already works without the world being loaded "enough"
 		frameDurationSensor.tick();
@@ -343,10 +343,10 @@ public class CubeWorldHelper {
 		if (keysEnabled) {
 			while (Keyboard.next()) {
 				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE && Keyboard.getEventKeyState()) {
-					IngameHandler.openGui(new MainMenuPage());
+					Ingame.get().openGui(new MainMenuPage());
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_I && Keyboard.getEventKeyState()) {
-					IngameHandler.openGui(new InventoryPage());
+					Ingame.get().openGui(new InventoryPage());
 				}
 			}
 		}

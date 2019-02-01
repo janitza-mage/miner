@@ -6,7 +6,7 @@
 
 package name.martingeisse.miner.client.ingame.gui;
 
-import name.martingeisse.miner.client.ingame.IngameHandler;
+import name.martingeisse.miner.client.ingame.Ingame;
 import name.martingeisse.miner.client.ingame.logic.Inventory;
 import name.martingeisse.miner.client.ingame.logic.InventorySlot;
 import name.martingeisse.miner.client.util.gui.Gui;
@@ -43,7 +43,7 @@ public class InventoryPage extends AbstractGameGuiPage {
 		menu.addElement(new GameGuiButton("Resume Game") {
 			@Override
 			protected void onClick() {
-				IngameHandler.closeGui();
+				Ingame.get().closeGui();
 			}
 		});
 

@@ -6,13 +6,12 @@
 
 package name.martingeisse.miner.client.ingame.gui;
 
-import name.martingeisse.miner.client.ingame.IngameHandler;
+import name.martingeisse.miner.client.ingame.Ingame;
 import name.martingeisse.miner.client.util.frame.BreakFrameLoopException;
 import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.element.Margin;
 import name.martingeisse.miner.client.util.gui.element.Spacer;
 import name.martingeisse.miner.client.util.gui.element.VerticalLayout;
-import name.martingeisse.miner.client.util.lwjgl.MouseUtil;
 
 /**
  * The "login" menu page.
@@ -27,7 +26,7 @@ public class MainMenuPage extends AbstractGameGuiPage {
 		menu.addElement(new GameGuiButton("Resume Game") {
 			@Override
 			protected void onClick() {
-				IngameHandler.closeGui();
+				Ingame.get().closeGui();
 			}
 		});
 		menu.addElement(new Spacer(2 * Gui.GRID));
