@@ -86,6 +86,7 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 
 		});
 		sendCoinsUpdate();
+		sendInventoryUpdate();
 	}
 
 	public PlayerAccess getPlayerAccess() {

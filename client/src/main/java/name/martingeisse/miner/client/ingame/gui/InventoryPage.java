@@ -13,9 +13,7 @@ import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.control.Button;
 import name.martingeisse.miner.client.util.gui.control.ListView;
-import name.martingeisse.miner.client.util.gui.element.Margin;
-import name.martingeisse.miner.client.util.gui.element.Spacer;
-import name.martingeisse.miner.client.util.gui.element.VerticalLayout;
+import name.martingeisse.miner.client.util.gui.element.*;
 
 /**
  * The "login" menu page.
@@ -27,6 +25,7 @@ public class InventoryPage extends AbstractGameGuiPage {
 	 */
 	public InventoryPage() {
 		final VerticalLayout menu = new VerticalLayout();
+
 		ListView<Item> itemListView = new ListView<Item>(Inventory.INSTANCE::getItems) {
 			@Override
 			protected GuiElement createGuiElement(Item dataElement) {
@@ -38,7 +37,7 @@ public class InventoryPage extends AbstractGameGuiPage {
 				return new Margin(button, 3 * Gui.MINIGRID, 0);
 			}
 		};
-		menu.addElement(itemListView);
+		menu.addElement(new Sizer(new ScrollContainer(itemListView), -1, 50 * Gui.GRID));
 
 		menu.addElement(new Spacer(0, 3 * Gui.GRID));
 		menu.addElement(new GameGuiButton("Resume Game") {

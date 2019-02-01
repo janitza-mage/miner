@@ -45,6 +45,11 @@ public class ScrollContainer extends GuiElement {
 		scrollBar.notifyNewParent(this);
 	}
 
+	public ScrollContainer(GuiElement wrappedElement) {
+		this();
+		setWrappedElement(wrappedElement);
+	}
+
 	public GuiElement getWrappedElement() {
 		return contentWrapper.getWrappedElement();
 	}
