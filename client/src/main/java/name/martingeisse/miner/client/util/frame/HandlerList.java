@@ -52,14 +52,4 @@ public class HandlerList extends ArrayList<IFrameHandler> implements IFrameHandl
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.client.frame.IFrameHandler#onAfterDraw(name.martingeisse.glworker.GlWorkerLoop)
-	 */
-	@Override
-	public void onAfterDraw(GlWorkerLoop glWorkerLoop) {
-		for (IFrameHandler handler : this) {
-			handler.onAfterDraw(glWorkerLoop);
-		}
-	}
-
 }

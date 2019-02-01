@@ -34,9 +34,7 @@ import org.lwjgl.opengl.Display;
  *   {@link Display#processMessages()} is passed to the worker
  *   loop instead of executed directly
  *   
- * - if the worker loop is overloaded, whole drawing phases are skipped, including
- *   calls to {@link IFrameHandler#onBeforeDraw(GlWorkerLoop)} and
- *   {@link IFrameHandler#onAfterDraw(GlWorkerLoop)}.
+ * - if the worker loop is overloaded, whole drawing phases are skipped.
  *   
  * - after drawing, this class adds a frame boundary marker to the GL worker loop
  * 
@@ -88,7 +86,6 @@ public final class FrameLoop {
 			if (glWorkerLoop == null || !glWorkerLoop.isOverloaded()) {
 				rootHandler.onBeforeDraw(glWorkerLoop);
 				rootHandler.draw(glWorkerLoop);
-				rootHandler.onAfterDraw(glWorkerLoop);
 				if (glWorkerLoop != null) {
 					// TODO don't create a new object every frame
 					glWorkerLoop.schedule(new GlWorkUnit() {

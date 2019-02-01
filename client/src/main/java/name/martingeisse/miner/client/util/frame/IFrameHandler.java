@@ -22,7 +22,7 @@ public interface IFrameHandler {
 	 * Handles a game step. This method performs the game logic.
 	 * @throws BreakFrameLoopException if this handler wants to break the frame loop
 	 */
-	public void handleStep() throws BreakFrameLoopException;
+	void handleStep() throws BreakFrameLoopException;
 	
 	/**
 	 * Called just before calling {@link #draw(GlWorkerLoop)} on all handlers.
@@ -31,21 +31,13 @@ public interface IFrameHandler {
 	 * 
 	 * @param glWorkerLoop the OpenGL worker loop
 	 */
-	public void onBeforeDraw(GlWorkerLoop glWorkerLoop);
+	void onBeforeDraw(GlWorkerLoop glWorkerLoop);
 	
 	/**
 	 * Draws the screen contents using OpenGL.
 	 * 
 	 * @param glWorkerLoop the OpenGL worker loop
 	 */
-	public void draw(GlWorkerLoop glWorkerLoop);
+	void draw(GlWorkerLoop glWorkerLoop);
 
-	/**
-	 * Called just after calling {@link #draw(GlWorkerLoop)} on all handlers.
-	 * This method should discard unused data.
-	 * 
-	 * @param glWorkerLoop the OpenGL worker loop
-	 */
-	public void onAfterDraw(GlWorkerLoop glWorkerLoop);
-	
 }
