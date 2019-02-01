@@ -102,11 +102,6 @@ public class IngameHandler extends HandlerList {
 			}
 
 			@Override
-			public void onAfterHandleStep() {
-				cubeWorldHandler.purge();
-			}
-
-			@Override
 			public void draw(GlWorkerLoop glWorkerLoop) {
 				cubeWorldHandler.draw(glWorkerLoop);
 			}
