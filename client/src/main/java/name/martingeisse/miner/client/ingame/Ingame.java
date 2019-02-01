@@ -59,11 +59,11 @@ public final class Ingame {
 	// ---------------------------------------------------------------------------------------------------
 	//
 
-	private FlashMessageHandler flashMessageHandler;
-	private StackdProtocolClient protocolClient;
-	private CubeWorldHelper cubeWorldHelper;
-	private GuiFrameHandler gameMenuHandler;
-	private SwappableHandler gameMenuHandlerWrapper;
+	private final FlashMessageHandler flashMessageHandler;
+	private final StackdProtocolClient protocolClient;
+	private final CubeWorldHelper cubeWorldHelper;
+	private final GuiFrameHandler gameMenuHandler;
+	private final SwappableHandler gameMenuHandlerWrapper;
 
 	private HandlerList handlerList;
 
@@ -105,12 +105,9 @@ public final class Ingame {
 		// Switch the frame handler to the in-game handler list
 		handlerList = new HandlerList();
 		handlerList.add(new CubeWorldHandler());
-		handlerList.add(new SendPositionToServerHandler(Ingame.get().getCubeWorldHelper().getPlayer()));
+		handlerList.add(new SendPositionToServerHandler(cubeWorldHelper.getPlayer()));
 		handlerList.add(new MessageFrameHandler());
-		handlerList.add(new SelectedCubeHud(
-			Ingame.get().getCubeWorldHelper().getResources().getCubeTextures(),
-			Ingame.get().getCubeWorldHelper()::getCurrentCubeType
-		));
+		handlerList.add(new SelectedCubeHud(cubeWorldHelper.getResources().getCubeTextures(), cubeWorldHelper::getCurrentCubeType));
 		handlerList.add(flashMessageHandler);
 		handlerList.add(new FpsPanel());
 		handlerList.add(gameMenuHandlerWrapper);
@@ -127,28 +124,12 @@ public final class Ingame {
 
 	}
 
-	public FlashMessageHandler getFlashMessageHandler() {
-		return flashMessageHandler;
-	}
-
-	public void setFlashMessageHandler(FlashMessageHandler flashMessageHandler) {
-		this.flashMessageHandler = flashMessageHandler;
-	}
-
 	public StackdProtocolClient getProtocolClient() {
 		return protocolClient;
 	}
 
-	public void setProtocolClient(StackdProtocolClient protocolClient) {
-		this.protocolClient = protocolClient;
-	}
-
 	public CubeWorldHelper getCubeWorldHelper() {
 		return cubeWorldHelper;
-	}
-
-	public void setCubeWorldHelper(CubeWorldHelper cubeWorldHelper) {
-		this.cubeWorldHelper = cubeWorldHelper;
 	}
 
 	public void openGui(Page page) {
@@ -165,6 +146,10 @@ public final class Ingame {
 
 	public boolean isGuiOpen() {
 		return gameMenuHandlerWrapper.getWrappedHandler() != null;
+	}
+
+	public void showFlashMessage(String text) {
+		flashMessageHandler.addMessage(text);
 	}
 
 }

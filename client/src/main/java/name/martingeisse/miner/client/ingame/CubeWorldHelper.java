@@ -310,7 +310,7 @@ public class CubeWorldHelper {
 			MouseUtil.grab();
 		}
 		if (keysEnabled && Keyboard.isKeyDown(Keyboard.KEY_SLASH) && !minusPressed) {
-			Ingame.get().getFlashMessageHandler().addMessage("foobar! " + flashMessageCounter);
+			Ingame.get().showFlashMessage("foobar! " + flashMessageCounter);
 			flashMessageCounter++;
 		}
 		minusPressed = keysEnabled && Keyboard.isKeyDown(Keyboard.KEY_SLASH);
