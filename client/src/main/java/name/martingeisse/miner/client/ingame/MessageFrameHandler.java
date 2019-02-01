@@ -53,7 +53,7 @@ public class MessageFrameHandler extends AbstractFrameHandler {
 				PlayerResumed message = (PlayerResumed) untypedMessage;
 				cubeWorldHandler.getPlayer().getPosition().copyFrom(message.getPosition());
 				cubeWorldHandler.getPlayer().getOrientation().copyFrom(message.getOrientation());
-				protocolClient.getSectionGridLoader().setViewerPosition(cubeWorldHandler.getPlayer().getSectionId());
+				Ingame.get().getSectionGridLoader().setViewerPosition(cubeWorldHandler.getPlayer().getSectionId());
 
 			} else if (untypedMessage instanceof PlayerListUpdate) {
 

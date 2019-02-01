@@ -184,8 +184,8 @@ public class CubeWorldHandler implements IFrameHandler {
 		@Override
 		protected void onIntervalTimerExpired() {
 			if (requestCooldown == 0) {
-				Ingame.get().getProtocolClient().getSectionGridLoader().setViewerPosition(player.getSectionId());
-				if (Ingame.get().getProtocolClient().getSectionGridLoader().update()) {
+				Ingame.get().getSectionGridLoader().setViewerPosition(player.getSectionId());
+				if (Ingame.get().getSectionGridLoader().update()) {
 					requestCooldown = 50;
 				}
 			} else {

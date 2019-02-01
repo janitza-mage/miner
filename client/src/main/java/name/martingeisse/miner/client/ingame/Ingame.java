@@ -62,6 +62,7 @@ public final class Ingame {
 	private final StackdProtocolClient protocolClient;
 	private final CubeWorldHandler cubeWorldHandler;
 	private final GuiFrameHandler gameMenuHandler;
+	private final SectionGridLoader sectionGridLoader;
 
 	private HandlerList handlerList;
 	private long coins = 0;
@@ -72,15 +73,15 @@ public final class Ingame {
 		protocolClient = new StackdProtocolClient();
 		cubeWorldHandler = new CubeWorldHandler(Main.screenWidth, Main.screenHeight);
 
-		// TODO: implement better checking for connection problems: only stall when surrounding sections
-		// are missing AND the player is in that half of the current section. currently using collider
-		// radius 2 to avoid "connection problems" when crossing a section boundary
-		protocolClient.setSectionGridLoader(new SectionGridLoader(cubeWorldHandler.getWorkingSet(), 3, 2));
-
 		// the in-game menu
 		gameMenuHandler = new GuiFrameHandler();
 		gameMenuHandler.getGui().setDefaultFont(MinerResources.getInstance().getFont());
 		gameMenuHandler.setEnableGui(false);
+
+		// TODO: implement better checking for connection problems: only stall when surrounding sections
+		// are missing AND the player is in that half of the current section. currently using collider
+		// radius 2 to avoid "connection problems" when crossing a section boundary
+		sectionGridLoader = new SectionGridLoader(cubeWorldHandler.getWorkingSet(), 3, 2);
 
 	}
 
@@ -128,6 +129,10 @@ public final class Ingame {
 
 	public CubeWorldHandler getCubeWorldHandler() {
 		return cubeWorldHandler;
+	}
+
+	public SectionGridLoader getSectionGridLoader() {
+		return sectionGridLoader;
 	}
 
 	public void openGui(Page page) {
