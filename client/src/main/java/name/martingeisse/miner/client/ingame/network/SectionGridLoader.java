@@ -30,8 +30,7 @@ import java.util.Set;
 /**
  * This class updates the set of sections in the {@link WorldWorkingSet} based
  * on the viewer's position. It requests new sections by sending section request
- * packets via a {@link StackdProtocolClient} and should be registered with
- * that client to handle section update packets.
+ * messages to the server and receives the responses via the in-game message router.
  * 
  * Sending a request for sections is not initiated by this class; this class
  * only provides a method to do so. Clients should call that method in regular

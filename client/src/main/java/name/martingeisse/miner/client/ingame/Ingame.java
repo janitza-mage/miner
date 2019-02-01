@@ -11,16 +11,18 @@ import name.martingeisse.miner.client.ingame.hud.FpsPanel;
 import name.martingeisse.miner.client.ingame.hud.SelectedCubeHud;
 import name.martingeisse.miner.client.ingame.network.SectionGridLoader;
 import name.martingeisse.miner.client.ingame.network.SendPositionToServerHandler;
-import name.martingeisse.miner.client.ingame.network.StackdProtocolClient;
+import name.martingeisse.miner.client.ingame.network.IngameMessageRouter;
 import name.martingeisse.miner.client.network.ClientEndpoint;
 import name.martingeisse.miner.client.startmenu.AccountApiClient;
 import name.martingeisse.miner.client.util.frame.HandlerList;
 import name.martingeisse.miner.client.util.gui.GuiFrameHandler;
 import name.martingeisse.miner.client.util.gui.control.Page;
 import name.martingeisse.miner.client.util.lwjgl.MouseUtil;
+import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.c2s.ResumePlayer;
 
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * The class wraps all in-game objects.
@@ -59,10 +61,10 @@ public final class Ingame {
 	//
 
 	private final FlashMessageHandler flashMessageHandler;
-	private final StackdProtocolClient protocolClient;
 	private final CubeWorldHandler cubeWorldHandler;
 	private final GuiFrameHandler gameMenuHandler;
 	private final SectionGridLoader sectionGridLoader;
+	private final ConcurrentLinkedQueue<Message> inboundMessageQueue = new ConcurrentLinkedQueue<>();
 
 	private HandlerList handlerList;
 	private long coins = 0;
@@ -70,7 +72,6 @@ public final class Ingame {
 	public Ingame() throws Exception {
 
 		flashMessageHandler = new FlashMessageHandler();
-		protocolClient = new StackdProtocolClient();
 		cubeWorldHandler = new CubeWorldHandler(Main.screenWidth, Main.screenHeight);
 
 		// the in-game menu
@@ -95,7 +96,7 @@ public final class Ingame {
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e);
 		}
-		ClientEndpoint.INSTANCE.setMessageConsumer(protocolClient);
+		ClientEndpoint.INSTANCE.setMessageConsumer(new IngameMessageRouter());
 
 		// TODO this will disappear anyway when the account API uses the ClientEndpoint, so don't worry about
 		// performance or about blocking the game intil resumed for now
@@ -121,10 +122,6 @@ public final class Ingame {
 		}
 		handlerList = null;
 
-	}
-
-	public StackdProtocolClient getProtocolClient() {
-		return protocolClient;
 	}
 
 	public CubeWorldHandler getCubeWorldHandler() {
@@ -161,6 +158,10 @@ public final class Ingame {
 
 	public void setCoins(long coins) {
 		this.coins = coins;
+	}
+
+	public ConcurrentLinkedQueue<Message> getInboundMessageQueue() {
+		return inboundMessageQueue;
 	}
 
 }

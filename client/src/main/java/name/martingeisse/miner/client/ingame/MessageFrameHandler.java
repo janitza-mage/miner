@@ -7,7 +7,6 @@ package name.martingeisse.miner.client.ingame;
 import com.google.common.collect.ImmutableList;
 import name.martingeisse.miner.client.ingame.logic.Inventory;
 import name.martingeisse.miner.client.ingame.logic.InventorySlot;
-import name.martingeisse.miner.client.ingame.network.StackdProtocolClient;
 import name.martingeisse.miner.client.ingame.player.PlayerProxy;
 import name.martingeisse.miner.client.util.frame.AbstractFrameHandler;
 import name.martingeisse.miner.common.network.Message;
@@ -32,9 +31,8 @@ public class MessageFrameHandler extends AbstractFrameHandler {
 		// would be wrong and also load wrong sections
 
 		CubeWorldHandler cubeWorldHandler = Ingame.get().getCubeWorldHandler();
-		StackdProtocolClient protocolClient = Ingame.get().getProtocolClient();
 
-		final ConcurrentLinkedQueue<Message> messages = protocolClient.getMessages();
+		final ConcurrentLinkedQueue<Message> messages = Ingame.get().getInboundMessageQueue();
 		while (true) {
 			Message untypedMessage = messages.poll();
 			if (untypedMessage == null) {
