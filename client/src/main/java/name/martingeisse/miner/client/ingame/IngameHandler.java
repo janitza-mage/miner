@@ -167,15 +167,6 @@ public class IngameHandler extends HandlerList {
 		gameMenuHandlerWrapper = new SwappableHandler();
 		add(gameMenuHandlerWrapper);
 
-		// Finally, the connected to the server (which we started creating early) must be established before the game
-		// can run, so if we're still not connected, wait for it. We also want to route network messages to the
-		// in-game logic now.
-		ClientEndpoint.INSTANCE.waitUntilConnected();
-		ClientEndpoint.INSTANCE.setMessageConsumer(protocolClient);
-
-		// TODO this will disappear anyway when the account API uses the ClientEndpoint, so don't worry about
-		// performance or about blocking the game intil resumed for now
-		ClientEndpoint.INSTANCE.send(new ResumePlayer(AccountApiClient.getInstance().getPlayerAccessToken().getBytes(StandardCharsets.UTF_8)));
 	}
 
 	public static void openGui(Page page) {

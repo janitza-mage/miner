@@ -6,7 +6,7 @@
 
 package name.martingeisse.miner.client;
 
-import name.martingeisse.miner.client.ingame.IngameHandler;
+import name.martingeisse.miner.client.ingame.Ingame;
 import name.martingeisse.miner.client.network.ClientEndpoint;
 import name.martingeisse.miner.client.startmenu.AccountApiClient;
 import name.martingeisse.miner.client.startmenu.LoginPage;
@@ -205,7 +205,7 @@ public class Main {
 	 */
 	@SuppressWarnings("unused")
 	private static void autologinComplete() throws Exception {
-		Main.frameLoop.getRootHandler().setWrappedHandler(new IngameHandler());
+		Ingame.create();
 		MouseUtil.grab();
 	}
 

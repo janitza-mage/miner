@@ -8,6 +8,7 @@ package name.martingeisse.miner.client.startmenu;
 
 import name.martingeisse.common.javascript.analyze.JsonAnalyzer;
 import name.martingeisse.miner.client.Main;
+import name.martingeisse.miner.client.ingame.Ingame;
 import name.martingeisse.miner.common.Faction;
 import name.martingeisse.miner.client.ingame.IngameHandler;
 import name.martingeisse.miner.client.util.gui.Gui;
@@ -122,7 +123,7 @@ public class PlayerDetailsPage extends AbstractStartmenuPage {
 			@Override
 			public void run() {
 				try {
-					Main.frameLoop.getRootHandler().setWrappedHandler(new IngameHandler());
+					Ingame.create();
 					MouseUtil.grab();
 				} catch (Exception e) {
 					throw new RuntimeException(e);
