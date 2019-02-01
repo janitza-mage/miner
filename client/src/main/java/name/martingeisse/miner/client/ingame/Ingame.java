@@ -15,7 +15,6 @@ import name.martingeisse.miner.client.ingame.network.StackdProtocolClient;
 import name.martingeisse.miner.client.network.ClientEndpoint;
 import name.martingeisse.miner.client.startmenu.AccountApiClient;
 import name.martingeisse.miner.client.util.frame.HandlerList;
-import name.martingeisse.miner.client.util.frame.SwappableHandler;
 import name.martingeisse.miner.client.util.gui.GuiFrameHandler;
 import name.martingeisse.miner.client.util.gui.control.Page;
 import name.martingeisse.miner.client.util.lwjgl.MouseUtil;
@@ -61,9 +60,8 @@ public final class Ingame {
 
 	private final FlashMessageHandler flashMessageHandler;
 	private final StackdProtocolClient protocolClient;
-	private final CubeWorldHelper cubeWorldHelper;
+	private final CubeWorldHandler cubeWorldHandler;
 	private final GuiFrameHandler gameMenuHandler;
-	private final SwappableHandler gameMenuHandlerWrapper;
 
 	private HandlerList handlerList;
 
@@ -72,17 +70,17 @@ public final class Ingame {
 		flashMessageHandler = new FlashMessageHandler();
 		protocolClient = new StackdProtocolClient();
 		protocolClient.setFlashMessageHandler(flashMessageHandler);
-		cubeWorldHelper = new CubeWorldHelper(Main.screenWidth, Main.screenHeight);
+		cubeWorldHandler = new CubeWorldHandler(Main.screenWidth, Main.screenHeight);
 
 		// TODO: implement better checking for connection problems: only stall when surrounding sections
 		// are missing AND the player is in that half of the current section. currently using collider
 		// radius 2 to avoid "connection problems" when crossing a section boundary
-		protocolClient.setSectionGridLoader(new SectionGridLoader(cubeWorldHelper.getWorkingSet(), 3, 2));
+		protocolClient.setSectionGridLoader(new SectionGridLoader(cubeWorldHandler.getWorkingSet(), 3, 2));
 
 		// the in-game menu
 		gameMenuHandler = new GuiFrameHandler();
 		gameMenuHandler.getGui().setDefaultFont(MinerResources.getInstance().getFont());
-		gameMenuHandlerWrapper = new SwappableHandler();
+		gameMenuHandler.setEnableGui(false);
 
 	}
 
@@ -104,13 +102,13 @@ public final class Ingame {
 
 		// Switch the frame handler to the in-game handler list
 		handlerList = new HandlerList();
-		handlerList.add(new CubeWorldHandler());
-		handlerList.add(new SendPositionToServerHandler(cubeWorldHelper.getPlayer()));
+		handlerList.add(cubeWorldHandler);
+		handlerList.add(new SendPositionToServerHandler(cubeWorldHandler.getPlayer()));
 		handlerList.add(new MessageFrameHandler());
-		handlerList.add(new SelectedCubeHud(cubeWorldHelper.getResources().getCubeTextures(), cubeWorldHelper::getCurrentCubeType));
+		handlerList.add(new SelectedCubeHud(cubeWorldHandler.getResources().getCubeTextures(), cubeWorldHandler::getCurrentCubeType));
 		handlerList.add(flashMessageHandler);
 		handlerList.add(new FpsPanel());
-		handlerList.add(gameMenuHandlerWrapper);
+		handlerList.add(gameMenuHandler);
 		Main.frameLoop.getRootHandler().setWrappedHandler(handlerList);
 	}
 
@@ -128,24 +126,24 @@ public final class Ingame {
 		return protocolClient;
 	}
 
-	public CubeWorldHelper getCubeWorldHelper() {
-		return cubeWorldHelper;
+	public CubeWorldHandler getCubeWorldHandler() {
+		return cubeWorldHandler;
 	}
 
 	public void openGui(Page page) {
-		gameMenuHandlerWrapper.setWrappedHandler(gameMenuHandler);
 		gameMenuHandler.getGui().setRootElement(page);
+		gameMenuHandler.setEnableGui(true);
 		MouseUtil.ungrab();
 	}
 
 	public void closeGui() {
-		gameMenuHandlerWrapper.setWrappedHandler(null);
+		gameMenuHandler.setEnableGui(false);
 		MouseUtil.grab();
-		CubeWorldHelper.disableLeftMouseButtonBecauseWeJustClosedTheGui = true;
+		CubeWorldHandler.disableLeftMouseButtonBecauseWeJustClosedTheGui = true;
 	}
 
 	public boolean isGuiOpen() {
-		return gameMenuHandlerWrapper.getWrappedHandler() != null;
+		return gameMenuHandler.isEnableGui();
 	}
 
 	public void showFlashMessage(String text) {

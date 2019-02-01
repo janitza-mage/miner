@@ -33,18 +33,18 @@ public class MessageFrameHandler extends AbstractFrameHandler {
 		// TODO race condition: should not start the game until the player has been resumed,
 		// would be wrong and also load wrong sections
 
-		CubeWorldHelper cubeWorldHelper = Ingame.get().getCubeWorldHelper();
+		CubeWorldHandler cubeWorldHandler = Ingame.get().getCubeWorldHandler();
 		StackdProtocolClient protocolClient = Ingame.get().getProtocolClient();
 
 		final List<PlayerProxy> updatedPlayerProxies = protocolClient.fetchUpdatedPlayerProxies();
 		if (updatedPlayerProxies != null) {
-			cubeWorldHelper.setPlayerProxies(updatedPlayerProxies);
+			cubeWorldHandler.setPlayerProxies(updatedPlayerProxies);
 		}
 		final PlayerResumedMessage playerResumedMessage = protocolClient.fetchPlayerResumedMessage();
 		if (playerResumedMessage != null) {
-			cubeWorldHelper.getPlayer().getPosition().copyFrom(playerResumedMessage.getPosition());
-			cubeWorldHelper.getPlayer().getOrientation().copyFrom(playerResumedMessage.getOrientation());
-			protocolClient.getSectionGridLoader().setViewerPosition(cubeWorldHelper.getPlayer().getSectionId());
+			cubeWorldHandler.getPlayer().getPosition().copyFrom(playerResumedMessage.getPosition());
+			cubeWorldHandler.getPlayer().getOrientation().copyFrom(playerResumedMessage.getOrientation());
+			protocolClient.getSectionGridLoader().setViewerPosition(cubeWorldHandler.getPlayer().getSectionId());
 		}
 		final ConcurrentLinkedQueue<Message> messages = protocolClient.getMessages();
 		while (true) {

@@ -21,69 +21,71 @@ public final class GuiFrameHandler extends AbstractFrameHandler {
 
 	private static Logger logger = Logger.getLogger(GuiFrameHandler.class);
 
-	/**
-	 * the gui
-	 */
 	private final Gui gui;
+	private boolean enableGui;
 
 	/**
 	 * Constructor.
 	 */
 	public GuiFrameHandler() {
 		this.gui = new Gui(Display.getWidth(), Display.getHeight());
+		this.enableGui = true;
 	}
 
-	/**
-	 * Getter method for the gui.
-	 * @return the gui
-	 */
 	public Gui getGui() {
 		return gui;
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.client.frame.AbstractFrameHandler#draw(name.martingeisse.glworker.GlWorkerLoop)
-	 */
+	public boolean isEnableGui() {
+		return enableGui;
+	}
+
+	public void setEnableGui(boolean enableGui) {
+		this.enableGui = enableGui;
+	}
+
 	@Override
 	public void draw(final GlWorkerLoop glWorkerLoop) {
-		try {
-			gui.setGlWorkerLoop(glWorkerLoop);
-			gui.fireEvent(GuiEvent.DRAW);
-			gui.executeFollowupOpenglActions();
-		} catch (Exception e) {
-			logger.error("unexpected exception in GUI (drawing)", e);
+		if (enableGui) {
+			try {
+				gui.setGlWorkerLoop(glWorkerLoop);
+				gui.fireEvent(GuiEvent.DRAW);
+				gui.executeFollowupOpenglActions();
+			} catch (Exception e) {
+				logger.error("unexpected exception in GUI (drawing)", e);
+			}
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.client.frame.AbstractFrameHandler#handleStep()
-	 */
 	@Override
 	public synchronized void handleStep() throws BreakFrameLoopException {
-		try {
+		// TODO why is this method synchronized?
+		if (enableGui) {
+			try {
 
-			// dispatch keyboard events
-			while (Keyboard.next()) {
-				gui.fireEvent(Keyboard.getEventKeyState() ? GuiEvent.KEY_PRESSED : GuiEvent.KEY_RELEASED);
-			}
-
-			// dispatch mouse events
-			while (Mouse.next()) {
-				if (Mouse.getEventDX() != 0 || Mouse.getEventDY() != 0) {
-					gui.fireEvent(GuiEvent.MOUSE_MOVED);
+				// dispatch keyboard events
+				while (Keyboard.next()) {
+					gui.fireEvent(Keyboard.getEventKeyState() ? GuiEvent.KEY_PRESSED : GuiEvent.KEY_RELEASED);
 				}
-				if (Mouse.getEventButton() != -1) {
-					gui.fireEvent(Mouse.getEventButtonState() ? GuiEvent.MOUSE_BUTTON_PRESSED : GuiEvent.MOUSE_BUTTON_RELEASED);
+
+				// dispatch mouse events
+				while (Mouse.next()) {
+					if (Mouse.getEventDX() != 0 || Mouse.getEventDY() != 0) {
+						gui.fireEvent(GuiEvent.MOUSE_MOVED);
+					}
+					if (Mouse.getEventButton() != -1) {
+						gui.fireEvent(Mouse.getEventButtonState() ? GuiEvent.MOUSE_BUTTON_PRESSED : GuiEvent.MOUSE_BUTTON_RELEASED);
+					}
 				}
+
+				// handle pending followup actions
+				gui.executeFollowupLogicActions();
+
+			} catch (BreakFrameLoopException e) {
+				throw e;
+			} catch (Exception e) {
+				logger.error("unexpected exception in GUI (logic)", e);
 			}
-
-			// handle pending followup actions
-			gui.executeFollowupLogicActions();
-
-		} catch (BreakFrameLoopException e) {
-			throw e;
-		} catch (Exception e) {
-			logger.error("unexpected exception in GUI (logic)", e);
 		}
 	}
 
