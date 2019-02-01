@@ -42,6 +42,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class StackdProtocolClient implements MessageConsumer {
 
+	public static final String SERVER_NAME = "localhost";
+
 	private static Logger logger = Logger.getLogger(StackdProtocolClient.class);
 
 	private MessageSender messageSender;
@@ -58,9 +60,6 @@ public class StackdProtocolClient implements MessageConsumer {
 	 * Constructor.
 	 */
 	public StackdProtocolClient() {
-		String host = IngameHandler.serverName;
-		int port = Constants.NETWORK_PORT;
-
 		logger.info("connecting to server");
 		EventLoopGroup workerGroup = new NioEventLoopGroup();
 		final Bootstrap bootstrap = new Bootstrap();
@@ -69,7 +68,7 @@ public class StackdProtocolClient implements MessageConsumer {
 		bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
 		bootstrap.option(ChannelOption.TCP_NODELAY, true);
 		bootstrap.handler(new ClientChannelInitializer(this));
-		bootstrap.connect(new InetSocketAddress(host, port));
+		bootstrap.connect(new InetSocketAddress(SERVER_NAME, Constants.NETWORK_PORT));
 	}
 
 	public void setMessageSender(MessageSender messageSender) {

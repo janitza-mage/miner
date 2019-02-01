@@ -49,16 +49,6 @@ public class IngameHandler extends HandlerList {
 	public static CubeWorldHandler cubeWorldHandler;
 
 	/**
-	 * the serverBaseUrl
-	 */
-	public static String serverBaseUrl;
-
-	/**
-	 * the serverName
-	 */
-	public static String serverName;
-
-	/**
 	 * the protocolClient
 	 */
 	public static StackdProtocolClient protocolClient;
@@ -83,22 +73,6 @@ public class IngameHandler extends HandlerList {
 	 * @throws Exception on errors
 	 */
 	public IngameHandler() throws Exception {
-
-		// determine server base URL (old HTTP protocol)
-		serverBaseUrl = System.getProperty("name.martingeisse.miner.serverBaseUrl");
-		if (serverBaseUrl == null) {
-			serverBaseUrl = "http://localhost:8080";
-		} else if (serverBaseUrl.equals("LIVE")) {
-			serverBaseUrl = "http://vshg03.mni.fh-giessen.de:8080";
-		}
-
-		// determine server name (new binary protocol)
-		serverName = System.getProperty("name.martingeisse.miner.serverName");
-		if (serverName == null) {
-			serverName = "localhost";
-		} else if (serverName.equals("LIVE")) {
-			serverName = "vshg03.mni.fh-giessen.de";
-		}
 
 		// connect to the server
 		MinerResources resources = MinerResources.getInstance();

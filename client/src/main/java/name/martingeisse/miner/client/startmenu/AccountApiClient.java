@@ -29,6 +29,8 @@ import org.apache.log4j.Logger;
  */
 public final class AccountApiClient {
 
+	public static final String SERVER_BASE_URL = "http://localhost:8080";
+
 	/**
 	 * the logger
 	 */
@@ -78,7 +80,7 @@ public final class AccountApiClient {
 	 */
 	private JsonAnalyzer request(final String action, final String requestData) {
 		try {
-			final HttpPost post = new HttpPost("http://localhost:8080/" + action);
+			final HttpPost post = new HttpPost(SERVER_BASE_URL + '/' + action);
 			post.setEntity(new StringEntity(requestData, StandardCharsets.UTF_8));
 			final HttpResponse response = httpClient.execute(post);
 			if (response.getStatusLine().getStatusCode() != 200) {
