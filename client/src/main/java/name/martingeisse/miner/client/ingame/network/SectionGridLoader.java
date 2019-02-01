@@ -9,6 +9,7 @@ package name.martingeisse.miner.client.ingame.network;
 import name.martingeisse.miner.client.ingame.engine.CollidingSection;
 import name.martingeisse.miner.client.ingame.engine.RenderableSection;
 import name.martingeisse.miner.client.ingame.engine.WorldWorkingSet;
+import name.martingeisse.miner.client.network.ClientEndpoint;
 import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.collision.IAxisAlignedCollider;
 import name.martingeisse.miner.common.collision.SectionCollider;
@@ -133,7 +134,7 @@ public final class SectionGridLoader {
 		// ProfilingHelper.checkRelevant("update sections 1");
 		
 		// if the protocol client isn't ready yet, we cannot load anything
-		if (!protocolClient.isReady()) {
+		if (!ClientEndpoint.INSTANCE.isConnected()) {
 			logger.debug("cannot load sections, protocol client not ready yet");
 			return anythingUpdated;
 		}

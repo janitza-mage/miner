@@ -18,6 +18,8 @@ import name.martingeisse.miner.client.ingame.network.PlayerResumedMessage;
 import name.martingeisse.miner.client.ingame.network.SendPositionToServerHandler;
 import name.martingeisse.miner.client.ingame.network.StackdProtocolClient;
 import name.martingeisse.miner.client.ingame.player.PlayerProxy;
+import name.martingeisse.miner.client.network.ClientEndpoint;
+import name.martingeisse.miner.client.startmenu.AccountApiClient;
 import name.martingeisse.miner.client.util.frame.AbstractFrameHandler;
 import name.martingeisse.miner.client.util.frame.BreakFrameLoopException;
 import name.martingeisse.miner.client.util.frame.HandlerList;
@@ -27,9 +29,11 @@ import name.martingeisse.miner.client.util.gui.GuiFrameHandler;
 import name.martingeisse.miner.client.util.gui.control.Page;
 import name.martingeisse.miner.client.util.lwjgl.MouseUtil;
 import name.martingeisse.miner.common.network.Message;
+import name.martingeisse.miner.common.network.c2s.ResumePlayer;
 import name.martingeisse.miner.common.network.s2c.UpdateInventory;
 import org.apache.log4j.Logger;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -171,10 +175,15 @@ public class IngameHandler extends HandlerList {
 		gameMenuHandlerWrapper = new SwappableHandler();
 		add(gameMenuHandlerWrapper);
 
-		// prepare running the game
-		protocolClient.setFlashMessageHandler(flashMessageHandler);
-		protocolClient.waitUntilReady();
+		// Finally, the connected to the server (which we started creating early) must be established before the game
+		// can run, so if we're still not connected, wait for it. We also want to route network messages to the
+		// in-game logic now.
+		ClientEndpoint.INSTANCE.waitUntilConnected();
+		ClientEndpoint.INSTANCE.setMessageConsumer(protocolClient);
 
+		// TODO this will disappear anyway when the account API uses the ClientEndpoint, so don't worry about
+		// performance or about blocking the game intil resumed for now
+		ClientEndpoint.INSTANCE.send(new ResumePlayer(AccountApiClient.getInstance().getPlayerAccessToken().getBytes(StandardCharsets.UTF_8)));
 	}
 
 	public static void openGui(Page page) {

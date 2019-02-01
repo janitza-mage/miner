@@ -6,31 +6,19 @@
 
 package name.martingeisse.miner.client.ingame.network;
 
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioSocketChannel;
-import name.martingeisse.miner.client.ingame.IngameHandler;
 import name.martingeisse.miner.client.ingame.frame.FlashMessageHandler;
 import name.martingeisse.miner.client.ingame.player.PlayerProxy;
-import name.martingeisse.miner.client.network.ClientChannelInitializer;
+import name.martingeisse.miner.client.network.ClientEndpoint;
 import name.martingeisse.miner.client.network.MessageConsumer;
-import name.martingeisse.miner.client.network.MessageSender;
-import name.martingeisse.miner.client.startmenu.AccountApiClient;
-import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.geometry.angle.ReadableEulerAngles;
 import name.martingeisse.miner.common.geometry.vector.ReadableVector3d;
 import name.martingeisse.miner.common.geometry.vector.Vector3i;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.c2s.DigNotification;
-import name.martingeisse.miner.common.network.c2s.ResumePlayer;
 import name.martingeisse.miner.common.network.c2s.UpdatePosition;
 import name.martingeisse.miner.common.network.s2c.*;
 import org.apache.log4j.Logger;
 
-import java.net.InetSocketAddress;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -42,11 +30,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class StackdProtocolClient implements MessageConsumer {
 
-	public static final String SERVER_NAME = "localhost";
 
 	private static Logger logger = Logger.getLogger(StackdProtocolClient.class);
 
-	private MessageSender messageSender;
 	private FlashMessageHandler flashMessageHandler;
 	private SectionGridLoader sectionGridLoader;
 	private List<PlayerProxy> updatedPlayerProxies;
@@ -60,40 +46,6 @@ public class StackdProtocolClient implements MessageConsumer {
 	 * Constructor.
 	 */
 	public StackdProtocolClient() {
-		logger.info("connecting to server");
-		EventLoopGroup workerGroup = new NioEventLoopGroup();
-		final Bootstrap bootstrap = new Bootstrap();
-		bootstrap.group(workerGroup);
-		bootstrap.channel(NioSocketChannel.class);
-		bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
-		bootstrap.option(ChannelOption.TCP_NODELAY, true);
-		bootstrap.handler(new ClientChannelInitializer(this));
-		bootstrap.connect(new InetSocketAddress(SERVER_NAME, Constants.NETWORK_PORT));
-	}
-
-	public void setMessageSender(MessageSender messageSender) {
-		this.messageSender = messageSender;
-		if (messageSender != null) {
-			send(new ResumePlayer(AccountApiClient.getInstance().getPlayerAccessToken().getBytes(StandardCharsets.UTF_8)));
-		}
-	}
-
-	/**
-	 * @return true if ready, false if still connecting
-	 */
-	public final boolean isReady() {
-		return (messageSender != null);
-	}
-
-	/**
-	 * Waits until this client is ready.
-	 *
-	 * @throws InterruptedException if interrupted while waiting
-	 */
-	public final void waitUntilReady() throws InterruptedException {
-		while (!isReady()) {
-			Thread.sleep(10);
-		}
 	}
 
 	public ConcurrentLinkedQueue<Message> getMessages() {
@@ -137,7 +89,7 @@ public class StackdProtocolClient implements MessageConsumer {
 	}
 
 	public final void send(Message message) {
-		messageSender.send(message);
+		ClientEndpoint.INSTANCE.send(message);
 	}
 
 	/**

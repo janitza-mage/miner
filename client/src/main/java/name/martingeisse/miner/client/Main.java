@@ -7,6 +7,7 @@
 package name.martingeisse.miner.client;
 
 import name.martingeisse.miner.client.ingame.IngameHandler;
+import name.martingeisse.miner.client.network.ClientEndpoint;
 import name.martingeisse.miner.client.startmenu.AccountApiClient;
 import name.martingeisse.miner.client.startmenu.LoginPage;
 import name.martingeisse.miner.client.util.frame.FrameLoop;
@@ -64,6 +65,9 @@ public class Main {
 			Thread.currentThread().setName("Startup (later OpenGL)");
 			TaskSystem.initialize();
 			final TaskBarrier barrier = new TaskBarrier(1);
+
+			// Start connecting to the server. This takes some time in the background, so start early.
+			ClientEndpoint.INSTANCE.connect();
 
 			// TODO development
 			new Task() {

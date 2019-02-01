@@ -6,33 +6,59 @@
 
 package name.martingeisse.miner.client.network;
 
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.network.Message;
+import name.martingeisse.miner.common.network.ProtocolChannelInitializer;
 import name.martingeisse.miner.common.network.ProtocolEndpoint;
 import org.apache.log4j.Logger;
 
+import java.net.InetSocketAddress;
 import java.nio.channels.ClosedChannelException;
 
 /**
  *
  */
-final class ClientEndpoint extends ProtocolEndpoint implements MessageSender {
+public final class ClientEndpoint extends ProtocolEndpoint {
 
 	private static Logger logger = Logger.getLogger(ClientEndpoint.class);
 
-	private final MessageConsumer messageConsumer;
+	public static final String SERVER_NAME = "localhost";
 
-	public ClientEndpoint(MessageConsumer messageConsumer) {
-		this.messageConsumer = messageConsumer;
+	public static final ClientEndpoint INSTANCE = new ClientEndpoint();
+
+	private volatile MessageConsumer messageConsumer;
+	private volatile boolean connected;
+
+	private ClientEndpoint() {
+		this.messageConsumer = NullMessageConsumer.INSTANCE;
+		this.connected = false;
 	}
 
 	@Override
 	protected void onConnect() {
-		messageConsumer.setMessageSender(this);
+		connected = true;
 	}
 
 	@Override
 	protected void onDisconnect() {
-		messageConsumer.setMessageSender(null);
+		connected = false;
+	}
+
+	public MessageConsumer getMessageConsumer() {
+		return messageConsumer;
+	}
+
+	public void setMessageConsumer(MessageConsumer messageConsumer) {
+		this.messageConsumer = messageConsumer;
+	}
+
+	public boolean isConnected() {
+		return connected;
 	}
 
 	@Override
@@ -54,6 +80,29 @@ final class ClientEndpoint extends ProtocolEndpoint implements MessageSender {
 	@Override
 	protected void onMessage(Message message) {
 		messageConsumer.consume(message);
+	}
+
+	public void connect() {
+		logger.info("connecting to server");
+		EventLoopGroup workerGroup = new NioEventLoopGroup();
+		final Bootstrap bootstrap = new Bootstrap();
+		bootstrap.group(workerGroup);
+		bootstrap.channel(NioSocketChannel.class);
+		bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
+		bootstrap.option(ChannelOption.TCP_NODELAY, true);
+		bootstrap.handler(new ProtocolChannelInitializer() {
+			@Override
+			protected ProtocolEndpoint createProtocolEndpoint() {
+				return ClientEndpoint.this;
+			}
+		});
+		bootstrap.connect(new InetSocketAddress(SERVER_NAME, Constants.NETWORK_PORT));
+	}
+
+	public void waitUntilConnected() throws InterruptedException {
+		while (!connected) {
+			Thread.sleep(10);
+		}
 	}
 
 }

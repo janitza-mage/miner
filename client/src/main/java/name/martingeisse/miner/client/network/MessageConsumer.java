@@ -10,12 +10,6 @@ import name.martingeisse.miner.common.network.Message;
  */
 public interface MessageConsumer {
 
-	// TODO remove this eventually. This method was intended to let the protocol client know about its messageSender as
-	// soon as it exists so the client can send messages. However, we want to refactor the connection process such
-	// that the end point exists *before* the client (i.e. MessageConsumer), so the messageSender can just be passed in
-	// the client's constructor and this method isn't needed anymore.
-	void setMessageSender(MessageSender messageSender);
-
 	/**
 	 * Consumes an incoming message. This method is called by a Netty thread and should not block for a long time.
 	 */
