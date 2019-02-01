@@ -153,7 +153,6 @@ public class Main {
 
 			// add the start menu as a handler
 			{
-				// TODO share resources properly
 				GuiFrameHandler startmenuHandler = new GuiFrameHandler();
 				startmenuHandler.getGui().setDefaultFont(MinerResources.getInstance().getFont());
 				startmenuHandler.getGui().setRootElement(new LoginPage());

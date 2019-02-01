@@ -78,7 +78,7 @@ public class IngameHandler extends HandlerList {
 		protocolClient = new StackdProtocolClient();
 		protocolClient.setFlashMessageHandler(flashMessageHandler);
 
-		// build the cube world handler
+		// game handlers
 		cubeWorldHandler = new CubeWorldHandler(Main.screenWidth, Main.screenHeight, resources);
 		add(new AbstractFrameHandler() {
 
@@ -108,15 +108,8 @@ public class IngameHandler extends HandlerList {
 			}
 
 		});
-		add(new FpsPanel(resources.getFont()));
-		final SelectedCubeHud selectedCubeHud = new SelectedCubeHud(cubeWorldHandler.getResources().getCubeTextures());
-		add(selectedCubeHud);
-		add(new AbstractFrameHandler() {
-			@Override
-			public void onBeforeDraw(GlWorkerLoop glWorkerLoop) {
-				selectedCubeHud.setCubeTypeIndex(cubeWorldHandler.getCurrentCubeType());
-			}
-		});
+
+		// network logic handlers
 		add(new SendPositionToServerHandler(cubeWorldHandler.getPlayer()));
 		add(new AbstractFrameHandler() {
 			@Override
@@ -159,14 +152,22 @@ public class IngameHandler extends HandlerList {
 
 			}
 		});
+
+		// HUD handlers
 		add(flashMessageHandler);
-		
+		add(new FpsPanel(resources.getFont()));
+		final SelectedCubeHud selectedCubeHud = new SelectedCubeHud(cubeWorldHandler.getResources().getCubeTextures());
+		add(selectedCubeHud);
+		add(new AbstractFrameHandler() {
+			@Override
+			public void onBeforeDraw(GlWorkerLoop glWorkerLoop) {
+				selectedCubeHud.setCubeTypeIndex(cubeWorldHandler.getCurrentCubeType());
+			}
+		});
+
 		// the in-game menu
-		{
-			// TODO share resources properly
-			gameMenuHandler = new GuiFrameHandler();
-			gameMenuHandler.getGui().setDefaultFont(MinerResources.getInstance().getFont());
-		}
+		gameMenuHandler = new GuiFrameHandler();
+		gameMenuHandler.getGui().setDefaultFont(MinerResources.getInstance().getFont());
 		gameMenuHandlerWrapper = new SwappableHandler();
 		add(gameMenuHandlerWrapper);
 
