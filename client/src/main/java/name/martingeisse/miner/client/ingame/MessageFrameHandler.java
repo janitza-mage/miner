@@ -13,6 +13,7 @@ import name.martingeisse.miner.client.util.frame.AbstractFrameHandler;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.s2c.PlayerListUpdate;
 import name.martingeisse.miner.common.network.s2c.PlayerResumed;
+import name.martingeisse.miner.common.network.s2c.UpdateCoins;
 import name.martingeisse.miner.common.network.s2c.UpdateInventory;
 import org.apache.log4j.Logger;
 
@@ -69,6 +70,11 @@ public class MessageFrameHandler extends AbstractFrameHandler {
 					updatedPlayerProxies.add(proxy);
 				}
 				cubeWorldHandler.setPlayerProxies(updatedPlayerProxies);
+
+			} else if (untypedMessage instanceof UpdateCoins) {
+
+				UpdateCoins message = (UpdateCoins) untypedMessage;
+				Ingame.get().setCoins(message.getCoins());
 
 			} else {
 				logger.error("client received unexpected message: " + untypedMessage);

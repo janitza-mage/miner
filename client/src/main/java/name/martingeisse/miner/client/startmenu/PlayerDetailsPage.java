@@ -41,7 +41,7 @@ public class PlayerDetailsPage extends AbstractStartmenuPage {
 	/**
 	 * the coins
 	 */
-	private final int coins;
+	private final long coins;
 	
 	/**
 	 * Constructor.
@@ -54,7 +54,7 @@ public class PlayerDetailsPage extends AbstractStartmenuPage {
 		JsonAnalyzer json = AccountApiClient.getInstance().fetchPlayerDetails(playerId);
 		this.faction = Faction.values()[json.analyzeMapElement("faction").expectInteger()];
 		this.name = json.analyzeMapElement("name").expectString();
-		this.coins = json.analyzeMapElement("coins").expectInteger();
+		this.coins = json.analyzeMapElement("coins").expectLong();
 		
 		// build the layout
 		final VerticalLayout menu = new VerticalLayout();

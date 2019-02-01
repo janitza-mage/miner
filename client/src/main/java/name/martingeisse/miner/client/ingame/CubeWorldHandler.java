@@ -658,7 +658,7 @@ public class CubeWorldHandler implements IFrameHandler {
 				GL11.glPixelTransferf(GL11.GL_RED_BIAS, 1.0f);
 				GL11.glPixelTransferf(GL11.GL_GREEN_BIAS, 1.0f);
 				GL11.glPixelTransferf(GL11.GL_BLUE_BIAS, 1.0f);
-				resources.getFont().drawText("coins: " + Ingame.get().getProtocolClient().getCoins(), 2, Font.ALIGN_RIGHT, Font.ALIGN_TOP);
+				resources.getFont().drawText("coins: " + Ingame.get().getCoins(), 2, Font.ALIGN_RIGHT, Font.ALIGN_TOP);
 				GL11.glPixelTransferf(GL11.GL_RED_BIAS, 0.0f);
 				GL11.glPixelTransferf(GL11.GL_GREEN_BIAS, 0.0f);
 				GL11.glPixelTransferf(GL11.GL_BLUE_BIAS, 0.0f);

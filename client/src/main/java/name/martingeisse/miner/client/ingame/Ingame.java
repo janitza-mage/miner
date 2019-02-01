@@ -64,6 +64,7 @@ public final class Ingame {
 	private final GuiFrameHandler gameMenuHandler;
 
 	private HandlerList handlerList;
+	private long coins = 0;
 
 	public Ingame() throws Exception {
 
@@ -147,6 +148,14 @@ public final class Ingame {
 
 	public void showFlashMessage(String text) {
 		flashMessageHandler.addMessage(text);
+	}
+
+	public long getCoins() {
+		return coins;
+	}
+
+	public void setCoins(long coins) {
+		this.coins = coins;
 	}
 
 }

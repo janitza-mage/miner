@@ -7,7 +7,6 @@
 package name.martingeisse.miner.client.ingame.network;
 
 import name.martingeisse.miner.client.ingame.Ingame;
-import name.martingeisse.miner.client.ingame.player.PlayerProxy;
 import name.martingeisse.miner.client.network.ClientEndpoint;
 import name.martingeisse.miner.client.network.MessageConsumer;
 import name.martingeisse.miner.common.geometry.vector.Vector3i;
@@ -16,8 +15,6 @@ import name.martingeisse.miner.common.network.c2s.DigNotification;
 import name.martingeisse.miner.common.network.s2c.*;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -30,7 +27,6 @@ public class StackdProtocolClient implements MessageConsumer {
 	private static Logger logger = Logger.getLogger(StackdProtocolClient.class);
 
 	private SectionGridLoader sectionGridLoader;
-	private volatile long coins = 0;
 
 	// TODO move everything to this queue that must be consumed by the game thread
 	private final ConcurrentLinkedQueue<Message> messages = new ConcurrentLinkedQueue<>();
@@ -103,11 +99,7 @@ public class StackdProtocolClient implements MessageConsumer {
 		} else if (untypedMessage instanceof PlayerResumed) {
 			messages.add(untypedMessage);
 		} else if (untypedMessage instanceof UpdateCoins) {
-
-			UpdateCoins message = (UpdateCoins) untypedMessage;
-			coins = message.getCoins();
-			logger.info("update coins: " + coins);
-
+			messages.add(untypedMessage);
 		} else if (untypedMessage instanceof UpdateInventory) {
 			messages.add(untypedMessage);
 		} else {
@@ -124,15 +116,6 @@ public class StackdProtocolClient implements MessageConsumer {
 	 */
 	public void sendDigNotification(int x, int y, int z) {
 		send(new DigNotification(new Vector3i(x, y, z)));
-	}
-
-	/**
-	 * Getter method for the coins.
-	 *
-	 * @return the coins
-	 */
-	public long getCoins() {
-		return coins;
 	}
 
 }
