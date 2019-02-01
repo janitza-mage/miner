@@ -30,7 +30,6 @@ public class StackdProtocolClient implements MessageConsumer {
 	private static Logger logger = Logger.getLogger(StackdProtocolClient.class);
 
 	private SectionGridLoader sectionGridLoader;
-	private List<PlayerProxy> updatedPlayerProxies;
 	private volatile long coins = 0;
 
 	// TODO move everything to this queue that must be consumed by the game thread
@@ -100,20 +99,7 @@ public class StackdProtocolClient implements MessageConsumer {
 			}
 
 		} else if (untypedMessage instanceof PlayerListUpdate) {
-
-			PlayerListUpdate message = (PlayerListUpdate) untypedMessage;
-			List<PlayerProxy> playerProxiesFromMessage = new ArrayList<PlayerProxy>();
-			for (PlayerListUpdate.Element element : message.getElements()) {
-				PlayerProxy proxy = new PlayerProxy();
-				proxy.getPosition().copyFrom(element.getPosition());
-				proxy.getOrientation().copyFrom(element.getAngles());
-				proxy.setName(element.getName());
-				playerProxiesFromMessage.add(proxy);
-			}
-			synchronized (this) {
-				this.updatedPlayerProxies = playerProxiesFromMessage;
-			}
-
+			messages.add(untypedMessage);
 		} else if (untypedMessage instanceof PlayerResumed) {
 			messages.add(untypedMessage);
 		} else if (untypedMessage instanceof UpdateCoins) {
@@ -127,19 +113,6 @@ public class StackdProtocolClient implements MessageConsumer {
 		} else {
 			logger.error("client received unexpected message: " + untypedMessage);
 		}
-	}
-
-	/**
-	 * If there is an updated list of player proxies, returns that
-	 * list and deletes it from this object.
-	 *
-	 * @return the updated player proxies, or null if no update
-	 * is available
-	 */
-	public synchronized List<PlayerProxy> fetchUpdatedPlayerProxies() {
-		List<PlayerProxy> result = updatedPlayerProxies;
-		updatedPlayerProxies = null;
-		return result;
 	}
 
 	/**
