@@ -6,7 +6,7 @@
 
 package name.martingeisse.miner.client.ingame.network;
 
-import name.martingeisse.miner.client.ingame.frame.FlashMessageHandler;
+import name.martingeisse.miner.client.ingame.hud.FlashMessageHandler;
 import name.martingeisse.miner.client.ingame.player.PlayerProxy;
 import name.martingeisse.miner.client.network.ClientEndpoint;
 import name.martingeisse.miner.client.network.MessageConsumer;
@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 /**
  * This class handles the connection to the server. Applications are
  * free to create subclasses that add application-specific message
- * types.
+ * types. TODO rename to IngameMessageRouter when refactoring is done.
  */
 public class StackdProtocolClient implements MessageConsumer {
 
