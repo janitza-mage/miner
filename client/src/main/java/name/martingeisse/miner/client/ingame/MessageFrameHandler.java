@@ -7,12 +7,11 @@ package name.martingeisse.miner.client.ingame;
 import com.google.common.collect.ImmutableList;
 import name.martingeisse.miner.client.ingame.logic.Inventory;
 import name.martingeisse.miner.client.ingame.logic.InventorySlot;
-import name.martingeisse.miner.client.ingame.network.PlayerResumedMessage;
 import name.martingeisse.miner.client.ingame.network.StackdProtocolClient;
 import name.martingeisse.miner.client.ingame.player.PlayerProxy;
 import name.martingeisse.miner.client.util.frame.AbstractFrameHandler;
-import name.martingeisse.miner.client.util.frame.BreakFrameLoopException;
 import name.martingeisse.miner.common.network.Message;
+import name.martingeisse.miner.common.network.s2c.PlayerResumed;
 import name.martingeisse.miner.common.network.s2c.UpdateInventory;
 import org.apache.log4j.Logger;
 
@@ -40,24 +39,29 @@ public class MessageFrameHandler extends AbstractFrameHandler {
 		if (updatedPlayerProxies != null) {
 			cubeWorldHandler.setPlayerProxies(updatedPlayerProxies);
 		}
-		final PlayerResumedMessage playerResumedMessage = protocolClient.fetchPlayerResumedMessage();
-		if (playerResumedMessage != null) {
-			cubeWorldHandler.getPlayer().getPosition().copyFrom(playerResumedMessage.getPosition());
-			cubeWorldHandler.getPlayer().getOrientation().copyFrom(playerResumedMessage.getOrientation());
-			protocolClient.getSectionGridLoader().setViewerPosition(cubeWorldHandler.getPlayer().getSectionId());
-		}
+
+
 		final ConcurrentLinkedQueue<Message> messages = protocolClient.getMessages();
 		while (true) {
 			Message untypedMessage = messages.poll();
 			if (untypedMessage == null) {
 				break;
 			} else if (untypedMessage instanceof UpdateInventory) {
+
 				UpdateInventory message = (UpdateInventory) untypedMessage;
 				List<InventorySlot> slots = new ArrayList<>();
 				for (UpdateInventory.Element element : message.getElements()) {
 					slots.add(new InventorySlot(element.getId() + ": " + element.getName() + " (" + element.getQuantity() + ")"));
 				}
 				Inventory.INSTANCE.setSlots(ImmutableList.copyOf(slots));
+
+			} else if (untypedMessage instanceof PlayerResumed) {
+
+				PlayerResumed message = (PlayerResumed)untypedMessage;
+				cubeWorldHandler.getPlayer().getPosition().copyFrom(message.getPosition());
+				cubeWorldHandler.getPlayer().getOrientation().copyFrom(message.getOrientation());
+				protocolClient.getSectionGridLoader().setViewerPosition(cubeWorldHandler.getPlayer().getSectionId());
+
 			} else {
 				logger.error("client received unexpected message: " + untypedMessage);
 			}

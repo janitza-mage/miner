@@ -38,6 +38,7 @@ public class StackdServer {
 
 		Timer timer = new Timer(true);
 		timer.schedule(new AvatarUpdateSender(), 0, 200);
+		timer.schedule(new AvatarPositionPersister(), 0, 5_000);
 
 		// TODO for testing
 		try {
@@ -112,4 +113,20 @@ public class StackdServer {
 
 	}
 
+	/**
+	 * Saves player position to the database regularly.
+	 */
+	private class AvatarPositionPersister extends TimerTask {
+
+		@Override
+		public void run() {
+			for (StackdSession session : getSessions()) {
+				Avatar avatar = session.getAvatar();
+				if (avatar != null) {
+					session.getPlayerAccess().saveAvatar(avatar);
+				}
+			}
+		}
+
+	}
 }

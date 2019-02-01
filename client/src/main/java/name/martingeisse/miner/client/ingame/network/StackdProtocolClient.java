@@ -10,12 +10,9 @@ import name.martingeisse.miner.client.ingame.Ingame;
 import name.martingeisse.miner.client.ingame.player.PlayerProxy;
 import name.martingeisse.miner.client.network.ClientEndpoint;
 import name.martingeisse.miner.client.network.MessageConsumer;
-import name.martingeisse.miner.common.geometry.angle.ReadableEulerAngles;
-import name.martingeisse.miner.common.geometry.vector.ReadableVector3d;
 import name.martingeisse.miner.common.geometry.vector.Vector3i;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.c2s.DigNotification;
-import name.martingeisse.miner.common.network.c2s.UpdatePosition;
 import name.martingeisse.miner.common.network.s2c.*;
 import org.apache.log4j.Logger;
 
@@ -34,7 +31,6 @@ public class StackdProtocolClient implements MessageConsumer {
 
 	private SectionGridLoader sectionGridLoader;
 	private List<PlayerProxy> updatedPlayerProxies;
-	private PlayerResumedMessage playerResumedMessage;
 	private volatile long coins = 0;
 
 	// TODO move everything to this queue that must be consumed by the game thread
@@ -119,12 +115,7 @@ public class StackdProtocolClient implements MessageConsumer {
 			}
 
 		} else if (untypedMessage instanceof PlayerResumed) {
-
-			PlayerResumed message = (PlayerResumed) untypedMessage;
-			synchronized (this) {
-				this.playerResumedMessage = new PlayerResumedMessage(message.getPosition(), message.getOrientation());
-			}
-
+			messages.add(untypedMessage);
 		} else if (untypedMessage instanceof UpdateCoins) {
 
 			UpdateCoins message = (UpdateCoins) untypedMessage;
@@ -148,18 +139,6 @@ public class StackdProtocolClient implements MessageConsumer {
 	public synchronized List<PlayerProxy> fetchUpdatedPlayerProxies() {
 		List<PlayerProxy> result = updatedPlayerProxies;
 		updatedPlayerProxies = null;
-		return result;
-	}
-
-	/**
-	 * If there is a {@link PlayerResumedMessage}, returns that
-	 * message and deletes it from this object.
-	 *
-	 * @return the message, or null if no message is available
-	 */
-	public synchronized PlayerResumedMessage fetchPlayerResumedMessage() {
-		PlayerResumedMessage result = playerResumedMessage;
-		playerResumedMessage = null;
 		return result;
 	}
 
