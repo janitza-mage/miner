@@ -7,11 +7,11 @@ package name.martingeisse.miner.client.ingame.logic;
 /**
  *
  */
-public final class Item {
+public final class InventorySlot {
 
 	private final String name;
 
-	public Item(String name) {
+	public InventorySlot(String name) {
 		this.name = name;
 	}
 

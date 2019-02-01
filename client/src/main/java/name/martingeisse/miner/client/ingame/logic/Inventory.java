@@ -13,21 +13,21 @@ public final class Inventory {
 
 	public static final Inventory INSTANCE = new Inventory();
 
-	private ImmutableList<Item> items = ImmutableList.of(
-		new Item("Eins"),
-		new Item("Zwei"),
-		new Item("Drei")
+	private ImmutableList<InventorySlot> slots = ImmutableList.of(
+		new InventorySlot("Eins"),
+		new InventorySlot("Zwei"),
+		new InventorySlot("Drei")
 	);
 
-	public ImmutableList<Item> getItems() {
-		return items;
+	public ImmutableList<InventorySlot> getSlots() {
+		return slots;
 	}
 
-	public void setItems(ImmutableList<Item> items) {
-		if (items == null) {
-			throw new IllegalArgumentException("items cannot be null");
+	public void setSlots(ImmutableList<InventorySlot> slots) {
+		if (slots == null) {
+			throw new IllegalArgumentException("slots cannot be null");
 		}
-		this.items = items;
+		this.slots = slots;
 	}
 
 }

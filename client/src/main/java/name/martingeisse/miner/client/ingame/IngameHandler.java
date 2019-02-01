@@ -13,7 +13,7 @@ import name.martingeisse.miner.client.ingame.frame.FlashMessageHandler;
 import name.martingeisse.miner.client.ingame.frame.FpsPanel;
 import name.martingeisse.miner.client.ingame.frame.SelectedCubeHud;
 import name.martingeisse.miner.client.ingame.logic.Inventory;
-import name.martingeisse.miner.client.ingame.logic.Item;
+import name.martingeisse.miner.client.ingame.logic.InventorySlot;
 import name.martingeisse.miner.client.ingame.network.PlayerResumedMessage;
 import name.martingeisse.miner.client.ingame.network.SendPositionToServerHandler;
 import name.martingeisse.miner.client.ingame.network.StackdProtocolClient;
@@ -145,11 +145,11 @@ public class IngameHandler extends HandlerList {
 						System.out.println("*** updating inventory");
 
 						UpdateInventory message = (UpdateInventory)untypedMessage;
-						List<Item> items = new ArrayList<>();
+						List<InventorySlot> slots = new ArrayList<>();
 						for (UpdateInventory.Element element : message.getElements()) {
-							items.add(new Item(element.getId() + ": " + element.getName() + " (" + element.getQuantity() + ")"));
+							slots.add(new InventorySlot(element.getId() + ": " + element.getName() + " (" + element.getQuantity() + ")"));
 						}
-						Inventory.INSTANCE.setItems(ImmutableList.copyOf(items));
+						Inventory.INSTANCE.setSlots(ImmutableList.copyOf(slots));
 
 					} else {
 						logger.error("client received unexpected message: " + untypedMessage);
