@@ -84,7 +84,6 @@ public final class FrameLoop {
 		// draw all handlers
 		try {
 			if (glWorkerLoop == null || !glWorkerLoop.isOverloaded()) {
-				rootHandler.onBeforeDraw(glWorkerLoop);
 				rootHandler.draw(glWorkerLoop);
 				if (glWorkerLoop != null) {
 					// TODO don't create a new object every frame

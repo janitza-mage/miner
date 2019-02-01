@@ -1,14 +1,14 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.miner.client.util.frame;
 
-import java.util.ArrayList;
-
 import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
+
+import java.util.ArrayList;
 
 /**
  * This handler is a list of other handlers. Each method call is
@@ -22,9 +22,6 @@ public class HandlerList extends ArrayList<IFrameHandler> implements IFrameHandl
 	public HandlerList() {
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.client.frame.IFrameHandler#handleStep()
-	 */
 	@Override
 	public void handleStep() throws BreakFrameLoopException {
 		for (IFrameHandler handler : this) {
@@ -32,19 +29,6 @@ public class HandlerList extends ArrayList<IFrameHandler> implements IFrameHandl
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.client.frame.IFrameHandler#onBeforeDraw(name.martingeisse.glworker.GlWorkerLoop)
-	 */
-	@Override
-	public void onBeforeDraw(GlWorkerLoop glWorkerLoop) {
-		for (IFrameHandler handler : this) {
-			handler.onBeforeDraw(glWorkerLoop);
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.client.frame.IFrameHandler#draw(name.martingeisse.glworker.GlWorkerLoop)
-	 */
 	@Override
 	public void draw(GlWorkerLoop glWorkerLoop) {
 		for (IFrameHandler handler : this) {

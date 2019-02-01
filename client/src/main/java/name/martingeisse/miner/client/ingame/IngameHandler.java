@@ -155,14 +155,11 @@ public class IngameHandler extends HandlerList {
 		// HUD handlers
 		add(flashMessageHandler);
 		add(new FpsPanel(resources.getFont()));
-		final SelectedCubeHud selectedCubeHud = new SelectedCubeHud(cubeWorldHandler.getResources().getCubeTextures());
+		final SelectedCubeHud selectedCubeHud = new SelectedCubeHud(
+			cubeWorldHandler.getResources().getCubeTextures(),
+			cubeWorldHandler::getCurrentCubeType
+		);
 		add(selectedCubeHud);
-		add(new AbstractFrameHandler() {
-			@Override
-			public void onBeforeDraw(GlWorkerLoop glWorkerLoop) {
-				selectedCubeHud.setCubeTypeIndex(cubeWorldHandler.getCurrentCubeType());
-			}
-		});
 
 		// the in-game menu
 		gameMenuHandler = new GuiFrameHandler();

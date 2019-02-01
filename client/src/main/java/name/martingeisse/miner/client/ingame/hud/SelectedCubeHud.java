@@ -22,15 +22,8 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public final class SelectedCubeHud extends AbstractFrameHandler {
 
-	/**
-	 * the textures
-	 */
 	private final StackdTexture[] textures;
-	
-	/**
-	 * the cubeTypeIndex
-	 */
-	private int cubeTypeIndex;
+	private final SelectedCubeTypeGetter selectedCubeTypeGetter;
 
 	/**
 	 * the glWorkUnit
@@ -52,7 +45,7 @@ public final class SelectedCubeHud extends AbstractFrameHandler {
 			h *= scale;
 			d *= scale;
 			
-			CubeType cubeType = CubeTypes.CUBE_TYPES[cubeTypeIndex];
+			CubeType cubeType = CubeTypes.CUBE_TYPES[selectedCubeTypeGetter.getSelectedCubeType()];
 
 			textures[cubeType.getCubeFaceTextureIndex(AxisAlignedDirection.POSITIVE_Z)].glBindTexture();
 			glBegin(GL_QUADS);
@@ -92,15 +85,12 @@ public final class SelectedCubeHud extends AbstractFrameHandler {
 			
 		}
 	};
-	
-	/**
-	 * Constructor.
-	 * @param textures the textures
-	 */
-	public SelectedCubeHud(final StackdTexture[] textures) {
+
+	public SelectedCubeHud(StackdTexture[] textures, SelectedCubeTypeGetter selectedCubeTypeGetter) {
 		this.textures = textures;
+		this.selectedCubeTypeGetter = selectedCubeTypeGetter;
 	}
-	
+
 	/**
 	 * Getter method for the textures.
 	 * @return the textures
@@ -109,28 +99,16 @@ public final class SelectedCubeHud extends AbstractFrameHandler {
 		return textures;
 	}
 	
-	/**
-	 * Getter method for the cubeTypeIndex.
-	 * @return the cubeTypeIndex
-	 */
-	public int getCubeTypeIndex() {
-		return cubeTypeIndex;
-	}
-	
-	/**
-	 * Setter method for the cubeTypeIndex.
-	 * @param cubeTypeIndex the cubeTypeIndex to set
-	 */
-	public void setCubeTypeIndex(int cubeTypeIndex) {
-		this.cubeTypeIndex = cubeTypeIndex;
-	}
-
 	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.client.frame.AbstractFrameHandler#draw(name.martingeisse.glworker.GlWorkerLoop)
 	 */
 	@Override
 	public void draw(GlWorkerLoop glWorkerLoop) {
 		glWorkerLoop.schedule(glWorkUnit);
+	}
+
+	public interface SelectedCubeTypeGetter {
+		byte getSelectedCubeType();
 	}
 
 }

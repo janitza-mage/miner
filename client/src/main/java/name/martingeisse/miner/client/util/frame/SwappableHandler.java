@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -20,7 +20,7 @@ public final class SwappableHandler implements IFrameHandler {
 	 * the wrappedHandler
 	 */
 	private IFrameHandler wrappedHandler;
-	
+
 	/**
 	 * Constructor.
 	 */
@@ -42,7 +42,7 @@ public final class SwappableHandler implements IFrameHandler {
 	public IFrameHandler getWrappedHandler() {
 		return wrappedHandler;
 	}
-	
+
 	/**
 	 * Setter method for the wrappedHandler.
 	 * @param wrappedHandler the wrappedHandler to set
@@ -51,9 +51,6 @@ public final class SwappableHandler implements IFrameHandler {
 		this.wrappedHandler = wrappedHandler;
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.client.frame.IFrameHandler#handleStep()
-	 */
 	@Override
 	public void handleStep() throws BreakFrameLoopException {
 		if (wrappedHandler != null) {
@@ -61,19 +58,6 @@ public final class SwappableHandler implements IFrameHandler {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.client.frame.IFrameHandler#onBeforeDraw(name.martingeisse.glworker.GlWorkerLoop)
-	 */
-	@Override
-	public void onBeforeDraw(GlWorkerLoop glWorkerLoop) {
-		if (wrappedHandler != null) {
-			wrappedHandler.onBeforeDraw(glWorkerLoop);
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.client.frame.IFrameHandler#draw(name.martingeisse.glworker.GlWorkerLoop)
-	 */
 	@Override
 	public void draw(GlWorkerLoop glWorkerLoop) {
 		if (wrappedHandler != null) {
