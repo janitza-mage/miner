@@ -6,7 +6,7 @@
 
 package name.martingeisse.miner.client.ingame.network;
 
-import name.martingeisse.miner.client.ingame.hud.FlashMessageHandler;
+import name.martingeisse.miner.client.ingame.Ingame;
 import name.martingeisse.miner.client.ingame.player.PlayerProxy;
 import name.martingeisse.miner.client.network.ClientEndpoint;
 import name.martingeisse.miner.client.network.MessageConsumer;
@@ -30,10 +30,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class StackdProtocolClient implements MessageConsumer {
 
-
 	private static Logger logger = Logger.getLogger(StackdProtocolClient.class);
 
-	private FlashMessageHandler flashMessageHandler;
 	private SectionGridLoader sectionGridLoader;
 	private List<PlayerProxy> updatedPlayerProxies;
 	private PlayerResumedMessage playerResumedMessage;
@@ -50,24 +48,6 @@ public class StackdProtocolClient implements MessageConsumer {
 
 	public ConcurrentLinkedQueue<Message> getMessages() {
 		return messages;
-	}
-
-	/**
-	 * Getter method for the flashMessageHandler.
-	 *
-	 * @return the flashMessageHandler
-	 */
-	public FlashMessageHandler getFlashMessageHandler() {
-		return flashMessageHandler;
-	}
-
-	/**
-	 * Setter method for the flashMessageHandler.
-	 *
-	 * @param flashMessageHandler the flashMessageHandler to set
-	 */
-	public void setFlashMessageHandler(FlashMessageHandler flashMessageHandler) {
-		this.flashMessageHandler = flashMessageHandler;
 	}
 
 	/**
@@ -93,31 +73,6 @@ public class StackdProtocolClient implements MessageConsumer {
 	}
 
 	/**
-	 * This method gets invoked when receiving a flash message packet from the server.
-	 * The default implementation adds the message to the flash message handler
-	 * that was previously set via {@link #setFlashMessageHandler(FlashMessageHandler)}.
-	 *
-	 * @param message the message
-	 */
-	protected void onFlashMessageReceived(String message) {
-		if (flashMessageHandler != null) {
-			// TODO: this happens in another thread, posibly causing a ConcurrentModificationException
-			// -> use a concurrent queue for *all* messages including flash messages!
-			flashMessageHandler.addMessage(message);
-		}
-	}
-
-	/**
-	 * Sends an update message for the player's position to the server.
-	 *
-	 * @param position    the player's position
-	 * @param orientation the player's orientation
-	 */
-	public void sendPositionUpdate(ReadableVector3d position, ReadableEulerAngles orientation) {
-		send(new UpdatePosition(position, orientation));
-	}
-
-	/**
 	 * This method gets invoked when receiving an application packet from the server.
 	 * The default implementation does nothing.
 	 * <p>
@@ -128,7 +83,7 @@ public class StackdProtocolClient implements MessageConsumer {
 		if (untypedMessage instanceof FlashMessage) {
 
 			FlashMessage message = (FlashMessage) untypedMessage;
-			onFlashMessageReceived(message.getText());
+			Ingame.get().showFlashMessage(message.getText());
 
 		} else if (untypedMessage instanceof InteractiveSectionDataResponse) {
 

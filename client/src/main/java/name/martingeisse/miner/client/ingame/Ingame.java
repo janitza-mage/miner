@@ -69,7 +69,6 @@ public final class Ingame {
 
 		flashMessageHandler = new FlashMessageHandler();
 		protocolClient = new StackdProtocolClient();
-		protocolClient.setFlashMessageHandler(flashMessageHandler);
 		cubeWorldHandler = new CubeWorldHandler(Main.screenWidth, Main.screenHeight);
 
 		// TODO: implement better checking for connection problems: only stall when surrounding sections
