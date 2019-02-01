@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2012 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -16,6 +16,7 @@ import name.martingeisse.miner.client.ingame.gui.MainMenuPage;
 import name.martingeisse.miner.client.ingame.player.Player;
 import name.martingeisse.miner.client.ingame.player.PlayerProxy;
 import name.martingeisse.miner.client.ingame.visual.OtherPlayerVisualTemplate;
+import name.martingeisse.miner.client.network.ClientEndpoint;
 import name.martingeisse.miner.client.util.frame.AbstractIntervalFrameHandler;
 import name.martingeisse.miner.client.util.frame.FrameDurationSensor;
 import name.martingeisse.miner.client.util.frame.IFrameHandler;
@@ -25,7 +26,9 @@ import name.martingeisse.miner.client.util.lwjgl.*;
 import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.RectangularRegion;
+import name.martingeisse.miner.common.geometry.vector.Vector3i;
 import name.martingeisse.miner.common.network.c2s.CubeModification;
+import name.martingeisse.miner.common.network.c2s.DigNotification;
 import name.martingeisse.miner.common.util.ProfilingHelper;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -85,7 +88,7 @@ public class CubeWorldHandler implements IFrameHandler {
 	 * the rayActionSupport
 	 */
 	private final RayActionSupport rayActionSupport;
-	
+
 	/**
 	 * the captureRayActionSupport
 	 */
@@ -160,7 +163,7 @@ public class CubeWorldHandler implements IFrameHandler {
 	 * the previousConnectionProblemInstant
 	 */
 	private Instant previousConnectionProblemInstant = new Instant();
-	
+
 	/**
 	 * the otherPlayerVisualTemplate
 	 */
@@ -169,7 +172,7 @@ public class CubeWorldHandler implements IFrameHandler {
 	/**
 	 * The sectionLoadHandler -- checks often (100 ms), but doesn't re-request frequently (5 sec)
 	 * to avoid re-requesting a section again and again while the server is loading it.
-	 * 
+	 *
 	 * TODO should be resettable for edge cases where frequent reloading is needed, such as
 	 * falling down from high places.
 	 * This handler checks if sections must be loaded.
@@ -217,7 +220,7 @@ public class CubeWorldHandler implements IFrameHandler {
 		rayActionSupport = new RayActionSupport(width, height);
 		screenWidth = width;
 		screenHeight = height;
-		aspectRatio = (float)width / (float)height;
+		aspectRatio = (float) width / (float) height;
 		frameDurationSensor = new FrameDurationSensor();
 		playerProxies = new ArrayList<PlayerProxy>();
 		footstepSound = new RegularSound(resources.getFootstep(), 500);
@@ -275,7 +278,7 @@ public class CubeWorldHandler implements IFrameHandler {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public void handleStep() {
@@ -418,7 +421,7 @@ public class CubeWorldHandler implements IFrameHandler {
 						if (distance < 3.0) {
 							final byte effectiveCubeType;
 							if (currentCubeType == 50) {
-								final int angle = ((int)player.getOrientation().getHorizontalAngle() % 360 + 360) % 360;
+								final int angle = ((int) player.getOrientation().getHorizontalAngle() % 360 + 360) % 360;
 								if (angle < 45) {
 									effectiveCubeType = 52;
 								} else if (angle < 45 + 90) {
@@ -442,7 +445,7 @@ public class CubeWorldHandler implements IFrameHandler {
 							CubeModification.Builder builder = new CubeModification.Builder();
 							builder.add(x, y, z, effectiveCubeType);
 							breakFree(builder);
-							Ingame.get().getProtocolClient().send(builder.build());
+							ClientEndpoint.INSTANCE.send(builder.build());
 
 							// cooldownFinishTime = now + 1000;
 							cooldownFinishTime = now + 200;
@@ -455,7 +458,7 @@ public class CubeWorldHandler implements IFrameHandler {
 					@Override
 					public void handleImpact(final int x, final int y, final int z, final double distance) {
 						if (distance < 2.0) {
-							Ingame.get().getProtocolClient().sendDigNotification(x, y, z);
+							ClientEndpoint.INSTANCE.send(new DigNotification(new Vector3i(x, y, z)));
 							resources.getHitCube().playAsSoundEffect(1.0f, 1.0f, false);
 							// cooldownFinishTime = now + 1000;
 							cooldownFinishTime = now + 200;
@@ -469,7 +472,7 @@ public class CubeWorldHandler implements IFrameHandler {
 		if (keysEnabled && Keyboard.isKeyDown(Keyboard.KEY_B)) {
 			final CubeModification.Builder builder = new CubeModification.Builder();
 			breakFree(builder);
-			Ingame.get().getProtocolClient().send(builder.build());
+			ClientEndpoint.INSTANCE.send(builder.build());
 		}
 
 		// handle player logic
@@ -488,14 +491,14 @@ public class CubeWorldHandler implements IFrameHandler {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void breakFree(final CubeModification.Builder builder) {
 		final RectangularRegion region = player.createCollisionRegion();
 		for (int x = region.getStartX(); x < region.getEndX(); x++) {
 			for (int y = region.getStartY(); y < region.getEndY(); y++) {
 				for (int z = region.getStartZ(); z < region.getEndZ(); z++) {
-					builder.add(x, y, z, (byte)0);
+					builder.add(x, y, z, (byte) 0);
 				}
 			}
 		}
@@ -507,9 +510,9 @@ public class CubeWorldHandler implements IFrameHandler {
 	public void draw(final GlWorkerLoop glWorkerLoop) {
 
 		// determine player's position as integers
-		final int playerX = (int)(Math.floor(player.getPosition().getX()));
-		final int playerY = (int)(Math.floor(player.getPosition().getY()));
-		final int playerZ = (int)(Math.floor(player.getPosition().getZ()));
+		final int playerX = (int) (Math.floor(player.getPosition().getX()));
+		final int playerY = (int) (Math.floor(player.getPosition().getY()));
+		final int playerZ = (int) (Math.floor(player.getPosition().getZ()));
 
 		// set the GL worker loop for the section renderer
 		workingSet.getSectionRenderer().setGlWorkerLoop(glWorkerLoop);
@@ -530,8 +533,8 @@ public class CubeWorldHandler implements IFrameHandler {
 				// set up modelview matrix
 				glMatrixMode(GL_MODELVIEW);
 				glLoadIdentity(); // model transformation (direct)
-				glRotatef((float)player.getOrientation().getVerticalAngle(), -1, 0, 0); // view transformation (reversed)
-				glRotatef((float)player.getOrientation().getHorizontalAngle(), 0, -1, 0); // ...
+				glRotatef((float) player.getOrientation().getVerticalAngle(), -1, 0, 0); // view transformation (reversed)
+				glRotatef((float) player.getOrientation().getHorizontalAngle(), 0, -1, 0); // ...
 				glTranslated(-player.getPosition().getX(), -player.getPosition().getY(), -player.getPosition().getZ()); // ...
 
 				// clear the screen
@@ -548,7 +551,7 @@ public class CubeWorldHandler implements IFrameHandler {
 				glPushMatrix();
 				float inverseFactor = 1.0f / Constants.GEOMETRY_DETAIL_FACTOR;
 				glScalef(inverseFactor, inverseFactor, inverseFactor);
-				
+
 			}
 		});
 
@@ -562,7 +565,7 @@ public class CubeWorldHandler implements IFrameHandler {
 
 				// scale back for the remaining operations
 				glPopMatrix();
-				
+
 				// Measure visible distance in the center of the crosshair, with only the world visible (no HUD or similar).
 				// Only call if needed, this stalls the rendering pipeline --> 2x frame rate possible!
 				if (captureRayActionSupport) {

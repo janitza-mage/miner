@@ -11,10 +11,7 @@ import name.martingeisse.miner.client.ingame.network.StackdProtocolClient;
 import name.martingeisse.miner.client.ingame.player.PlayerProxy;
 import name.martingeisse.miner.client.util.frame.AbstractFrameHandler;
 import name.martingeisse.miner.common.network.Message;
-import name.martingeisse.miner.common.network.s2c.PlayerListUpdate;
-import name.martingeisse.miner.common.network.s2c.PlayerResumed;
-import name.martingeisse.miner.common.network.s2c.UpdateCoins;
-import name.martingeisse.miner.common.network.s2c.UpdateInventory;
+import name.martingeisse.miner.common.network.s2c.*;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -75,6 +72,11 @@ public class MessageFrameHandler extends AbstractFrameHandler {
 
 				UpdateCoins message = (UpdateCoins) untypedMessage;
 				Ingame.get().setCoins(message.getCoins());
+
+			} else if (untypedMessage instanceof FlashMessage) {
+
+				FlashMessage message = (FlashMessage) untypedMessage;
+				Ingame.get().showFlashMessage(message.getText());
 
 			} else {
 				logger.error("client received unexpected message: " + untypedMessage);
