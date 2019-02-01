@@ -6,15 +6,7 @@
 
 package name.martingeisse.miner.client.ingame.hud;
 
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glBlendFunc;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL14.glWindowPos2i;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import name.martingeisse.miner.client.MinerResources;
 import name.martingeisse.miner.client.util.frame.AbstractFrameHandler;
 import name.martingeisse.miner.client.util.frame.BreakFrameLoopException;
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
@@ -24,9 +16,13 @@ import org.apache.log4j.Logger;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL14.glWindowPos2i;
+
 /**
- * Displays one or more messages for a certain time. Messages are rendered
- * using a {@link Font}. Each message will stay for the same configurable
+ * Displays one or more messages for a certain time. Each message will stay for the same configurable
  * time. Multiple messages will be stacked vertically if necessary.
  * 
  * Stacked messages will be drawn downwards, starting at a configurable
@@ -40,11 +36,6 @@ public class FlashMessageHandler extends AbstractFrameHandler {
 	 */
 	private static Logger logger = Logger.getLogger(FlashMessageHandler.class);
 	
-	/**
-	 * the font
-	 */
-	private Font font;
-
 	/**
 	 * the displayTime
 	 */
@@ -76,6 +67,7 @@ public class FlashMessageHandler extends AbstractFrameHandler {
 	private final GlWorkUnit glWorkUnit = new GlWorkUnit() {
 		@Override
 		public void execute() {
+			Font font = MinerResources.getInstance().getFont();
 			int height = Display.getHeight();
 			final long now = System.currentTimeMillis();
 			int i = 0;
@@ -116,31 +108,13 @@ public class FlashMessageHandler extends AbstractFrameHandler {
 
 	/**
 	 * Constructor.
-	 * @param font the font to use
 	 */
-	public FlashMessageHandler(final Font font) {
-		this.font = font;
+	public FlashMessageHandler() {
 		this.displayTime = 3000;
 		this.fadeTime = 1000;
 		this.leftOffset = 0;
 		this.topOffset = 0;
 		this.queue = new ConcurrentLinkedQueue<FlashMessageHandler.Entry>();
-	}
-
-	/**
-	 * Getter method for the font.
-	 * @return the font
-	 */
-	public final Font getFont() {
-		return font;
-	}
-
-	/**
-	 * Setter method for the font.
-	 * @param font the font to set
-	 */
-	public final void setFont(final Font font) {
-		this.font = font;
 	}
 
 	/**

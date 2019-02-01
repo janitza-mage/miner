@@ -18,8 +18,6 @@ import name.martingeisse.miner.client.ingame.network.PlayerResumedMessage;
 import name.martingeisse.miner.client.ingame.network.SendPositionToServerHandler;
 import name.martingeisse.miner.client.ingame.network.StackdProtocolClient;
 import name.martingeisse.miner.client.ingame.player.PlayerProxy;
-import name.martingeisse.miner.client.network.ClientEndpoint;
-import name.martingeisse.miner.client.startmenu.AccountApiClient;
 import name.martingeisse.miner.client.util.frame.AbstractFrameHandler;
 import name.martingeisse.miner.client.util.frame.BreakFrameLoopException;
 import name.martingeisse.miner.client.util.frame.HandlerList;
@@ -29,11 +27,9 @@ import name.martingeisse.miner.client.util.gui.GuiFrameHandler;
 import name.martingeisse.miner.client.util.gui.control.Page;
 import name.martingeisse.miner.client.util.lwjgl.MouseUtil;
 import name.martingeisse.miner.common.network.Message;
-import name.martingeisse.miner.common.network.c2s.ResumePlayer;
 import name.martingeisse.miner.common.network.s2c.UpdateInventory;
 import org.apache.log4j.Logger;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -77,13 +73,12 @@ public class IngameHandler extends HandlerList {
 	public IngameHandler() throws Exception {
 
 		// connect to the server
-		MinerResources resources = MinerResources.getInstance();
-		flashMessageHandler = new FlashMessageHandler(resources.getFont());
+		flashMessageHandler = new FlashMessageHandler();
 		protocolClient = new StackdProtocolClient();
 		protocolClient.setFlashMessageHandler(flashMessageHandler);
 
 		// game handlers
-		cubeWorldHandler = new CubeWorldHandler(Main.screenWidth, Main.screenHeight, resources);
+		cubeWorldHandler = new CubeWorldHandler(Main.screenWidth, Main.screenHeight);
 		add(new AbstractFrameHandler() {
 
 			/* (non-Javadoc)
@@ -154,7 +149,7 @@ public class IngameHandler extends HandlerList {
 
 		// HUD handlers
 		add(flashMessageHandler);
-		add(new FpsPanel(resources.getFont()));
+		add(new FpsPanel());
 		final SelectedCubeHud selectedCubeHud = new SelectedCubeHud(
 			cubeWorldHandler.getResources().getCubeTextures(),
 			cubeWorldHandler::getCurrentCubeType

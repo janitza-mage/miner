@@ -195,13 +195,12 @@ public class CubeWorldHandler {
 	 * Constructor.
 	 * @param width the width of the framebuffer
 	 * @param height the height of the framebuffer
-	 * @param resources the resources
 	 * @throws IOException on I/O errors while loading the textures
 	 */
-	public CubeWorldHandler(final int width, final int height, final MinerResources resources) throws IOException {
+	public CubeWorldHandler(final int width, final int height) throws IOException {
 
 		// the resources (textures)
-		this.resources = resources;
+		this.resources = MinerResources.getInstance();
 
 		// the world
 		final EngineParameters engineParameters = new EngineParameters(resources.getCubeTextures());

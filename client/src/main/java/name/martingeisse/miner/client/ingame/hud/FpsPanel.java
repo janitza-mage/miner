@@ -6,14 +6,7 @@
 
 package name.martingeisse.miner.client.ingame.hud;
 
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glBlendFunc;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL14.glWindowPos2i;
+import name.martingeisse.miner.client.MinerResources;
 import name.martingeisse.miner.client.util.frame.AbstractFrameHandler;
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
@@ -21,16 +14,14 @@ import name.martingeisse.miner.client.util.lwjgl.Font;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL14.glWindowPos2i;
+
 /**
  * Displays the current frames per second on the screen.
  */
 public final class FpsPanel extends AbstractFrameHandler {
 
-	/**
-	 * the font
-	 */
-	private final Font font;
-	
 	/**
 	 * the lastSamplingTime
 	 */
@@ -70,8 +61,8 @@ public final class FpsPanel extends AbstractFrameHandler {
 			glWindowPos2i(Display.getWidth(), Display.getHeight());
 			GL11.glPixelTransferf(GL11.GL_RED_BIAS, 1.0f);			
 			GL11.glPixelTransferf(GL11.GL_GREEN_BIAS, 1.0f);			
-			GL11.glPixelTransferf(GL11.GL_BLUE_BIAS, 1.0f);			
-			font.drawText(fpsText, 2, Font.ALIGN_RIGHT, Font.ALIGN_TOP);
+			GL11.glPixelTransferf(GL11.GL_BLUE_BIAS, 1.0f);
+			MinerResources.getInstance().getFont().drawText(fpsText, 2, Font.ALIGN_RIGHT, Font.ALIGN_TOP);
 			GL11.glPixelTransferf(GL11.GL_RED_BIAS, 0.0f);			
 			GL11.glPixelTransferf(GL11.GL_GREEN_BIAS, 0.0f);			
 			GL11.glPixelTransferf(GL11.GL_BLUE_BIAS, 0.0f);
@@ -81,10 +72,8 @@ public final class FpsPanel extends AbstractFrameHandler {
 	
 	/**
 	 * Constructor.
-	 * @param font the font used to draw text
 	 */
-	public FpsPanel(Font font) {
-		this.font = font;
+	public FpsPanel() {
 		this.lastSamplingTime = System.currentTimeMillis();
 		this.countedFrames = 0;
 		this.fps = 0;
