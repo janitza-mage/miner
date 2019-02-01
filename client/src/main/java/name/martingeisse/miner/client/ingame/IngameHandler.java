@@ -22,7 +22,6 @@ import name.martingeisse.miner.client.util.frame.AbstractFrameHandler;
 import name.martingeisse.miner.client.util.frame.BreakFrameLoopException;
 import name.martingeisse.miner.client.util.frame.HandlerList;
 import name.martingeisse.miner.client.util.frame.SwappableHandler;
-import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
 import name.martingeisse.miner.client.util.gui.GuiFrameHandler;
 import name.martingeisse.miner.client.util.gui.control.Page;
 import name.martingeisse.miner.client.util.lwjgl.MouseUtil;
@@ -42,9 +41,9 @@ public class IngameHandler extends HandlerList {
 	private static Logger logger = Logger.getLogger(IngameHandler.class);
 
 	/**
-	 * the cubeWorldHandler
+	 * the cubeWorldHelper
 	 */
-	public static CubeWorldHandler cubeWorldHandler;
+	public static CubeWorldHelper cubeWorldHelper;
 
 	/**
 	 * the protocolClient
@@ -72,39 +71,11 @@ public class IngameHandler extends HandlerList {
 	 */
 	public IngameHandler() throws Exception {
 
-		// connect to the server
-		flashMessageHandler = new FlashMessageHandler();
-		protocolClient = new StackdProtocolClient();
-		protocolClient.setFlashMessageHandler(flashMessageHandler);
-
 		// game handlers
-		cubeWorldHandler = new CubeWorldHandler(Main.screenWidth, Main.screenHeight);
-		add(new AbstractFrameHandler() {
-
-			/* (non-Javadoc)
-			 * @see name.martingeisse.stackd.frame.AbstractFrameHandler#handleStep()
-			 */
-			@Override
-			public void handleStep() throws BreakFrameLoopException {
-				cubeWorldHandler.step();
-
-				// TODO avoid filling up the render queue, should detect when the logic thread is running too fast
-				try {
-					Thread.sleep(5);
-				} catch (InterruptedException e) {
-				}
-
-			}
-
-			@Override
-			public void draw(GlWorkerLoop glWorkerLoop) {
-				cubeWorldHandler.draw(glWorkerLoop);
-			}
-
-		});
+		add(new CubeWorldHandler());
 
 		// network logic handlers
-		add(new SendPositionToServerHandler(cubeWorldHandler.getPlayer()));
+		add(new SendPositionToServerHandler(cubeWorldHelper.getPlayer()));
 		add(new AbstractFrameHandler() {
 			@Override
 			public void handleStep() throws BreakFrameLoopException {
@@ -114,13 +85,13 @@ public class IngameHandler extends HandlerList {
 
 				final List<PlayerProxy> updatedPlayerProxies = protocolClient.fetchUpdatedPlayerProxies();
 				if (updatedPlayerProxies != null) {
-					cubeWorldHandler.setPlayerProxies(updatedPlayerProxies);
+					cubeWorldHelper.setPlayerProxies(updatedPlayerProxies);
 				}
 				final PlayerResumedMessage playerResumedMessage = protocolClient.fetchPlayerResumedMessage();
 				if (playerResumedMessage != null) {
-					cubeWorldHandler.getPlayer().getPosition().copyFrom(playerResumedMessage.getPosition());
-					cubeWorldHandler.getPlayer().getOrientation().copyFrom(playerResumedMessage.getOrientation());
-					protocolClient.getSectionGridLoader().setViewerPosition(cubeWorldHandler.getPlayer().getSectionId());
+					cubeWorldHelper.getPlayer().getPosition().copyFrom(playerResumedMessage.getPosition());
+					cubeWorldHelper.getPlayer().getOrientation().copyFrom(playerResumedMessage.getOrientation());
+					protocolClient.getSectionGridLoader().setViewerPosition(cubeWorldHelper.getPlayer().getSectionId());
 				}
 				final ConcurrentLinkedQueue<Message> messages = protocolClient.getMessages();
 				while (true) {
@@ -151,8 +122,8 @@ public class IngameHandler extends HandlerList {
 		add(flashMessageHandler);
 		add(new FpsPanel());
 		final SelectedCubeHud selectedCubeHud = new SelectedCubeHud(
-			cubeWorldHandler.getResources().getCubeTextures(),
-			cubeWorldHandler::getCurrentCubeType
+			cubeWorldHelper.getResources().getCubeTextures(),
+			cubeWorldHelper::getCurrentCubeType
 		);
 		add(selectedCubeHud);
 
@@ -173,7 +144,7 @@ public class IngameHandler extends HandlerList {
 	public static void closeGui() {
 		gameMenuHandlerWrapper.setWrappedHandler(null);
 		MouseUtil.grab();
-		CubeWorldHandler.disableLeftMouseButtonBecauseWeJustClosedTheGui = true;
+		CubeWorldHelper.disableLeftMouseButtonBecauseWeJustClosedTheGui = true;
 	}
 
 	public static boolean isGuiOpen() {

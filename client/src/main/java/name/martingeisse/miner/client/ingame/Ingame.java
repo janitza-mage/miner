@@ -5,6 +5,8 @@
 package name.martingeisse.miner.client.ingame;
 
 import name.martingeisse.miner.client.Main;
+import name.martingeisse.miner.client.ingame.hud.FlashMessageHandler;
+import name.martingeisse.miner.client.ingame.network.StackdProtocolClient;
 import name.martingeisse.miner.client.network.ClientEndpoint;
 import name.martingeisse.miner.client.startmenu.AccountApiClient;
 import name.martingeisse.miner.common.network.c2s.ResumePlayer;
@@ -45,9 +47,20 @@ public final class Ingame {
 	// ---------------------------------------------------------------------------------------------------
 	//
 
+	private FlashMessageHandler flashMessageHandler;
+	private StackdProtocolClient protocolClient;
+	private CubeWorldHelper cubeWorldHelper;
 	private IngameHandler ingameHandler;
 
 	public Ingame() throws Exception {
+
+		flashMessageHandler = new FlashMessageHandler();
+		IngameHandler.flashMessageHandler = flashMessageHandler;
+		protocolClient = new StackdProtocolClient();
+		protocolClient.setFlashMessageHandler(flashMessageHandler);
+		IngameHandler.protocolClient = protocolClient;
+		cubeWorldHelper = new CubeWorldHelper(Main.screenWidth, Main.screenHeight);
+		IngameHandler.cubeWorldHelper = cubeWorldHelper;
 
 		ingameHandler = new IngameHandler();
 
@@ -75,8 +88,35 @@ public final class Ingame {
 
 	}
 
+	public FlashMessageHandler getFlashMessageHandler() {
+		return flashMessageHandler;
+	}
+
+	public void setFlashMessageHandler(FlashMessageHandler flashMessageHandler) {
+		this.flashMessageHandler = flashMessageHandler;
+	}
+
+	public StackdProtocolClient getProtocolClient() {
+		return protocolClient;
+	}
+
+	public void setProtocolClient(StackdProtocolClient protocolClient) {
+		this.protocolClient = protocolClient;
+	}
+
+	public CubeWorldHelper getCubeWorldHelper() {
+		return cubeWorldHelper;
+	}
+
+	public void setCubeWorldHelper(CubeWorldHelper cubeWorldHelper) {
+		this.cubeWorldHelper = cubeWorldHelper;
+	}
+
 	public IngameHandler getIngameHandler() {
 		return ingameHandler;
 	}
 
+	public void setIngameHandler(IngameHandler ingameHandler) {
+		this.ingameHandler = ingameHandler;
+	}
 }
