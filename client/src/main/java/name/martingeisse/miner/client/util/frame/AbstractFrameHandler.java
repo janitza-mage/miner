@@ -14,24 +14,10 @@ import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
 public abstract class AbstractFrameHandler implements IFrameHandler {
 
 	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.frame.IFrameHandler#onBeforeHandleStep()
-	 */
-	@Override
-	public void onBeforeHandleStep() {
-	}
-
-	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.frame.IFrameHandler#handleStep()
 	 */
 	@Override
 	public void handleStep() throws BreakFrameLoopException {
-	}
-
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.frame.IFrameHandler#onAfterHandleStep()
-	 */
-	@Override
-	public void onAfterHandleStep() {
 	}
 
 	/* (non-Javadoc)

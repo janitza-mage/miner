@@ -50,16 +50,6 @@ public final class SwappableHandler implements IFrameHandler {
 	public void setWrappedHandler(IFrameHandler wrappedHandler) {
 		this.wrappedHandler = wrappedHandler;
 	}
-	
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.client.frame.IFrameHandler#onBeforeHandleStep()
-	 */
-	@Override
-	public void onBeforeHandleStep() {
-		if (wrappedHandler != null) {
-			wrappedHandler.onBeforeHandleStep();
-		}
-	}
 
 	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.client.frame.IFrameHandler#handleStep()
@@ -68,16 +58,6 @@ public final class SwappableHandler implements IFrameHandler {
 	public void handleStep() throws BreakFrameLoopException {
 		if (wrappedHandler != null) {
 			wrappedHandler.handleStep();
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.client.frame.IFrameHandler#onAfterHandleStep()
-	 */
-	@Override
-	public void onAfterHandleStep() {
-		if (wrappedHandler != null) {
-			wrappedHandler.onAfterHandleStep();
 		}
 	}
 

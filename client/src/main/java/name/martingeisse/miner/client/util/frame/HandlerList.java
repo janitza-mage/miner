@@ -23,32 +23,12 @@ public class HandlerList extends ArrayList<IFrameHandler> implements IFrameHandl
 	}
 
 	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.client.frame.IFrameHandler#onBeforeHandleStep()
-	 */
-	@Override
-	public void onBeforeHandleStep() {
-		for (IFrameHandler handler : this) {
-			handler.onBeforeHandleStep();
-		}
-	}
-
-	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.client.frame.IFrameHandler#handleStep()
 	 */
 	@Override
 	public void handleStep() throws BreakFrameLoopException {
 		for (IFrameHandler handler : this) {
 			handler.handleStep();
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.client.frame.IFrameHandler#onAfterHandleStep()
-	 */
-	@Override
-	public void onAfterHandleStep() {
-		for (IFrameHandler handler : this) {
-			handler.onAfterHandleStep();
 		}
 	}
 

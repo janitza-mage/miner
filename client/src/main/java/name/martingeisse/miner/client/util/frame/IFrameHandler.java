@@ -19,23 +19,10 @@ import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
 public interface IFrameHandler {
 
 	/**
-	 * Called just before calling {@link #handleStep()} on all handlers.
-	 * This method should prepare data that this or other handlers might
-	 * require in their handleStep() method.
-	 */
-	public void onBeforeHandleStep();
-	
-	/**
 	 * Handles a game step. This method performs the game logic.
 	 * @throws BreakFrameLoopException if this handler wants to break the frame loop
 	 */
 	public void handleStep() throws BreakFrameLoopException;
-	
-	/**
-	 * Called just after calling {@link #handleStep()} on all handlers.
-	 * This method should discard unused data.
-	 */
-	public void onAfterHandleStep();
 	
 	/**
 	 * Called just before calling {@link #draw(GlWorkerLoop)} on all handlers.

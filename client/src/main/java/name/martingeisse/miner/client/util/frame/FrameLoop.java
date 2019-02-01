@@ -116,13 +116,11 @@ public final class FrameLoop {
 		
 		// prepare game logic steps
 		try {
-			rootHandler.onBeforeHandleStep();
 			rootHandler.handleStep();
-			rootHandler.onAfterHandleStep();
 		} catch (BreakFrameLoopException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new RuntimeException("unexpected exception during onBeforeHandleStep()", e);
+			throw new RuntimeException("unexpected exception during logic step", e);
 		}
 		
 	}
