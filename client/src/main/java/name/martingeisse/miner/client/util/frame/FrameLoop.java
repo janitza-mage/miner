@@ -14,7 +14,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
-
 /**
  * Performs a loop, typically drawing the world each
  * frame and potentially doing other things. At a lower
