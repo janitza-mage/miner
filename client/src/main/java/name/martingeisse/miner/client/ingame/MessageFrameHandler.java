@@ -28,7 +28,7 @@ public class MessageFrameHandler extends AbstractFrameHandler {
 	private static Logger logger = Logger.getLogger(MessageFrameHandler.class);
 
 	@Override
-	public void handleStep() throws BreakFrameLoopException {
+	public void handleStep() {
 
 		// TODO race condition: should not start the game until the player has been resumed,
 		// would be wrong and also load wrong sections
@@ -52,16 +52,12 @@ public class MessageFrameHandler extends AbstractFrameHandler {
 			if (untypedMessage == null) {
 				break;
 			} else if (untypedMessage instanceof UpdateInventory) {
-
-				System.out.println("*** updating inventory");
-
 				UpdateInventory message = (UpdateInventory) untypedMessage;
 				List<InventorySlot> slots = new ArrayList<>();
 				for (UpdateInventory.Element element : message.getElements()) {
 					slots.add(new InventorySlot(element.getId() + ": " + element.getName() + " (" + element.getQuantity() + ")"));
 				}
 				Inventory.INSTANCE.setSlots(ImmutableList.copyOf(slots));
-
 			} else {
 				logger.error("client received unexpected message: " + untypedMessage);
 			}
