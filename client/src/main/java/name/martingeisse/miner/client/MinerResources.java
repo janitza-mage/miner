@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.ingame;
+package name.martingeisse.miner.client;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glBindTexture;
@@ -131,7 +131,7 @@ public class MinerResources {
 			return  ImageIO.read(inputStream);
 		}
 	}
-	
+
 	/**
 	 * Getter method for the cubeTextures.
 	 * @return the cubeTextures

@@ -6,13 +6,11 @@
 
 package name.martingeisse.miner.client.tools;
 
-import name.martingeisse.launcher.assets.LauncherAssets;
+import name.martingeisse.miner.client.MinerResources;
 import name.martingeisse.miner.client.util.frame.FrameLoop;
 import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
 import name.martingeisse.miner.client.util.gui.GuiFrameHandler;
-import name.martingeisse.miner.client.util.lwjgl.FixedWidthFont;
 import name.martingeisse.miner.client.util.lwjgl.LwjglNativeLibraryHelper;
-import name.martingeisse.miner.client.util.lwjgl.ResourceLoader;
 import name.martingeisse.miner.common.task.TaskBarrier;
 import name.martingeisse.miner.common.task.TaskSystem;
 import org.lwjgl.input.Mouse;
@@ -59,7 +57,7 @@ public class GuiTestMain {
 
 			// add the start menu as a handler
 			GuiFrameHandler startmenuHandler = new GuiFrameHandler();
-			startmenuHandler.getGui().setDefaultFont(new FixedWidthFont(ResourceLoader.loadAwtImage(LauncherAssets.class, "font.png"), 8, 16));
+			startmenuHandler.getGui().setDefaultFont(MinerResources.getInstance().getFont());
 			startmenuHandler.getGui().setRootElement(new GuiTestPage());
 			frameLoop.getRootHandler().setWrappedHandler(startmenuHandler);
 

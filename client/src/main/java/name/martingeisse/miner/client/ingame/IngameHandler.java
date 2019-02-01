@@ -7,8 +7,8 @@
 package name.martingeisse.miner.client.ingame;
 
 import com.google.common.collect.ImmutableList;
-import name.martingeisse.launcher.assets.LauncherAssets;
 import name.martingeisse.miner.client.Main;
+import name.martingeisse.miner.client.MinerResources;
 import name.martingeisse.miner.client.ingame.frame.FlashMessageHandler;
 import name.martingeisse.miner.client.ingame.frame.FpsPanel;
 import name.martingeisse.miner.client.ingame.frame.SelectedCubeHud;
@@ -25,9 +25,7 @@ import name.martingeisse.miner.client.util.frame.SwappableHandler;
 import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
 import name.martingeisse.miner.client.util.gui.GuiFrameHandler;
 import name.martingeisse.miner.client.util.gui.control.Page;
-import name.martingeisse.miner.client.util.lwjgl.FixedWidthFont;
 import name.martingeisse.miner.client.util.lwjgl.MouseUtil;
-import name.martingeisse.miner.client.util.lwjgl.ResourceLoader;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.s2c.UpdateInventory;
 import org.apache.log4j.Logger;
@@ -167,7 +165,7 @@ public class IngameHandler extends HandlerList {
 		{
 			// TODO share resources properly
 			gameMenuHandler = new GuiFrameHandler();
-			gameMenuHandler.getGui().setDefaultFont(new FixedWidthFont(ResourceLoader.loadAwtImage(LauncherAssets.class, "font.png"), 8, 16));
+			gameMenuHandler.getGui().setDefaultFont(MinerResources.getInstance().getFont());
 		}
 		gameMenuHandlerWrapper = new SwappableHandler();
 		add(gameMenuHandlerWrapper);

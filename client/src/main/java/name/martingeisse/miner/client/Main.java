@@ -6,18 +6,14 @@
 
 package name.martingeisse.miner.client;
 
-import name.martingeisse.launcher.assets.LauncherAssets;
 import name.martingeisse.miner.client.ingame.IngameHandler;
-import name.martingeisse.miner.client.ingame.MinerResources;
 import name.martingeisse.miner.client.startmenu.AccountApiClient;
 import name.martingeisse.miner.client.startmenu.LoginPage;
 import name.martingeisse.miner.client.util.frame.FrameLoop;
 import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
 import name.martingeisse.miner.client.util.gui.GuiFrameHandler;
-import name.martingeisse.miner.client.util.lwjgl.FixedWidthFont;
 import name.martingeisse.miner.client.util.lwjgl.LwjglNativeLibraryHelper;
 import name.martingeisse.miner.client.util.lwjgl.MouseUtil;
-import name.martingeisse.miner.client.util.lwjgl.ResourceLoader;
 import name.martingeisse.miner.common.task.Task;
 import name.martingeisse.miner.common.task.TaskBarrier;
 import name.martingeisse.miner.common.task.TaskSystem;
@@ -159,7 +155,7 @@ public class Main {
 			{
 				// TODO share resources properly
 				GuiFrameHandler startmenuHandler = new GuiFrameHandler();
-				startmenuHandler.getGui().setDefaultFont(new FixedWidthFont(ResourceLoader.loadAwtImage(LauncherAssets.class, "font.png"), 8, 16));
+				startmenuHandler.getGui().setDefaultFont(MinerResources.getInstance().getFont());
 				startmenuHandler.getGui().setRootElement(new LoginPage());
 				frameLoop.getRootHandler().setWrappedHandler(startmenuHandler);
 			}

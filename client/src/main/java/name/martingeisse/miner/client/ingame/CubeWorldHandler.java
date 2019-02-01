@@ -7,6 +7,7 @@
 package name.martingeisse.miner.client.ingame;
 
 import name.martingeisse.common.util.ThreadUtil;
+import name.martingeisse.miner.client.MinerResources;
 import name.martingeisse.miner.client.ingame.engine.EngineParameters;
 import name.martingeisse.miner.client.ingame.engine.FrameRenderParameters;
 import name.martingeisse.miner.client.ingame.engine.WorldWorkingSet;
@@ -22,7 +23,6 @@ import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
 import name.martingeisse.miner.client.util.lwjgl.*;
 import name.martingeisse.miner.common.Constants;
-import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.RectangularRegion;
 import name.martingeisse.miner.common.network.c2s.CubeModification;
