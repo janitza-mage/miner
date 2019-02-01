@@ -7,23 +7,16 @@
 package name.martingeisse.miner.client.startmenu;
 
 import name.martingeisse.common.javascript.analyze.JsonAnalyzer;
-import name.martingeisse.miner.client.Main;
 import name.martingeisse.miner.client.ingame.Ingame;
-import name.martingeisse.miner.common.Faction;
-import name.martingeisse.miner.client.ingame.IngameHandler;
 import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.control.MessageBox;
+import name.martingeisse.miner.client.util.gui.element.*;
 import name.martingeisse.miner.client.util.gui.element.fill.FillColor;
-import name.martingeisse.miner.client.util.gui.element.Margin;
-import name.martingeisse.miner.client.util.gui.element.OverlayStack;
-import name.martingeisse.miner.client.util.gui.element.Sizer;
-import name.martingeisse.miner.client.util.gui.element.Spacer;
 import name.martingeisse.miner.client.util.gui.element.text.TextParagraph;
-import name.martingeisse.miner.client.util.gui.element.ThinBorder;
-import name.martingeisse.miner.client.util.gui.element.VerticalLayout;
 import name.martingeisse.miner.client.util.gui.util.Color;
 import name.martingeisse.miner.client.util.lwjgl.MouseUtil;
+import name.martingeisse.miner.common.Faction;
 
 /**
  * The "character details" menu page.

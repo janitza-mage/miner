@@ -58,11 +58,6 @@ public final class SectionGridLoader {
 	private final WorldWorkingSet workingSet;
 
 	/**
-	 * the protocolClient
-	 */
-	private final StackdProtocolClient protocolClient;
-
-	/**
 	 * the renderModelRadius
 	 */
 	private final int renderModelRadius;
@@ -80,13 +75,11 @@ public final class SectionGridLoader {
 	/**
 	 * Constructor.
 	 * @param workingSet the working set to load sections for
-	 * @param protocolClient the protocol client used to send requests
 	 * @param renderModelRadius the "radius" of the active set of render models
 	 * @param colliderRadius the "radius" of the active set of colliders
 	 */
-	public SectionGridLoader(final WorldWorkingSet workingSet, final StackdProtocolClient protocolClient, final int renderModelRadius, final int colliderRadius) {
+	public SectionGridLoader(final WorldWorkingSet workingSet, final int renderModelRadius, final int colliderRadius) {
 		this.workingSet = workingSet;
-		this.protocolClient = protocolClient;
 		this.renderModelRadius = renderModelRadius;
 		this.colliderRadius = colliderRadius;
 		this.viewerPosition = null;
@@ -149,7 +142,7 @@ public final class SectionGridLoader {
 				final SectionId[] sectionIds = missingSectionIds.toArray(new SectionId[missingSectionIds.size()]);
 				for (SectionId sectionId : sectionIds) {
 					logger.debug("requested render model update for section " + sectionId);
-					protocolClient.send(new InteractiveSectionDataRequest(sectionId));
+					ClientEndpoint.INSTANCE.send(new InteractiveSectionDataRequest(sectionId));
 					anythingUpdated = true;
 				}
 			}
@@ -165,7 +158,7 @@ public final class SectionGridLoader {
 				final SectionId[] sectionIds = missingSectionIds.toArray(new SectionId[missingSectionIds.size()]);
 				for (SectionId sectionId : sectionIds) {
 					logger.debug("requested collider update for section " + sectionId);
-					protocolClient.send(new InteractiveSectionDataRequest(sectionId));
+					ClientEndpoint.INSTANCE.send(new InteractiveSectionDataRequest(sectionId));
 					anythingUpdated = true;
 				}
 			}
@@ -182,7 +175,7 @@ public final class SectionGridLoader {
 	 */
 	public void reloadSection(SectionId sectionId) {
 		// TODO check distance; adjust data type; fetch at all?
-		protocolClient.send(new InteractiveSectionDataRequest(sectionId));
+		ClientEndpoint.INSTANCE.send(new InteractiveSectionDataRequest(sectionId));
 	}
 	
 	/**

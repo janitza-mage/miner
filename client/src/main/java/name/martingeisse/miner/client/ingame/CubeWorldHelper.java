@@ -181,8 +181,8 @@ public class CubeWorldHelper {
 		@Override
 		protected void onIntervalTimerExpired() {
 			if (requestCooldown == 0) {
-				IngameHandler.protocolClient.getSectionGridLoader().setViewerPosition(player.getSectionId());
-				if (IngameHandler.protocolClient.getSectionGridLoader().update()) {
+				Ingame.get().getProtocolClient().getSectionGridLoader().setViewerPosition(player.getSectionId());
+				if (Ingame.get().getProtocolClient().getSectionGridLoader().update()) {
 					requestCooldown = 50;
 				}
 			} else {
@@ -223,11 +223,6 @@ public class CubeWorldHelper {
 		footstepSound = new RegularSound(resources.getFootstep(), 500);
 		cooldownFinishTime = System.currentTimeMillis();
 		otherPlayerVisualTemplate = new OtherPlayerVisualTemplate(resources, player);
-
-		// TODO: implement better checking for connection problems: only stall when surrounding sections
-		// are missing AND the player is in that half of the current section. currently using collider
-		// radius 2 to avoid "connection problems" when crossing a section boundary
-		IngameHandler.protocolClient.setSectionGridLoader(new SectionGridLoader(workingSet, IngameHandler.protocolClient, 3, 2));
 
 	}
 
@@ -315,7 +310,7 @@ public class CubeWorldHelper {
 			MouseUtil.grab();
 		}
 		if (keysEnabled && Keyboard.isKeyDown(Keyboard.KEY_SLASH) && !minusPressed) {
-			IngameHandler.flashMessageHandler.addMessage("foobar! " + flashMessageCounter);
+			Ingame.get().getFlashMessageHandler().addMessage("foobar! " + flashMessageCounter);
 			flashMessageCounter++;
 		}
 		minusPressed = keysEnabled && Keyboard.isKeyDown(Keyboard.KEY_SLASH);
@@ -439,7 +434,7 @@ public class CubeWorldHelper {
 							CubeModification.Builder builder = new CubeModification.Builder();
 							builder.add(x, y, z, effectiveCubeType);
 							breakFree(builder);
-							IngameHandler.protocolClient.send(builder.build());
+							Ingame.get().getProtocolClient().send(builder.build());
 
 							// cooldownFinishTime = now + 1000;
 							cooldownFinishTime = now + 200;
@@ -452,7 +447,7 @@ public class CubeWorldHelper {
 					@Override
 					public void handleImpact(final int x, final int y, final int z, final double distance) {
 						if (distance < 2.0) {
-							IngameHandler.protocolClient.sendDigNotification(x, y, z);
+							Ingame.get().getProtocolClient().sendDigNotification(x, y, z);
 							resources.getHitCube().playAsSoundEffect(1.0f, 1.0f, false);
 							// cooldownFinishTime = now + 1000;
 							cooldownFinishTime = now + 200;
@@ -466,7 +461,7 @@ public class CubeWorldHelper {
 		if (keysEnabled && Keyboard.isKeyDown(Keyboard.KEY_B)) {
 			final CubeModification.Builder builder = new CubeModification.Builder();
 			breakFree(builder);
-			IngameHandler.protocolClient.send(builder.build());
+			Ingame.get().getProtocolClient().send(builder.build());
 		}
 
 		// handle player logic
@@ -655,7 +650,7 @@ public class CubeWorldHelper {
 				GL11.glPixelTransferf(GL11.GL_RED_BIAS, 1.0f);
 				GL11.glPixelTransferf(GL11.GL_GREEN_BIAS, 1.0f);
 				GL11.glPixelTransferf(GL11.GL_BLUE_BIAS, 1.0f);
-				resources.getFont().drawText("coins: " + IngameHandler.protocolClient.getCoins(), 2, Font.ALIGN_RIGHT, Font.ALIGN_TOP);
+				resources.getFont().drawText("coins: " + Ingame.get().getProtocolClient().getCoins(), 2, Font.ALIGN_RIGHT, Font.ALIGN_TOP);
 				GL11.glPixelTransferf(GL11.GL_RED_BIAS, 0.0f);
 				GL11.glPixelTransferf(GL11.GL_GREEN_BIAS, 0.0f);
 				GL11.glPixelTransferf(GL11.GL_BLUE_BIAS, 0.0f);

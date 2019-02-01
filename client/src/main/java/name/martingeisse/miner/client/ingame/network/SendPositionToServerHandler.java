@@ -6,7 +6,7 @@
 
 package name.martingeisse.miner.client.ingame.network;
 
-import name.martingeisse.miner.client.ingame.IngameHandler;
+import name.martingeisse.miner.client.ingame.Ingame;
 import name.martingeisse.miner.client.ingame.player.Player;
 import name.martingeisse.miner.client.util.frame.AbstractIntervalFrameHandler;
 
@@ -34,7 +34,7 @@ public class SendPositionToServerHandler extends AbstractIntervalFrameHandler {
 	 */
 	@Override
 	protected void onIntervalTimerExpired() {
-		IngameHandler.protocolClient.sendPositionUpdate(player.getPosition(), player.getOrientation());
+		Ingame.get().getProtocolClient().sendPositionUpdate(player.getPosition(), player.getOrientation());
 	}
 	
 }
