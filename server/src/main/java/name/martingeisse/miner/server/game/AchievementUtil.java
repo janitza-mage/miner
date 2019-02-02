@@ -30,7 +30,7 @@ public class AchievementUtil {
 	 * @return true if successfully awarded, false if the player had already
 	 * been awarded this achievement (or if no player was loaded)
 	 */
-	public static boolean awardAchievment(PlayerAccess player, String achievementCode) {
+	public static boolean awardAchievment(Player player, String achievementCode) {
 		if (player == null) {
 			return false;
 		} else {
@@ -39,7 +39,7 @@ public class AchievementUtil {
 	}
 
 	/**
-	 * Like {@link #awardAchievment(PlayerAccess, String)}, but also sends a message to
+	 * Like {@link #awardAchievment(Player, String)}, but also sends a message to
 	 * the client if the achievment was successfully awarded and assigns some bonus
 	 * coins to the player.
 	 *
@@ -50,7 +50,7 @@ public class AchievementUtil {
 	 * @return true if successfully awarded, false if the player had already
 	 * been awarded this achievement
 	 */
-	public static boolean awardAchievment(PlayerAccess player, String achievementCode, String description, int reward) {
+	public static boolean awardAchievment(Player player, String achievementCode, String description, int reward) {
 		boolean success = awardAchievment(player, achievementCode);
 		if (success) {
 			if (player != null) {

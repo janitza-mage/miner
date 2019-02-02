@@ -25,7 +25,7 @@ public final class DigUtil {
 	 * and saving the updated cube server-side. For example, this method rewards
 	 * inventory items for digging ores.
 	 */
-	public static void onCubeDugAway(PlayerAccess player, Vector3i position, byte cubeType) {
+	public static void onCubeDugAway(Player player, Vector3i position, byte cubeType) {
 		logger.info("dug cube: " + cubeType);
 
 		// check for ores
@@ -84,7 +84,7 @@ public final class DigUtil {
 
 	}
 
-	private static void oreFound(PlayerAccess player, String name, int value) {
+	private static void oreFound(Player player, String name, int value) {
 		if (player == null) {
 			return;
 		}

@@ -26,7 +26,7 @@ import java.util.function.Consumer;
 /**
  * TODO rename this class to Player.
  */
-public final class PlayerAccess {
+public final class Player {
 
 	private final long id;
 	private final ConcurrentMap<PlayerListener, PlayerListener> listeners = new ConcurrentHashMap<>();
@@ -39,7 +39,7 @@ public final class PlayerAccess {
 	 * notified. Solve by moving notification to a separate PlayerNotificationHub (or -service) which gets injected
 	 * by Guice.
 	 */
-	public PlayerAccess(long id) {
+	public Player(long id) {
 		this.id = id;
 		loadPlayerRow();
 		this.inventoryAccess = new InventoryAccess(this);

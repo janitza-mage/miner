@@ -16,7 +16,7 @@ import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.common.section.SectionId;
 import name.martingeisse.miner.server.MinerServerSecurityConstants;
 import name.martingeisse.miner.server.game.DigUtil;
-import name.martingeisse.miner.server.game.PlayerAccess;
+import name.martingeisse.miner.server.game.Player;
 import name.martingeisse.miner.server.game.PlayerListener;
 import name.martingeisse.miner.server.postgres_entities.PlayerInventorySlotRow;
 import name.martingeisse.miner.server.world.WorldSubsystem;
@@ -46,7 +46,7 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 
 	private final StackdServer server;
 	private final ServerEndpoint endpoint;
-	private volatile PlayerAccess player;
+	private volatile Player player;
 	private volatile Avatar avatar;
 
 	public StackdSession(StackdServer server, ServerEndpoint endpoint) {
@@ -65,7 +65,7 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 		if (avatar != null) {
 			throw new IllegalStateException("cannot select player -- avatar exists (state inconsistent)");
 		}
-		player = new PlayerAccess(playerId);
+		player = new Player(playerId);
 		player.add(new PlayerListener() {
 
 			@Override
@@ -88,7 +88,7 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 		sendInventoryUpdate();
 	}
 
-	public PlayerAccess getPlayer() {
+	public Player getPlayer() {
 		return player;
 	}
 

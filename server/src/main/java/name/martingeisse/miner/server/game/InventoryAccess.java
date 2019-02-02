@@ -22,14 +22,14 @@ import java.util.List;
  */
 public final class InventoryAccess {
 
-	private final PlayerAccess player;
+	private final Player player;
 	private final long playerId;
 
 	/**
 	 * You MUST invoke this constructor with the "real" player to make sure the real one gets its listeners
 	 * notified about changes.
 	 */
-	InventoryAccess(PlayerAccess player) {
+	InventoryAccess(Player player) {
 		this.player = player;
 		this.playerId = player.getId();
 	}
@@ -38,7 +38,7 @@ public final class InventoryAccess {
 		return playerId;
 	}
 
-	public PlayerAccess getPlayer() {
+	public Player getPlayer() {
 		return player;
 	}
 
