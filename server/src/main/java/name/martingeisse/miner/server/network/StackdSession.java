@@ -157,7 +157,7 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 		if (player == null) {
 			return;
 		}
-		List<PlayerInventorySlotRow> slots = player.getInventoryAccess().listAll();
+		List<PlayerInventorySlotRow> slots = player.getInventory().listAll();
 		List<UpdateInventory.Element> updateElements = new ArrayList<>();
 		for (PlayerInventorySlotRow slot : slots) {
 			updateElements.add(new UpdateInventory.Element(slot.getId(), slot.getType(), slot.getQuantity()));

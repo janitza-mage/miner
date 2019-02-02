@@ -30,7 +30,7 @@ public final class Player {
 
 	private final long id;
 	private final ConcurrentMap<PlayerListener, PlayerListener> listeners = new ConcurrentHashMap<>();
-	private final InventoryAccess inventoryAccess;
+	private final InventoryAccess inventory;
 
 	/**
 	 * TODO use repository pattern and prevent multiple instances from being created. Rather, re-use an existing instance.
@@ -42,7 +42,7 @@ public final class Player {
 	public Player(long id) {
 		this.id = id;
 		loadPlayerRow();
-		this.inventoryAccess = new InventoryAccess(this);
+		this.inventory = new InventoryAccess(this);
 	}
 
 	private PlayerRow loadPlayerRow() {
@@ -130,8 +130,8 @@ public final class Player {
 		}
 	}
 
-	public InventoryAccess getInventoryAccess() {
-		return inventoryAccess;
+	public InventoryAccess getInventory() {
+		return inventory;
 	}
 
 	public void loadAvatar(Avatar avatar) {

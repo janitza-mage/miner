@@ -32,21 +32,21 @@ public final class DigUtil {
 		switch (cubeType) {
 
 			case 1:
-				player.getInventoryAccess().add(ItemType.STONE);
+				player.getInventory().add(ItemType.STONE);
 				break;
 
 			case 2:
 			case 3:
-				player.getInventoryAccess().add(ItemType.DIRT);
+				player.getInventory().add(ItemType.DIRT);
 				break;
 
 			case 12:
-				player.getInventoryAccess().add(ItemType.SAND);
+				player.getInventory().add(ItemType.SAND);
 				break;
 
 			case 16:
 				oreFound(player, "coal", 2);
-				player.getInventoryAccess().add(ItemType.COAL);
+				player.getInventory().add(ItemType.COAL);
 				player.sendFlashMessage("inventory item added");
 				break;
 
