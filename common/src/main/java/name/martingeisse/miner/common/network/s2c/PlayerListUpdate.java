@@ -13,7 +13,8 @@ import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
 
 /**
- *
+ * Sends an update for the list of players currently playing. Not to be confused with {@link LoginResponse} which
+ * sends a list of players for the current user account.
  */
 public final class PlayerListUpdate extends Message {
 
