@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Database utility class to deal with players' inventories.
  */
-public final class InventoryAccess {
+public final class Inventory {
 
 	private final Player player;
 	private final long playerId;
@@ -29,7 +29,7 @@ public final class InventoryAccess {
 	 * You MUST invoke this constructor with the "real" player to make sure the real one gets its listeners
 	 * notified about changes.
 	 */
-	InventoryAccess(Player player) {
+	Inventory(Player player) {
 		this.player = player;
 		this.playerId = player.getId();
 	}
