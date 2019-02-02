@@ -123,7 +123,7 @@ public class StackdServer {
 			for (StackdSession session : getSessions()) {
 				Avatar avatar = session.getAvatar();
 				if (avatar != null) {
-					session.getPlayerAccess().saveAvatar(avatar);
+					session.getPlayer().saveAvatar(avatar);
 				}
 			}
 		}

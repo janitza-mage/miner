@@ -15,11 +15,10 @@ import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.common.section.SectionId;
 import name.martingeisse.miner.server.MinerServerSecurityConstants;
-import name.martingeisse.miner.server.postgres_entities.PlayerInventorySlotRow;
 import name.martingeisse.miner.server.game.DigUtil;
-import name.martingeisse.miner.server.game.ItemType;
 import name.martingeisse.miner.server.game.PlayerAccess;
 import name.martingeisse.miner.server.game.PlayerListener;
+import name.martingeisse.miner.server.postgres_entities.PlayerInventorySlotRow;
 import name.martingeisse.miner.server.world.WorldSubsystem;
 import org.apache.log4j.Logger;
 import org.joda.time.Instant;
@@ -47,7 +46,7 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 
 	private final StackdServer server;
 	private final ServerEndpoint endpoint;
-	private volatile PlayerAccess playerAccess;
+	private volatile PlayerAccess player;
 	private volatile Avatar avatar;
 
 	public StackdSession(StackdServer server, ServerEndpoint endpoint) {
@@ -60,14 +59,14 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 	//
 
 	public void selectPlayer(long playerId) {
-		if (playerAccess != null) {
+		if (player != null) {
 			throw new IllegalStateException("player already selected");
 		}
 		if (avatar != null) {
 			throw new IllegalStateException("cannot select player -- avatar exists (state inconsistent)");
 		}
-		playerAccess = new PlayerAccess(playerId);
-		playerAccess.add(new PlayerListener() {
+		player = new PlayerAccess(playerId);
+		player.add(new PlayerListener() {
 
 			@Override
 			public void onCoinsChanged() {
@@ -89,8 +88,8 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 		sendInventoryUpdate();
 	}
 
-	public PlayerAccess getPlayerAccess() {
-		return playerAccess;
+	public PlayerAccess getPlayer() {
+		return player;
 	}
 
 	//
@@ -98,14 +97,14 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 	//
 
 	public void createAvatar() {
-		if (playerAccess == null) {
+		if (player == null) {
 			throw new IllegalStateException("cannot create avatar -- no player selected");
 		}
 		if (avatar != null) {
 			throw new IllegalStateException("avatar already exists");
 		}
 		avatar = new Avatar();
-		playerAccess.loadAvatar(avatar);
+		player.loadAvatar(avatar);
 		send(new PlayerResumed(avatar.getPosition(), avatar.getOrientation()));
 	}
 
@@ -128,8 +127,8 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 	 * Called when the client disconnects, just before the session gets removed from the server.
 	 */
 	public void onDisconnect() {
-		if (playerAccess != null && avatar != null) {
-			playerAccess.saveAvatar(avatar);
+		if (player != null && avatar != null) {
+			player.saveAvatar(avatar);
 		}
 	}
 
@@ -151,14 +150,14 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 	 * number of coins from the database.
 	 */
 	public void sendCoinsUpdate() {
-		send(new UpdateCoins(playerAccess == null ? 0 : playerAccess.getCoins()));
+		send(new UpdateCoins(player == null ? 0 : player.getCoins()));
 	}
 
 	public void sendInventoryUpdate() {
-		if (playerAccess == null) {
+		if (player == null) {
 			return;
 		}
-		List<PlayerInventorySlotRow> slots = playerAccess.getInventoryAccess().listAll();
+		List<PlayerInventorySlotRow> slots = player.getInventoryAccess().listAll();
 		List<UpdateInventory.Element> updateElements = new ArrayList<>();
 		for (PlayerInventorySlotRow slot : slots) {
 			updateElements.add(new UpdateInventory.Element(slot.getId(), slot.getType(), slot.getQuantity()));
@@ -220,8 +219,8 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 			worldSubsystem.setCube(message.getPosition(), (byte) 0);
 
 			// trigger special logic (e.g. add a unit of ore to the player's inventory)
-			if (playerAccess != null) {
-				DigUtil.onCubeDugAway(playerAccess, message.getPosition(), oldCubeType);
+			if (player != null) {
+				DigUtil.onCubeDugAway(player, message.getPosition(), oldCubeType);
 			}
 
 		} else {

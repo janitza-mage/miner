@@ -22,24 +22,24 @@ import java.util.List;
  */
 public final class InventoryAccess {
 
-	private final PlayerAccess playerAccess;
+	private final PlayerAccess player;
 	private final long playerId;
 
 	/**
-	 * You MUST invoke this constructor with the "real" PlayerAccess to make sure the real one gets its listeners
+	 * You MUST invoke this constructor with the "real" player to make sure the real one gets its listeners
 	 * notified about changes.
 	 */
-	InventoryAccess(PlayerAccess playerAccess) {
-		this.playerAccess = playerAccess;
-		this.playerId = playerAccess.getId();
+	InventoryAccess(PlayerAccess player) {
+		this.player = player;
+		this.playerId = player.getId();
 	}
 
 	public long getPlayerId() {
 		return playerId;
 	}
 
-	public PlayerAccess getPlayerAccess() {
-		return playerAccess;
+	public PlayerAccess getPlayer() {
+		return player;
 	}
 
 	/**
@@ -67,7 +67,7 @@ public final class InventoryAccess {
 			insert.set(qpis.equipped, false);
 			insert.execute();
 		}
-		getPlayerAccess().notifyListeners(PlayerListener::onInventoryChanged);
+		player.notifyListeners(PlayerListener::onInventoryChanged);
 	}
 
 	/**
@@ -120,7 +120,7 @@ public final class InventoryAccess {
 			delete.where(qpis.playerId.eq(playerId), qpis.equipped.isFalse(), qpis.id.eq(id));
 			delete.execute();
 		}
-		getPlayerAccess().notifyListeners(PlayerListener::onInventoryChanged);
+		player.notifyListeners(PlayerListener::onInventoryChanged);
 	}
 
 	/**
@@ -135,7 +135,7 @@ public final class InventoryAccess {
 			delete.where(qpis.playerId.eq(playerId), qpis.equipped.isTrue(), qpis.id.eq(id));
 			delete.execute();
 		}
-		getPlayerAccess().notifyListeners(PlayerListener::onInventoryChanged);
+		player.notifyListeners(PlayerListener::onInventoryChanged);
 	}
 
 	/**
@@ -151,7 +151,7 @@ public final class InventoryAccess {
 			update.set(qpis.equipped, true);
 			update.execute();
 		}
-		getPlayerAccess().notifyListeners(PlayerListener::onInventoryChanged);
+		player.notifyListeners(PlayerListener::onInventoryChanged);
 	}
 
 	/**
@@ -167,7 +167,7 @@ public final class InventoryAccess {
 			update.set(qpis.equipped, false);
 			update.execute();
 		}
-		getPlayerAccess().notifyListeners(PlayerListener::onInventoryChanged);
+		player.notifyListeners(PlayerListener::onInventoryChanged);
 	}
 
 	/**

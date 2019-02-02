@@ -25,71 +25,71 @@ public final class DigUtil {
 	 * and saving the updated cube server-side. For example, this method rewards
 	 * inventory items for digging ores.
 	 */
-	public static void onCubeDugAway(PlayerAccess playerAccess, Vector3i position, byte cubeType) {
+	public static void onCubeDugAway(PlayerAccess player, Vector3i position, byte cubeType) {
 		logger.info("dug cube: " + cubeType);
 
 		// check for ores
 		switch (cubeType) {
 
 			case 1:
-				playerAccess.getInventoryAccess().add(ItemType.STONE);
+				player.getInventoryAccess().add(ItemType.STONE);
 				break;
 
 			case 2:
 			case 3:
-				playerAccess.getInventoryAccess().add(ItemType.DIRT);
+				player.getInventoryAccess().add(ItemType.DIRT);
 				break;
 
 			case 12:
-				playerAccess.getInventoryAccess().add(ItemType.SAND);
+				player.getInventoryAccess().add(ItemType.SAND);
 				break;
 
 			case 16:
-				oreFound(playerAccess, "coal", 2);
-				playerAccess.getInventoryAccess().add(ItemType.COAL);
-				playerAccess.sendFlashMessage("inventory item added");
+				oreFound(player, "coal", 2);
+				player.getInventoryAccess().add(ItemType.COAL);
+				player.sendFlashMessage("inventory item added");
 				break;
 
 			case 10:
-				oreFound(playerAccess, "gold", 5);
+				oreFound(player, "gold", 5);
 				break;
 
 			case 11:
-				oreFound(playerAccess, "diamond", 20);
+				oreFound(player, "diamond", 20);
 				break;
 
 			case 13:
-				oreFound(playerAccess, "ruby", 10);
+				oreFound(player, "ruby", 10);
 				break;
 
 			case 14:
-				oreFound(playerAccess, "sapphire", 10);
+				oreFound(player, "sapphire", 10);
 				break;
 
 		}
 
 		// check for achievements
 		if (position.y > 10) {
-			AchievementUtil.awardAchievment(playerAccess, "digAbove10", "Dig a cube above 10m height", 10);
+			AchievementUtil.awardAchievment(player, "digAbove10", "Dig a cube above 10m height", 10);
 		}
 		if (position.y > 100) {
-			AchievementUtil.awardAchievment(playerAccess, "digAbove100", "Dig a cube above 100m height", 100);
+			AchievementUtil.awardAchievment(player, "digAbove100", "Dig a cube above 100m height", 100);
 		}
 		if (position.y < -10) {
-			AchievementUtil.awardAchievment(playerAccess, "digBelow10", "Dig a cube below 10m depth", 10);
+			AchievementUtil.awardAchievment(player, "digBelow10", "Dig a cube below 10m depth", 10);
 		}
 		if (position.y < -100) {
-			AchievementUtil.awardAchievment(playerAccess, "bigBelow100", "Dig a cube below 100m depth", 100);
+			AchievementUtil.awardAchievment(player, "bigBelow100", "Dig a cube below 100m depth", 100);
 		}
 
 	}
 
-	private static void oreFound(PlayerAccess playerAccess, String name, int value) {
-		if (playerAccess == null) {
+	private static void oreFound(PlayerAccess player, String name, int value) {
+		if (player == null) {
 			return;
 		}
-		playerAccess.addCoins(value);
-		playerAccess.sendFlashMessage("You found some " + name + " (worth " + value + " coins).");
+		player.addCoins(value);
+		player.sendFlashMessage("You found some " + name + " (worth " + value + " coins).");
 	}
 
 	/**

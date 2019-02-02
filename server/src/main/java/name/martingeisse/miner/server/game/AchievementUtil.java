@@ -25,16 +25,16 @@ public class AchievementUtil {
 	 * In that case, the calling function should next credit a reward to
 	 * the player.
 	 *
-	 * @param playerAccess         the player's playerAccess
+	 * @param player          the player
 	 * @param achievementCode the internal unique code for the achievement
 	 * @return true if successfully awarded, false if the player had already
 	 * been awarded this achievement (or if no player was loaded)
 	 */
-	public static boolean awardAchievment(PlayerAccess playerAccess, String achievementCode) {
-		if (playerAccess == null) {
+	public static boolean awardAchievment(PlayerAccess player, String achievementCode) {
+		if (player == null) {
 			return false;
 		} else {
-			return playerAccess.addAchievement(achievementCode);
+			return player.addAchievement(achievementCode);
 		}
 	}
 
@@ -43,19 +43,19 @@ public class AchievementUtil {
 	 * the client if the achievment was successfully awarded and assigns some bonus
 	 * coins to the player.
 	 *
-	 * @param playerAccess         the player's playerAccess
+	 * @param player          the player
 	 * @param achievementCode the internal unique code for the achievement
 	 * @param description     a short description of the achievement, used in the message
 	 * @param reward          player's reward in coins
 	 * @return true if successfully awarded, false if the player had already
 	 * been awarded this achievement
 	 */
-	public static boolean awardAchievment(PlayerAccess playerAccess, String achievementCode, String description, int reward) {
-		boolean success = awardAchievment(playerAccess, achievementCode);
+	public static boolean awardAchievment(PlayerAccess player, String achievementCode, String description, int reward) {
+		boolean success = awardAchievment(player, achievementCode);
 		if (success) {
-			if (playerAccess != null) {
-				playerAccess.sendFlashMessage("Achievement Unlocked: " + description + "(reward: " + reward + " coins)");
-				playerAccess.addCoins(reward);
+			if (player != null) {
+				player.sendFlashMessage("Achievement Unlocked: " + description + "(reward: " + reward + " coins)");
+				player.addCoins(reward);
 			}
 		}
 		return success;
