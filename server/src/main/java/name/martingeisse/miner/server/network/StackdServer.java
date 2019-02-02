@@ -114,7 +114,7 @@ public class StackdServer {
 	}
 
 	/**
-	 * Saves player position to the database regularly.
+	 * Saves the position of all avatars to the database regularly.
 	 */
 	private class AvatarPositionPersister extends TimerTask {
 
