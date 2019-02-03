@@ -2,7 +2,13 @@ package name.martingeisse.miner.common.network;
 
 import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.network.c2s.*;
+import name.martingeisse.miner.common.network.c2s.request.CreatePlayerRequest;
+import name.martingeisse.miner.common.network.c2s.request.DeletePlayerRequest;
+import name.martingeisse.miner.common.network.c2s.request.LoginRequest;
 import name.martingeisse.miner.common.network.s2c.*;
+import name.martingeisse.miner.common.network.s2c.response.ErrorResponse;
+import name.martingeisse.miner.common.network.s2c.response.LoginResponse;
+import name.martingeisse.miner.common.network.s2c.response.OkayResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,12 +27,24 @@ final class MessageTypeRegistry {
 
 	private MessageTypeRegistry() {
 
+		// client-to-server requests
+		register(LoginRequest.class, LoginRequest::decodeBody);
+		register(CreatePlayerRequest.class, CreatePlayerRequest::decodeBody);
+		register(DeletePlayerRequest.class, DeletePlayerRequest::decodeBody);
+
+		// other client-to-server messages
 		register(CubeModification.class, CubeModification::decodeBody);
 		register(DigNotification.class, DigNotification::decodeBody);
 		register(ResumePlayer.class, ResumePlayer::decodeBody);
 		register(UpdatePosition.class, UpdatePosition::decodeBody);
 		register(InteractiveSectionDataRequest.class, InteractiveSectionDataRequest::decodeBody);
 
+		// server-to-client responses
+		register(OkayResponse.class, OkayResponse::decodeBody);
+		register(ErrorResponse.class, ErrorResponse::decodeBody);
+		register(LoginResponse.class, LoginResponse::decodeBody);
+
+		// other server-to-client messages
 		register(FlashMessage.class, FlashMessage::decodeBody);
 		register(PlayerListUpdate.class, PlayerListUpdate::decodeBody);
 		register(PlayerResumed.class, PlayerResumed::decodeBody);

@@ -29,9 +29,9 @@ public class PlayerRow implements Serializable {
     private Boolean deleted;
 
     /**
-     * the factionId
+     * the faction
      */
-    private Long factionId;
+    private Integer faction;
 
     /**
      * the id
@@ -110,21 +110,21 @@ public class PlayerRow implements Serializable {
     }
 
     /**
-     * Getter method for the factionId.
+     * Getter method for the faction.
      * 
-     * @return the factionId
+     * @return the faction
      */
-    public Long getFactionId() {
-        return factionId;
+    public Integer getFaction() {
+        return faction;
     }
 
     /**
-     * Setter method for the factionId.
+     * Setter method for the faction.
      * 
-     * @param factionId the factionId to set
+     * @param faction the faction to set
      */
-    public void setFactionId(Long factionId) {
-        this.factionId = factionId;
+    public void setFaction(Integer faction) {
+        this.faction = faction;
     }
 
     /**
@@ -294,7 +294,7 @@ public class PlayerRow implements Serializable {
         SQLInsertClause insert = connection.insert(q);
         insert.set(q.coins, coins);
         insert.set(q.deleted, deleted);
-        insert.set(q.factionId, factionId);
+        insert.set(q.faction, faction);
         insert.set(q.leftAngle, leftAngle);
         insert.set(q.name, name);
         insert.set(q.upAngle, upAngle);
@@ -310,7 +310,7 @@ public class PlayerRow implements Serializable {
      */
     @Override
     public String toString() {
-        return "{PlayerRow. coins = " + coins + ", deleted = " + deleted + ", factionId = " + factionId + ", id = " + id + ", leftAngle = " + leftAngle + ", name = " + name + ", upAngle = " + upAngle + ", userAccountId = " + userAccountId + ", x = " + x + ", y = " + y + ", z = " + z + "}";
+        return "{PlayerRow. coins = " + coins + ", deleted = " + deleted + ", faction = " + faction + ", id = " + id + ", leftAngle = " + leftAngle + ", name = " + name + ", upAngle = " + upAngle + ", userAccountId = " + userAccountId + ", x = " + x + ", y = " + y + ", z = " + z + "}";
     }
 
 }

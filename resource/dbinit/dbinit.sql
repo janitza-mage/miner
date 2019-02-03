@@ -7,22 +7,12 @@ CREATE SCHEMA "miner";
 -- -------------------------------------------------------------------------
 
 
--- faction data
--- --------------------------
-
-CREATE TABLE "miner"."Faction" (
-	"id" bigserial NOT NULL PRIMARY KEY,
-	"score" bigint NOT NULL,
-	"divinePower" bigint NOT NULL
-);
-
-
 -- user account data
 -- --------------------------
 
 CREATE TABLE "miner"."UserAccount" (
 	"id" bigserial NOT NULL PRIMARY KEY,
-	"username" character varying(255) NOT NULL,
+	"username" character varying(255) NOT NULL CHECK ("username" != ''),
 	"passwordHash" character varying(255) NOT NULL,
 	"deleted" boolean NOT NULL DEFAULT false
 );
@@ -35,13 +25,13 @@ CREATE TABLE "miner"."Player" (
 	"id" bigserial NOT NULL PRIMARY KEY,
 	"userAccountId" bigint NOT NULL REFERENCES "miner"."UserAccount" ON DELETE CASCADE,
 	"name" character varying(255) NOT NULL,
-	"factionId" bigint NOT NULL REFERENCES "miner"."Faction",
+	"faction" integer NOT NULL CHECK ("faction" >= 0 AND "faction" < 4),
 	"x" decimal(10,2) NOT NULL DEFAULT 0,
 	"y" decimal(10,2) NOT NULL DEFAULT 0,
 	"z" decimal(10,2) NOT NULL DEFAULT 0,
 	"leftAngle" decimal(5,2) NOT NULL DEFAULT 0,
 	"upAngle" decimal(5,2) NOT NULL DEFAULT 0,
-	"coins" bigint NOT NULL,
+	"coins" bigint NOT NULL CHECK ("coins" >= 0),
 	"deleted" boolean NOT NULL DEFAULT false
 );
 
@@ -56,7 +46,7 @@ CREATE TABLE "miner"."PlayerInventorySlot" (
 	"id" bigserial NOT NULL PRIMARY KEY,
 	"playerId" bigint NOT NULL REFERENCES "miner"."Player" ON DELETE CASCADE,
 	"type" character varying(255) NOT NULL,
-	"quantity" integer NOT NULL,
+	"quantity" integer NOT NULL CHECK ("quantity" > 0),
 	"equipped" boolean NOT NULL
 );
 CREATE INDEX "PlayerInventorySlot_main" ON "miner"."PlayerInventorySlot" ("playerId", "id");
@@ -68,24 +58,14 @@ CREATE INDEX "PlayerInventorySlot_main" ON "miner"."PlayerInventorySlot" ("playe
 -- -------------------------------------------------------------------------
 
 
--- factions
--- --------------------------
-
-INSERT INTO "miner"."Faction" ("score", "divinePower") VALUES
-(0, 0),
-(0, 0),
-(0, 0),
-(0, 0);
-
-
 -- users, players and related data
 -- --------------------------
 
 INSERT INTO "miner"."UserAccount" ("username", "passwordHash") VALUES
 ('martin', '$2a$12$.5KM.jQ/TnPn7bMET7.lO.CnGxUzssEr8w590eYQYl8XRkui2OCg6');
 
-INSERT INTO	"miner"."Player" ("userAccountId", "name", "factionId", "coins") VALUES
-(1, 'Big Boss', 1, 123);
+INSERT INTO	"miner"."Player" ("userAccountId", "name", "faction", "coins") VALUES
+(1, 'Big Boss', 0, 123);
 
 
 

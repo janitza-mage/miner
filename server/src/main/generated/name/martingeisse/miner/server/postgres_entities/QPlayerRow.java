@@ -29,7 +29,7 @@ public class QPlayerRow extends com.querydsl.sql.RelationalPathBase<PlayerRow> {
 
     public final BooleanPath deleted = createBoolean("deleted");
 
-    public final NumberPath<Long> factionId = createNumber("factionId", Long.class);
+    public final NumberPath<Integer> faction = createNumber("faction", Integer.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
@@ -50,8 +50,6 @@ public class QPlayerRow extends com.querydsl.sql.RelationalPathBase<PlayerRow> {
     public final com.querydsl.sql.PrimaryKey<PlayerRow> playerPkey = createPrimaryKey(id);
 
     public final com.querydsl.sql.ForeignKey<UserAccountRow> playerUserAccountIdFkey = createForeignKey(userAccountId, "id");
-
-    public final com.querydsl.sql.ForeignKey<FactionRow> playerFactionIdFkey = createForeignKey(factionId, "id");
 
     public final com.querydsl.sql.ForeignKey<PlayerInventorySlotRow> _playerInventorySlotPlayerIdFkey = createInvForeignKey(id, "playerId");
 
@@ -80,7 +78,7 @@ public class QPlayerRow extends com.querydsl.sql.RelationalPathBase<PlayerRow> {
     public void addMetadata() {
         addMetadata(coins, ColumnMetadata.named("coins").withIndex(10).ofType(Types.BIGINT).withSize(19).notNull());
         addMetadata(deleted, ColumnMetadata.named("deleted").withIndex(11).ofType(Types.BIT).withSize(1).notNull());
-        addMetadata(factionId, ColumnMetadata.named("factionId").withIndex(4).ofType(Types.BIGINT).withSize(19).notNull());
+        addMetadata(faction, ColumnMetadata.named("faction").withIndex(4).ofType(Types.INTEGER).withSize(10).notNull());
         addMetadata(id, ColumnMetadata.named("id").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
         addMetadata(leftAngle, ColumnMetadata.named("leftAngle").withIndex(8).ofType(Types.NUMERIC).withSize(5).withDigits(2).notNull());
         addMetadata(name, ColumnMetadata.named("name").withIndex(3).ofType(Types.VARCHAR).withSize(255).notNull());

@@ -50,7 +50,7 @@ public final class CreatePlayerHandler extends AbstractLoggedInHandler {
 			insert.set(qp.userAccountId, userAccount.getId());
 			insert.set(qp.coins, 0L);
 			insert.set(qp.name, name);
-			insert.set(qp.factionId, (long) (factionIndex + 1));
+			insert.set(qp.faction, factionIndex);
 			insert.set(qp.x, BigDecimal.ZERO);
 			insert.set(qp.y, BigDecimal.ONE.add(BigDecimal.ONE));
 			insert.set(qp.z, BigDecimal.ZERO);

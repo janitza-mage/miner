@@ -88,14 +88,7 @@ public final class Ingame {
 
 	private void onCreate() {
 
-		// The connection to the server (which we started creating early) must be established before the game
-		// can run, so if we're still not connected, wait for it. We also want to route network messages to the
-		// in-game logic now.
-		try {
-			ClientEndpoint.INSTANCE.waitUntilConnected();
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
-		}
+		// Route network messages to the in-game logic from now.
 		ClientEndpoint.INSTANCE.setMessageConsumer(new IngameMessageRouter());
 
 		// TODO this will disappear anyway when the account API uses the ClientEndpoint, so don't worry about

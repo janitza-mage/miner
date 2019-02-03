@@ -8,9 +8,12 @@ package name.martingeisse.miner.client.startmenu;
 
 import java.util.prefs.Preferences;
 
+import name.martingeisse.miner.client.network.ClientEndpoint;
 import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.element.Spacer;
 import name.martingeisse.miner.client.util.gui.element.VerticalLayout;
+import name.martingeisse.miner.common.network.c2s.request.LoginRequest;
+import name.martingeisse.miner.common.network.s2c.response.LoginResponse;
 import name.martingeisse.miner.common.util.UserVisibleMessageException;
 
 /**
@@ -113,6 +116,20 @@ public class LoginPage extends AbstractStartmenuPage {
 		String username = this.username.getTextField().getValue();
 		String password = this.password.getTextField().getValue();
 		AccountApiClient.getInstance().login(username, password);
+
+		// This is the first time we actually need a network connection, so wait until connected.
+		try {
+			ClientEndpoint.INSTANCE.waitUntilConnected();
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
+
+		// route network messages to the startmenu logic
+		ClientEndpoint.INSTANCE.setMessageConsumer(StartmenuNetworkClient.INSTANCE);
+
+		// log in
+		LoginResponse response = StartmenuNetworkClient.INSTANCE.requestAndWait(new LoginRequest(username, password), LoginResponse.class);
+
 		getGui().setRootElement(new ChooseCharacterPage());
 		Preferences.userNodeForPackage(AccountApiClient.class).put("username", username);
 	}
