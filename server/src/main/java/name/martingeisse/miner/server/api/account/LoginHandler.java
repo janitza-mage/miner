@@ -6,18 +6,13 @@
 
 package name.martingeisse.miner.server.api.account;
 
-import external.BCrypt;
 import name.martingeisse.api.handler.jsonapi.AbstractJsonApiHandler;
-import name.martingeisse.api.handler.jsonapi.JsonApiException;
 import name.martingeisse.api.request.ApiRequestCycle;
 import name.martingeisse.common.SecurityTokenUtil;
 import name.martingeisse.common.javascript.analyze.JsonAnalyzer;
 import name.martingeisse.common.javascript.jsonbuilder.JsonValueBuilder;
-import name.martingeisse.miner.server.Databases;
 import name.martingeisse.miner.server.MinerServerSecurityConstants;
-import name.martingeisse.miner.server.postgres_entities.QUserAccountRow;
-import name.martingeisse.miner.server.postgres_entities.UserAccountRow;
-import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
+import name.martingeisse.miner.server.game.UserAccountRepository;
 import org.joda.time.Instant;
 
 import javax.servlet.http.Cookie;
@@ -30,31 +25,16 @@ import javax.servlet.http.Cookie;
  */
 public final class LoginHandler extends AbstractJsonApiHandler {
 
-	/**
-	 * the DUMMY_PASSWORD_HASH
-	 */
-	private static final String DUMMY_PASSWORD_HASH = "$2a$12$xxyZikdRn7HxYXlOqOvaXOLmtpaXoLxFjPDQpiSYZSZNxbzeV68Xy";
-
 	/* (non-Javadoc)
 	 * @see name.martingeisse.api.handler.jsonapi.AbstractJsonApiHandler#handle(name.martingeisse.api.request.RequestCycle, name.martingeisse.common.javascript.analyze.JsonAnalyzer, name.martingeisse.common.javascript.jsonbuilder.JsonValueBuilder)
 	 */
 	@Override
 	protected void handle(ApiRequestCycle requestCycle, JsonAnalyzer input, JsonValueBuilder<?> output) throws Exception {
 
-		// fetch the user record
+		// check credentials
 		String username = input.analyzeMapElement("username").expectString();
-		UserAccountRow userAccount;
-		try (PostgresConnection connection = Databases.main.newConnection()) {
-			QUserAccountRow qua = QUserAccountRow.UserAccount;
-			userAccount = connection.query().select(qua).from(qua).where(qua.username.eq(username)).fetchOne();
-		}
-
-		// Check the password. Even if we found no user account we check against a pre-generated
-		// dummy hash to produce similar timing, to prevent timing attacks.
 		String password = input.analyzeMapElement("password").expectString();
-		if (!BCrypt.checkpw(password, userAccount == null ? DUMMY_PASSWORD_HASH : userAccount.getPasswordHash())) {
-			throw new JsonApiException(1, "Invalid username or password");
-		}
+		UserAccountRepository.INSTANCE.login(username, password);
 
 		// build the access token and add it to the response body and to the cookie header
 		Instant expiryTime = new Instant().plus(MinerServerSecurityConstants.ACCOUNT_ACCESS_TOKEN_MAX_AGE_MILLISECONDS);
