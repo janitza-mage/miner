@@ -10,14 +10,20 @@ import com.google.common.collect.ImmutableList;
 import name.martingeisse.common.SecurityTokenUtil;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.c2s.*;
+import name.martingeisse.miner.common.network.c2s.request.CreatePlayerRequest;
+import name.martingeisse.miner.common.network.c2s.request.DeletePlayerRequest;
+import name.martingeisse.miner.common.network.c2s.request.LoginRequest;
+import name.martingeisse.miner.common.network.c2s.request.Request;
 import name.martingeisse.miner.common.network.s2c.*;
+import name.martingeisse.miner.common.network.s2c.response.ErrorResponse;
+import name.martingeisse.miner.common.network.s2c.response.OkayResponse;
+import name.martingeisse.miner.common.network.s2c.response.Response;
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.common.section.SectionId;
+import name.martingeisse.miner.common.util.UserVisibleMessageException;
 import name.martingeisse.miner.server.MinerServerSecurityConstants;
-import name.martingeisse.miner.server.game.DigUtil;
-import name.martingeisse.miner.server.game.Player;
-import name.martingeisse.miner.server.game.PlayerListener;
+import name.martingeisse.miner.server.game.*;
 import name.martingeisse.miner.server.postgres_entities.PlayerInventorySlotRow;
 import name.martingeisse.miner.server.world.WorldSubsystem;
 import org.apache.log4j.Logger;
@@ -46,6 +52,7 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 
 	private final StackdServer server;
 	private final ServerEndpoint endpoint;
+	private volatile UserAccount userAccount; // TODO authorize e.g. player acces against this user account!
 	private volatile Player player;
 	private volatile Avatar avatar;
 
@@ -53,6 +60,10 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 		this.server = server;
 		this.endpoint = endpoint;
 	}
+
+	//
+	// user account management
+	//
 
 	//
 	// player management
@@ -171,7 +182,23 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 	}
 
 	final void onMessageReceived(Message untypedMessage) {
-		if (untypedMessage instanceof ResumePlayer) {
+		if (untypedMessage instanceof Request) {
+
+			Request message = (Request) untypedMessage;
+			try {
+				Response response = onRequest(message);
+				if (response == null) {
+					send(new ErrorResponse("internal server error"));
+				} else {
+					send(response);
+				}
+			} catch (UserVisibleMessageException e) {
+				send(new ErrorResponse(e.getMessage()));
+			} catch (Exception e) {
+				send(new ErrorResponse("internal server error"));
+			}
+
+		} else if (untypedMessage instanceof ResumePlayer) {
 
 			ResumePlayer message = (ResumePlayer) untypedMessage;
 			String token = new String(message.getToken(), StandardCharsets.UTF_8);
@@ -225,6 +252,37 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 
 		} else {
 			logger.error("unknown message: " + untypedMessage);
+		}
+	}
+
+	private Response onRequest(Request request) {
+		if (request instanceof LoginRequest) {
+
+			LoginRequest message = (LoginRequest) request;
+			UserAccount userAccount = UserAccountRepository.INSTANCE.login(message.getUsername(), message.getPassword());
+			this.userAccount = userAccount;
+			return userAccount.getLoginResponse();
+
+		} else if (request instanceof CreatePlayerRequest) {
+
+			if (userAccount == null) {
+				throw new UserVisibleMessageException("not logged in");
+			}
+			CreatePlayerRequest message = (CreatePlayerRequest) request;
+			userAccount.createPlayer(message);
+			return new OkayResponse();
+
+		} else if (request instanceof DeletePlayerRequest) {
+
+			if (userAccount == null) {
+				throw new UserVisibleMessageException("not logged in");
+			}
+			DeletePlayerRequest message = (DeletePlayerRequest) request;
+			userAccount.deletePlayer(message);
+			return new OkayResponse();
+
+		} else {
+			throw new IllegalArgumentException("unknown request message: " + request);
 		}
 	}
 

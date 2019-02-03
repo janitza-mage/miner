@@ -4,13 +4,10 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util;
-
-import name.martingeisse.miner.client.startmenu.AccountApiClient;
+package name.martingeisse.miner.common.util;
 
 /**
- * This exception type gets thrown by the {@link AccountApiClient} to
- * signal an error message that should be displayed to the user.
+ * This exception type signals an error message that should be displayed to the user.
  */
 public class UserVisibleMessageException extends RuntimeException {
 

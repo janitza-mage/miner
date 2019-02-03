@@ -11,7 +11,7 @@ import java.util.prefs.Preferences;
 import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.element.Spacer;
 import name.martingeisse.miner.client.util.gui.element.VerticalLayout;
-import name.martingeisse.miner.client.util.UserVisibleMessageException;
+import name.martingeisse.miner.common.util.UserVisibleMessageException;
 
 /**
  * The "login" menu page.

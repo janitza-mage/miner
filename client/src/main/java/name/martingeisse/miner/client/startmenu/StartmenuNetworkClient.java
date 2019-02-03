@@ -7,7 +7,7 @@ package name.martingeisse.miner.client.startmenu;
 import name.martingeisse.miner.client.network.ClientEndpoint;
 import name.martingeisse.miner.client.network.MessageConsumer;
 import name.martingeisse.miner.common.network.Message;
-import name.martingeisse.miner.common.network.s2c.ErrorResponse;
+import name.martingeisse.miner.common.network.s2c.response.ErrorResponse;
 
 /**
  *

@@ -2,17 +2,16 @@
  * Copyright (c) 2018 Martin Geisse
  * This file is distributed under the terms of the MIT license.
  */
-package name.martingeisse.miner.common.network.s2c;
+package name.martingeisse.miner.common.network.s2c.response;
 
 import io.netty.buffer.ByteBuf;
-import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
 
 /**
  * General-purpose response for request messages that use a request-response scheme but don't have any data to
  * return in the response.
  */
-public final class OkayResponse extends Message {
+public final class OkayResponse extends Response {
 
 	@Override
 	protected int getExpectedBodySize() {

@@ -2,18 +2,17 @@
  * Copyright (c) 2018 Martin Geisse
  * This file is distributed under the terms of the MIT license.
  */
-package name.martingeisse.miner.common.network.c2s;
+package name.martingeisse.miner.common.network.c2s.request;
 
 import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.Faction;
 import name.martingeisse.miner.common.network.BufferUtil;
-import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
 
 /**
  *
  */
-public final class CreatePlayerRequest extends Message {
+public final class CreatePlayerRequest extends Request {
 
 	private final Faction faction;
 	private final String name;

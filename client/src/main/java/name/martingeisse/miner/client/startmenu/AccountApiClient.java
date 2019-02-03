@@ -13,7 +13,7 @@ import name.martingeisse.common.javascript.jsonbuilder.JsonBuilder;
 import name.martingeisse.common.javascript.jsonbuilder.JsonObjectBuilder;
 import name.martingeisse.httpclient.NullCookieStore;
 import name.martingeisse.miner.common.Faction;
-import name.martingeisse.miner.client.util.UserVisibleMessageException;
+import name.martingeisse.miner.common.util.UserVisibleMessageException;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;

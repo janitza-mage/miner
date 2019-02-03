@@ -2,21 +2,21 @@
  * Copyright (c) 2018 Martin Geisse
  * This file is distributed under the terms of the MIT license.
  */
-package name.martingeisse.miner.common.network.s2c;
+package name.martingeisse.miner.common.network.s2c.response;
 
 import com.google.common.collect.ImmutableList;
 import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.Faction;
 import name.martingeisse.miner.common.network.BufferUtil;
-import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
-import name.martingeisse.miner.common.network.c2s.LoginRequest;
+import name.martingeisse.miner.common.network.c2s.request.LoginRequest;
+import name.martingeisse.miner.common.network.s2c.PlayerListUpdate;
 
 /**
  * A response to {@link LoginRequest}. Contains the players for this user account. Not to be confused with
  * {@link PlayerListUpdate} which contains the list of other players currently playing.
  */
-public final class LoginResponse extends Message {
+public final class LoginResponse extends Response {
 
 	private final ImmutableList<Element> elements;
 

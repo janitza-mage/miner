@@ -10,7 +10,7 @@ import name.martingeisse.miner.common.network.MessageDecodingException;
 import name.martingeisse.miner.common.section.SectionId;
 
 /**
- *
+ * TODO rename to make clear that this message does not follow the typical request/response pattern.
  */
 public final class InteractiveSectionDataRequest extends Message {
 

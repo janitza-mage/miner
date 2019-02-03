@@ -2,10 +2,9 @@
  * Copyright (c) 2018 Martin Geisse
  * This file is distributed under the terms of the MIT license.
  */
-package name.martingeisse.miner.common.network.s2c;
+package name.martingeisse.miner.common.network.s2c.response;
 
 import io.netty.buffer.ByteBuf;
-import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
 
 import java.nio.charset.StandardCharsets;
@@ -13,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 /**
  *
  */
-public final class ErrorResponse extends Message {
+public final class ErrorResponse extends Response {
 
 	private final String text;
 

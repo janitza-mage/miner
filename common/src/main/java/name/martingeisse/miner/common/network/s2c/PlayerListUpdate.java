@@ -11,6 +11,7 @@ import name.martingeisse.miner.common.geometry.vector.Vector3d;
 import name.martingeisse.miner.common.network.BufferUtil;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
+import name.martingeisse.miner.common.network.s2c.response.LoginResponse;
 
 /**
  * Sends an update for the list of players currently playing. Not to be confused with {@link LoginResponse} which
