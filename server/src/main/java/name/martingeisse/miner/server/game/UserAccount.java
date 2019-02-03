@@ -6,12 +6,13 @@ package name.martingeisse.miner.server.game;
 
 import com.google.common.collect.ImmutableList;
 import com.querydsl.sql.dml.SQLInsertClause;
-import name.martingeisse.api.handler.jsonapi.JsonApiException;
-import name.martingeisse.common.javascript.jsonbuilder.JsonObjectBuilder;
+import com.querydsl.sql.dml.SQLUpdateClause;
 import name.martingeisse.miner.common.Faction;
 import name.martingeisse.miner.common.network.c2s.request.CreatePlayerRequest;
 import name.martingeisse.miner.common.network.c2s.request.DeletePlayerRequest;
+import name.martingeisse.miner.common.network.s2c.response.CreatePlayerResponse;
 import name.martingeisse.miner.common.network.s2c.response.LoginResponse;
+import name.martingeisse.miner.common.network.s2c.response.OkayResponse;
 import name.martingeisse.miner.common.util.UserVisibleMessageException;
 import name.martingeisse.miner.server.Databases;
 import name.martingeisse.miner.server.postgres_entities.PlayerRow;
@@ -45,34 +46,42 @@ public final class UserAccount {
 		}
 	}
 
-	public void createPlayer(CreatePlayerRequest request) {
-//		long playerId;
-//		try (PostgresConnection connection = Databases.main.newConnection()) {
-//			final QPlayerRow qp = QPlayerRow.Player;
-//			final SQLInsertClause insert = connection.insert(qp);
-//			insert.set(qp.userAccountId, id);
-//			insert.set(qp.coins, 0L);
-//			insert.set(qp.name, request.getName());
-//			insert.set(qp.faction, request.getFaction().ordinal());
-//			insert.set(qp.x, BigDecimal.ZERO);
-//			insert.set(qp.y, BigDecimal.ONE.add(BigDecimal.ONE));
-//			insert.set(qp.z, BigDecimal.ZERO);
-//			insert.set(qp.leftAngle, BigDecimal.ZERO);
-//			insert.set(qp.upAngle, BigDecimal.ZERO);
-//			playerId = insert.executeWithKey(Long.class);
-//		}
-//
-//		// build the response
-//		JsonObjectBuilder<?> objectBuilder = output.object();
-//		objectBuilder.property("id").number(playerId);
-//		objectBuilder.end();
-
-
-		throw new UserVisibleMessageException("NOT IMPLEMENTED");
+	public CreatePlayerResponse createPlayer(CreatePlayerRequest request) {
+		String name = request.getName();
+		Faction faction = request.getFaction();
+		long coins = 0;
+		long playerId;
+		try (PostgresConnection connection = Databases.main.newConnection()) {
+			final QPlayerRow qp = QPlayerRow.Player;
+			final SQLInsertClause insert = connection.insert(qp);
+			insert.set(qp.userAccountId, this.id);
+			insert.set(qp.coins, coins);
+			insert.set(qp.name, name);
+			insert.set(qp.faction, faction.ordinal());
+			insert.set(qp.x, BigDecimal.ZERO);
+			insert.set(qp.y, BigDecimal.ONE.add(BigDecimal.ONE));
+			insert.set(qp.z, BigDecimal.ZERO);
+			insert.set(qp.leftAngle, BigDecimal.ZERO);
+			insert.set(qp.upAngle, BigDecimal.ZERO);
+			playerId = insert.executeWithKey(Long.class);
+		}
+		return new CreatePlayerResponse(new LoginResponse.Element(playerId, name, faction, coins));
 	}
 
-	public void deletePlayer(DeletePlayerRequest request) {
-		throw new UserVisibleMessageException("NOT IMPLEMENTED");
+	public OkayResponse deletePlayer(DeletePlayerRequest request) {
+		QPlayerRow qp = QPlayerRow.Player;
+		try (PostgresConnection connection = Databases.main.newConnection()) {
+			SQLUpdateClause update = connection.update(qp);
+			update.where(qp.userAccountId.eq(this.id));
+			update.where(qp.id.eq(request.getId()));
+			update.where(qp.deleted.isFalse());
+			long result = update.set(qp.deleted, true).execute();
+			if (result > 0) {
+				return new OkayResponse();
+			} else {
+				throw new UserVisibleMessageException("player not found");
+			}
+		}
 	}
 
 }

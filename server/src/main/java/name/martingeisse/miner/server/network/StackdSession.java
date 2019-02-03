@@ -16,7 +16,6 @@ import name.martingeisse.miner.common.network.c2s.request.LoginRequest;
 import name.martingeisse.miner.common.network.c2s.request.Request;
 import name.martingeisse.miner.common.network.s2c.*;
 import name.martingeisse.miner.common.network.s2c.response.ErrorResponse;
-import name.martingeisse.miner.common.network.s2c.response.OkayResponse;
 import name.martingeisse.miner.common.network.s2c.response.Response;
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
@@ -269,8 +268,7 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 				throw new UserVisibleMessageException("not logged in");
 			}
 			CreatePlayerRequest message = (CreatePlayerRequest) request;
-			userAccount.createPlayer(message);
-			return new OkayResponse();
+			return userAccount.createPlayer(message);
 
 		} else if (request instanceof DeletePlayerRequest) {
 
@@ -278,8 +276,7 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 				throw new UserVisibleMessageException("not logged in");
 			}
 			DeletePlayerRequest message = (DeletePlayerRequest) request;
-			userAccount.deletePlayer(message);
-			return new OkayResponse();
+			return userAccount.deletePlayer(message);
 
 		} else {
 			throw new IllegalArgumentException("unknown request message: " + request);
