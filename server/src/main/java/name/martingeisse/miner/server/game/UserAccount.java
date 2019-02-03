@@ -5,6 +5,9 @@
 package name.martingeisse.miner.server.game;
 
 import com.google.common.collect.ImmutableList;
+import com.querydsl.sql.dml.SQLInsertClause;
+import name.martingeisse.api.handler.jsonapi.JsonApiException;
+import name.martingeisse.common.javascript.jsonbuilder.JsonObjectBuilder;
 import name.martingeisse.miner.common.Faction;
 import name.martingeisse.miner.common.network.c2s.request.CreatePlayerRequest;
 import name.martingeisse.miner.common.network.c2s.request.DeletePlayerRequest;
@@ -15,6 +18,7 @@ import name.martingeisse.miner.server.postgres_entities.PlayerRow;
 import name.martingeisse.miner.server.postgres_entities.QPlayerRow;
 import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +46,28 @@ public final class UserAccount {
 	}
 
 	public void createPlayer(CreatePlayerRequest request) {
+//		long playerId;
+//		try (PostgresConnection connection = Databases.main.newConnection()) {
+//			final QPlayerRow qp = QPlayerRow.Player;
+//			final SQLInsertClause insert = connection.insert(qp);
+//			insert.set(qp.userAccountId, id);
+//			insert.set(qp.coins, 0L);
+//			insert.set(qp.name, request.getName());
+//			insert.set(qp.faction, request.getFaction().ordinal());
+//			insert.set(qp.x, BigDecimal.ZERO);
+//			insert.set(qp.y, BigDecimal.ONE.add(BigDecimal.ONE));
+//			insert.set(qp.z, BigDecimal.ZERO);
+//			insert.set(qp.leftAngle, BigDecimal.ZERO);
+//			insert.set(qp.upAngle, BigDecimal.ZERO);
+//			playerId = insert.executeWithKey(Long.class);
+//		}
+//
+//		// build the response
+//		JsonObjectBuilder<?> objectBuilder = output.object();
+//		objectBuilder.property("id").number(playerId);
+//		objectBuilder.end();
+
+
 		throw new UserVisibleMessageException("NOT IMPLEMENTED");
 	}
 
