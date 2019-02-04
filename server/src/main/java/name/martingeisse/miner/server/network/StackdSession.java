@@ -187,6 +187,7 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 			try {
 				Response response = onRequest(message);
 				if (response == null) {
+					logger.error("onRequest() returned null");
 					send(new ErrorResponse("internal server error"));
 				} else {
 					send(response);
@@ -194,6 +195,7 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 			} catch (UserVisibleMessageException e) {
 				send(new ErrorResponse(e.getMessage()));
 			} catch (Exception e) {
+				logger.error("exception during request handling", e);
 				send(new ErrorResponse("internal server error"));
 			}
 
