@@ -9,7 +9,9 @@ package name.martingeisse.miner.client.startmenu;
 import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.element.Spacer;
 import name.martingeisse.miner.client.util.gui.element.VerticalLayout;
-
+import name.martingeisse.miner.common.Faction;
+import name.martingeisse.miner.common.network.c2s.request.CreatePlayerRequest;
+import name.martingeisse.miner.common.network.s2c.response.CreatePlayerResponse;
 
 /**
  * The "choose your name" menu page.
@@ -65,9 +67,11 @@ public class ChooseNamePage extends AbstractStartmenuPage {
 	 * 
 	 */
 	private void createPlayer() {
+		Faction faction = ChooseFactionPage.selectedFaction;
 		String name = ChooseNamePage.this.name.getTextField().getValue();
-		long playerId = AccountApiClient.getInstance().createPlayer(ChooseFactionPage.selectedFaction, name);
-		getGui().setRootElement(new PlayerDetailsPage(playerId));
+		CreatePlayerRequest request = new CreatePlayerRequest(faction, name);
+		CreatePlayerResponse response = StartmenuNetworkClient.INSTANCE.requestAndWait(request, CreatePlayerResponse.class);
+		getGui().setRootElement(new PlayerDetailsPage(response.getPlayerData().getId()));
 	}
 	
 }
