@@ -13,15 +13,9 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import name.martingeisse.api.handler.DefaultMasterHandler;
-import name.martingeisse.api.handler.misc.NotFoundHandler;
-import name.martingeisse.api.request.ApiRequestCycle;
-import name.martingeisse.api.servlet.ApiConfiguration;
-import name.martingeisse.api.servlet.ApiLauncher;
 import name.martingeisse.common.javascript.JavascriptAssembler;
 import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.task.TaskSystem;
-import name.martingeisse.miner.server.api.account.AccountApiHandler;
 import name.martingeisse.miner.server.network.ServerChannelInitializer;
 import name.martingeisse.miner.server.network.StackdServer;
 import name.martingeisse.miner.server.util.database.postgres.PostgresService;
@@ -31,7 +25,6 @@ import org.joda.time.format.DateTimeFormat;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 
 /**

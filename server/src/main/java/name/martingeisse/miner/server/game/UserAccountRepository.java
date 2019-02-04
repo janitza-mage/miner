@@ -5,7 +5,7 @@
 package name.martingeisse.miner.server.game;
 
 import external.BCrypt;
-import name.martingeisse.api.handler.jsonapi.JsonApiException;
+import name.martingeisse.miner.common.util.UserVisibleMessageException;
 import name.martingeisse.miner.server.Databases;
 import name.martingeisse.miner.server.postgres_entities.QUserAccountRow;
 import name.martingeisse.miner.server.postgres_entities.UserAccountRow;
@@ -32,7 +32,7 @@ public final class UserAccountRepository {
 		// Check the password. Even if we found no user account we check against a pre-generated
 		// dummy hash to produce similar timing, to prevent timing attacks.
 		if (!BCrypt.checkpw(password, userAccountRow == null ? DUMMY_PASSWORD_HASH : userAccountRow.getPasswordHash())) {
-			throw new JsonApiException(1, "Invalid username or password");
+			throw new UserVisibleMessageException("Invalid username or password");
 		}
 
 		return new UserAccount(userAccountRow.getId());
