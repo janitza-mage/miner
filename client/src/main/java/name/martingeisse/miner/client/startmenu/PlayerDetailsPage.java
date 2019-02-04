@@ -17,6 +17,8 @@ import name.martingeisse.miner.client.util.gui.element.text.TextParagraph;
 import name.martingeisse.miner.client.util.gui.util.Color;
 import name.martingeisse.miner.client.util.lwjgl.MouseUtil;
 import name.martingeisse.miner.common.Faction;
+import name.martingeisse.miner.common.network.c2s.request.DeletePlayerRequest;
+import name.martingeisse.miner.common.network.s2c.response.OkayResponse;
 
 /**
  * The "character details" menu page.
@@ -74,7 +76,8 @@ public class PlayerDetailsPage extends AbstractStartmenuPage {
 					@Override
 					protected void onClose(int buttonIndex) {
 						if (buttonIndex == 0) {
-							AccountApiClient.getInstance().deletePlayer(PlayerDetailsPage.this.playerId);
+							DeletePlayerRequest request = new DeletePlayerRequest(PlayerDetailsPage.this.playerId);
+							StartmenuNetworkClient.INSTANCE.requestAndWait(request, OkayResponse.class);
 							getGui().setRootElement(new ChooseCharacterPage());
 						}
 					};
