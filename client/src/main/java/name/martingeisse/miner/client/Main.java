@@ -8,7 +8,6 @@ package name.martingeisse.miner.client;
 
 import name.martingeisse.miner.client.ingame.Ingame;
 import name.martingeisse.miner.client.network.ClientEndpoint;
-import name.martingeisse.miner.client.startmenu.AccountApiClient;
 import name.martingeisse.miner.client.startmenu.LoginPage;
 import name.martingeisse.miner.client.util.frame.FrameLoop;
 import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
@@ -196,8 +195,6 @@ public class Main {
 	 * Helper method for development.
 	 */
 	private static void autologinRequest(String username, String password, long playerId) throws Exception {
-		AccountApiClient.getInstance().login(username, password);
-		AccountApiClient.getInstance().accessPlayer(playerId);
 	}
 
 	/**

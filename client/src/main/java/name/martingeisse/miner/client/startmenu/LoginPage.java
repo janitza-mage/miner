@@ -1,12 +1,10 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.miner.client.startmenu;
-
-import java.util.prefs.Preferences;
 
 import name.martingeisse.miner.client.network.ClientEndpoint;
 import name.martingeisse.miner.client.util.gui.Gui;
@@ -15,6 +13,8 @@ import name.martingeisse.miner.client.util.gui.element.VerticalLayout;
 import name.martingeisse.miner.common.network.c2s.request.LoginRequest;
 import name.martingeisse.miner.common.network.s2c.response.LoginResponse;
 import name.martingeisse.miner.common.util.UserVisibleMessageException;
+
+import java.util.prefs.Preferences;
 
 /**
  * The "login" menu page.
@@ -25,18 +25,18 @@ public class LoginPage extends AbstractStartmenuPage {
 	 * the username
 	 */
 	private final LabeledTextField username;
-	
+
 	/**
 	 * the password
 	 */
 	private final LabeledTextField password;
-	
+
 	/**
 	 * Constructor.
 	 */
 	public LoginPage() {
-		
-		Preferences preferences = Preferences.userNodeForPackage(AccountApiClient.class);
+
+		Preferences preferences = Preferences.userNodeForPackage(StartmenuState.class);
 		String defaultUsername = preferences.get("username", null);
 		if (defaultUsername == null) {
 			defaultUsername = "";
@@ -47,7 +47,7 @@ public class LoginPage extends AbstractStartmenuPage {
 		username.getTextField().setNextFocusableElement(password.getTextField()).setValue(defaultUsername).moveCursorToEnd();
 		password.getTextField().setNextFocusableElement(username.getTextField());
 		password.getTextField().setPasswordCharacter('*');
-		
+
 		final VerticalLayout menu = new VerticalLayout();
 		menu.addElement(username);
 		menu.addElement(new Spacer(2 * Gui.GRID));
@@ -71,7 +71,7 @@ public class LoginPage extends AbstractStartmenuPage {
 		});
 		menu.addElement(new Spacer(2 * Gui.GRID));
 		menu.addElement(EXIT_BUTTON);
-		
+
 //		menu.addElement(new Spacer(Gui.GRID));
 //		menu.addElement(new Grid(10, 5) {
 //			@Override
@@ -87,9 +87,9 @@ public class LoginPage extends AbstractStartmenuPage {
 //				return button;
 //			}
 //		}.initialize());
-		
+
 		initializeStartmenuPage(menu);
-		
+
 	}
 
 	/* (non-Javadoc)
@@ -100,7 +100,7 @@ public class LoginPage extends AbstractStartmenuPage {
 		LabeledTextField initialFocus = (username.getTextField().getValue().isEmpty() ? username : password);
 		getGui().setFocus(initialFocus.getTextField());
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see name.martingeisse.miner.startmenu.AbstractStartmenuPage#onEnterPressed()
 	 */
@@ -108,9 +108,9 @@ public class LoginPage extends AbstractStartmenuPage {
 	protected void onEnterPressed() {
 		login();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private void login() {
 		String username = this.username.getTextField().getValue();
@@ -129,9 +129,10 @@ public class LoginPage extends AbstractStartmenuPage {
 
 		// log in
 		LoginResponse response = StartmenuNetworkClient.INSTANCE.requestAndWait(new LoginRequest(username, password), LoginResponse.class);
+		StartmenuState.INSTANCE.setPlayers(response.getElements());
 
 		getGui().setRootElement(new ChooseCharacterPage());
-		Preferences.userNodeForPackage(AccountApiClient.class).put("username", username);
+		Preferences.userNodeForPackage(StartmenuState.class).put("username", username);
 	}
 
 }

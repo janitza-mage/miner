@@ -1,11 +1,12 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.miner.client.startmenu;
 
+import com.google.common.collect.ImmutableList;
 import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.element.Spacer;
 import name.martingeisse.miner.client.util.gui.element.VerticalLayout;
@@ -13,11 +14,14 @@ import name.martingeisse.miner.common.Faction;
 import name.martingeisse.miner.common.network.c2s.request.CreatePlayerRequest;
 import name.martingeisse.miner.common.network.s2c.response.CreatePlayerResponse;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The "choose your name" menu page.
  */
 public class ChooseNamePage extends AbstractStartmenuPage {
-	
+
 	/**
 	 * the username
 	 */
@@ -64,14 +68,22 @@ public class ChooseNamePage extends AbstractStartmenuPage {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void createPlayer() {
-		Faction faction = ChooseFactionPage.selectedFaction;
+		Faction faction = StartmenuState.INSTANCE.getNewPlayerFaction();
 		String name = ChooseNamePage.this.name.getTextField().getValue();
 		CreatePlayerRequest request = new CreatePlayerRequest(faction, name);
 		CreatePlayerResponse response = StartmenuNetworkClient.INSTANCE.requestAndWait(request, CreatePlayerResponse.class);
-		getGui().setRootElement(new PlayerDetailsPage(response.getPlayerData().getId()));
+		StartmenuState.INSTANCE.setPlayers(addToList(StartmenuState.INSTANCE.getPlayers(), response.getPlayerData()));
+		StartmenuState.INSTANCE.setSelectedPlayer(response.getPlayerData());
+		getGui().setRootElement(new PlayerDetailsPage());
 	}
-	
+
+	private static <T> ImmutableList<T> addToList(ImmutableList<T> list, T element) {
+		List<T> mutableList = new ArrayList<>(list);
+		mutableList.add(element);
+		return ImmutableList.copyOf(mutableList);
+	}
+
 }

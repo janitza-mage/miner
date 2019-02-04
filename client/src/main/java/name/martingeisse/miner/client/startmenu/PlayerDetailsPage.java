@@ -1,12 +1,11 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.miner.client.startmenu;
 
-import name.martingeisse.common.javascript.analyze.JsonAnalyzer;
 import name.martingeisse.miner.client.ingame.Ingame;
 import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.GuiElement;
@@ -16,7 +15,6 @@ import name.martingeisse.miner.client.util.gui.element.fill.FillColor;
 import name.martingeisse.miner.client.util.gui.element.text.TextParagraph;
 import name.martingeisse.miner.client.util.gui.util.Color;
 import name.martingeisse.miner.client.util.lwjgl.MouseUtil;
-import name.martingeisse.miner.common.Faction;
 import name.martingeisse.miner.common.network.c2s.request.DeletePlayerRequest;
 import name.martingeisse.miner.common.network.s2c.response.OkayResponse;
 
@@ -26,38 +24,10 @@ import name.martingeisse.miner.common.network.s2c.response.OkayResponse;
 public class PlayerDetailsPage extends AbstractStartmenuPage {
 
 	/**
-	 * the playerId
-	 */
-	private final long playerId;
-	
-	/**
-	 * the faction
-	 */
-	private final Faction faction;
-	
-	/**
-	 * the name
-	 */
-	private final String name;
-
-	/**
-	 * the coins
-	 */
-	private final long coins;
-	
-	/**
 	 * Constructor.
-	 * @param playerId the player ID
 	 */
-	public PlayerDetailsPage(long playerId) {
-		
-		// fetch player data
-		this.playerId = playerId;
-		JsonAnalyzer json = AccountApiClient.getInstance().fetchPlayerDetails(playerId);
-		this.faction = Faction.values()[json.analyzeMapElement("faction").expectInteger()];
-		this.name = json.analyzeMapElement("name").expectString();
-		this.coins = json.analyzeMapElement("coins").expectLong();
-		
+	public PlayerDetailsPage() {
+
 		// build the layout
 		final VerticalLayout menu = new VerticalLayout();
 		menu.addElement(buildInfoBox());
@@ -76,11 +46,13 @@ public class PlayerDetailsPage extends AbstractStartmenuPage {
 					@Override
 					protected void onClose(int buttonIndex) {
 						if (buttonIndex == 0) {
-							DeletePlayerRequest request = new DeletePlayerRequest(PlayerDetailsPage.this.playerId);
+							DeletePlayerRequest request = new DeletePlayerRequest(StartmenuState.INSTANCE.getSelectedPlayer().getId());
 							StartmenuNetworkClient.INSTANCE.requestAndWait(request, OkayResponse.class);
 							getGui().setRootElement(new ChooseCharacterPage());
 						}
-					};
+					}
+
+					;
 				}.show(PlayerDetailsPage.this);
 			}
 		});
@@ -92,18 +64,18 @@ public class PlayerDetailsPage extends AbstractStartmenuPage {
 			}
 		}, -1, 5 * Gui.GRID));
 		initializeStartmenuPage(menu);
-		
+
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private GuiElement buildInfoBox() {
 		VerticalLayout verticalLayout = new VerticalLayout();
-		verticalLayout.addElement(new TextParagraph().setText("--- " + name + " ---"));
+		verticalLayout.addElement(new TextParagraph().setText("--- " + StartmenuState.INSTANCE.getSelectedPlayer().getName() + " ---"));
 		verticalLayout.addElement(new Spacer(Gui.GRID));
-		verticalLayout.addElement(new TextParagraph().setText("Faction: " + faction.getDisplayName()));
-		verticalLayout.addElement(new TextParagraph().setText("Coins: " + coins));
+		verticalLayout.addElement(new TextParagraph().setText("Faction: " + StartmenuState.INSTANCE.getSelectedPlayer().getFaction().getDisplayName()));
+		verticalLayout.addElement(new TextParagraph().setText("Coins: " + StartmenuState.INSTANCE.getSelectedPlayer().getCoins()));
 		OverlayStack stack = new OverlayStack();
 		stack.addElement(new FillColor(new Color(128, 128, 128, 255)));
 		stack.addElement(new Margin(verticalLayout, Gui.GRID));
@@ -111,10 +83,10 @@ public class PlayerDetailsPage extends AbstractStartmenuPage {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void play() {
-		AccountApiClient.getInstance().accessPlayer(playerId);
+		AccountApiClient.getInstance().accessPlayer(StartmenuState.INSTANCE.getSelectedPlayer().getId());
 		getGui().addFollowupOpenglAction(new Runnable() {
 			@Override
 			public void run() {
