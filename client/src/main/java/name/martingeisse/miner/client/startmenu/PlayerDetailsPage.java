@@ -86,16 +86,14 @@ public class PlayerDetailsPage extends AbstractStartmenuPage {
 	 *
 	 */
 	private void play() {
-		AccountApiClient.getInstance().accessPlayer(StartmenuState.INSTANCE.getSelectedPlayer().getId());
-		getGui().addFollowupOpenglAction(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Ingame.create();
-					MouseUtil.grab();
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
+		// Don't send ResumePlayer now, but start the client-side ingame state first. We need to switch to the ingame
+		// message router before sending ResumePlayer to make sure we don't lose the response due to race conditions.
+		getGui().addFollowupOpenglAction(() -> {
+			try {
+				Ingame.create();
+				MouseUtil.grab();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
 			}
 		});
 	}

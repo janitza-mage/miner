@@ -9,11 +9,10 @@ import name.martingeisse.miner.client.MinerResources;
 import name.martingeisse.miner.client.ingame.hud.FlashMessageHandler;
 import name.martingeisse.miner.client.ingame.hud.FpsPanel;
 import name.martingeisse.miner.client.ingame.hud.SelectedCubeHud;
+import name.martingeisse.miner.client.ingame.network.IngameMessageRouter;
 import name.martingeisse.miner.client.ingame.network.SectionGridLoader;
 import name.martingeisse.miner.client.ingame.network.SendPositionToServerHandler;
-import name.martingeisse.miner.client.ingame.network.IngameMessageRouter;
 import name.martingeisse.miner.client.network.ClientEndpoint;
-import name.martingeisse.miner.client.startmenu.AccountApiClient;
 import name.martingeisse.miner.client.startmenu.StartmenuState;
 import name.martingeisse.miner.client.util.frame.HandlerList;
 import name.martingeisse.miner.client.util.gui.GuiFrameHandler;
@@ -22,7 +21,6 @@ import name.martingeisse.miner.client.util.lwjgl.MouseUtil;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.c2s.ResumePlayer;
 
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
