@@ -39,7 +39,7 @@ import java.util.concurrent.CountDownLatch;
  */
 public class Main {
 
-	public static final CountDownLatch startupFinishedLatch = new CountDownLatch(2);
+	public static final CountDownLatch startupFinishedLatch = new CountDownLatch(1);
 
 	/**
 	 * The main method.
@@ -72,26 +72,6 @@ public class Main {
 					bindFuture.sync();
 				} catch (InterruptedException e) {
 					throw new RuntimeException("failed to wait for binding the socket");
-				}
-				startupFinishedLatch.countDown();
-			}
-		}.start();
-
-		// account API
-		new Thread() {
-			@Override
-			public void run() {
-				try {
-					ApiRequestCycle.setUseSessions(false);
-					DefaultMasterHandler masterHandler = new DefaultMasterHandler();
-					masterHandler.setApplicationRequestHandler(new AccountApiHandler());
-					masterHandler.getInterceptHandlers().put("/favicon.ico", new NotFoundHandler(false));
-					ApiConfiguration configuration = new ApiConfiguration();
-					configuration.setMasterRequestHandler(masterHandler);
-					configuration.getLocalizationConfiguration().setGlobalFallback(Locale.US);
-					ApiLauncher.launch(configuration);
-				} catch (Exception e) {
-					throw new RuntimeException(e);
 				}
 				startupFinishedLatch.countDown();
 			}
