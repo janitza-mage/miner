@@ -14,6 +14,7 @@ import name.martingeisse.miner.client.ingame.network.SendPositionToServerHandler
 import name.martingeisse.miner.client.ingame.network.IngameMessageRouter;
 import name.martingeisse.miner.client.network.ClientEndpoint;
 import name.martingeisse.miner.client.startmenu.AccountApiClient;
+import name.martingeisse.miner.client.startmenu.StartmenuState;
 import name.martingeisse.miner.client.util.frame.HandlerList;
 import name.martingeisse.miner.client.util.gui.GuiFrameHandler;
 import name.martingeisse.miner.client.util.gui.control.Page;
@@ -91,9 +92,8 @@ public final class Ingame {
 		// Route network messages to the in-game logic from now.
 		ClientEndpoint.INSTANCE.setMessageConsumer(new IngameMessageRouter());
 
-		// TODO this will disappear anyway when the account API uses the ClientEndpoint, so don't worry about
-		// performance or about blocking the game intil resumed for now
-		ClientEndpoint.INSTANCE.send(new ResumePlayer(AccountApiClient.getInstance().getPlayerAccessToken().getBytes(StandardCharsets.UTF_8)));
+		// resume the game with the player selected in the start menu
+		ClientEndpoint.INSTANCE.send(new ResumePlayer(StartmenuState.INSTANCE.getSelectedPlayer().getId()));
 
 		// Switch the frame handler to the in-game handler list
 		handlerList = new HandlerList();

@@ -13,52 +13,28 @@ import name.martingeisse.miner.common.network.MessageDecodingException;
  */
 public final class ResumePlayer extends Message {
 
-	public static final int MAX_TOKEN_LENGTH = 10_000;
+	private final long id;
 
-	private final byte[] token;
-
-	public ResumePlayer(byte[] token) {
-		this(token, true);
+	public ResumePlayer(long id) {
+		this.id = id;
 	}
 
-	private ResumePlayer(byte[] token, boolean copy) {
-		if (token.length > MAX_TOKEN_LENGTH) {
-			throw new IllegalArgumentException("token too long");
-		}
-		this.token = copy ? token.clone() : token;
-	}
-
-	/**
-	 * Note: Copies the token to retain immutability, so don't call this method unnecessarily.
-	 */
-	public byte[] getToken() {
-		return token.clone();
+	public long getId() {
+		return id;
 	}
 
 	@Override
 	protected int getExpectedBodySize() {
-		return token.length + 2;
+		return 8;
 	}
 
 	@Override
 	protected void encodeBody(ByteBuf buffer) {
-		// Although the length may currently be derived from the packet size, the packet still
-		// contains the length explicitly so we can add other fields.
-		buffer.writeShort(token.length);
-		buffer.writeBytes(token);
+		buffer.writeLong(id);
 	}
 
 	public static ResumePlayer decodeBody(ByteBuf buffer) throws MessageDecodingException {
-		int length = buffer.readShort();
-		if (length < 0) {
-			throw new MessageDecodingException("negative token length");
-		}
-		if (length > MAX_TOKEN_LENGTH) {
-			throw new MessageDecodingException("token too long");
-		}
-		byte[] token = new byte[length];
-		buffer.readBytes(token);
-		return new ResumePlayer(token, false);
+		return new ResumePlayer(buffer.readLong());
 	}
 
 }

@@ -201,12 +201,11 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 
 		} else if (untypedMessage instanceof ResumePlayer) {
 
-			ResumePlayer message = (ResumePlayer) untypedMessage;
-			String token = new String(message.getToken(), StandardCharsets.UTF_8);
-			String tokenSubject = SecurityTokenUtil.validateToken(token, new Instant(), MinerServerSecurityConstants.SECURITY_TOKEN_SECRET);
-			long playerId = Long.parseLong(tokenSubject);
-			selectPlayer(playerId);
-			createAvatar();
+			if (userAccount != null) {
+				ResumePlayer message = (ResumePlayer) untypedMessage;
+				selectPlayer(message.getId());
+				createAvatar();
+			}
 
 		} else if (untypedMessage instanceof UpdatePosition) {
 
