@@ -115,7 +115,6 @@ public class LoginPage extends AbstractStartmenuPage {
 	private void login() {
 		String username = this.username.getTextField().getValue();
 		String password = this.password.getTextField().getValue();
-		AccountApiClient.getInstance().login(username, password);
 
 		// This is the first time we actually need a network connection, so wait until connected.
 		try {
