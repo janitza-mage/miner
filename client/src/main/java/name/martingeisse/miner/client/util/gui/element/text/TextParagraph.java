@@ -6,6 +6,7 @@
 
 package name.martingeisse.miner.client.util.gui.element.text;
 
+import com.google.common.collect.ImmutableList;
 import name.martingeisse.common.util.ParameterUtil;
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.util.gui.Gui;
@@ -73,6 +74,7 @@ public final class TextParagraph extends GuiElement {
 
 	/**
 	 * Getter method for the font.
+	 *
 	 * @return the font
 	 */
 	public Font getFont() {
@@ -81,6 +83,7 @@ public final class TextParagraph extends GuiElement {
 
 	/**
 	 * Setter method for the font.
+	 *
 	 * @param font the font to set
 	 * @return this for chaining
 	 */
@@ -93,6 +96,7 @@ public final class TextParagraph extends GuiElement {
 
 	/**
 	 * Getter method for the color.
+	 *
 	 * @return the color
 	 */
 	public Color getColor() {
@@ -101,6 +105,7 @@ public final class TextParagraph extends GuiElement {
 
 	/**
 	 * Setter method for the color.
+	 *
 	 * @param color the color to set
 	 * @return this for chaining
 	 */
@@ -112,6 +117,7 @@ public final class TextParagraph extends GuiElement {
 
 	/**
 	 * Getter method for the text.
+	 *
 	 * @return the text
 	 */
 	public String getText() {
@@ -120,6 +126,7 @@ public final class TextParagraph extends GuiElement {
 
 	/**
 	 * Setter method for the text.
+	 *
 	 * @param text the text to set
 	 * @return this for chaining
 	 */
@@ -195,6 +202,11 @@ public final class TextParagraph extends GuiElement {
 			windowPosY = getGui().getHeightPixels() - gui.unitsToPixelsInt(getAbsoluteY());
 			gui.getGlWorkerLoop().schedule(workUnit);
 		}
+	}
+
+	@Override
+	public ImmutableList<GuiElement> getChildren() {
+		return ImmutableList.of();
 	}
 
 }

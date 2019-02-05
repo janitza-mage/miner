@@ -6,6 +6,7 @@
 
 package name.martingeisse.miner.client.util.gui.element.fill;
 
+import com.google.common.collect.ImmutableList;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiEvent;
 
@@ -37,5 +38,10 @@ public abstract class AbstractFillElement extends GuiElement {
 	 * Draws this element.
 	 */
 	protected abstract void draw();
-	
+
+	@Override
+	public ImmutableList<GuiElement> getChildren() {
+		return ImmutableList.of();
+	}
+
 }

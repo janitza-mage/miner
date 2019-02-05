@@ -100,8 +100,14 @@ public class ScrollContainer extends GuiElement {
 			// handle content
 			int maxKnobDisplacement = height - SCROLL_KNOB_SIZE;
 			int maxContentDisplacement = contentHeight - height;
-			int contentDisplacement = (knobDisplacement * maxContentDisplacement / maxKnobDisplacement);
-			contentWrapper.setDisplacement(0, -contentDisplacement);
+			if (maxContentDisplacement > 0) {
+				// scrollable
+				int contentDisplacement = (knobDisplacement * maxContentDisplacement / maxKnobDisplacement);
+				contentWrapper.setDisplacement(0, -contentDisplacement);
+			} else {
+				// content is less than a single page -> not scrollable
+				contentWrapper.setDisplacement(0, 0);
+			}
 
 			requestLayout();
 		}

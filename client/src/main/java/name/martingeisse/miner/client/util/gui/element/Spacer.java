@@ -6,6 +6,7 @@
 
 package name.martingeisse.miner.client.util.gui.element;
 
+import com.google.common.collect.ImmutableList;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiEvent;
 
@@ -44,5 +45,10 @@ public final class Spacer extends GuiElement {
 	@Override
 	public void handleEvent(GuiEvent event) {
 	}
-	
+
+	@Override
+	public ImmutableList<GuiElement> getChildren() {
+		return ImmutableList.of();
+	}
+
 }

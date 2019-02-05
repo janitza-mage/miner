@@ -6,6 +6,7 @@
 
 package name.martingeisse.miner.client.util.gui.control;
 
+import com.google.common.collect.ImmutableList;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiEvent;
 
@@ -29,7 +30,7 @@ public class Control extends GuiElement {
 	 * Getter method for the controlRootElement.
 	 * @return the controlRootElement
 	 */
-	protected final GuiElement getControlRootElement() {
+	public final GuiElement getControlRootElement() {
 		return controlRootElement;
 	}
 	
@@ -69,5 +70,10 @@ public class Control extends GuiElement {
 	protected final void setChildrenLayoutPosition(int absoluteX, int absoluteY) {
 		controlRootElement.setAbsolutePosition(absoluteX, absoluteY);
 	}
-	
+
+	@Override
+	public final ImmutableList<GuiElement> getChildren() {
+		return ImmutableList.of(controlRootElement);
+	}
+
 }

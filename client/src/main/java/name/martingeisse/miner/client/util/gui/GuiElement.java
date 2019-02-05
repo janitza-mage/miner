@@ -6,6 +6,8 @@
 
 package name.martingeisse.miner.client.util.gui;
 
+import com.google.common.collect.ImmutableList;
+
 /**
  * The root class for all GUI elements.
  */
@@ -206,5 +208,10 @@ public abstract class GuiElement {
 		int y = getGui().getMouseY();
 		return (x >= absoluteX && x < absoluteX + getWidth() && y >= absoluteY && y < absoluteY + getHeight());
 	}
+
+	/**
+	 * Returns a list of all direct child elements.
+	 */
+	public abstract ImmutableList<GuiElement> getChildren();
 
 }
