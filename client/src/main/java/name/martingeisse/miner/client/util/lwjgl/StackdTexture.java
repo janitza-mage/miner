@@ -6,11 +6,12 @@
 
 package name.martingeisse.miner.client.util.lwjgl;
 
-import java.io.IOException;
-import java.io.InputStream;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.InternalTextureLoader;
 import org.newdawn.slick.opengl.Texture;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Wraps an image and provides OpenGL texture handling functions.

@@ -6,7 +6,15 @@
 
 package name.martingeisse.miner.client.ingame.engine.prepare;
 
-import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
+import name.martingeisse.miner.client.ingame.engine.RenderUnit;
+import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
+import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
+import name.martingeisse.miner.client.util.lwjgl.OpenGlVertexBuffer;
+import name.martingeisse.miner.client.util.lwjgl.SystemResourceNode;
+import name.martingeisse.miner.common.cubetype.MeshBuilderBase;
+import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
+import name.martingeisse.miner.common.geometry.RectangularRegion;
+import org.apache.log4j.Logger;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -16,16 +24,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import name.martingeisse.miner.client.ingame.engine.RenderUnit;
-import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
-import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
-import name.martingeisse.miner.client.util.lwjgl.OpenGlVertexBuffer;
-import name.martingeisse.miner.client.util.lwjgl.SystemResourceNode;
-import name.martingeisse.miner.common.cubetype.MeshBuilderBase;
-import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
-import name.martingeisse.miner.common.geometry.RectangularRegion;
-
-import org.apache.log4j.Logger;
+import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
 
 /**
  * This class accepts polygons to render and builds an array of

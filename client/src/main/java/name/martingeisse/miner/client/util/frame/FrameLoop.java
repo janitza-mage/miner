@@ -6,13 +6,13 @@
 
 package name.martingeisse.miner.client.util.frame;
 
-import static org.lwjgl.opengl.GL11.glFlush;
-
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+
+import static org.lwjgl.opengl.GL11.glFlush;
 
 /**
  * Performs a loop, typically drawing the world each

@@ -6,22 +6,22 @@
 
 package name.martingeisse.miner.client;
 
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glColor4ub;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import javax.imageio.ImageIO;
 import name.martingeisse.launcher.assets.LauncherAssets;
-import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.client.util.lwjgl.FixedWidthFont;
 import name.martingeisse.miner.client.util.lwjgl.Font;
 import name.martingeisse.miner.client.util.lwjgl.StackdTexture;
+import name.martingeisse.miner.common.cubetype.CubeTypes;
 import org.newdawn.slick.openal.Audio;
 import org.newdawn.slick.openal.AudioLoader;
 import org.newdawn.slick.util.ClasspathLocation;
 import org.newdawn.slick.util.ResourceLoader;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+
+import static org.lwjgl.opengl.GL11.*;
 
 /**
  * 

@@ -20,6 +20,7 @@ import name.martingeisse.miner.client.util.gui.control.Page;
 import name.martingeisse.miner.client.util.lwjgl.MouseUtil;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.c2s.ResumePlayer;
+import org.lwjgl.opengl.Display;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -71,7 +72,7 @@ public final class Ingame {
 	public Ingame() throws Exception {
 
 		flashMessageHandler = new FlashMessageHandler();
-		cubeWorldHandler = new CubeWorldHandler(Main.screenWidth, Main.screenHeight);
+		cubeWorldHandler = new CubeWorldHandler(Display.getWidth(), Display.getHeight());
 
 		// the in-game menu
 		gameMenuHandler = new GuiFrameHandler();

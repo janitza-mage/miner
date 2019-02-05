@@ -6,8 +6,6 @@
 
 package name.martingeisse.miner.client.util.lwjgl;
 
-import name.martingeisse.miner.client.util.lwjgl.SystemResourceNode;
-
 /**
  * A system resource that can be disposed of. System resources can be put into
  * a {@link SystemResourceNode} for management.

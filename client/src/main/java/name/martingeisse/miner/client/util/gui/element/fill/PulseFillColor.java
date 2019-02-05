@@ -6,14 +6,13 @@
 
 package name.martingeisse.miner.client.util.gui.element.fill;
 
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.glBlendFunc;
 import name.martingeisse.common.util.ParameterUtil;
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.util.gui.util.Color;
 import name.martingeisse.miner.client.util.gui.util.PulseFunction;
 import org.lwjgl.opengl.GL11;
+
+import static org.lwjgl.opengl.GL11.*;
 
 /**
  * This element fills its area with a pulsing RGBA color.

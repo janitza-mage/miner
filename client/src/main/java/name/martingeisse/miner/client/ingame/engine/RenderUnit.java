@@ -6,15 +6,13 @@
 
 package name.martingeisse.miner.client.ingame.engine;
 
-import static org.lwjgl.opengl.GL11.GL_INT;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11.glDrawArrays;
-import static org.lwjgl.opengl.GL11.glVertexPointer;
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
 import name.martingeisse.miner.client.util.lwjgl.OpenGlVertexBuffer;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.RectangularRegion;
+
+import static org.lwjgl.opengl.GL11.*;
 
 /**
  * The {@link RenderableSection}s of the working set get subdivided into units

@@ -8,8 +8,8 @@ package name.martingeisse.miner.client.startmenu;
 
 import name.martingeisse.miner.client.util.gui.control.Control;
 import name.martingeisse.miner.client.util.gui.control.TextField;
-import name.martingeisse.miner.client.util.gui.element.text.TextLine;
 import name.martingeisse.miner.client.util.gui.element.VerticalLayout;
+import name.martingeisse.miner.client.util.gui.element.text.TextLine;
 import name.martingeisse.miner.client.util.gui.util.Color;
 import name.martingeisse.miner.client.util.gui.util.HorizontalAlignment;
 

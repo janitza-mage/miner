@@ -6,13 +6,12 @@
 
 package name.martingeisse.miner.client.util.gui.element;
 
-import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
-import org.lwjgl.opengl.GL11;
-
 import name.martingeisse.common.util.ParameterUtil;
+import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiEvent;
 import name.martingeisse.miner.client.util.gui.util.Color;
+import org.lwjgl.opengl.GL11;
 
 /**
  * This element is a WxH sized grid that contains pre-generated

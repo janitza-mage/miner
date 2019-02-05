@@ -6,10 +6,9 @@
 
 package name.martingeisse.miner.client.util.lwjgl;
 
-import static org.lwjgl.opengl.GL15.glDeleteBuffers;
-import static org.lwjgl.opengl.GL15.glGenBuffers;
-import static org.lwjgl.opengl.GL15.glIsBuffer;
 import org.lwjgl.opengl.GL15;
+
+import static org.lwjgl.opengl.GL15.*;
 
 /**
  * Manages a OpenGL-server-side buffer.

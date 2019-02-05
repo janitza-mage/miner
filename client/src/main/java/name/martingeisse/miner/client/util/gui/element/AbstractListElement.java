@@ -6,11 +6,12 @@
 
 package name.martingeisse.miner.client.util.gui.element;
 
-import java.util.ArrayList;
-import java.util.List;
 import name.martingeisse.common.util.ParameterUtil;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiEvent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Base class for a GUI element that wraps a list of other elements.

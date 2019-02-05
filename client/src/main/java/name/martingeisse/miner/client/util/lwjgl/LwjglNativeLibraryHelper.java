@@ -6,12 +6,13 @@
 
 package name.martingeisse.miner.client.util.lwjgl;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
 
 /**
  * Helper class that extracts LWJGL native libraries to a temporary folder

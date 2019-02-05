@@ -6,16 +6,11 @@
 
 package name.martingeisse.miner.client.util.lwjgl;
 
-import static org.lwjgl.opengl.GL11.GL_UNPACK_ROW_LENGTH;
-import static org.lwjgl.opengl.GL11.GL_UNPACK_SKIP_PIXELS;
-import static org.lwjgl.opengl.GL11.GL_UNPACK_SKIP_ROWS;
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
-import static org.lwjgl.opengl.GL11.glBitmap;
-import static org.lwjgl.opengl.GL11.glDrawPixels;
-import static org.lwjgl.opengl.GL11.glPixelStorei;
-import static org.lwjgl.opengl.GL11.glPixelZoom;
-import java.nio.ByteBuffer;
 import org.lwjgl.opengl.GL11;
+
+import java.nio.ByteBuffer;
+
+import static org.lwjgl.opengl.GL11.*;
 
 /**
  * An OpenGL-capabable font, using a "character atlas" image.

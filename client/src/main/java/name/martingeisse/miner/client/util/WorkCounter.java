@@ -6,9 +6,10 @@
 
 package name.martingeisse.miner.client.util;
 
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.log4j.Logger;
 
 /**
  * Utility class to count how often a piece of work

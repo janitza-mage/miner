@@ -8,7 +8,10 @@ package name.martingeisse.miner.client.tools;
 
 import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.control.Page;
-import name.martingeisse.miner.client.util.gui.element.*;
+import name.martingeisse.miner.client.util.gui.element.Margin;
+import name.martingeisse.miner.client.util.gui.element.ScrollContainer;
+import name.martingeisse.miner.client.util.gui.element.ThinBorder;
+import name.martingeisse.miner.client.util.gui.element.VerticalLayout;
 import name.martingeisse.miner.client.util.gui.element.fill.FillColor;
 import name.martingeisse.miner.client.util.gui.element.text.TextLine;
 import name.martingeisse.miner.client.util.gui.util.Color;

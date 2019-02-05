@@ -9,13 +9,9 @@ package name.martingeisse.miner.client.util.gui.control;
 import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiEvent;
-import name.martingeisse.miner.client.util.gui.element.Margin;
-import name.martingeisse.miner.client.util.gui.element.MouseOverWrapper;
-import name.martingeisse.miner.client.util.gui.element.NullElement;
-import name.martingeisse.miner.client.util.gui.element.OverlayStack;
+import name.martingeisse.miner.client.util.gui.element.*;
 import name.martingeisse.miner.client.util.gui.element.fill.PulseFillColor;
 import name.martingeisse.miner.client.util.gui.element.text.TextLine;
-import name.martingeisse.miner.client.util.gui.element.ThinBorder;
 import name.martingeisse.miner.client.util.gui.util.Color;
 import name.martingeisse.miner.client.util.gui.util.PulseFunction;
 

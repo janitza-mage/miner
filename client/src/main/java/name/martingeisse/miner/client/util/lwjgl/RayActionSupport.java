@@ -6,20 +6,13 @@
 
 package name.martingeisse.miner.client.util.lwjgl;
 
-import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW_MATRIX;
-import static org.lwjgl.opengl.GL11.GL_PROJECTION_MATRIX;
-import static org.lwjgl.opengl.GL11.GL_VIEWPORT;
-import static org.lwjgl.opengl.GL11.glGetFloat;
-import static org.lwjgl.opengl.GL11.glGetInteger;
-import static org.lwjgl.opengl.GL11.glReadPixels;
-import static org.lwjgl.util.glu.GLU.gluUnProject;
+import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import org.lwjgl.BufferUtils;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.util.glu.GLU.gluUnProject;
 
 /**
  * This class captures the information that is needed for ray actions.

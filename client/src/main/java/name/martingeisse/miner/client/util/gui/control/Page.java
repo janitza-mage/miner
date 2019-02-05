@@ -8,9 +8,9 @@ package name.martingeisse.miner.client.util.gui.control;
 
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiEvent;
-import name.martingeisse.miner.client.util.gui.element.fill.FillColor;
 import name.martingeisse.miner.client.util.gui.element.NullElement;
 import name.martingeisse.miner.client.util.gui.element.OverlayStack;
+import name.martingeisse.miner.client.util.gui.element.fill.FillColor;
 import name.martingeisse.miner.client.util.gui.util.AreaAlignment;
 import name.martingeisse.miner.client.util.gui.util.Color;
 import org.apache.log4j.Logger;

@@ -6,9 +6,10 @@
 
 package name.martingeisse.miner.client.util.lwjgl;
 
+import org.lwjgl.BufferUtils;
+
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
-import org.lwjgl.BufferUtils;
 
 /**
  * Default font implementation, based on the following assumption:

@@ -6,9 +6,9 @@
 
 package name.martingeisse.miner.client.util.lwjgl;
 
-import static org.lwjgl.opengl.GL11.glVertex3d;
-
 import org.lwjgl.opengl.GL11;
+
+import static org.lwjgl.opengl.GL11.glVertex3d;
 
 /**
  * Helper methods to draw objects using OpenGL.

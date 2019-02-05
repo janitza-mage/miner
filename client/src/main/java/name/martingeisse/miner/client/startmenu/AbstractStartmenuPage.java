@@ -7,16 +7,16 @@
 package name.martingeisse.miner.client.startmenu;
 
 import name.martingeisse.launcher.assets.LauncherAssets;
-import name.martingeisse.miner.common.util.UserVisibleMessageException;
 import name.martingeisse.miner.client.util.frame.BreakFrameLoopException;
 import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiEvent;
 import name.martingeisse.miner.client.util.gui.control.MessageBox;
 import name.martingeisse.miner.client.util.gui.control.Page;
-import name.martingeisse.miner.client.util.gui.element.fill.FillTexture;
 import name.martingeisse.miner.client.util.gui.element.Margin;
+import name.martingeisse.miner.client.util.gui.element.fill.FillTexture;
 import name.martingeisse.miner.client.util.lwjgl.StackdTexture;
+import name.martingeisse.miner.common.util.UserVisibleMessageException;
 import org.lwjgl.input.Keyboard;
 
 /**

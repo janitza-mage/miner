@@ -6,9 +6,10 @@
 
 package name.martingeisse.miner.client.util.glworker;
 
+import org.apache.log4j.Logger;
+
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import org.apache.log4j.Logger;
 
 /**
  * This class must be used by the OpenGL worker thread to handle work units.

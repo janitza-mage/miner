@@ -6,10 +6,10 @@
 
 package name.martingeisse.miner.client.ingame.visual;
 
-import name.martingeisse.miner.client.util.glworker.AbstractSingleWorkUnitVisualTemplate;
 import name.martingeisse.miner.client.MinerResources;
 import name.martingeisse.miner.client.ingame.player.Player;
 import name.martingeisse.miner.client.ingame.player.PlayerProxy;
+import name.martingeisse.miner.client.util.glworker.AbstractSingleWorkUnitVisualTemplate;
 import name.martingeisse.miner.client.util.lwjgl.GlUtil;
 import org.lwjgl.opengl.GL11;
 

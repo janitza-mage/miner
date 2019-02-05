@@ -6,15 +6,11 @@
 
 package name.martingeisse.miner.client.util.lwjgl;
 
-import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.glBindBuffer;
-import static org.lwjgl.opengl.GL15.glBufferData;
-import java.nio.ByteBuffer;
-import java.nio.DoubleBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
 import org.lwjgl.opengl.GL15;
+
+import java.nio.*;
+
+import static org.lwjgl.opengl.GL15.*;
 
 /**
  * Represents OpenGL-server-side VBOs.

@@ -6,12 +6,13 @@
 
 package name.martingeisse.launcher;
 
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Properties;
-import org.apache.log4j.Logger;
 
 /**
  * The launcher -- downloads the up-to-date client and starts it.

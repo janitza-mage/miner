@@ -6,10 +6,10 @@
 
 package name.martingeisse.miner.client.ingame.gui;
 
-import name.martingeisse.miner.common.util.UserVisibleMessageException;
 import name.martingeisse.miner.client.util.gui.GuiEvent;
 import name.martingeisse.miner.client.util.gui.control.MessageBox;
 import name.martingeisse.miner.client.util.gui.control.Page;
+import name.martingeisse.miner.common.util.UserVisibleMessageException;
 import org.lwjgl.input.Keyboard;
 
 /**
