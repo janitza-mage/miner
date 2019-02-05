@@ -7,7 +7,6 @@
 package name.martingeisse.miner.server.network;
 
 import com.google.common.collect.ImmutableList;
-import name.martingeisse.common.SecurityTokenUtil;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.c2s.*;
 import name.martingeisse.miner.common.network.c2s.request.CreatePlayerRequest;
@@ -21,14 +20,11 @@ import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.common.section.SectionId;
 import name.martingeisse.miner.common.util.UserVisibleMessageException;
-import name.martingeisse.miner.server.MinerServerSecurityConstants;
 import name.martingeisse.miner.server.game.*;
 import name.martingeisse.miner.server.postgres_entities.PlayerInventorySlotRow;
 import name.martingeisse.miner.server.world.WorldSubsystem;
 import org.apache.log4j.Logger;
-import org.joda.time.Instant;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;

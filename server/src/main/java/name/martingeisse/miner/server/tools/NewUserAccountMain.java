@@ -6,8 +6,8 @@
 
 package name.martingeisse.miner.server.tools;
 
-import name.martingeisse.miner.common.Constants;
 import external.BCrypt;
+import name.martingeisse.miner.common.Constants;
 
 /**
  * Helper application to build a new user account.

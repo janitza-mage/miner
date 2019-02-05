@@ -11,10 +11,10 @@ import name.martingeisse.miner.common.geometry.angle.EulerAngles;
 import name.martingeisse.miner.common.geometry.vector.Vector3d;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.server.Databases;
-import name.martingeisse.miner.server.postgres_entities.PlayerRow;
-import name.martingeisse.miner.server.postgres_entities.QPlayerRow;
-import name.martingeisse.miner.server.postgres_entities.QPlayerAwardedAchievementRow;
 import name.martingeisse.miner.server.network.Avatar;
+import name.martingeisse.miner.server.postgres_entities.PlayerRow;
+import name.martingeisse.miner.server.postgres_entities.QPlayerAwardedAchievementRow;
+import name.martingeisse.miner.server.postgres_entities.QPlayerRow;
 import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
 import name.martingeisse.miner.server.util.database.postgres.PostgresUtil;
 

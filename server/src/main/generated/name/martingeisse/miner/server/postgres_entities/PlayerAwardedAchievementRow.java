@@ -5,6 +5,7 @@ package name.martingeisse.miner.server.postgres_entities;
 
 import com.querydsl.sql.dml.SQLInsertClause;
 import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
+
 import java.io.Serializable;
 
 /**

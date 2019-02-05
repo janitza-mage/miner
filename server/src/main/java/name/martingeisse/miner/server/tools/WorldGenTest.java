@@ -6,14 +6,13 @@
 
 package name.martingeisse.miner.server.tools;
 
+import name.martingeisse.miner.common.util.PerlinNoise;
+
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.FileOutputStream;
-
-import javax.imageio.ImageIO;
-
-import name.martingeisse.miner.common.util.PerlinNoise;
 
 /**
  *

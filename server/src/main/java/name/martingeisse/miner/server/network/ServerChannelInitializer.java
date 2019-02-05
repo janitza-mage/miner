@@ -4,8 +4,8 @@
  */
 package name.martingeisse.miner.server.network;
 
-import name.martingeisse.miner.common.network.ProtocolEndpoint;
 import name.martingeisse.miner.common.network.ProtocolChannelInitializer;
+import name.martingeisse.miner.common.network.ProtocolEndpoint;
 
 /**
  *

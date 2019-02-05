@@ -23,16 +23,12 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.concurrent.CountDownLatch;
 
 /**
  * The main class for the game server.
  */
 public class Main {
-
-	public static final CountDownLatch startupFinishedLatch = new CountDownLatch(1);
 
 	/**
 	 * The main method.
@@ -42,40 +38,7 @@ public class Main {
 	 */
 	public static void main(final String[] args) throws Exception {
 
-		// core initialization
-		parseCommandLine(args);
-		initializeBase();
-
-		// game server
-		new Thread() {
-			@Override
-			public void run() {
-				StackdServer server = new StackdServer();
-				EventLoopGroup bossGroup = new NioEventLoopGroup();
-				EventLoopGroup workerGroup = new NioEventLoopGroup();
-				final ServerBootstrap bootstrap = new ServerBootstrap();
-				bootstrap.group(bossGroup, workerGroup);
-				bootstrap.channel(NioServerSocketChannel.class);
-				bootstrap.option(ChannelOption.SO_BACKLOG, 128);
-				bootstrap.option(ChannelOption.TCP_NODELAY, true);
-				bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
-				bootstrap.childHandler(new ServerChannelInitializer(server));
-				ChannelFuture bindFuture = bootstrap.bind(new InetSocketAddress(Constants.NETWORK_PORT));
-				try {
-					bindFuture.sync();
-				} catch (InterruptedException e) {
-					throw new RuntimeException("failed to wait for binding the socket");
-				}
-				startupFinishedLatch.countDown();
-			}
-		}.start();
-
-	}
-
-	/**
-	 * Parses the command line and sets static variables in this class.
-	 */
-	private static void parseCommandLine(final String[] args) throws IOException {
+		// parse the command line
 		if (args.length == 0) {
 			Configuration.initializeFromClasspathConfig();
 		} else if (args.length == 1) {
@@ -84,14 +47,6 @@ public class Main {
 			System.err.println("usage: Main [config.properties]");
 			System.exit(1);
 		}
-	}
-
-	/**
-	 * Initializes URL handlers, time zones and the database.
-	 *
-	 * @throws IOException on I/O errors
-	 */
-	private static void initializeBase() throws IOException {
 
 		// initialize time zone
 		final DateTimeZone timeZone = DateTimeZone.UTC;
@@ -111,6 +66,24 @@ public class Main {
 		// initialize Cassandra database
 		Databases.cassandraCluster = Cluster.builder().addContactPoint("localhost").build();
 		Databases.world = Databases.cassandraCluster.connect("miner");
+
+		// initialize network server
+		StackdServer server = new StackdServer();
+		EventLoopGroup bossGroup = new NioEventLoopGroup();
+		EventLoopGroup workerGroup = new NioEventLoopGroup();
+		final ServerBootstrap bootstrap = new ServerBootstrap();
+		bootstrap.group(bossGroup, workerGroup);
+		bootstrap.channel(NioServerSocketChannel.class);
+		bootstrap.option(ChannelOption.SO_BACKLOG, 128);
+		bootstrap.option(ChannelOption.TCP_NODELAY, true);
+		bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
+		bootstrap.childHandler(new ServerChannelInitializer(server));
+		ChannelFuture bindFuture = bootstrap.bind(new InetSocketAddress(Constants.NETWORK_PORT));
+		try {
+			bindFuture.sync();
+		} catch (InterruptedException e) {
+			throw new RuntimeException("failed to wait for binding the socket");
+		}
 
 	}
 
