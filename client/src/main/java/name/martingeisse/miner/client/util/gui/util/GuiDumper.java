@@ -22,7 +22,8 @@ public final class GuiDumper {
 
 	public static void dump(GuiElement element, int indent) {
 		indent(indent);
-		System.out.println(element.getClass() + " (" + element.getAbsoluteX() + ", " + element.getAbsoluteY() + ")");
+		System.out.println(element.getClass() + " (" + element.getAbsoluteX() + ", " + element.getAbsoluteY() + ") ("
+			+ element.getWidth() + " x " + element.getHeight() + ")");
 		for (GuiElement child : element.getChildren()) {
 			dump(child, indent + 1);
 		}
