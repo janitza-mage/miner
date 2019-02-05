@@ -6,11 +6,12 @@
 
 package name.martingeisse.common.javascript.ownjson.parser;
 
-import java.util.ArrayList;
-import java.util.List;
 import name.martingeisse.common.javascript.ownjson.ast.JsonAstArray;
 import name.martingeisse.common.javascript.ownjson.ast.JsonAstValue;
 import name.martingeisse.common.javascript.ownjson.parserbase.AbstractJsonParserState;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The state to parse object properties.

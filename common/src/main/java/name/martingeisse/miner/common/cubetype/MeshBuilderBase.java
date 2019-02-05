@@ -6,11 +6,11 @@
 
 package name.martingeisse.miner.common.cubetype;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.RectangularRegion;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This is the base class for the client-side mesh builder. It allows to define cube types

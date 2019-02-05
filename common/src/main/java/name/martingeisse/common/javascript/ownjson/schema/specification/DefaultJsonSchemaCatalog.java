@@ -6,9 +6,6 @@
 
 package name.martingeisse.common.javascript.ownjson.schema.specification;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import name.martingeisse.common.javascript.ownjson.ast.JsonAstNull;
 import name.martingeisse.common.javascript.ownjson.ast.JsonAstObject;
 import name.martingeisse.common.javascript.ownjson.ast.JsonAstObjectProperty;
@@ -17,13 +14,11 @@ import name.martingeisse.common.javascript.ownjson.schema.JsonPropertySchema;
 import name.martingeisse.common.javascript.ownjson.schema.JsonValidationReport;
 import name.martingeisse.common.javascript.ownjson.schema.JsonValueOrPropertySchema;
 import name.martingeisse.common.javascript.ownjson.schema.JsonValueSchema;
-import name.martingeisse.common.javascript.ownjson.schema.parts.JsonBooleanSchema;
-import name.martingeisse.common.javascript.ownjson.schema.parts.JsonFloatSchema;
-import name.martingeisse.common.javascript.ownjson.schema.parts.JsonIntegerSchema;
-import name.martingeisse.common.javascript.ownjson.schema.parts.JsonStringSchema;
-import name.martingeisse.common.javascript.ownjson.schema.parts.OptionalSchema;
-
+import name.martingeisse.common.javascript.ownjson.schema.parts.*;
 import org.apache.commons.lang3.NotImplementedException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Default implementation of {@link JsonSchemaCatalog}. Defines the following

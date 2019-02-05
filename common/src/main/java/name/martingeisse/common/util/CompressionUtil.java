@@ -6,11 +6,12 @@
 
 package name.martingeisse.common.util;
 
+import org.apache.log4j.Logger;
+
 import java.io.ByteArrayOutputStream;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
-import org.apache.log4j.Logger;
 
 /**
  * Compression-related utility methods.

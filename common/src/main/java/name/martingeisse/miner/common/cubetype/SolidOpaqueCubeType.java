@@ -6,8 +6,9 @@
 
 package name.martingeisse.miner.common.cubetype;
 
-import java.util.Arrays;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
+
+import java.util.Arrays;
 
 /**
  * Cube type that is used for the typical "solid opaque" cube, like dirt, stone etc.

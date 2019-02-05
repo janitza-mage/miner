@@ -6,13 +6,14 @@
 
 package name.martingeisse.miner.common.cubes;
 
+import name.martingeisse.common.util.CompressionUtil;
+import name.martingeisse.miner.common.geometry.ClusterSize;
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
-import name.martingeisse.common.util.CompressionUtil;
-import name.martingeisse.miner.common.geometry.ClusterSize;
-import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * This type of cubes object stores a cube matrix directly. It is the

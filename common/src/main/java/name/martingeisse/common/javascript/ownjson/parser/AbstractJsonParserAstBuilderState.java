@@ -6,12 +6,7 @@
 
 package name.martingeisse.common.javascript.ownjson.parser;
 
-import name.martingeisse.common.javascript.ownjson.ast.JsonAstBoolean;
-import name.martingeisse.common.javascript.ownjson.ast.JsonAstFloat;
-import name.martingeisse.common.javascript.ownjson.ast.JsonAstInteger;
-import name.martingeisse.common.javascript.ownjson.ast.JsonAstNull;
-import name.martingeisse.common.javascript.ownjson.ast.JsonAstString;
-import name.martingeisse.common.javascript.ownjson.ast.JsonAstValue;
+import name.martingeisse.common.javascript.ownjson.ast.*;
 import name.martingeisse.common.javascript.ownjson.parserbase.AbstractJsonParserState;
 
 /**

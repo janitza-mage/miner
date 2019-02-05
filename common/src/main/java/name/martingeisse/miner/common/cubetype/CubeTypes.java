@@ -6,11 +6,6 @@
 
 package name.martingeisse.miner.common.cubetype;
 
-import name.martingeisse.miner.common.cubetype.CubeType;
-import name.martingeisse.miner.common.cubetype.EmptyCubeType;
-import name.martingeisse.miner.common.cubetype.SlabCubeType;
-import name.martingeisse.miner.common.cubetype.SolidOpaqueCubeType;
-import name.martingeisse.miner.common.cubetype.StairsCubeType;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 
 /**

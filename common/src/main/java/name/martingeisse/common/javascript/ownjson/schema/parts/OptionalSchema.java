@@ -6,11 +6,7 @@
 
 package name.martingeisse.common.javascript.ownjson.schema.parts;
 
-import name.martingeisse.common.javascript.ownjson.ast.JsonAstNull;
-import name.martingeisse.common.javascript.ownjson.ast.JsonAstObject;
-import name.martingeisse.common.javascript.ownjson.ast.JsonAstObjectProperty;
-import name.martingeisse.common.javascript.ownjson.ast.JsonAstString;
-import name.martingeisse.common.javascript.ownjson.ast.JsonAstValue;
+import name.martingeisse.common.javascript.ownjson.ast.*;
 import name.martingeisse.common.javascript.ownjson.schema.JsonValidationReport;
 import name.martingeisse.common.javascript.ownjson.schema.JsonValueOrPropertySchema;
 

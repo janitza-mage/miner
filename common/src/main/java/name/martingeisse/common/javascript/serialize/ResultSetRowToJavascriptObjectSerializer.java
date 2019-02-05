@@ -6,10 +6,11 @@
 
 package name.martingeisse.common.javascript.serialize;
 
+import name.martingeisse.common.javascript.JavascriptAssembler;
+
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import name.martingeisse.common.javascript.JavascriptAssembler;
 
 /**
  * This class turns JDBC {@link ResultSet} objects into Javascript objects.

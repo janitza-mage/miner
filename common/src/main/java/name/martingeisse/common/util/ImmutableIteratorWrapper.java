@@ -4,9 +4,9 @@
 
 package name.martingeisse.common.util;
 
-import java.util.Iterator;
-
 import org.apache.commons.collections.iterators.UnmodifiableIterator;
+
+import java.util.Iterator;
 
 /**
  * This class wraps another iterator to block off the {@link #remove()} method.

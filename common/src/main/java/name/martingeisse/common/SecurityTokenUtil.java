@@ -6,12 +6,13 @@
 
 package name.martingeisse.common;
 
-import java.util.Locale;
 import name.martingeisse.common.util.HmacUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.ReadableInstant;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
+
+import java.util.Locale;
 
 /**
  * Some utility methods to handle signed security tokens.

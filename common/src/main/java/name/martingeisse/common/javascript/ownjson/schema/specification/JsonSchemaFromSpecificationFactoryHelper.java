@@ -6,13 +6,12 @@
 
 package name.martingeisse.common.javascript.ownjson.schema.specification;
 
-import org.apache.commons.lang3.NotImplementedException;
-
 import name.martingeisse.common.javascript.ownjson.ast.JsonAstObject;
 import name.martingeisse.common.javascript.ownjson.ast.JsonAstObjectProperty;
 import name.martingeisse.common.javascript.ownjson.ast.JsonAstString;
 import name.martingeisse.common.javascript.ownjson.schema.JsonPropertySchema;
 import name.martingeisse.common.javascript.ownjson.schema.JsonValueSchema;
+import org.apache.commons.lang3.NotImplementedException;
 
 /**
  * Temporary helper class that is used to build a schema from a specification.

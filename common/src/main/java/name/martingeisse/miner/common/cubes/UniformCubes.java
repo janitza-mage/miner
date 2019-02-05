@@ -6,9 +6,10 @@
 
 package name.martingeisse.miner.common.cubes;
 
+import name.martingeisse.miner.common.geometry.ClusterSize;
+
 import java.io.IOException;
 import java.io.OutputStream;
-import name.martingeisse.miner.common.geometry.ClusterSize;
 
 /**
  * Cubes object that is filled uniformly with a single cube type. Only the cube

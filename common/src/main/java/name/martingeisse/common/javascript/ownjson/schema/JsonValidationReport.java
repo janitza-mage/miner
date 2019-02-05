@@ -6,11 +6,12 @@
 
 package name.martingeisse.common.javascript.ownjson.schema;
 
-import java.util.ArrayList;
-import java.util.List;
 import name.martingeisse.common.javascript.ownjson.ast.JsonAstNode;
 import name.martingeisse.common.javascript.ownjson.ast.JsonAstObject;
 import name.martingeisse.common.javascript.ownjson.ast.JsonAstValue;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Stores validation messages while validating a JSON struture

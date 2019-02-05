@@ -6,9 +6,10 @@
 
 package name.martingeisse.miner.common.collision;
 
+import name.martingeisse.miner.common.geometry.RectangularRegion;
+
 import java.util.ArrayList;
 import java.util.Collection;
-import name.martingeisse.miner.common.geometry.RectangularRegion;
 
 
 /**

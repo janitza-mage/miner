@@ -6,8 +6,9 @@
 
 package name.martingeisse.miner.common.task;
 
-import java.util.concurrent.TimeUnit;
 import name.martingeisse.common.util.SemaphoreWithPublicReducePermits;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * A goal is similar to a task, but can be scheduled only once. In turn,
