@@ -129,8 +129,6 @@ public class LoginPage extends AbstractStartmenuPage {
 		// log in
 		LoginResponse response = StartmenuNetworkClient.INSTANCE.requestAndWait(new LoginRequest(username, password), LoginResponse.class);
 		StartmenuState.INSTANCE.setPlayers(response.getElements());
-		StartmenuState.INSTANCE.setSelectedPlayer(response.getElements().get(0));
-
 
 		getGui().setRootElement(new ChooseCharacterPage());
 		Preferences.userNodeForPackage(StartmenuState.class).put("username", username);

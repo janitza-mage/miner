@@ -3,6 +3,7 @@ package name.martingeisse.miner;
 import name.martingeisse.miner.client.ClientStartup;
 import name.martingeisse.miner.client.network.ClientEndpoint;
 import name.martingeisse.miner.client.startmenu.StartmenuNetworkClient;
+import name.martingeisse.miner.client.startmenu.StartmenuState;
 import name.martingeisse.miner.common.network.c2s.request.LoginRequest;
 import name.martingeisse.miner.common.network.s2c.response.LoginResponse;
 
@@ -37,6 +38,7 @@ public class AutologinMain {
 		ClientEndpoint.INSTANCE.waitUntilConnected();
 		ClientEndpoint.INSTANCE.setMessageConsumer(StartmenuNetworkClient.INSTANCE);
 		StartmenuNetworkClient.INSTANCE.requestAndWait(new LoginRequest("martin", "foobar"), LoginResponse.class);
+		// StartmenuState.INSTANCE.setSelectedPlayer(response.getElements().get(0));
 
 
 		startup.createApplicationThread();
