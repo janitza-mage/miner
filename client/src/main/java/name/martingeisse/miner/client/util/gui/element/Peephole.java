@@ -7,6 +7,7 @@
 package name.martingeisse.miner.client.util.gui.element;
 
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
+import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiEvent;
 import org.lwjgl.opengl.GL11;
@@ -45,11 +46,10 @@ public final class Peephole extends AbstractWrapperElement {
 			previousClipW = currentClipW;
 			previousClipH = currentClipH;
 			currentClipX = getGui().unitsToPixelsInt(getAbsoluteX());
-			currentClipY = getGui().unitsToPixelsInt(getAbsoluteY());
+			currentClipY = getGui().unitsToPixelsInt(Gui.HEIGHT_UNITS - getAbsoluteY() - getHeight());
 			currentClipW = getGui().unitsToPixelsInt(getWidth());
 			currentClipH = getGui().unitsToPixelsInt(getHeight());
 			GL11.glEnable(GL11.GL_SCISSOR_TEST);
-			// TODO might be upside-down
 			GL11.glScissor(currentClipX, currentClipY, currentClipW, currentClipH);
 		}
 	};

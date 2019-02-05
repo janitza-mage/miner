@@ -1,5 +1,6 @@
 package name.martingeisse.miner.client.util.gui.element;
 
+import com.google.common.collect.ImmutableList;
 import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiEvent;
@@ -113,4 +114,8 @@ public class ScrollContainer extends GuiElement {
 		}
 	}
 
+	@Override
+	public ImmutableList<GuiElement> getChildren() {
+		return ImmutableList.of(contentWrapper, scrollBar);
+	}
 }
