@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.server.world.terrain;
+package name.martingeisse.miner.server.world.generate;
 
 import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.cubes.Cubes;

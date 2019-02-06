@@ -21,7 +21,7 @@ import name.martingeisse.miner.server.Databases;
 import name.martingeisse.miner.server.world.entry.SectionCubesCacheEntry;
 import name.martingeisse.miner.server.world.entry.SectionDataCacheEntry;
 import name.martingeisse.miner.server.world.storage.CassandraSectionStorage;
-import name.martingeisse.miner.server.world.terrain.TerrainGenerator;
+import name.martingeisse.miner.server.world.generate.TerrainGenerator;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
