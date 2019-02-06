@@ -15,6 +15,7 @@ import name.martingeisse.miner.client.ingame.network.SendPositionToServerHandler
 import name.martingeisse.miner.client.network.ClientEndpoint;
 import name.martingeisse.miner.client.startmenu.StartmenuState;
 import name.martingeisse.miner.client.util.frame.HandlerList;
+import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.GuiFrameHandler;
 import name.martingeisse.miner.client.util.gui.control.Page;
 import name.martingeisse.miner.client.util.lwjgl.MouseUtil;
@@ -138,6 +139,10 @@ public final class Ingame {
 
 	public boolean isGuiOpen() {
 		return gameMenuHandler.isEnableGui();
+	}
+
+	public Gui getGui() {
+		return gameMenuHandler.getGui();
 	}
 
 	public void showFlashMessage(String text) {

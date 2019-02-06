@@ -5,6 +5,8 @@
 package name.martingeisse.miner.client.ingame.logic;
 
 import com.google.common.collect.ImmutableList;
+import name.martingeisse.miner.client.ingame.Ingame;
+import name.martingeisse.miner.client.ingame.gui.InventoryPage;
 
 /**
  *
@@ -28,6 +30,9 @@ public final class Inventory {
 			throw new IllegalArgumentException("slots cannot be null");
 		}
 		this.slots = slots;
+		if (Ingame.get().isGuiOpen() && Ingame.get().getGui().getRootElement() instanceof InventoryPage) {
+			Ingame.get().getGui().requestLayout();
+		}
 	}
 
 }

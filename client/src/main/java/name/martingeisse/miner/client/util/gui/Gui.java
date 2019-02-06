@@ -173,7 +173,7 @@ public final class Gui {
 	 * @return the pixels
 	 */
 	public int unitsToPixelsInt(int units) {
-		return units * heightPixels / HEIGHT_UNITS;
+		return (int)(units * (long)heightPixels / HEIGHT_UNITS);
 	}
 	
 	/**
@@ -182,7 +182,7 @@ public final class Gui {
 	 * @return the coordinate units
 	 */
 	public int pixelsToUnitsInt(int pixels) {
-		return pixels * HEIGHT_UNITS / heightPixels;
+		return (int)(pixels * (long)HEIGHT_UNITS / heightPixels);
 	}
 	
 	/**
