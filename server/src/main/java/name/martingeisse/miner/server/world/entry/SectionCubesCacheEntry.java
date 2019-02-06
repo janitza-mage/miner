@@ -155,26 +155,6 @@ public final class SectionCubesCacheEntry extends SectionDataCacheEntry {
 
 	}
 
-	/**
-	 * Returns an {@link EditAccess} for this section. Editing uses coordinates that
-	 * are absolute to the world.
-	 * 
-	 * @return the edit access
-	 */
-	public EditAccess getAbsoluteEditAccess() {
-		return new EditAccess(new SectionAbsoluteEditAccessHost(this));
-	}
-
-	/**
-	 * Returns an {@link EditAccess} for this section. Editing uses coordinates that
-	 * are relative to this section's origin.
-	 * 
-	 * @return the edit access
-	 */
-	public EditAccess getRelativeEditAccess() {
-		return new EditAccess(new SectionRelativeEditAccessHost(this));
-	}
-
 	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.server.section.AbstractSectionRelatedCacheEntry#onModification()
 	 */
