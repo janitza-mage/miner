@@ -25,6 +25,7 @@ public class ScrollContainer extends GuiElement {
 	public static final int SCROLL_KNOB_SIZE = 3 * Gui.GRID;
 
 	private final Peephole contentWrapper;
+	private final Margin contentWrapperMargin;
 	private final Peephole scrollBar;
 	private final Peephole knobRail;
 	private final GuiElement knob;
@@ -33,6 +34,7 @@ public class ScrollContainer extends GuiElement {
 	public ScrollContainer() {
 		contentWrapper = new Peephole(new FillColor(Color.RED));
 		contentWrapper.notifyNewParent(this);
+		contentWrapperMargin = new Margin(contentWrapper, null);
 
 		knob = new FillColor(Color.WHITE);
 		knobRail = new Peephole(knob);
