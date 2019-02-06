@@ -6,6 +6,7 @@
 
 package name.martingeisse.miner.client.util.gui.element;
 
+import com.google.common.collect.ImmutableList;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiEvent;
 
@@ -70,6 +71,11 @@ public abstract class AbstractWrapperElement extends GuiElement {
 		if (wrappedElement == null) {
 			throw new IllegalArgumentException(getClass().getName() + " has no wrapped element set");
 		}
+	}
+
+	@Override
+	public ImmutableList<GuiElement> getChildren() {
+		return ImmutableList.of(wrappedElement);
 	}
 
 }

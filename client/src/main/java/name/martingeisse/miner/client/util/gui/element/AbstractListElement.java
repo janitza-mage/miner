@@ -6,6 +6,7 @@
 
 package name.martingeisse.miner.client.util.gui.element;
 
+import com.google.common.collect.ImmutableList;
 import name.martingeisse.common.util.ParameterUtil;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiEvent;
@@ -111,6 +112,11 @@ public abstract class AbstractListElement extends GuiElement {
 		for (GuiElement element : getWrappedElements()) {
 			element.handleEvent(event);
 		}
+	}
+
+	@Override
+	public ImmutableList<GuiElement> getChildren() {
+		return ImmutableList.copyOf(wrappedElements);
 	}
 
 }

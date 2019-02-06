@@ -14,9 +14,12 @@ import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.control.Button;
 import name.martingeisse.miner.client.util.gui.control.ListView;
 import name.martingeisse.miner.client.util.gui.element.*;
+import name.martingeisse.miner.client.util.gui.util.GuiDumper;
 
 /**
  * The "login" menu page.
+ *
+ * TODO won't handle changes to the inventory well
  */
 public class InventoryPage extends AbstractGameGuiPage {
 
@@ -32,12 +35,13 @@ public class InventoryPage extends AbstractGameGuiPage {
 				Button button = new GameGuiButton(dataElement.getName()) {
 					@Override
 					protected void onClick() {
+						GuiDumper.dump(getGui());
 					}
 				};
 				return new Margin(button, 3 * Gui.MINIGRID, 0);
 			}
 		};
-		menu.addElement(new Sizer(new ScrollContainer(slotListView), -1, 50 * Gui.GRID));
+		menu.addElement(new Sizer(new ScrollContainer(new Margin(slotListView, 2 * Gui.MINIGRID)), -1, 50 * Gui.GRID));
 
 		menu.addElement(new Spacer(0, 3 * Gui.GRID));
 		menu.addElement(new GameGuiButton("Resume Game") {

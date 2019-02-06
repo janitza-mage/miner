@@ -6,6 +6,7 @@
 
 package name.martingeisse.miner.client.util.gui.element.text;
 
+import com.google.common.collect.ImmutableList;
 import name.martingeisse.common.util.ParameterUtil;
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.util.gui.Gui;
@@ -164,6 +165,11 @@ public final class TextLine extends GuiElement {
 	@Override
 	public void requestSize(final int width, final int height) {
 		computeSize();
+	}
+
+	@Override
+	public ImmutableList<GuiElement> getChildren() {
+		return ImmutableList.of();
 	}
 
 }

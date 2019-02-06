@@ -1,8 +1,11 @@
 package name.martingeisse.miner;
 
 import name.martingeisse.miner.client.ClientStartup;
+import name.martingeisse.miner.client.ingame.Ingame;
 import name.martingeisse.miner.client.network.ClientEndpoint;
 import name.martingeisse.miner.client.startmenu.StartmenuNetworkClient;
+import name.martingeisse.miner.client.startmenu.StartmenuState;
+import name.martingeisse.miner.client.util.lwjgl.MouseUtil;
 import name.martingeisse.miner.common.network.c2s.request.LoginRequest;
 import name.martingeisse.miner.common.network.s2c.response.LoginResponse;
 
@@ -36,8 +39,10 @@ public class AutologinMain {
 		startup.startConnectingToServer();
 		ClientEndpoint.INSTANCE.waitUntilConnected();
 		ClientEndpoint.INSTANCE.setMessageConsumer(StartmenuNetworkClient.INSTANCE);
-		StartmenuNetworkClient.INSTANCE.requestAndWait(new LoginRequest("martin", "foobar"), LoginResponse.class);
-
+		LoginResponse loginResponse = StartmenuNetworkClient.INSTANCE.requestAndWait(new LoginRequest("martin", "foobar"), LoginResponse.class);
+		StartmenuState.INSTANCE.setSelectedPlayer(loginResponse.getElements().get(0));
+		Ingame.create();
+		MouseUtil.grab();
 
 		startup.createApplicationThread();
 		startup.becomeGlWorkerThread();
