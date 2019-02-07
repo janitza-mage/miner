@@ -17,6 +17,11 @@ import name.martingeisse.miner.server.world.SectionWorkingSet;
 
 /**
  * A section cache entry for the INTERACTIVE section image.
+ *
+ * The image is stored as serialized {@link Cubes}. The stored image can be null to indicate that it is outdated due
+ * to modifications in the DEFINITIVE section data. Note that this does not mean that the cache entry itself is
+ * invalid; setting the image to null is a modification to this image that must be saved. (Since we currently can't
+ * save null images, the image will be updated from the DEFINITIVE data for saving).
  * 
  * TODO To allow the client to remove additional hidden faces, information about
  * the neighbor sections should be included in the image.

@@ -175,13 +175,10 @@ public final class WorldSubsystem {
 	 * and digging
 	 */
 	public byte getCube(Vector3i position) {
-		int shiftBits = Constants.SECTION_SIZE.getShiftBits();
-		int x = position.x, sectionX = (x >> shiftBits);
-		int y = position.y, sectionY = (y >> shiftBits);
-		int z = position.z, sectionZ = (z >> shiftBits);
-		SectionId id = new SectionId(sectionX, sectionY, sectionZ);
-		SectionCubesCacheEntry sectionDataCacheEntry = (SectionCubesCacheEntry) workingSet.get(new SectionDataId(id, SectionDataType.DEFINITIVE));
-		return sectionDataCacheEntry.getCubeAbsolute(x, y, z);
+		SectionId sectionId = SectionId.fromPosition(position);
+		SectionDataId sectionDataId = new SectionDataId(sectionId, SectionDataType.DEFINITIVE);
+		SectionCubesCacheEntry sectionDataCacheEntry = (SectionCubesCacheEntry) workingSet.get(sectionDataId);
+		return sectionDataCacheEntry.getCubeAbsolute(position);
 	}
 
 	//
@@ -195,7 +192,7 @@ public final class WorldSubsystem {
 			SectionId sectionId = SectionId.fromPosition(element.getPosition());
 			SectionDataId sectionDataId = new SectionDataId(sectionId, SectionDataType.DEFINITIVE);
 			SectionCubesCacheEntry sectionDataCacheEntry = (SectionCubesCacheEntry) workingSet.get(sectionDataId);
-			sectionDataCacheEntry.setCubeAbsolute(position.x, position.y, position.z, element.getCubeType());
+			sectionDataCacheEntry.setCubeAbsolute(position, element.getCubeType());
 			affectedPositions.add(element.getPosition());
 		}
 		notifyModificationListenersAboutModifiedPositions(ImmutableList.copyOf(affectedPositions));
@@ -209,7 +206,7 @@ public final class WorldSubsystem {
 		SectionId sectionId = SectionId.fromPosition(position);
 		SectionDataId sectionDataId = new SectionDataId(sectionId, SectionDataType.DEFINITIVE);
 		SectionCubesCacheEntry sectionDataCacheEntry = (SectionCubesCacheEntry) workingSet.get(sectionDataId);
-		sectionDataCacheEntry.setCubeAbsolute(position.x, position.y, position.z, cube);
+		sectionDataCacheEntry.setCubeAbsolute(position, cube);
 		notifyModificationListenersAboutModifiedPositions(ImmutableList.of(position));
 	}
 

@@ -8,9 +8,8 @@ package name.martingeisse.miner.server.world.entry;
 
 import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.cubes.Cubes;
-import name.martingeisse.miner.common.edit.EditAccess;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
-import name.martingeisse.miner.common.geometry.RectangularRegion;
+import name.martingeisse.miner.common.geometry.vector.Vector3i;
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.common.section.SectionId;
@@ -21,14 +20,7 @@ import name.martingeisse.miner.server.world.SectionWorkingSet;
  */
 public final class SectionCubesCacheEntry extends SectionDataCacheEntry {
 
-	/**
-	 * the region
-	 */
-	private final RectangularRegion region;
-
-	/**
-	 * the sectionCubes
-	 */
+	private final Vector3i anchor;
 	private Cubes sectionCubes;
 
 	/**
@@ -40,16 +32,8 @@ public final class SectionCubesCacheEntry extends SectionDataCacheEntry {
 	public SectionCubesCacheEntry(final SectionWorkingSet sectionWorkingSet, final SectionDataId sectionDataId, final Cubes sectionCubes) {
 		super(sectionWorkingSet, sectionDataId);
 		SectionId sectionId = sectionDataId.getSectionId();
-		this.region = new RectangularRegion(sectionId.getX(), sectionId.getY(), sectionId.getZ()).multiply(Constants.SECTION_SIZE);
+		this.anchor = new Vector3i(sectionId.getX(), sectionId.getY(), sectionId.getZ()).multiply(Constants.SECTION_SIZE.getSize());
 		this.sectionCubes = sectionCubes;
-	}
-
-	/**
-	 * Getter method for the region.
-	 * @return the region
-	 */
-	public RectangularRegion getRegion() {
-		return region;
 	}
 
 	/**
@@ -70,87 +54,59 @@ public final class SectionCubesCacheEntry extends SectionDataCacheEntry {
 
 	/**
 	 * Returns the cube value for the specified absolute position.
-	 * 
-	 * @param x the x position
-	 * @param y the y position
-	 * @param z the z position
-	 * @return the cube value
 	 */
-	public final byte getCubeAbsolute(final int x, final int y, final int z) {
-		return getCubeRelative(x - region.getStartX(), y - region.getStartY(), z - region.getStartZ());
+	public final byte getCubeAbsolute(Vector3i position) {
+		return getCubeRelative(position.subtract(anchor));
 	}
 
 	/**
 	 * Returns the cube value for the specified section-relative position.
-	 * 
-	 * @param x the x position
-	 * @param y the y position
-	 * @param z the z position
-	 * @return the cube value
 	 */
-	public final byte getCubeRelative(final int x, final int y, final int z) {
-		return sectionCubes.getCubeRelative(Constants.SECTION_SIZE, x, y, z);
+	public final byte getCubeRelative(Vector3i position) {
+		return sectionCubes.getCubeRelative(Constants.SECTION_SIZE, position);
 	}
 
 	/**
 	 * Sets the cube value for the specified absolute position.
-	 * 
-	 * @param x the x position
-	 * @param y the y position
-	 * @param z the z position
-	 * @param value the cube value to set
 	 */
-	public final void setCubeAbsolute(final int x, final int y, final int z, final byte value) {
-		setCubeRelative(x - region.getStartX(), y - region.getStartY(), z - region.getStartZ(), value);
+	public final void setCubeAbsolute(Vector3i position, final byte value) {
+		setCubeRelative(position.subtract(anchor), value);
 	}
 
 	/**
 	 * Sets the cube value for the specified section-relative position.
-	 * 
-	 * @param x the x position
-	 * @param y the y position
-	 * @param z the z position
-	 * @param value the cube value to set
 	 */
-	public final void setCubeRelative(final int x, final int y, final int z, final byte value) {
-		this.sectionCubes = sectionCubes.setCubeRelative(Constants.SECTION_SIZE, x, y, z, value);
-		markCubeModifiedRelative(x, y, z);
+	public final void setCubeRelative(Vector3i position, final byte value) {
+		this.sectionCubes = sectionCubes.setCubeRelative(Constants.SECTION_SIZE, position, value);
+		markCubeModifiedRelative(position);
 	}
 
 	/**
 	 * Marks this cache entry as modified, and possibly neighbor sections as well. The cube
 	 * position is specified in absolute coordinates.
-	 * 
-	 * @param x the x position
-	 * @param y the y position
-	 * @param z the z position
 	 */
-	public final void markCubeModifiedAbsolute(final int x, final int y, final int z) {
-		markCubeModifiedRelative(x - region.getStartX(), y - region.getStartY(), z - region.getStartZ());
+	public final void markCubeModifiedAbsolute(Vector3i position) {
+		markCubeModifiedRelative(position.subtract(anchor));
 	}
 
 	/**
 	 * Marks this cache entry as modified, and possibly neighbor sections as well. The cube
 	 * position is specified relative to this section.
-	 * 
-	 * @param x the x position
-	 * @param y the y position
-	 * @param z the z position
 	 */
-	public synchronized final void markCubeModifiedRelative(final int x, final int y, final int z) {
+	public synchronized final void markCubeModifiedRelative(Vector3i position) {
 
 		// mark modified as usual
 		markModified();
 		
-		// mark neighbor sections modified if this cube is on the border
+		// Mark neighbor sections modified if this cube is on the border. The reason we need to do this is because the
+		// cube in the neighbor section gets sent as "unknown" to the client first since it's obscured, and by
+		// revealing that cube, the client has to know what kind of cube it is. Thus, modifying a cube at a section
+		// boundary must invalidate the INTERACTIVE image for the neighbor section.
 		SectionDataId sectionDataId = getSectionDataId();
-		for (AxisAlignedDirection neighborDirection : Constants.SECTION_SIZE.getBorderDirections(x, y, z)) {
-			// TODO there should be a way to do this without loading the to-be-invalidated object from storage
-			
+		for (AxisAlignedDirection neighborDirection : Constants.SECTION_SIZE.getBorderDirections(position)) {
 			SectionDataId neighborInteractiveDataId = sectionDataId.getNeighbor(neighborDirection, SectionDataType.INTERACTIVE);
 			InteractiveSectionImageCacheEntry neighborInteractiveDataEntry = (InteractiveSectionImageCacheEntry)getSectionWorkingSet().get(neighborInteractiveDataId);
 			neighborInteractiveDataEntry.invalidateData();
-			
 		}
 
 	}
@@ -160,12 +116,8 @@ public final class SectionCubesCacheEntry extends SectionDataCacheEntry {
 	 */
 	@Override
 	protected void onModification() {
-
-		// invalidate render model and collider
-		// TODO there should be a way to do this without loading the to-be-invalidated object from storage
 		SectionDataId sectionDataId = getSectionDataId();
 		((InteractiveSectionImageCacheEntry)getSectionWorkingSet().get(sectionDataId.getWithType(SectionDataType.INTERACTIVE))).invalidateData();
-
 	}
 
 	/* (non-Javadoc)

@@ -73,4 +73,24 @@ public final class Vector3i extends ReadableVector3i {
 		return this;
 	}
 
+	public Vector3i add(Vector3i other) {
+		return new Vector3i(x + other.x, y + other.y, z + other.z);
+	}
+
+	public Vector3i subtract(Vector3i other) {
+		return new Vector3i(x + other.x, y + other.y, z + other.z);
+	}
+
+	public Vector3i multiply(int a) {
+		return new Vector3i(x * a, y * a, z * a);
+	}
+
+	public Vector3i divide(int a) {
+		return new Vector3i(x / a, y / a, z / a);
+	}
+
+	public int dot(Vector3i other) {
+		return x * other.x + y * other.y + z * other.z;
+	}
+
 }
