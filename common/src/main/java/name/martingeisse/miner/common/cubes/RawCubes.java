@@ -163,7 +163,7 @@ public class RawCubes extends Cubes {
 	final int getRelativeCubeIndex(final ClusterSize clusterSize, final int x, final int y, final int z) {
 		final int size = clusterSize.getSize();
 		if (x < 0 || y < 0 || z < 0 || x >= size || y >= size || z >= size) {
-			throw new IndexOutOfBoundsException();
+			throw new IndexOutOfBoundsException("relative position out of bounds: " + x + ", " + y + ", " + z);
 		}
 		return (x * size + y) * size + z;
 	}

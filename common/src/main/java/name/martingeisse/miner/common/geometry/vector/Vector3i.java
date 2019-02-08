@@ -78,7 +78,7 @@ public final class Vector3i extends ReadableVector3i {
 	}
 
 	public Vector3i subtract(Vector3i other) {
-		return new Vector3i(x + other.x, y + other.y, z + other.z);
+		return new Vector3i(x - other.x, y - other.y, z - other.z);
 	}
 
 	public Vector3i multiply(int a) {

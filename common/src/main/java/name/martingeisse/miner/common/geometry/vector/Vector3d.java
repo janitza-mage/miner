@@ -78,7 +78,7 @@ public final class Vector3d extends ReadableVector3d {
 	}
 
 	public Vector3d subtract(Vector3d other) {
-		return new Vector3d(x + other.x, y + other.y, z + other.z);
+		return new Vector3d(x - other.x, y - other.y, z - other.z);
 	}
 
 	public Vector3d multiply(double a) {

@@ -20,14 +20,16 @@ import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
 import name.martingeisse.miner.common.section.SectionId;
 import name.martingeisse.miner.common.util.UserVisibleMessageException;
-import name.martingeisse.miner.server.game.*;
+import name.martingeisse.miner.server.game.Player;
+import name.martingeisse.miner.server.game.PlayerListener;
+import name.martingeisse.miner.server.game.UserAccount;
+import name.martingeisse.miner.server.game.UserAccountRepository;
 import name.martingeisse.miner.server.postgres_entities.PlayerInventorySlotRow;
 import name.martingeisse.miner.server.world.WorldSubsystem;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Stores the data for one user session (currently associated with the connection,
@@ -212,7 +214,7 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 			}
 		} else if (untypedMessage instanceof CubeModification) {
 
-			server.getWorldSubsystem().handleMessage((CubeModification) untypedMessage);
+			server.getWorldSubsystem().placeCube((CubeModification) untypedMessage);
 
 		} else if (untypedMessage instanceof InteractiveSectionDataRequest) {
 
@@ -225,26 +227,7 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 		} else if (untypedMessage instanceof DigNotification) {
 
 			DigNotification message = (DigNotification) untypedMessage;
-			WorldSubsystem worldSubsystem = server.getWorldSubsystem();
-
-			// check if successful and remove the cube
-			byte oldCubeType = worldSubsystem.getCube(message.getPosition());
-			boolean success;
-			if (oldCubeType == 1 || oldCubeType == 5 || oldCubeType == 15) {
-				success = true;
-			} else {
-				success = (new Random().nextInt(3) < 1);
-			}
-			if (!success) {
-				// TODO enable god mode -- digging always succeeds
-				// break;
-			}
-			worldSubsystem.setCube(message.getPosition(), (byte) 0);
-
-			// trigger special logic (e.g. add a unit of ore to the player's inventory)
-			if (player != null) {
-				DigUtil.onCubeDugAway(player, message.getPosition(), oldCubeType);
-			}
+			server.getWorldSubsystem().dig(player, message.getPosition());
 
 		} else {
 			logger.error("unknown message: " + untypedMessage);
