@@ -39,6 +39,15 @@ import java.util.concurrent.ExecutionException;
  * subclass instance.
  * 
  * TODO save on evict
+ *
+ * TODO read-modify-write is not totally thread safe
+ *
+ * TODO should this class or the enclosing WorldSubsystem handle modification listeners?
+ * - if the WorldSubsystem handles listeners then it's ugly, logic is separated. Thread safety is also
+ *   hard to achieve. (but the latter could be achieved by modifying world data, *then* sending a notification
+ *   to all listeners).
+ * - related to how read-modify-write is implemented
+ *
  */
 public final class SectionWorkingSet {
 

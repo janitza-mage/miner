@@ -22,8 +22,8 @@ import name.martingeisse.miner.server.game.DigUtil;
 import name.martingeisse.miner.server.game.Player;
 import name.martingeisse.miner.server.world.entry.SectionCubesCacheEntry;
 import name.martingeisse.miner.server.world.entry.SectionDataCacheEntry;
-import name.martingeisse.miner.server.world.storage.CassandraSectionStorage;
 import name.martingeisse.miner.server.world.generate.TerrainGenerator;
+import name.martingeisse.miner.server.world.storage.CassandraSectionStorage;
 import org.apache.log4j.Logger;
 
 import java.util.*;
@@ -32,9 +32,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Encapsulates all server-side functionality recarding the cube world.
- *
+ * <p>
  * TODO Usage from outside: read, place, dig, listener
- *
+ * <p>
  * Separate WorldSubsystem from SectionDataCache:
  * - read --(readreq)-> world --(readreq)-> cache (pass through)
  * - place --placereq-> world --(cache entry change)-> cache
@@ -177,17 +177,6 @@ public final class WorldSubsystem {
 		}
 	}
 
-	/**
-	 * TODO cannot work if the section is not cached, but that assumption is currently true because it's about placing
-	 * and digging
-	 */
-	public byte getCube(Vector3i position) {
-		SectionId sectionId = SectionId.fromPosition(position);
-		SectionDataId sectionDataId = new SectionDataId(sectionId, SectionDataType.DEFINITIVE);
-		SectionCubesCacheEntry sectionDataCacheEntry = (SectionCubesCacheEntry) workingSet.get(sectionDataId);
-		return sectionDataCacheEntry.getCubeAbsolute(position);
-	}
-
 	//
 	// --- modifications
 	//
@@ -206,9 +195,12 @@ public final class WorldSubsystem {
 	}
 
 	public void dig(Player player, Vector3i position) {
+		SectionId sectionId = SectionId.fromPosition(position);
+		SectionDataId sectionDataId = new SectionDataId(sectionId, SectionDataType.DEFINITIVE);
+		SectionCubesCacheEntry sectionDataCacheEntry = (SectionCubesCacheEntry) workingSet.get(sectionDataId);
 
 		// check if successful and remove the cube
-		byte oldCubeType = getCube(position);
+		byte oldCubeType = sectionDataCacheEntry.getCubeAbsolute(position);
 		boolean success;
 		if (oldCubeType == 1 || oldCubeType == 5 || oldCubeType == 15) {
 			success = true;
@@ -219,25 +211,14 @@ public final class WorldSubsystem {
 			// TODO enable god mode -- digging always succeeds
 			// break;
 		}
-		setCube(position, (byte) 0);
+		sectionDataCacheEntry.setCubeAbsolute(position, (byte) 0);
+		notifyModificationListenersAboutModifiedPositions(ImmutableList.of(position));
 
 		// trigger special logic (e.g. add a unit of ore to the player's inventory)
 		if (player != null) {
 			DigUtil.onCubeDugAway(player, position, oldCubeType);
 		}
 
-	}
-
-	/**
-	 * TODO cannot work if the section is not cached, but that assumption is currently true because it's about placing
-	 * and digging
-	 */
-	private void setCube(Vector3i position, byte cube) {
-		SectionId sectionId = SectionId.fromPosition(position);
-		SectionDataId sectionDataId = new SectionDataId(sectionId, SectionDataType.DEFINITIVE);
-		SectionCubesCacheEntry sectionDataCacheEntry = (SectionCubesCacheEntry) workingSet.get(sectionDataId);
-		sectionDataCacheEntry.setCubeAbsolute(position, cube);
-		notifyModificationListenersAboutModifiedPositions(ImmutableList.of(position));
 	}
 
 	private void notifyModificationListenersAboutModifiedPositions(ImmutableList<Vector3i> positions) {
