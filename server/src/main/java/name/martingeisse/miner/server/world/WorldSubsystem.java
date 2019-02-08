@@ -33,6 +33,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Encapsulates all server-side functionality recarding the cube world.
+ *
+ * TODO Usage from outside: read, place, dig, listener
  */
 public final class WorldSubsystem {
 
