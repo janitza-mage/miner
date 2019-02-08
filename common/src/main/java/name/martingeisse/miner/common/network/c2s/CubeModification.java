@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * TODO change to hold a single cube and rename to PlaceCube
  */
 public final class CubeModification extends Message {
 

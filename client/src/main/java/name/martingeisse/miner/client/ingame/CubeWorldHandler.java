@@ -24,6 +24,7 @@ import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
 import name.martingeisse.miner.client.util.lwjgl.*;
 import name.martingeisse.miner.common.Constants;
+import name.martingeisse.miner.common.collision.SingleCubeCollider;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.RectangularRegion;
 import name.martingeisse.miner.common.geometry.vector.Vector3i;
@@ -437,15 +438,11 @@ public class CubeWorldHandler implements IFrameHandler {
 								effectiveCubeType = currentCubeType;
 							}
 
-							/* TODO: The call to breakFree() will remove a stairs cube if the player is standing
-							 * on the lower step, because the player's bounding box intersects with the cube's
-							 * bounding box. Solution 1: Remove breakFree(), don't place a cube if the player then
-							 * collides. Solution 2: Make breakFree() more accurate.
-							 */
-							CubeModification.Builder builder = new CubeModification.Builder();
-							builder.add(x, y, z, effectiveCubeType);
-							breakFree(builder);
-							ClientEndpoint.INSTANCE.send(builder.build());
+							if (!new SingleCubeCollider(new Vector3i(x, y, z)).collides(player.createCollisionRegion())) {
+								CubeModification.Builder builder = new CubeModification.Builder();
+								builder.add(x, y, z, effectiveCubeType);
+								ClientEndpoint.INSTANCE.send(builder.build());
+							}
 
 							// cooldownFinishTime = now + 1000;
 							cooldownFinishTime = now + 200;
@@ -470,9 +467,7 @@ public class CubeWorldHandler implements IFrameHandler {
 
 		// special actions
 		if (keysEnabled && Keyboard.isKeyDown(Keyboard.KEY_B)) {
-			final CubeModification.Builder builder = new CubeModification.Builder();
-			breakFree(builder);
-			ClientEndpoint.INSTANCE.send(builder.build());
+			breakFree();
 		}
 
 		// handle player logic
@@ -493,12 +488,12 @@ public class CubeWorldHandler implements IFrameHandler {
 	/**
 	 *
 	 */
-	private void breakFree(final CubeModification.Builder builder) {
+	private void breakFree() {
 		final RectangularRegion region = player.createCollisionRegion();
 		for (int x = region.getStartX(); x < region.getEndX(); x++) {
 			for (int y = region.getStartY(); y < region.getEndY(); y++) {
 				for (int z = region.getStartZ(); z < region.getEndZ(); z++) {
-					builder.add(x, y, z, (byte) 0);
+					ClientEndpoint.INSTANCE.send(new DigNotification(new Vector3i(x, y, z)));
 				}
 			}
 		}
