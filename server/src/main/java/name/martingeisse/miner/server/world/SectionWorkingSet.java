@@ -70,6 +70,11 @@ import java.util.concurrent.ExecutionException;
  * Step 2: Consider building that around a LoadingCache, e.g. with an additional save queue and extra synchronization
  * purely around modifications (most accesses will be non-synchronized reads!)
  *
+ * TODO: NO. "Unsynchronized read access" is too complicated to even define, and neither that nor RMW is sufficient
+ * for reading section cubes as neighbor data when build an interactive image. What I actually need is reader/writer
+ * synchronization *PER SECTION DATA* as well as "pinning" a section data (prevent eviction). Exact eviction is
+ * irrelevant. Pinning does not mean locking; locking is done per section data if needed. Inter-section-data locking
+ * is not needed.
  *
  */
 public final class SectionWorkingSet {
