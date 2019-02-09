@@ -48,6 +48,29 @@ import java.util.concurrent.ExecutionException;
  *   to all listeners).
  * - related to how read-modify-write is implemented
  *
+ * Solution: What I need is a cache that locks a cache key on get and demands an explicit unlock. Simple reads in
+ * response to a modification listener may get an arbitrary state since they are not thread-safe anyway, but anything
+ * that modifies a cache entry has to make the read-modify-write atomic.
+ *
+ * Step 1: Design the interface of this class around that.
+ * - non-synchronized reads should not be able to modify the section -> do not allow that
+ * - synchronized read-modify-write should use a callback or explicit unlock (decide which one or both)
+ * - should modification listeners be part of this class?
+ *   Probably. Otherwise each modification logic in WorldSubsystem would have to notify listeners
+ *   (prone to errors)
+ * - are accumulating multi-section read jobs part of this class? Note that Cassandra supports async
+ *   loading but Guava cache does not. Cassandra would finish an async load in its own thread but allows
+ *   to specify an executor (e.g. the TaskSystem) for that.
+ *   CON: outside logic would know when a "fast lane read" is necessary, bypassing the accumulating read
+ *   PRO: read-modify-write cycles could use the same logic
+ *   CON: this is hardly necessary, since modifications typically affect sections that are already cached since the
+ *        modifications are caused by a player who is in those sections
+ *   CON: such logic simply does not belong there
+ *
+ * Step 2: Consider building that around a LoadingCache, e.g. with an additional save queue and extra synchronization
+ * purely around modifications (most accesses will be non-synchronized reads!)
+ *
+ *
  */
 public final class SectionWorkingSet {
 
