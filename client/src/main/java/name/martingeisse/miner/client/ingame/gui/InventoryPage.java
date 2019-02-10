@@ -19,6 +19,7 @@ import name.martingeisse.miner.client.util.gui.element.fill.FillColor;
 import name.martingeisse.miner.client.util.gui.util.Color;
 import name.martingeisse.miner.client.util.gui.util.GuiDumper;
 import name.martingeisse.miner.common.network.c2s.EquipMessage;
+import org.lwjgl.input.Mouse;
 
 /**
  * The "login" menu page.
@@ -39,10 +40,22 @@ public class InventoryPage extends AbstractGameGuiPage {
 			@Override
 			protected GuiElement createGuiElement(InventorySlot dataElement) {
 				Button button = new GameGuiButton(dataElement.getName() + " (" + dataElement.getQuantity() + ")") {
+
 					@Override
 					protected void onClick() {
-						ClientEndpoint.INSTANCE.send(new EquipMessage(dataElement.getId(), false));
+						if (Mouse.getEventButton() == 0) {
+							ClientEndpoint.INSTANCE.send(new EquipMessage(dataElement.getId(), false));
+							// TODO mark the item equipped locally to hide the network latency. Uncomment this as soon
+							// as I'm sure that server-side equipping works flawlessly.
+							// dataElement.setEquipped(true);
+							// otherDataElements.setEquipped(false);
+							// setBackgroundElement(new FillColor(Color.GREEN));
+						} else if (Mouse.getEventButton() == 1) {
+							ClientEndpoint.INSTANCE.send(new EquipMessage(dataElement.getId(), true));
+							// TODO same as above, locally unequip
+						}
 					}
+
 				};
 				if (dataElement.isEquipped()) {
 					button.setBackgroundElement(new FillColor(Color.GREEN));
