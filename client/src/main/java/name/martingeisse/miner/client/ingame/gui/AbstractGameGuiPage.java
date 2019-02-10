@@ -6,6 +6,7 @@
 
 package name.martingeisse.miner.client.ingame.gui;
 
+import name.martingeisse.miner.client.ingame.Ingame;
 import name.martingeisse.miner.client.util.gui.GuiEvent;
 import name.martingeisse.miner.client.util.gui.control.MessageBox;
 import name.martingeisse.miner.client.util.gui.control.Page;
@@ -42,8 +43,24 @@ public class AbstractGameGuiPage extends Page {
 	@Override
 	protected void handlePageEvent(GuiEvent event) {
 		super.handlePageEvent(event);
-		if (event == GuiEvent.KEY_PRESSED && Keyboard.getEventCharacter() == '\r') {
-			onEnterPressed();
+		if (event == GuiEvent.KEY_PRESSED) {
+			switch (Keyboard.getEventKey()) {
+
+				case Keyboard.KEY_RETURN:
+					onEnterPressed();
+					break;
+
+				case Keyboard.KEY_I:
+					if (!(this instanceof InventoryPage)) {
+						Ingame.get().openGui(new InventoryPage());
+					}
+					break;
+
+				case Keyboard.KEY_ESCAPE:
+					Ingame.get().closeGui();
+					break;
+
+			}
 		}
 	}
 
