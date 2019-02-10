@@ -14,6 +14,8 @@ import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.control.Button;
 import name.martingeisse.miner.client.util.gui.control.ListView;
 import name.martingeisse.miner.client.util.gui.element.*;
+import name.martingeisse.miner.client.util.gui.element.fill.FillColor;
+import name.martingeisse.miner.client.util.gui.util.Color;
 import name.martingeisse.miner.client.util.gui.util.GuiDumper;
 
 /**
@@ -38,6 +40,9 @@ public class InventoryPage extends AbstractGameGuiPage {
 						GuiDumper.dump(getGui());
 					}
 				};
+				if (dataElement.isEquipped()) {
+					button.setBackgroundElement(new FillColor(Color.GREEN));
+				}
 				return new Margin(button, 3 * Gui.MINIGRID, 0);
 			}
 		};

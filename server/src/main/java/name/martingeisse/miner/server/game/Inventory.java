@@ -80,7 +80,7 @@ public final class Inventory {
 	public List<PlayerInventorySlotRow> listAll() {
 		final QPlayerInventorySlotRow qpis = QPlayerInventorySlotRow.PlayerInventorySlot;
 		try (PostgresConnection connection = Databases.main.newConnection()) {
-			return connection.query().select(qpis).from(qpis).where(qpis.playerId.eq(playerId)).orderBy(qpis.equipped.asc(), qpis.id.asc()).fetch();
+			return connection.query().select(qpis).from(qpis).where(qpis.playerId.eq(playerId)).orderBy(qpis.id.asc()).fetch();
 		}
 	}
 

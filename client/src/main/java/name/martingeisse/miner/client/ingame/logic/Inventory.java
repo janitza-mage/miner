@@ -15,11 +15,7 @@ public final class Inventory {
 
 	public static final Inventory INSTANCE = new Inventory();
 
-	private ImmutableList<InventorySlot> slots = ImmutableList.of(
-		new InventorySlot("Eins"),
-		new InventorySlot("Zwei"),
-		new InventorySlot("Drei")
-	);
+	private ImmutableList<InventorySlot> slots = ImmutableList.of();
 
 	public ImmutableList<InventorySlot> getSlots() {
 		return slots;

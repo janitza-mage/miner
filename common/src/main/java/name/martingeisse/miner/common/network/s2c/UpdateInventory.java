@@ -40,11 +40,13 @@ public final class UpdateInventory extends Message {
 		private final long id;
 		private final String name;
 		private final int quantity;
+		private final boolean equipped;
 
-		public Element(long id, String name, int quantity) {
+		public Element(long id, String name, int quantity, boolean equipped) {
 			this.id = id;
 			this.name = name;
 			this.quantity = quantity;
+			this.equipped = equipped;
 		}
 
 		public long getId() {
@@ -59,14 +61,19 @@ public final class UpdateInventory extends Message {
 			return quantity;
 		}
 
+		public boolean isEquipped() {
+			return equipped;
+		}
+
 		public void encode(ByteBuf buffer) {
 			buffer.writeLong(id);
 			BufferUtil.encodeString(name, buffer);
 			buffer.writeInt(quantity);
+			buffer.writeBoolean(equipped);
 		}
 
 		public static Element decode(ByteBuf buffer) {
-			return new Element(buffer.readLong(), BufferUtil.decodeString(buffer), buffer.readInt());
+			return new Element(buffer.readLong(), BufferUtil.decodeString(buffer), buffer.readInt(), buffer.readBoolean());
 		}
 
 	}

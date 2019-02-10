@@ -42,7 +42,9 @@ public class MessageFrameHandler extends AbstractFrameHandler {
 				UpdateInventory message = (UpdateInventory) untypedMessage;
 				List<InventorySlot> slots = new ArrayList<>();
 				for (UpdateInventory.Element element : message.getElements()) {
-					slots.add(new InventorySlot(element.getId() + ": " + element.getName() + " (" + element.getQuantity() + ")"));
+					slots.add(new InventorySlot(
+						element.getId() + ": " + element.getName() + " (" + element.getQuantity() + ")",
+						element.isEquipped()));
 				}
 				Inventory.INSTANCE.setSlots(ImmutableList.copyOf(slots));
 

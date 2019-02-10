@@ -10,13 +10,19 @@ package name.martingeisse.miner.client.ingame.logic;
 public final class InventorySlot {
 
 	private final String name;
+	private boolean equipped;
 
-	public InventorySlot(String name) {
+	public InventorySlot(String name, boolean equipped) {
 		this.name = name;
+		this.equipped = equipped;
 	}
 
 	public String getName() {
 		return name;
+	}
+
+	public boolean isEquipped() {
+		return equipped;
 	}
 
 }
