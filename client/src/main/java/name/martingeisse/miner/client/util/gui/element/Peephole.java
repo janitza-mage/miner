@@ -17,7 +17,7 @@ import org.lwjgl.opengl.GL11;
  * element gets requested the same size (or alternatively, a specified fixed size), but its resulting actual size is
  * ignored. The wrapped element can be shifted around relative to the peephole using an (x, y) displacement, with
  * (0, 0) meaning that the top-left corners of both elements match.
- *
+ * <p>
  * TODO current clipping state should be handled by the GL worker system to allow different work units to cooperate
  */
 public final class Peephole extends AbstractWrapperElement {
@@ -137,10 +137,28 @@ public final class Peephole extends AbstractWrapperElement {
 
 	@Override
 	public void handleEvent(GuiEvent event) {
-		if (event == GuiEvent.DRAW && clip) {
-			getGui().getGlWorkerLoop().schedule(preClipWorkUnit);
-			super.handleEvent(event);
-			getGui().getGlWorkerLoop().schedule(postClipWorkUnit);
+		if (clip) {
+			switch (event) {
+
+				case DRAW:
+					getGui().getGlWorkerLoop().schedule(preClipWorkUnit);
+					super.handleEvent(event);
+					getGui().getGlWorkerLoop().schedule(postClipWorkUnit);
+					break;
+
+				case MOUSE_MOVED:
+				case MOUSE_BUTTON_PRESSED:
+				case MOUSE_BUTTON_RELEASED:
+					if (isMouseInside()) {
+						super.handleEvent(event);
+					}
+					break;
+
+				default:
+					super.handleEvent(event);
+					break;
+
+			}
 		} else {
 			super.handleEvent(event);
 		}
