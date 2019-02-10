@@ -28,8 +28,8 @@ import name.martingeisse.miner.common.collision.SingleCubeCollider;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.RectangularRegion;
 import name.martingeisse.miner.common.geometry.vector.Vector3i;
-import name.martingeisse.miner.common.network.c2s.CubeModification;
 import name.martingeisse.miner.common.network.c2s.DigNotification;
+import name.martingeisse.miner.common.network.c2s.PlaceCube;
 import name.martingeisse.miner.common.util.ProfilingHelper;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -49,7 +49,6 @@ import static org.lwjgl.util.glu.GLU.gluPerspective;
 
 /**
  * TODO: document me
- *
  */
 public class CubeWorldHandler implements IFrameHandler {
 
@@ -173,7 +172,7 @@ public class CubeWorldHandler implements IFrameHandler {
 	/**
 	 * The sectionLoadHandler -- checks often (100 ms), but doesn't re-request frequently (5 sec)
 	 * to avoid re-requesting a section again and again while the server is loading it.
-	 *
+	 * <p>
 	 * TODO should be resettable for edge cases where frequent reloading is needed, such as
 	 * falling down from high places.
 	 * This handler checks if sections must be loaded.
@@ -197,7 +196,8 @@ public class CubeWorldHandler implements IFrameHandler {
 
 	/**
 	 * Constructor.
-	 * @param width the width of the framebuffer
+	 *
+	 * @param width  the width of the framebuffer
 	 * @param height the height of the framebuffer
 	 * @throws IOException on I/O errors while loading the textures
 	 */
@@ -232,6 +232,7 @@ public class CubeWorldHandler implements IFrameHandler {
 
 	/**
 	 * Getter method for the resources.
+	 *
 	 * @return the resources
 	 */
 	public MinerResources getResources() {
@@ -240,6 +241,7 @@ public class CubeWorldHandler implements IFrameHandler {
 
 	/**
 	 * Getter method for the currentCubeType.
+	 *
 	 * @return the currentCubeType
 	 */
 	public byte getCurrentCubeType() {
@@ -248,6 +250,7 @@ public class CubeWorldHandler implements IFrameHandler {
 
 	/**
 	 * Getter method for the workingSet.
+	 *
 	 * @return the workingSet
 	 */
 	public WorldWorkingSet getWorkingSet() {
@@ -256,6 +259,7 @@ public class CubeWorldHandler implements IFrameHandler {
 
 	/**
 	 * Getter method for the player.
+	 *
 	 * @return the player
 	 */
 	public Player getPlayer() {
@@ -264,6 +268,7 @@ public class CubeWorldHandler implements IFrameHandler {
 
 	/**
 	 * Getter method for the playerProxies.
+	 *
 	 * @return the playerProxies
 	 */
 	public List<PlayerProxy> getPlayerProxies() {
@@ -272,6 +277,7 @@ public class CubeWorldHandler implements IFrameHandler {
 
 	/**
 	 * Setter method for the playerProxies.
+	 *
 	 * @param playerProxies the playerProxies to set
 	 */
 	public void setPlayerProxies(final List<PlayerProxy> playerProxies) {
@@ -439,9 +445,7 @@ public class CubeWorldHandler implements IFrameHandler {
 							}
 
 							if (!new SingleCubeCollider(new Vector3i(x, y, z)).collides(player.createCollisionRegion())) {
-								CubeModification.Builder builder = new CubeModification.Builder();
-								builder.add(x, y, z, effectiveCubeType);
-								ClientEndpoint.INSTANCE.send(builder.build());
+								ClientEndpoint.INSTANCE.send(new PlaceCube(new Vector3i(x, y, z), effectiveCubeType));
 							}
 
 							// cooldownFinishTime = now + 1000;

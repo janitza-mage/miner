@@ -11,7 +11,7 @@ import com.google.common.collect.ImmutableMap;
 import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.vector.Vector3i;
-import name.martingeisse.miner.common.network.c2s.CubeModification;
+import name.martingeisse.miner.common.network.c2s.PlaceCube;
 import name.martingeisse.miner.common.network.s2c.InteractiveSectionDataResponse;
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
@@ -26,7 +26,10 @@ import name.martingeisse.miner.server.world.generate.TerrainGenerator;
 import name.martingeisse.miner.server.world.storage.CassandraSectionStorage;
 import org.apache.log4j.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -181,17 +184,13 @@ public final class WorldSubsystem {
 	// --- modifications
 	//
 
-	public void placeCube(CubeModification message) {
-		List<Vector3i> affectedPositions = new ArrayList<>();
-		for (CubeModification.Element element : message.getElements()) {
-			Vector3i position = element.getPosition();
-			SectionId sectionId = SectionId.fromPosition(element.getPosition());
-			SectionDataId sectionDataId = new SectionDataId(sectionId, SectionDataType.DEFINITIVE);
-			SectionCubesCacheEntry sectionDataCacheEntry = (SectionCubesCacheEntry) workingSet.get(sectionDataId);
-			sectionDataCacheEntry.setCubeAbsolute(position, element.getCubeType());
-			affectedPositions.add(element.getPosition());
-		}
-		notifyModificationListenersAboutModifiedPositions(ImmutableList.copyOf(affectedPositions));
+	public void placeCube(PlaceCube message) {
+		Vector3i position = message.getPosition();
+		SectionId sectionId = SectionId.fromPosition(position);
+		SectionDataId sectionDataId = new SectionDataId(sectionId, SectionDataType.DEFINITIVE);
+		SectionCubesCacheEntry sectionDataCacheEntry = (SectionCubesCacheEntry) workingSet.get(sectionDataId);
+		sectionDataCacheEntry.setCubeAbsolute(position, message.getCubeType());
+		notifyModificationListenersAboutModifiedPositions(ImmutableList.of(position));
 	}
 
 	public void dig(Player player, Vector3i position) {

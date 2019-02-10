@@ -212,9 +212,9 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 				avatar.setPosition(message.getPosition());
 				avatar.setOrientation(message.getOrientation());
 			}
-		} else if (untypedMessage instanceof CubeModification) {
+		} else if (untypedMessage instanceof PlaceCube) {
 
-			server.getWorldSubsystem().placeCube((CubeModification) untypedMessage);
+			server.getWorldSubsystem().placeCube((PlaceCube) untypedMessage);
 
 		} else if (untypedMessage instanceof InteractiveSectionDataRequest) {
 

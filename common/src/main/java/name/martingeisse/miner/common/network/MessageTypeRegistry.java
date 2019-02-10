@@ -34,7 +34,7 @@ final class MessageTypeRegistry {
 		register(DeletePlayerRequest.class, DeletePlayerRequest::decodeBody);
 
 		// other client-to-server messages
-		register(CubeModification.class, CubeModification::decodeBody);
+		register(PlaceCube.class, PlaceCube::decodeBody);
 		register(DigNotification.class, DigNotification::decodeBody);
 		register(ResumePlayer.class, ResumePlayer::decodeBody);
 		register(UpdatePosition.class, UpdatePosition::decodeBody);
