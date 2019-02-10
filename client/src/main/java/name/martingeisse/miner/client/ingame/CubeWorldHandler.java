@@ -444,7 +444,7 @@ public class CubeWorldHandler implements IFrameHandler {
 								effectiveCubeType = currentCubeType;
 							}
 
-							if (!new SingleCubeCollider(new Vector3i(x, y, z)).collides(player.createCollisionRegion())) {
+							if (!new SingleCubeCollider(new Vector3i(x, y, z)).collides(player.createDetailCollisionRegion())) {
 								ClientEndpoint.INSTANCE.send(new PlaceCube(new Vector3i(x, y, z), effectiveCubeType));
 							}
 
