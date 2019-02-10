@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.server.game;
+package name.martingeisse.miner.common.logic;
 
 import java.util.HashMap;
 import java.util.Map;

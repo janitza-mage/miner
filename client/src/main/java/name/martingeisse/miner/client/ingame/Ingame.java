@@ -6,6 +6,7 @@ package name.martingeisse.miner.client.ingame;
 
 import name.martingeisse.miner.client.Main;
 import name.martingeisse.miner.client.MinerResources;
+import name.martingeisse.miner.client.ingame.hud.EquippedItemHud;
 import name.martingeisse.miner.client.ingame.hud.FlashMessageHandler;
 import name.martingeisse.miner.client.ingame.hud.FpsPanel;
 import name.martingeisse.miner.client.ingame.hud.SelectedCubeHud;
@@ -100,7 +101,8 @@ public final class Ingame {
 		handlerList.add(cubeWorldHandler);
 		handlerList.add(new SendPositionToServerHandler(cubeWorldHandler.getPlayer()));
 		handlerList.add(new MessageFrameHandler());
-		handlerList.add(new SelectedCubeHud(cubeWorldHandler.getResources().getCubeTextures(), cubeWorldHandler::getCurrentCubeType));
+		// handlerList.add(new SelectedCubeHud(cubeWorldHandler.getResources().getCubeTextures(), cubeWorldHandler::getCurrentCubeType));
+		handlerList.add(new EquippedItemHud());
 		handlerList.add(flashMessageHandler);
 		handlerList.add(new FpsPanel());
 		handlerList.add(gameMenuHandler);

@@ -6,11 +6,12 @@
 
 package name.martingeisse.miner.server.game;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.sql.dml.SQLDeleteClause;
 import com.querydsl.sql.dml.SQLInsertClause;
 import com.querydsl.sql.dml.SQLUpdateClause;
 import com.querydsl.sql.postgresql.PostgreSQLQuery;
+import name.martingeisse.miner.common.logic.EquipmentSlot;
+import name.martingeisse.miner.common.logic.ItemType;
 import name.martingeisse.miner.server.Databases;
 import name.martingeisse.miner.server.postgres_entities.PlayerInventorySlotRow;
 import name.martingeisse.miner.server.postgres_entities.QPlayerInventorySlotRow;

@@ -7,6 +7,7 @@
 package name.martingeisse.miner.server.game;
 
 import name.martingeisse.miner.common.geometry.vector.Vector3i;
+import name.martingeisse.miner.common.logic.ItemType;
 import org.apache.log4j.Logger;
 
 /**

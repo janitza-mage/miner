@@ -38,13 +38,13 @@ public final class UpdateInventory extends Message {
 	public static final class Element {
 
 		private final long id;
-		private final String name;
+		private final String type;
 		private final int quantity;
 		private final boolean equipped;
 
-		public Element(long id, String name, int quantity, boolean equipped) {
+		public Element(long id, String type, int quantity, boolean equipped) {
 			this.id = id;
-			this.name = name;
+			this.type = type;
 			this.quantity = quantity;
 			this.equipped = equipped;
 		}
@@ -53,8 +53,8 @@ public final class UpdateInventory extends Message {
 			return id;
 		}
 
-		public String getName() {
-			return name;
+		public String getType() {
+			return type;
 		}
 
 		public int getQuantity() {
@@ -67,7 +67,7 @@ public final class UpdateInventory extends Message {
 
 		public void encode(ByteBuf buffer) {
 			buffer.writeLong(id);
-			BufferUtil.encodeString(name, buffer);
+			BufferUtil.encodeString(type, buffer);
 			buffer.writeInt(quantity);
 			buffer.writeBoolean(equipped);
 		}

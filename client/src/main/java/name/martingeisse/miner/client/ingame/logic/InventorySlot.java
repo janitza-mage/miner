@@ -12,17 +12,17 @@ import name.martingeisse.miner.common.network.s2c.UpdateInventory;
 public final class InventorySlot {
 
 	private final long id;
-	private final String name;
+	private final String type;
 	private final int quantity;
 	private boolean equipped;
 
 	public InventorySlot(UpdateInventory.Element element) {
-		this(element.getId(), element.getName(), element.getQuantity(), element.isEquipped());
+		this(element.getId(), element.getType(), element.getQuantity(), element.isEquipped());
 	}
 
-	public InventorySlot(long id, String name, int quantity, boolean equipped) {
+	public InventorySlot(long id, String type, int quantity, boolean equipped) {
 		this.id = id;
-		this.name = name;
+		this.type = type;
 		this.quantity = quantity;
 		this.equipped = equipped;
 	}
@@ -31,8 +31,8 @@ public final class InventorySlot {
 		return id;
 	}
 
-	public String getName() {
-		return name;
+	public String getType() {
+		return type;
 	}
 
 	public int getQuantity() {
@@ -45,6 +45,7 @@ public final class InventorySlot {
 
 	public void setEquipped(boolean equipped) {
 		this.equipped = equipped;
+		Inventory.INSTANCE.updateEquippedItems();
 	}
 
 }
