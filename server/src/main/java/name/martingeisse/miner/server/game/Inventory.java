@@ -145,13 +145,17 @@ public final class Inventory {
 	 */
 	public void equip(long id) {
 		final QPlayerInventorySlotRow qpis = QPlayerInventorySlotRow.PlayerInventorySlot;
+		boolean changed;
 		try (PostgresConnection connection = Databases.main.newConnection()) {
+			// TODO unequip other item of the same equipment slot -- but the DB does not know about equipment slots!?
 			SQLUpdateClause update = connection.update(qpis);
 			update.where(qpis.playerId.eq(playerId), qpis.equipped.isFalse(), qpis.id.eq(id));
 			update.set(qpis.equipped, true);
-			update.execute();
+			changed = (update.execute() > 0);
 		}
-		player.notifyListeners(PlayerListener::onInventoryChanged);
+		if (changed) {
+			player.notifyListeners(PlayerListener::onInventoryChanged);
+		}
 	}
 
 	/**
@@ -161,13 +165,16 @@ public final class Inventory {
 	 */
 	public void unequip(long id) {
 		final QPlayerInventorySlotRow qpis = QPlayerInventorySlotRow.PlayerInventorySlot;
+		boolean changed;
 		try (PostgresConnection connection = Databases.main.newConnection()) {
 			SQLUpdateClause update = connection.update(qpis);
 			update.where(qpis.playerId.eq(playerId), qpis.equipped.isTrue(), qpis.id.eq(id));
 			update.set(qpis.equipped, false);
-			update.execute();
+			changed = (update.execute() > 0);
 		}
-		player.notifyListeners(PlayerListener::onInventoryChanged);
+		if (changed) {
+			player.notifyListeners(PlayerListener::onInventoryChanged);
+		}
 	}
 
 	/**

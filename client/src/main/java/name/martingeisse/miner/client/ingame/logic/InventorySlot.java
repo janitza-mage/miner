@@ -4,25 +4,47 @@
  */
 package name.martingeisse.miner.client.ingame.logic;
 
+import name.martingeisse.miner.common.network.s2c.UpdateInventory;
+
 /**
  *
  */
 public final class InventorySlot {
 
+	private final long id;
 	private final String name;
+	private final int quantity;
 	private boolean equipped;
 
-	public InventorySlot(String name, boolean equipped) {
+	public InventorySlot(UpdateInventory.Element element) {
+		this(element.getId(), element.getName(), element.getQuantity(), element.isEquipped());
+	}
+
+	public InventorySlot(long id, String name, int quantity, boolean equipped) {
+		this.id = id;
 		this.name = name;
+		this.quantity = quantity;
 		this.equipped = equipped;
+	}
+
+	public long getId() {
+		return id;
 	}
 
 	public String getName() {
 		return name;
 	}
 
+	public int getQuantity() {
+		return quantity;
+	}
+
 	public boolean isEquipped() {
 		return equipped;
+	}
+
+	public void setEquipped(boolean equipped) {
+		this.equipped = equipped;
 	}
 
 }

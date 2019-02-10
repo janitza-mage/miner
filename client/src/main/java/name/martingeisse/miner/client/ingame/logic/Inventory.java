@@ -27,7 +27,8 @@ public final class Inventory {
 		}
 		this.slots = slots;
 		if (Ingame.get().isGuiOpen() && Ingame.get().getGui().getRootElement() instanceof InventoryPage) {
-			Ingame.get().getGui().requestLayout();
+			InventoryPage inventoryPage = (InventoryPage)Ingame.get().getGui().getRootElement();
+			inventoryPage.refreshInventory();
 		}
 	}
 

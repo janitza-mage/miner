@@ -10,13 +10,16 @@ import com.querydsl.sql.dml.SQLUpdateClause;
 import name.martingeisse.miner.common.geometry.angle.EulerAngles;
 import name.martingeisse.miner.common.geometry.vector.Vector3d;
 import name.martingeisse.miner.common.network.Message;
+import name.martingeisse.miner.common.network.c2s.EquipMessage;
 import name.martingeisse.miner.server.Databases;
 import name.martingeisse.miner.server.network.Avatar;
+import name.martingeisse.miner.server.network.StackdSession;
 import name.martingeisse.miner.server.postgres_entities.PlayerRow;
 import name.martingeisse.miner.server.postgres_entities.QPlayerAwardedAchievementRow;
 import name.martingeisse.miner.server.postgres_entities.QPlayerRow;
 import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
 import name.martingeisse.miner.server.util.database.postgres.PostgresUtil;
+import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,6 +30,8 @@ import java.util.function.Consumer;
  * TODO rename this class to Player.
  */
 public final class Player {
+
+	private static Logger logger = Logger.getLogger(StackdSession.class);
 
 	private final long id;
 	private final ConcurrentMap<PlayerListener, PlayerListener> listeners = new ConcurrentHashMap<>();
@@ -83,7 +88,18 @@ public final class Player {
 	//
 
 	public void handleMessage(Message untypedMessage) {
+		if (untypedMessage instanceof EquipMessage) {
 
+			EquipMessage message = (EquipMessage)untypedMessage;
+			if (message.isUnequip()) {
+				inventory.unequip(message.getInventorySlotId());
+			} else {
+				inventory.equip(message.getInventorySlotId());
+			}
+
+		} else {
+			logger.error("unknown message routed to Player object: " + untypedMessage);
+		}
 	}
 
 	//

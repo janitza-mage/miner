@@ -9,6 +9,7 @@ package name.martingeisse.miner.client.ingame.gui;
 import name.martingeisse.miner.client.ingame.Ingame;
 import name.martingeisse.miner.client.ingame.logic.Inventory;
 import name.martingeisse.miner.client.ingame.logic.InventorySlot;
+import name.martingeisse.miner.client.network.ClientEndpoint;
 import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.control.Button;
@@ -17,6 +18,7 @@ import name.martingeisse.miner.client.util.gui.element.*;
 import name.martingeisse.miner.client.util.gui.element.fill.FillColor;
 import name.martingeisse.miner.client.util.gui.util.Color;
 import name.martingeisse.miner.client.util.gui.util.GuiDumper;
+import name.martingeisse.miner.common.network.c2s.EquipMessage;
 
 /**
  * The "login" menu page.
@@ -25,19 +27,21 @@ import name.martingeisse.miner.client.util.gui.util.GuiDumper;
  */
 public class InventoryPage extends AbstractGameGuiPage {
 
+	private final ListView<InventorySlot> slotListView;
+
 	/**
 	 * Constructor.
 	 */
 	public InventoryPage() {
 		final VerticalLayout menu = new VerticalLayout();
 
-		ListView<InventorySlot> slotListView = new ListView<InventorySlot>(Inventory.INSTANCE::getSlots) {
+		slotListView = new ListView<InventorySlot>(Inventory.INSTANCE::getSlots) {
 			@Override
 			protected GuiElement createGuiElement(InventorySlot dataElement) {
-				Button button = new GameGuiButton(dataElement.getName()) {
+				Button button = new GameGuiButton(dataElement.getName() + " (" + dataElement.getQuantity() + ")") {
 					@Override
 					protected void onClick() {
-						GuiDumper.dump(getGui());
+						ClientEndpoint.INSTANCE.send(new EquipMessage(dataElement.getId(), false));
 					}
 				};
 				if (dataElement.isEquipped()) {
@@ -57,6 +61,10 @@ public class InventoryPage extends AbstractGameGuiPage {
 		});
 
 		initializePage(null, new Margin(menu, 30 * Gui.GRID, 30 * Gui.GRID));
+	}
+
+	public void refreshInventory() {
+		slotListView.update();
 	}
 
 }
