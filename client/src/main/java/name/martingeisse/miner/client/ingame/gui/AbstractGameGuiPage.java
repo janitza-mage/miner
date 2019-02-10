@@ -51,7 +51,9 @@ public class AbstractGameGuiPage extends Page {
 					break;
 
 				case Keyboard.KEY_I:
-					if (!(this instanceof InventoryPage)) {
+					if (this instanceof InventoryPage) {
+						Ingame.get().closeGui();
+					} else {
 						Ingame.get().openGui(new InventoryPage());
 					}
 					break;
