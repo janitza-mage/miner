@@ -17,7 +17,8 @@ public enum ItemType {
 	STONE,
 	DIRT,
 	COAL,
-	SAND;
+	SAND,
+	BOOTS(EquipmentSlot.FOOT);
 
 	/**
 	 * the typeByDisplayName
@@ -40,28 +41,28 @@ public enum ItemType {
 		return typeByDisplayName.get(displayName);
 	}
 	
-	/**
-	 * the displayName
-	 */
 	private final String displayName;
+	private final EquipmentSlot equipmentSlot;
 
-	/**
-	 * Constructor.
-	 */
 	private ItemType() {
-		this(null);
+		this(null, EquipmentSlot.HAND);
 	}
-	
-	/**
-	 * Constructor.
-	 * @param displayName the displayed item name
-	 */
+
+	private ItemType(EquipmentSlot equipmentSlot) {
+		this(null, equipmentSlot);
+	}
+
 	private ItemType(String displayName) {
+		this(displayName, EquipmentSlot.HAND);
+	}
+
+	private ItemType(String displayName, EquipmentSlot equipmentSlot) {
 		if (displayName == null) {
 			this.displayName = generateDisplayName(name());
 		} else {
 			this.displayName = displayName;
 		}
+		this.equipmentSlot = equipmentSlot;
 	}
 
 	/**
@@ -79,5 +80,9 @@ public enum ItemType {
 	public String getDisplayName() {
 		return displayName;
 	}
-	
+
+	public EquipmentSlot getEquipmentSlot() {
+		return equipmentSlot;
+	}
+
 }
