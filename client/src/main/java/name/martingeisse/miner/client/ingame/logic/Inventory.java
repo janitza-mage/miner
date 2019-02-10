@@ -47,7 +47,9 @@ public final class Inventory {
 	void updateEquippedItems() {
 		Map<EquipmentSlot, InventorySlot> map = new HashMap<>();
 		for (InventorySlot slot : slots) {
-			map.put(ItemType.valueOf(slot.getType()).getEquipmentSlot(), slot);
+			if (slot.isEquipped()) {
+				map.put(ItemType.valueOf(slot.getType()).getEquipmentSlot(), slot);
+			}
 		}
 		this.equippedItems = ImmutableMap.copyOf(map);
 	}
