@@ -39,6 +39,7 @@ final class MessageTypeRegistry {
 		register(ResumePlayer.class, ResumePlayer::decodeBody);
 		register(UpdatePosition.class, UpdatePosition::decodeBody);
 		register(InteractiveSectionDataRequest.class, InteractiveSectionDataRequest::decodeBody);
+		register(EquipMessage.class, EquipMessage::decodeBody);
 
 		// server-to-client responses
 		register(OkayResponse.class, OkayResponse::decodeBody);
