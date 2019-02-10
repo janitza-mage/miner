@@ -6,6 +6,7 @@
 
 package name.martingeisse.miner.server.game;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.sql.dml.SQLDeleteClause;
 import com.querydsl.sql.dml.SQLInsertClause;
 import com.querydsl.sql.dml.SQLUpdateClause;
@@ -147,11 +148,23 @@ public final class Inventory {
 		final QPlayerInventorySlotRow qpis = QPlayerInventorySlotRow.PlayerInventorySlot;
 		boolean changed;
 		try (PostgresConnection connection = Databases.main.newConnection()) {
-			// TODO unequip other item of the same equipment slot -- but the DB does not know about equipment slots!?
+
+			// fetch that row
+			PlayerInventorySlotRow row = connection.query().select(qpis).from(qpis).
+				where(qpis.playerId.eq(playerId), qpis.equipped.isFalse(), qpis.id.eq(id)).fetchFirst();
+			if (row == null) {
+				return;
+			}
+
+			// unequip the previously equipped row of the same equipment slot, if any
+			unequip(ItemType.valueOf(row.getType()).getEquipmentSlot());
+
+			// equip the specified slot
 			SQLUpdateClause update = connection.update(qpis);
-			update.where(qpis.playerId.eq(playerId), qpis.equipped.isFalse(), qpis.id.eq(id));
+			update.where(qpis.id.eq(row.getId()));
 			update.set(qpis.equipped, true);
 			changed = (update.execute() > 0);
+
 		}
 		if (changed) {
 			player.notifyListeners(PlayerListener::onInventoryChanged);
@@ -174,6 +187,22 @@ public final class Inventory {
 		}
 		if (changed) {
 			player.notifyListeners(PlayerListener::onInventoryChanged);
+		}
+	}
+
+	/**
+	 * Unequips the equipped item with the specified equipment slot, if any.
+	 *
+	 * In case multiple inventory slots with that equipment slot are equipped (which should not happen), this
+	 * method unequips them all.
+	 */
+	public void unequip(EquipmentSlot equipmentSlot) {
+		List<PlayerInventorySlotRow> rows = listAll();
+		for (PlayerInventorySlotRow row : rows) {
+			ItemType type = ItemType.valueOf(row.getType());
+			if (type.getEquipmentSlot() == equipmentSlot) {
+				unequip(row.getId());
+			}
 		}
 	}
 
