@@ -17,10 +17,8 @@ import java.util.Arrays;
  */
 public class SolidOpaqueCubeType extends CubeType {
 
-	/**
-	 * the cubeFaceTextureIndices
-	 */
 	private final int[] cubeFaceTextureIndices;
+	private String cachedDisplayName;
 
 	/**
 	 * Constructor for cube types that use the same texture all over.
@@ -72,6 +70,14 @@ public class SolidOpaqueCubeType extends CubeType {
 	@Override
 	public boolean collidesWithRegion(final int startX, final int startY, final int startZ, final int endX, final int endY, final int endZ) {
 		return true;
+	}
+
+	@Override
+	public String getDisplayName() {
+		if (cachedDisplayName == null) {
+			cachedDisplayName = CubeTypes.CUBE_TEXTURE_FILENAMES[cubeFaceTextureIndices[0]].replace(".png", "");
+		}
+		return cachedDisplayName;
 	}
 
 }

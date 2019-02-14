@@ -20,27 +20,6 @@ public enum ItemType {
 	SAND,
 	BOOTS(EquipmentSlot.FOOT);
 
-	/**
-	 * the typeByDisplayName
-	 */
-	private static final Map<String, ItemType> typeByDisplayName = new HashMap<String, ItemType>();
-
-	//
-	static {
-		for (ItemType itemType : values()) {
-			typeByDisplayName.put(itemType.getDisplayName(), itemType);
-		}
-	}
-
-	/**
-	 * Returns the item type with the specified display name.
-	 * @param displayName the display name
-	 * @return the item type
-	 */
-	public static ItemType getByDisplayName(String displayName) {
-		return typeByDisplayName.get(displayName);
-	}
-	
 	private final String displayName;
 	private final EquipmentSlot equipmentSlot;
 

@@ -6,12 +6,14 @@
 
 package name.martingeisse.miner.common.cubetype;
 
+import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.RectangularRegion;
+import name.martingeisse.miner.common.logic.EquipmentSlot;
 
 /**
- * Captures information about all cubes using the same cube type
- * index in the data array of a section.
+ * Defines a type of cube to be used in a section. At the same time, this also defines a type of item that can be held
+ * in a player's inventory.
  */
 public abstract class CubeType {
 	
@@ -65,10 +67,10 @@ public abstract class CubeType {
 	 * specially because the engine tries to merge cube faces to large rectangles
 	 * across cubes, but this does not happen for inner polygons.
 	 * 
-	 * This method uses detail coordinates, with {@link StackdConstants#GEOMETRY_DETAIL_FACTOR}
+	 * This method uses detail coordinates, with {@link Constants#GEOMETRY_DETAIL_FACTOR}
 	 * units per cube. The inner polygons are contained in a cube using this cube type, located
 	 * in the range (baseX, baseY, baseZ) to (baseX + df, baseY + df, baseZ + df), with df
-	 * being {@link StackdConstants#GEOMETRY_DETAIL_FACTOR}.
+	 * being {@link Constants#GEOMETRY_DETAIL_FACTOR}.
 	 * 
 	 * @param meshBuilder the mesh builder used to actually add polygons
 	 * @param baseX the base x coordinate of the containing cube
@@ -80,7 +82,7 @@ public abstract class CubeType {
 	
 	/**
 	 * Checks whether a cube of this cube type that lies in the region (0, 0, 0) to
-	 * (df, df, df) with df = {@link StackdConstants#GEOMETRY_DETAIL_FACTOR} collides
+	 * (df, df, df) with df = {@link Constants#GEOMETRY_DETAIL_FACTOR} collides
 	 * with the specified region, which is also expressed in detail coordinates.
 	 * 
 	 * The arguments should be assumed to behave just like a {@link RectangularRegion}.
@@ -101,5 +103,19 @@ public abstract class CubeType {
 	 * @return true if there is any intersection, false if not
 	 */
 	public abstract boolean collidesWithRegion(int startX, int startY, int startZ, int endX, int endY, int endZ);
+
+	/**
+	 * Returns a readable name for this cube type / item type.
+	 */
+	public String getDisplayName() {
+		return "cube";
+	}
+
+	/**
+	 * Returns the equipment slot used when a player equips an item of this type.
+	 */
+	public EquipmentSlot getEquipmentSlot() {
+		return EquipmentSlot.HAND;
+	}
 
 }
