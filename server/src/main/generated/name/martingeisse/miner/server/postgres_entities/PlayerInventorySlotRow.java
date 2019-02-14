@@ -42,7 +42,7 @@ public class PlayerInventorySlotRow implements Serializable {
     /**
      * the type
      */
-    private String type;
+    private Integer type;
 
     /**
      * Getter method for the equipped.
@@ -121,7 +121,7 @@ public class PlayerInventorySlotRow implements Serializable {
      * 
      * @return the type
      */
-    public String getType() {
+    public Integer getType() {
         return type;
     }
 
@@ -130,7 +130,7 @@ public class PlayerInventorySlotRow implements Serializable {
      * 
      * @param type the type to set
      */
-    public void setType(String type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 

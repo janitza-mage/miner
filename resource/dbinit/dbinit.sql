@@ -45,7 +45,7 @@ CREATE UNIQUE INDEX "PlayerAwardedAchievement_main" ON "miner"."PlayerAwardedAch
 CREATE TABLE "miner"."PlayerInventorySlot" (
 	"id" bigserial NOT NULL PRIMARY KEY,
 	"playerId" bigint NOT NULL REFERENCES "miner"."Player" ON DELETE CASCADE,
-	"type" character varying(255) NOT NULL,
+	"type" integer NOT NULL,
 	"quantity" integer NOT NULL CHECK ("quantity" > 0),
 	"equipped" boolean NOT NULL
 );

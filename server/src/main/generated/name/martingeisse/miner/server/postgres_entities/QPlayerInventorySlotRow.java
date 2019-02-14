@@ -4,7 +4,6 @@ import com.querydsl.core.types.Path;
 import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.BooleanPath;
 import com.querydsl.core.types.dsl.NumberPath;
-import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.sql.ColumnMetadata;
 
 import javax.annotation.Generated;
@@ -34,7 +33,7 @@ public class QPlayerInventorySlotRow extends com.querydsl.sql.RelationalPathBase
 
     public final NumberPath<Integer> quantity = createNumber("quantity", Integer.class);
 
-    public final StringPath type = createString("type");
+    public final NumberPath<Integer> type = createNumber("type", Integer.class);
 
     public final com.querydsl.sql.PrimaryKey<PlayerInventorySlotRow> playerInventorySlotPkey = createPrimaryKey(id);
 
@@ -65,7 +64,7 @@ public class QPlayerInventorySlotRow extends com.querydsl.sql.RelationalPathBase
         addMetadata(id, ColumnMetadata.named("id").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
         addMetadata(playerId, ColumnMetadata.named("playerId").withIndex(2).ofType(Types.BIGINT).withSize(19).notNull());
         addMetadata(quantity, ColumnMetadata.named("quantity").withIndex(4).ofType(Types.INTEGER).withSize(10).notNull());
-        addMetadata(type, ColumnMetadata.named("type").withIndex(3).ofType(Types.VARCHAR).withSize(255).notNull());
+        addMetadata(type, ColumnMetadata.named("type").withIndex(3).ofType(Types.INTEGER).withSize(10).notNull());
     }
 
 }
