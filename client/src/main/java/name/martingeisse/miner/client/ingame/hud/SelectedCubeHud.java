@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -11,7 +11,6 @@ import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
 import name.martingeisse.miner.client.util.lwjgl.StackdTexture;
 import name.martingeisse.miner.common.cubetype.CubeType;
-import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -31,44 +30,47 @@ public final class SelectedCubeHud extends AbstractFrameHandler {
 	private final GlWorkUnit glWorkUnit = new GlWorkUnit() {
 		@Override
 		public void execute() {
-			
+
 			glMatrixMode(GL_MODELVIEW);
 			glLoadIdentity();
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
 			glEnable(GL_TEXTURE_2D);
-			
+
 			double w = 1.0, h = 1.6, d = 0.5;
 			double x = -0.8, y = 0.8;
 			double scale = 0.10;
 			w *= scale;
 			h *= scale;
 			d *= scale;
-			
-			CubeType cubeType = CubeTypes.CUBE_TYPES[selectedCubeTypeGetter.getSelectedCubeType()];
+
+			CubeType cubeType = selectedCubeTypeGetter.getSelectedCubeType();
+			if (cubeType == null) {
+				return;
+			}
 
 			textures[cubeType.getCubeFaceTextureIndex(AxisAlignedDirection.POSITIVE_Z)].glBindTexture();
 			glBegin(GL_QUADS);
 			glTexCoord2f(0.0f, 0.0f);
-			glVertex2d(x, y-h);
+			glVertex2d(x, y - h);
 			glTexCoord2f(0.0f, 1.0f);
 			glVertex2d(x, y);
 			glTexCoord2f(1.0f, 1.0f);
-			glVertex2d(x-w, y+d);
+			glVertex2d(x - w, y + d);
 			glTexCoord2f(1.0f, 0.0f);
-			glVertex2d(x-w, y-h+d);
+			glVertex2d(x - w, y - h + d);
 			glEnd();
-			
+
 			textures[cubeType.getCubeFaceTextureIndex(AxisAlignedDirection.POSITIVE_X)].glBindTexture();
 			glBegin(GL_QUADS);
 			glTexCoord2f(0.0f, 0.0f);
 			glVertex2d(x, y);
 			glTexCoord2f(0.0f, 1.0f);
-			glVertex2d(x, y-h);
+			glVertex2d(x, y - h);
 			glTexCoord2f(1.0f, 1.0f);
-			glVertex2d(x+w, y-h+d);
+			glVertex2d(x + w, y - h + d);
 			glTexCoord2f(1.0f, 0.0f);
-			glVertex2d(x+w, y+d);
+			glVertex2d(x + w, y + d);
 			glEnd();
 
 			textures[cubeType.getCubeFaceTextureIndex(AxisAlignedDirection.POSITIVE_Y)].glBindTexture();
@@ -76,13 +78,13 @@ public final class SelectedCubeHud extends AbstractFrameHandler {
 			glTexCoord2f(0.0f, 0.0f);
 			glVertex2d(x, y);
 			glTexCoord2f(0.0f, 1.0f);
-			glVertex2d(x+w, y+d);
+			glVertex2d(x + w, y + d);
 			glTexCoord2f(1.0f, 1.0f);
-			glVertex2d(x, y+d+d);
+			glVertex2d(x, y + d + d);
 			glTexCoord2f(1.0f, 0.0f);
-			glVertex2d(x-w, y+d);
+			glVertex2d(x - w, y + d);
 			glEnd();
-			
+
 		}
 	};
 
@@ -98,7 +100,7 @@ public final class SelectedCubeHud extends AbstractFrameHandler {
 	public StackdTexture[] getTextures() {
 		return textures;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.client.frame.AbstractFrameHandler#draw(name.martingeisse.glworker.GlWorkerLoop)
 	 */
@@ -108,7 +110,7 @@ public final class SelectedCubeHud extends AbstractFrameHandler {
 	}
 
 	public interface SelectedCubeTypeGetter {
-		byte getSelectedCubeType();
+		CubeType getSelectedCubeType();
 	}
 
 }

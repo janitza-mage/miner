@@ -10,6 +10,8 @@ import name.martingeisse.miner.client.ingame.hud.EquippedItemHud;
 import name.martingeisse.miner.client.ingame.hud.FlashMessageHandler;
 import name.martingeisse.miner.client.ingame.hud.FpsPanel;
 import name.martingeisse.miner.client.ingame.hud.SelectedCubeHud;
+import name.martingeisse.miner.client.ingame.logic.Inventory;
+import name.martingeisse.miner.client.ingame.logic.InventorySlot;
 import name.martingeisse.miner.client.ingame.network.IngameMessageRouter;
 import name.martingeisse.miner.client.ingame.network.SectionGridLoader;
 import name.martingeisse.miner.client.ingame.network.SendPositionToServerHandler;
@@ -20,6 +22,7 @@ import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.GuiFrameHandler;
 import name.martingeisse.miner.client.util.gui.control.Page;
 import name.martingeisse.miner.client.util.lwjgl.MouseUtil;
+import name.martingeisse.miner.common.logic.EquipmentSlot;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.c2s.ResumePlayer;
 import org.lwjgl.opengl.Display;
@@ -102,6 +105,10 @@ public final class Ingame {
 		handlerList.add(new SendPositionToServerHandler(cubeWorldHandler.getPlayer()));
 		handlerList.add(new MessageFrameHandler());
 		// handlerList.add(new SelectedCubeHud(cubeWorldHandler.getResources().getCubeTextures(), cubeWorldHandler::getCurrentCubeType));
+		handlerList.add(new SelectedCubeHud(MinerResources.getInstance().getCubeTextures(), () -> {
+			InventorySlot slot = Inventory.INSTANCE.getEquippedItems().get(EquipmentSlot.HAND);
+			return (slot == null ? null : slot.getType());
+		}));
 		handlerList.add(new EquippedItemHud());
 		handlerList.add(flashMessageHandler);
 		handlerList.add(new FpsPanel());
