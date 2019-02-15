@@ -64,7 +64,7 @@ public final class Inventory {
 		try (PostgresConnection connection = Databases.main.newConnection()) {
 			SQLInsertClause insert = connection.insert(qpis);
 			insert.set(qpis.playerId, playerId);
-			insert.set(qpis.type, type.name());
+			insert.set(qpis.type, type.ordinal());
 			insert.set(qpis.quantity, quantity);
 			insert.set(qpis.equipped, false);
 			insert.execute();
@@ -158,7 +158,7 @@ public final class Inventory {
 			}
 
 			// unequip the previously equipped row of the same equipment slot, if any
-			unequip(ItemType.valueOf(row.getType()).getEquipmentSlot());
+			unequip(ItemType.values()[row.getType()].getEquipmentSlot());
 
 			// equip the specified slot
 			SQLUpdateClause update = connection.update(qpis);
@@ -200,7 +200,7 @@ public final class Inventory {
 	public void unequip(EquipmentSlot equipmentSlot) {
 		List<PlayerInventorySlotRow> rows = listAll();
 		for (PlayerInventorySlotRow row : rows) {
-			ItemType type = ItemType.valueOf(row.getType());
+			ItemType type = ItemType.values()[row.getType()];
 			if (type.getEquipmentSlot() == equipmentSlot) {
 				unequip(row.getId());
 			}
@@ -218,7 +218,7 @@ public final class Inventory {
 		final QPlayerInventorySlotRow qpis = QPlayerInventorySlotRow.PlayerInventorySlot;
 		try (PostgresConnection connection = Databases.main.newConnection()) {
 			PostgreSQLQuery<Long> query = connection.query().select(qpis.id).from(qpis);
-			query.where(qpis.playerId.eq(playerId), qpis.equipped.eq(equipped), qpis.type.eq(type.name()));
+			query.where(qpis.playerId.eq(playerId), qpis.equipped.eq(equipped), qpis.type.eq(type.ordinal()));
 			Long result = query.fetchFirst();
 			return (result == null ? -1 : result);
 		}

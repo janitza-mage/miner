@@ -53,7 +53,7 @@ public final class EquippedItemHud extends AbstractFrameHandler {
 	@Override
 	public void draw(GlWorkerLoop glWorkerLoop) {
 		InventorySlot slot = Inventory.INSTANCE.getEquippedItems().get(EquipmentSlot.HAND);
-		this.text = (slot == null ? "" : (slot.getType() + " (" + slot.getQuantity() + ")"));
+		this.text = (slot == null ? "" : (slot.getType().getDisplayName() + " (" + slot.getQuantity() + ")"));
 		glWorkerLoop.schedule(glWorkUnit);
 	}
 

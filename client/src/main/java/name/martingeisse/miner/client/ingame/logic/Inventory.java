@@ -9,7 +9,6 @@ import com.google.common.collect.ImmutableMap;
 import name.martingeisse.miner.client.ingame.Ingame;
 import name.martingeisse.miner.client.ingame.gui.InventoryPage;
 import name.martingeisse.miner.common.logic.EquipmentSlot;
-import name.martingeisse.miner.common.logic.ItemType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,7 +38,7 @@ public final class Inventory {
 		this.slots = slots;
 		updateEquippedItems();
 		if (Ingame.get().isGuiOpen() && Ingame.get().getGui().getRootElement() instanceof InventoryPage) {
-			InventoryPage inventoryPage = (InventoryPage)Ingame.get().getGui().getRootElement();
+			InventoryPage inventoryPage = (InventoryPage) Ingame.get().getGui().getRootElement();
 			inventoryPage.refreshInventory();
 		}
 	}
@@ -48,7 +47,7 @@ public final class Inventory {
 		Map<EquipmentSlot, InventorySlot> map = new HashMap<>();
 		for (InventorySlot slot : slots) {
 			if (slot.isEquipped()) {
-				map.put(ItemType.valueOf(slot.getType()).getEquipmentSlot(), slot);
+				map.put(slot.getType().getEquipmentSlot(), slot);
 			}
 		}
 		this.equippedItems = ImmutableMap.copyOf(map);

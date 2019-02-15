@@ -7,6 +7,7 @@
 package name.martingeisse.miner.server.network;
 
 import com.google.common.collect.ImmutableList;
+import name.martingeisse.miner.common.logic.ItemType;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.c2s.*;
 import name.martingeisse.miner.common.network.c2s.request.CreatePlayerRequest;
@@ -168,7 +169,8 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 		List<PlayerInventorySlotRow> slots = player.getInventory().listAll();
 		List<UpdateInventory.Element> updateElements = new ArrayList<>();
 		for (PlayerInventorySlotRow slot : slots) {
-			updateElements.add(new UpdateInventory.Element(slot.getId(), slot.getType(), slot.getQuantity(), slot.getEquipped()));
+			ItemType type = ItemType.values()[slot.getType()];
+			updateElements.add(new UpdateInventory.Element(slot.getId(), type, slot.getQuantity(), slot.getEquipped()));
 		}
 		send(new UpdateInventory(ImmutableList.copyOf(updateElements)));
 	}
@@ -231,7 +233,7 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 
 		} else if (untypedMessage instanceof EquipMessage) {
 
-			EquipMessage message = (EquipMessage)untypedMessage;
+			EquipMessage message = (EquipMessage) untypedMessage;
 			player.handleMessage(message);
 
 		} else {

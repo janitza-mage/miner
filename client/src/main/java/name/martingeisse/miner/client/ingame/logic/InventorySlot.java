@@ -4,6 +4,7 @@
  */
 package name.martingeisse.miner.client.ingame.logic;
 
+import name.martingeisse.miner.common.logic.ItemType;
 import name.martingeisse.miner.common.network.s2c.UpdateInventory;
 
 /**
@@ -12,7 +13,7 @@ import name.martingeisse.miner.common.network.s2c.UpdateInventory;
 public final class InventorySlot {
 
 	private final long id;
-	private final String type;
+	private final ItemType type;
 	private final int quantity;
 	private boolean equipped;
 
@@ -20,7 +21,7 @@ public final class InventorySlot {
 		this(element.getId(), element.getType(), element.getQuantity(), element.isEquipped());
 	}
 
-	public InventorySlot(long id, String type, int quantity, boolean equipped) {
+	public InventorySlot(long id, ItemType type, int quantity, boolean equipped) {
 		this.id = id;
 		this.type = type;
 		this.quantity = quantity;
@@ -31,7 +32,7 @@ public final class InventorySlot {
 		return id;
 	}
 
-	public String getType() {
+	public ItemType getType() {
 		return type;
 	}
 

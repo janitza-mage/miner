@@ -39,7 +39,7 @@ public class InventoryPage extends AbstractGameGuiPage {
 		slotListView = new ListView<InventorySlot>(Inventory.INSTANCE::getSlots) {
 			@Override
 			protected GuiElement createGuiElement(InventorySlot dataElement) {
-				Button button = new GameGuiButton(dataElement.getType() + " (" + dataElement.getQuantity() + ")") {
+				Button button = new GameGuiButton(dataElement.getType().getDisplayName() + " (" + dataElement.getQuantity() + ")") {
 
 					@Override
 					protected void onClick() {

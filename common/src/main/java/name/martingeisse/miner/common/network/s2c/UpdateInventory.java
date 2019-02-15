@@ -2,6 +2,7 @@ package name.martingeisse.miner.common.network.s2c;
 
 import com.google.common.collect.ImmutableList;
 import io.netty.buffer.ByteBuf;
+import name.martingeisse.miner.common.logic.ItemType;
 import name.martingeisse.miner.common.network.BufferUtil;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
@@ -38,11 +39,11 @@ public final class UpdateInventory extends Message {
 	public static final class Element {
 
 		private final long id;
-		private final String type;
+		private final ItemType type;
 		private final int quantity;
 		private final boolean equipped;
 
-		public Element(long id, String type, int quantity, boolean equipped) {
+		public Element(long id, ItemType type, int quantity, boolean equipped) {
 			this.id = id;
 			this.type = type;
 			this.quantity = quantity;
@@ -53,7 +54,7 @@ public final class UpdateInventory extends Message {
 			return id;
 		}
 
-		public String getType() {
+		public ItemType getType() {
 			return type;
 		}
 
@@ -67,13 +68,13 @@ public final class UpdateInventory extends Message {
 
 		public void encode(ByteBuf buffer) {
 			buffer.writeLong(id);
-			BufferUtil.encodeString(type, buffer);
+			buffer.writeInt(type.ordinal());
 			buffer.writeInt(quantity);
 			buffer.writeBoolean(equipped);
 		}
 
 		public static Element decode(ByteBuf buffer) {
-			return new Element(buffer.readLong(), BufferUtil.decodeString(buffer), buffer.readInt(), buffer.readBoolean());
+			return new Element(buffer.readLong(), ItemType.values()[buffer.readInt()], buffer.readInt(), buffer.readBoolean());
 		}
 
 	}
