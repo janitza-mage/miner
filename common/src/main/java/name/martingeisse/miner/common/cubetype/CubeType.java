@@ -16,7 +16,17 @@ import name.martingeisse.miner.common.logic.EquipmentSlot;
  * in a player's inventory.
  */
 public abstract class CubeType {
-	
+
+	private int index;
+
+	public final int getIndex() {
+		return index;
+	}
+
+	final void setIndex(int index) {
+		this.index = index;
+	}
+
 	/**
 	 * Checks whether a cube of this type totally obscures a neighbor's face
 	 * when the neighbor lies in the specified direction from this cube. This

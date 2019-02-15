@@ -318,6 +318,12 @@ public final class CubeTypes {
 		new SolidOpaqueCubeType(5), // 255: invalid
 	};
 
+	static {
+		for (int i = 0; i < CUBE_TYPES.length; i++) {
+			CUBE_TYPES[i].setIndex(i);
+		}
+	}
+
 	/**
 	 * Prevent instantiation.
 	 */
