@@ -425,30 +425,23 @@ public class CubeWorldHandler implements IFrameHandler {
 				rayActionSupport.execute(player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), new RayAction(false) {
 					@Override
 					public void handleImpact(final int x, final int y, final int z, final double distance) {
-						if (distance < 3.0) {
-							final byte effectiveCubeType;
-							if (currentCubeType == 50) {
-								final int angle = ((int) player.getOrientation().getHorizontalAngle() % 360 + 360) % 360;
-								if (angle < 45) {
-									effectiveCubeType = 52;
-								} else if (angle < 45 + 90) {
-									effectiveCubeType = 50;
-								} else if (angle < 45 + 180) {
-									effectiveCubeType = 53;
-								} else if (angle < 45 + 270) {
-									effectiveCubeType = 51;
-								} else {
-									effectiveCubeType = 52;
-								}
+						if (distance < 3.0 && !new SingleCubeCollider(new Vector3i(x, y, z)).collides(player.createDetailCollisionRegion())) {
+
+							AxisAlignedDirection direction;
+							final int angle = ((int) player.getOrientation().getHorizontalAngle() % 360 + 360) % 360;
+							if (angle < 45) {
+								direction = AxisAlignedDirection.POSITIVE_X;
+							} else if (angle < 45 + 90) {
+								direction = AxisAlignedDirection.NEGATIVE_Z;
+							} else if (angle < 45 + 180) {
+								direction = AxisAlignedDirection.NEGATIVE_X;
+							} else if (angle < 45 + 270) {
+								direction = AxisAlignedDirection.POSITIVE_Z;
 							} else {
-								effectiveCubeType = currentCubeType;
+								direction = AxisAlignedDirection.POSITIVE_X;
 							}
 
-							if (!new SingleCubeCollider(new Vector3i(x, y, z)).collides(player.createDetailCollisionRegion())) {
-								ClientEndpoint.INSTANCE.send(new PlaceCube(new Vector3i(x, y, z), effectiveCubeType));
-							}
-
-							// cooldownFinishTime = now + 1000;
+							ClientEndpoint.INSTANCE.send(new PlaceCube(new Vector3i(x, y, z), direction));
 							cooldownFinishTime = now + 200;
 						}
 					}

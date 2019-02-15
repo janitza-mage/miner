@@ -223,7 +223,27 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 			Vector3i position = message.getPosition();
 			PlayerInventorySlotRow slot = player.getInventory().getEquippedByEquipmentSlot(EquipmentSlot.HAND);
 			if (slot != null) {
-				CubeType cubeType = CubeTypes.CUBE_TYPES[slot.getType()];
+
+				// handle stairs direction
+				int cubeTypeIndex = slot.getType();
+				if (cubeTypeIndex == 50) {
+					switch (message.getDirection()) {
+						case POSITIVE_X:
+							cubeTypeIndex = 52;
+							break;
+						case NEGATIVE_X:
+							cubeTypeIndex = 53;
+							break;
+						case POSITIVE_Z:
+							cubeTypeIndex = 51;
+							break;
+						case NEGATIVE_Z:
+							cubeTypeIndex = 50;
+							break;
+					}
+				}
+
+				CubeType cubeType = CubeTypes.CUBE_TYPES[cubeTypeIndex];
 				server.getWorldSubsystem().placeCube(position, cubeType);
 			}
 

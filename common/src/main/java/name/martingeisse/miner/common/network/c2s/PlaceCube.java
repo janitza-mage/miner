@@ -1,29 +1,34 @@
 package name.martingeisse.miner.common.network.c2s;
 
 import io.netty.buffer.ByteBuf;
+import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.vector.Vector3i;
+import name.martingeisse.miner.common.logic.EquipmentSlot;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
 
 /**
- *
+ * Places the currently equipped inventory item for {@link EquipmentSlot#HAND} as a cube in the world.
  */
 public final class PlaceCube extends Message {
 
 	private final Vector3i position;
-	private final byte cubeType;
+	private final AxisAlignedDirection direction;
 
-	public PlaceCube(Vector3i position, byte cubeType) {
+	public PlaceCube(Vector3i position, AxisAlignedDirection direction) {
+		if (direction.getAxis() == 1) {
+			throw new IllegalArgumentException("PlaceCube must specify a horizontal direction");
+		}
 		this.position = position;
-		this.cubeType = cubeType;
+		this.direction = direction;
 	}
 
 	public Vector3i getPosition() {
 		return position;
 	}
 
-	public byte getCubeType() {
-		return cubeType;
+	public AxisAlignedDirection getDirection() {
+		return direction;
 	}
 
 	@Override
@@ -34,11 +39,11 @@ public final class PlaceCube extends Message {
 	@Override
 	protected void encodeBody(ByteBuf buffer) {
 		position.encode(buffer);
-		buffer.writeByte(cubeType);
+		buffer.writeByte((byte) direction.ordinal());
 	}
 
 	public static PlaceCube decodeBody(ByteBuf buffer) throws MessageDecodingException {
-		return new PlaceCube(Vector3i.decode(buffer), buffer.readByte());
+		return new PlaceCube(Vector3i.decode(buffer), AxisAlignedDirection.values()[buffer.readByte()]);
 	}
 
 }
