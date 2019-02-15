@@ -9,6 +9,7 @@ package name.martingeisse.miner.server.world;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import name.martingeisse.miner.common.Constants;
+import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.vector.Vector3i;
 import name.martingeisse.miner.common.network.c2s.PlaceCube;
@@ -184,12 +185,11 @@ public final class WorldSubsystem {
 	// --- modifications
 	//
 
-	public void placeCube(PlaceCube message) {
-		Vector3i position = message.getPosition();
+	public void placeCube(Vector3i position, CubeType cubeType) {
 		SectionId sectionId = SectionId.fromPosition(position);
 		SectionDataId sectionDataId = new SectionDataId(sectionId, SectionDataType.DEFINITIVE);
 		SectionCubesCacheEntry sectionDataCacheEntry = (SectionCubesCacheEntry) workingSet.get(sectionDataId);
-		sectionDataCacheEntry.setCubeAbsolute(position, message.getCubeType());
+		sectionDataCacheEntry.setCubeAbsolute(position, (byte)cubeType.getIndex());
 		notifyModificationListenersAboutModifiedPositions(ImmutableList.of(position));
 	}
 

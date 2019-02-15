@@ -9,6 +9,8 @@ package name.martingeisse.miner.server.network;
 import com.google.common.collect.ImmutableList;
 import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.cubetype.CubeTypes;
+import name.martingeisse.miner.common.geometry.vector.Vector3i;
+import name.martingeisse.miner.common.logic.EquipmentSlot;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.c2s.*;
 import name.martingeisse.miner.common.network.c2s.request.CreatePlayerRequest;
@@ -217,7 +219,13 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 			}
 		} else if (untypedMessage instanceof PlaceCube) {
 
-			server.getWorldSubsystem().placeCube((PlaceCube) untypedMessage);
+			PlaceCube message = (PlaceCube) untypedMessage;
+			Vector3i position = message.getPosition();
+			PlayerInventorySlotRow slot = player.getInventory().getEquippedByEquipmentSlot(EquipmentSlot.HAND);
+			if (slot != null) {
+				CubeType cubeType = CubeTypes.CUBE_TYPES[slot.getType()];
+				server.getWorldSubsystem().placeCube(position, cubeType);
+			}
 
 		} else if (untypedMessage instanceof InteractiveSectionDataRequest) {
 

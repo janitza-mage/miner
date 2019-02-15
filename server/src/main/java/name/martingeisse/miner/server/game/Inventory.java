@@ -111,6 +111,17 @@ public final class Inventory {
 		}
 	}
 
+	public PlayerInventorySlotRow getEquippedByEquipmentSlot(EquipmentSlot equipmentSlot) {
+		List<PlayerInventorySlotRow> equipped = listEquipped();
+		for (PlayerInventorySlotRow row : equipped) {
+			CubeType cubeType = CubeTypes.CUBE_TYPES[row.getType()];
+			if (cubeType.getEquipmentSlot() == equipmentSlot) {
+				return row;
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Deletes a backpack item, specified by id.
 	 *
