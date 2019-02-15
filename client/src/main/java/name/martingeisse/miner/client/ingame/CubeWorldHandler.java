@@ -120,11 +120,6 @@ public class CubeWorldHandler implements IFrameHandler {
 	private final float aspectRatio;
 
 	/**
-	 * the currentCubeType
-	 */
-	private byte currentCubeType = 1;
-
-	/**
 	 * the frameDurationSensor
 	 */
 	private final FrameDurationSensor frameDurationSensor;
@@ -240,15 +235,6 @@ public class CubeWorldHandler implements IFrameHandler {
 	}
 
 	/**
-	 * Getter method for the currentCubeType.
-	 *
-	 * @return the currentCubeType
-	 */
-	public byte getCurrentCubeType() {
-		return currentCubeType;
-	}
-
-	/**
 	 * Getter method for the workingSet.
 	 *
 	 * @return the workingSet
@@ -334,15 +320,6 @@ public class CubeWorldHandler implements IFrameHandler {
 		minusPressed = keysEnabled && Keyboard.isKeyDown(Keyboard.KEY_SLASH);
 		wireframe = keysEnabled && Keyboard.isKeyDown(Keyboard.KEY_F);
 		player.setWantsToJump(keysEnabled && Keyboard.isKeyDown(Keyboard.KEY_SPACE));
-		if (keysEnabled && Keyboard.isKeyDown(Keyboard.KEY_1)) {
-			currentCubeType = 1;
-		} else if (keysEnabled && Keyboard.isKeyDown(Keyboard.KEY_2)) {
-			currentCubeType = 2;
-		} else if (keysEnabled && Keyboard.isKeyDown(Keyboard.KEY_3)) {
-			currentCubeType = 3;
-		} else if (keysEnabled && Keyboard.isKeyDown(Keyboard.KEY_4)) {
-			currentCubeType = 50;
-		}
 		if (mouseMovementEnabled) {
 			player.getOrientation().setHorizontalAngle(player.getOrientation().getHorizontalAngle() - Mouse.getDX() * 0.5);
 			double newUpAngle = player.getOrientation().getVerticalAngle() + Mouse.getDY() * 0.5;
