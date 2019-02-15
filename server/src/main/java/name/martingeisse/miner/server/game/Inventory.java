@@ -10,8 +10,9 @@ import com.querydsl.sql.dml.SQLDeleteClause;
 import com.querydsl.sql.dml.SQLInsertClause;
 import com.querydsl.sql.dml.SQLUpdateClause;
 import com.querydsl.sql.postgresql.PostgreSQLQuery;
+import name.martingeisse.miner.common.cubetype.CubeType;
+import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.common.logic.EquipmentSlot;
-import name.martingeisse.miner.common.logic.ItemType;
 import name.martingeisse.miner.server.Databases;
 import name.martingeisse.miner.server.postgres_entities.PlayerInventorySlotRow;
 import name.martingeisse.miner.server.postgres_entities.QPlayerInventorySlotRow;
@@ -49,7 +50,7 @@ public final class Inventory {
 	 *
 	 * @param type the item type
 	 */
-	public void add(ItemType type) {
+	public void add(CubeType type) {
 		add(type, 1);
 	}
 
@@ -59,12 +60,12 @@ public final class Inventory {
 	 * @param type     the item type
 	 * @param quantity the quantity of the item stack
 	 */
-	public void add(ItemType type, int quantity) {
+	public void add(CubeType type, int quantity) {
 		QPlayerInventorySlotRow qpis = QPlayerInventorySlotRow.PlayerInventorySlot;
 		try (PostgresConnection connection = Databases.main.newConnection()) {
 			SQLInsertClause insert = connection.insert(qpis);
 			insert.set(qpis.playerId, playerId);
-			insert.set(qpis.type, type.ordinal());
+			insert.set(qpis.type, type.getIndex());
 			insert.set(qpis.quantity, quantity);
 			insert.set(qpis.equipped, false);
 			insert.execute();
@@ -158,7 +159,7 @@ public final class Inventory {
 			}
 
 			// unequip the previously equipped row of the same equipment slot, if any
-			unequip(ItemType.values()[row.getType()].getEquipmentSlot());
+			unequip(CubeTypes.CUBE_TYPES[row.getType()].getEquipmentSlot());
 
 			// equip the specified slot
 			SQLUpdateClause update = connection.update(qpis);
@@ -193,14 +194,14 @@ public final class Inventory {
 
 	/**
 	 * Unequips the equipped item with the specified equipment slot, if any.
-	 *
+	 * <p>
 	 * In case multiple inventory slots with that equipment slot are equipped (which should not happen), this
 	 * method unequips them all.
 	 */
 	public void unequip(EquipmentSlot equipmentSlot) {
 		List<PlayerInventorySlotRow> rows = listAll();
 		for (PlayerInventorySlotRow row : rows) {
-			ItemType type = ItemType.values()[row.getType()];
+			CubeType type = CubeTypes.CUBE_TYPES[row.getType()];
 			if (type.getEquipmentSlot() == equipmentSlot) {
 				unequip(row.getId());
 			}
@@ -214,11 +215,11 @@ public final class Inventory {
 	 * @param equipped whether to look for equipped items or backpack items
 	 * @return the id, or -1 if not found
 	 */
-	public long findByType(ItemType type, boolean equipped) {
+	public long findByType(CubeType type, boolean equipped) {
 		final QPlayerInventorySlotRow qpis = QPlayerInventorySlotRow.PlayerInventorySlot;
 		try (PostgresConnection connection = Databases.main.newConnection()) {
 			PostgreSQLQuery<Long> query = connection.query().select(qpis.id).from(qpis);
-			query.where(qpis.playerId.eq(playerId), qpis.equipped.eq(equipped), qpis.type.eq(type.ordinal()));
+			query.where(qpis.playerId.eq(playerId), qpis.equipped.eq(equipped), qpis.type.eq(type.getIndex()));
 			Long result = query.fetchFirst();
 			return (result == null ? -1 : result);
 		}

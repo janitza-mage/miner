@@ -7,7 +7,8 @@
 package name.martingeisse.miner.server.network;
 
 import com.google.common.collect.ImmutableList;
-import name.martingeisse.miner.common.logic.ItemType;
+import name.martingeisse.miner.common.cubetype.CubeType;
+import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.c2s.*;
 import name.martingeisse.miner.common.network.c2s.request.CreatePlayerRequest;
@@ -169,7 +170,7 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 		List<PlayerInventorySlotRow> slots = player.getInventory().listAll();
 		List<UpdateInventory.Element> updateElements = new ArrayList<>();
 		for (PlayerInventorySlotRow slot : slots) {
-			ItemType type = ItemType.values()[slot.getType()];
+			CubeType type = CubeTypes.CUBE_TYPES[slot.getType()];
 			updateElements.add(new UpdateInventory.Element(slot.getId(), type, slot.getQuantity(), slot.getEquipped()));
 		}
 		send(new UpdateInventory(ImmutableList.copyOf(updateElements)));

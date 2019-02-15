@@ -6,8 +6,8 @@
 
 package name.martingeisse.miner.server.game;
 
+import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.common.geometry.vector.Vector3i;
-import name.martingeisse.miner.common.logic.ItemType;
 import org.apache.log4j.Logger;
 
 /**
@@ -27,29 +27,10 @@ public final class DigUtil {
 	 * inventory items for digging ores.
 	 */
 	public static void onCubeDugAway(Player player, Vector3i position, byte cubeType) {
-		logger.info("dug cube: " + cubeType);
+		player.getInventory().add(CubeTypes.CUBE_TYPES[cubeType & 0xff]);
 
 		// check for ores
 		switch (cubeType) {
-
-			case 1:
-				player.getInventory().add(ItemType.STONE);
-				break;
-
-			case 2:
-			case 3:
-				player.getInventory().add(ItemType.DIRT);
-				break;
-
-			case 12:
-				player.getInventory().add(ItemType.SAND);
-				break;
-
-			case 16:
-				oreFound(player, "coal", 2);
-				player.getInventory().add(ItemType.COAL);
-				player.sendFlashMessage("inventory item added");
-				break;
 
 			case 10:
 				oreFound(player, "gold", 5);
