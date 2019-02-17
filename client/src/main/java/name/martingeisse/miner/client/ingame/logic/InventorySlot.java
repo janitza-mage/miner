@@ -46,7 +46,7 @@ public final class InventorySlot {
 
 	public void setEquipped(boolean equipped) {
 		this.equipped = equipped;
-		Inventory.INSTANCE.updateEquippedItems();
+		Inventory.INSTANCE.updateDerived();
 	}
 
 }

@@ -7,19 +7,21 @@
 package name.martingeisse.miner.client.ingame.gui;
 
 import name.martingeisse.miner.client.ingame.Ingame;
+import name.martingeisse.miner.client.ingame.logic.Inventory;
 import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.control.Button;
 import name.martingeisse.miner.client.util.gui.control.ListView;
 import name.martingeisse.miner.client.util.gui.element.*;
 import name.martingeisse.miner.common.logic.CraftingFormula;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * The "crafting" menu page.
  */
-public class CraftingPage extends AbstractGameGuiPage {
+public class CraftingPage extends AbstractGameGuiPage implements InventoryDependentPage {
 
-	private final ListView<CraftingFormula> formulaListView;
+	private final ListView<Pair<CraftingFormula, Integer>> formulaListView;
 
 	/**
 	 * Constructor.
@@ -27,10 +29,11 @@ public class CraftingPage extends AbstractGameGuiPage {
 	public CraftingPage() {
 		final VerticalLayout menu = new VerticalLayout();
 
-		formulaListView = new ListView<CraftingFormula>(() -> CraftingFormula.ALL) {
+		formulaListView = new ListView<Pair<CraftingFormula, Integer>>(Inventory.INSTANCE::getApplicableFormulas) {
 			@Override
-			protected GuiElement createGuiElement(CraftingFormula dataElement) {
-				Button button = new GameGuiButton(dataElement.name()) {
+			protected GuiElement createGuiElement(Pair<CraftingFormula, Integer> dataElement) {
+				String text = dataElement.getLeft().name() + " (" + dataElement.getRight() + ")";
+				Button button = new GameGuiButton(text) {
 
 					@Override
 					protected void onClick() {
@@ -51,6 +54,11 @@ public class CraftingPage extends AbstractGameGuiPage {
 		});
 
 		initializePage(null, new Margin(menu, 30 * Gui.GRID, 30 * Gui.GRID));
+	}
+
+	@Override
+	public void onInventoryChanged() {
+		formulaListView.update();
 	}
 
 }

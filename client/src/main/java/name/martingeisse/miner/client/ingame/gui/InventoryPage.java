@@ -23,7 +23,7 @@ import org.lwjgl.input.Mouse;
 /**
  * The "inventory" menu page.
  */
-public class InventoryPage extends AbstractGameGuiPage {
+public class InventoryPage extends AbstractGameGuiPage implements InventoryDependentPage {
 
 	private final ListView<InventorySlot> slotListView;
 
@@ -73,7 +73,8 @@ public class InventoryPage extends AbstractGameGuiPage {
 		initializePage(null, new Margin(menu, 30 * Gui.GRID, 30 * Gui.GRID));
 	}
 
-	public void refreshInventory() {
+	@Override
+	public void onInventoryChanged() {
 		slotListView.update();
 	}
 

@@ -7,10 +7,17 @@ package name.martingeisse.miner.client.ingame.logic;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import name.martingeisse.miner.client.ingame.Ingame;
+import name.martingeisse.miner.client.ingame.gui.InventoryDependentPage;
 import name.martingeisse.miner.client.ingame.gui.InventoryPage;
+import name.martingeisse.miner.common.cubetype.CubeType;
+import name.martingeisse.miner.common.cubetype.CubeTypes;
+import name.martingeisse.miner.common.logic.CraftingFormula;
 import name.martingeisse.miner.common.logic.EquipmentSlot;
+import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,6 +29,7 @@ public final class Inventory {
 
 	private ImmutableList<InventorySlot> slots = ImmutableList.of();
 	private ImmutableMap<EquipmentSlot, InventorySlot> equippedItems = ImmutableMap.of();
+	private ImmutableMap<CubeType, Integer> totals = ImmutableMap.of();
 
 	public ImmutableList<InventorySlot> getSlots() {
 		return slots;
@@ -31,26 +39,58 @@ public final class Inventory {
 		return equippedItems;
 	}
 
+	public ImmutableMap<CubeType, Integer> getTotals() {
+		return totals;
+	}
+
+	public int getTotal(CubeType type) {
+		Integer total = totals.get(type);
+		return (total == null ? 0 : total);
+	}
+
 	public void setSlots(ImmutableList<InventorySlot> slots) {
 		if (slots == null) {
 			throw new IllegalArgumentException("slots cannot be null");
 		}
 		this.slots = slots;
-		updateEquippedItems();
-		if (Ingame.get().isGuiOpen() && Ingame.get().getGui().getRootElement() instanceof InventoryPage) {
-			InventoryPage inventoryPage = (InventoryPage) Ingame.get().getGui().getRootElement();
-			inventoryPage.refreshInventory();
+		updateDerived();
+		if (Ingame.get().isGuiOpen() && Ingame.get().getGui().getRootElement() instanceof InventoryDependentPage) {
+			InventoryDependentPage page = (InventoryDependentPage) Ingame.get().getGui().getRootElement();
+			page.onInventoryChanged();
 		}
 	}
 
-	void updateEquippedItems() {
-		Map<EquipmentSlot, InventorySlot> map = new HashMap<>();
+	void updateDerived() {
+		Map<EquipmentSlot, InventorySlot> equippedMap = new HashMap<>();
+		Map<CubeType, Integer> totalsMap = new HashMap<>();
 		for (InventorySlot slot : slots) {
 			if (slot.isEquipped()) {
-				map.put(slot.getType().getEquipmentSlot(), slot);
+				equippedMap.put(slot.getType().getEquipmentSlot(), slot);
+			}
+			int quantity = slot.getQuantity();
+			totalsMap.compute(slot.getType(), (ignored, total) -> total == null ? quantity : (total + quantity));
+		}
+		this.equippedItems = ImmutableMap.copyOf(equippedMap);
+		this.totals = ImmutableMap.copyOf(totalsMap);
+	}
+
+	public int getPossibleApplications(CraftingFormula formula) {
+
+		// TODO hardcoded
+		int snowTotal = getTotal(CubeTypes.CUBE_TYPES[78]);
+		return snowTotal / 3;
+
+	}
+
+	public ImmutableList<Pair<CraftingFormula, Integer>> getApplicableFormulas() {
+		List<Pair<CraftingFormula, Integer>> result = new ArrayList<>();
+		for (CraftingFormula formula : CraftingFormula.ALL) {
+			int applications = getPossibleApplications(formula);
+			if (applications > 0) {
+				result.add(Pair.of(formula, applications));
 			}
 		}
-		this.equippedItems = ImmutableMap.copyOf(map);
+		return ImmutableList.copyOf(result);
 	}
 
 }
