@@ -7,9 +7,9 @@
 package name.martingeisse.miner.client.util.gui.element;
 
 import com.google.common.collect.ImmutableList;
-import name.martingeisse.miner.common.util.ParameterUtil;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiEvent;
+import name.martingeisse.miner.common.util.contract.ParameterUtil;
 
 import java.util.ArrayList;
 import java.util.List;

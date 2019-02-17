@@ -6,7 +6,7 @@
 
 package name.martingeisse.miner.client.util.gui.element;
 
-import name.martingeisse.miner.common.util.ParameterUtil;
+import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.util.HorizontalAlignment;

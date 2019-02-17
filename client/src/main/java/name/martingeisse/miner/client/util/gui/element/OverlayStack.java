@@ -6,9 +6,9 @@
 
 package name.martingeisse.miner.client.util.gui.element;
 
-import name.martingeisse.miner.common.util.ParameterUtil;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.util.AreaAlignment;
+import name.martingeisse.miner.common.util.contract.ParameterUtil;
 
 /**
  * This element places its sub-elements at the same position and
