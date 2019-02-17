@@ -10,6 +10,7 @@ import name.martingeisse.miner.client.MinerResources;
 import name.martingeisse.miner.client.ingame.engine.EngineParameters;
 import name.martingeisse.miner.client.ingame.engine.FrameRenderParameters;
 import name.martingeisse.miner.client.ingame.engine.WorldWorkingSet;
+import name.martingeisse.miner.client.ingame.gui.CraftingPage;
 import name.martingeisse.miner.client.ingame.gui.InventoryPage;
 import name.martingeisse.miner.client.ingame.gui.MainMenuPage;
 import name.martingeisse.miner.client.ingame.player.Player;
@@ -337,6 +338,9 @@ public class CubeWorldHandler implements IFrameHandler {
 				}
 				if (Keyboard.getEventKey() == Keyboard.KEY_I && Keyboard.getEventKeyState()) {
 					Ingame.get().openGui(new InventoryPage());
+				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_C && Keyboard.getEventKeyState()) {
+					Ingame.get().openGui(new CraftingPage());
 				}
 			}
 		}

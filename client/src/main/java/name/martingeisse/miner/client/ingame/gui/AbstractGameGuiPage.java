@@ -58,6 +58,12 @@ public class AbstractGameGuiPage extends Page {
 					}
 					break;
 
+				case Keyboard.KEY_C:
+					if (this instanceof CraftingPage) {
+						Ingame.get().closeGui();
+					} // else: cannot just open a crafting page without targeting a workbench or similar
+					break;
+
 				case Keyboard.KEY_ESCAPE:
 					Ingame.get().closeGui();
 					break;
