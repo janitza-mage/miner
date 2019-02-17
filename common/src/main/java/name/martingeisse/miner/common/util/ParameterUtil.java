@@ -110,5 +110,61 @@ public class ParameterUtil {
 		}
 		return argument;
 	}
-	
+
+	/**
+	 * Ensures that the specified argument is not negative.
+	 *
+	 * @param argument the argument value
+	 * @param name     the argument name (for error messages)
+	 * @return the argument value for convenience
+	 */
+	public static int ensureNotNegative(final int argument, final String name) {
+		if (argument < 0) {
+			throw new IllegalArgumentException("argument is negative: " + name);
+		}
+		return argument;
+	}
+
+	/**
+	 * Ensures that the specified argument is not negative.
+	 *
+	 * @param argument the argument value
+	 * @param name     the argument name (for error messages)
+	 * @return the argument value for convenience
+	 */
+	public static long ensureNotNegative(final long argument, final String name) {
+		if (argument < 0) {
+			throw new IllegalArgumentException("argument is negative: " + name);
+		}
+		return argument;
+	}
+
+	/**
+	 * Ensures that the specified argument is positive.
+	 *
+	 * @param argument the argument value
+	 * @param name     the argument name (for error messages)
+	 * @return the argument value for convenience
+	 */
+	public static int ensurePositive(final int argument, final String name) {
+		if (argument <= 0) {
+			throw new IllegalArgumentException("argument is not positive: " + name);
+		}
+		return argument;
+	}
+
+	/**
+	 * Ensures that the specified argument is positive.
+	 *
+	 * @param argument the argument value
+	 * @param name     the argument name (for error messages)
+	 * @return the argument value for convenience
+	 */
+	public static long ensurePositive(final long argument, final String name) {
+		if (argument <= 0) {
+			throw new IllegalArgumentException("argument is not positive: " + name);
+		}
+		return argument;
+	}
+
 }
