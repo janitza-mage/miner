@@ -8,12 +8,14 @@ package name.martingeisse.miner.client.ingame.gui;
 
 import name.martingeisse.miner.client.ingame.Ingame;
 import name.martingeisse.miner.client.ingame.logic.Inventory;
+import name.martingeisse.miner.client.network.ClientEndpoint;
 import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.control.Button;
 import name.martingeisse.miner.client.util.gui.control.ListView;
 import name.martingeisse.miner.client.util.gui.element.*;
 import name.martingeisse.miner.common.logic.CraftingFormula;
+import name.martingeisse.miner.common.network.c2s.ApplyFormula;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
@@ -37,6 +39,7 @@ public class CraftingPage extends AbstractGameGuiPage implements InventoryDepend
 
 					@Override
 					protected void onClick() {
+						ClientEndpoint.INSTANCE.send(new ApplyFormula(dataElement.getLeft()));
 					}
 
 				};

@@ -260,10 +260,9 @@ public class StackdSession implements WorldSubsystem.SectionDataConsumer {
 			DigNotification message = (DigNotification) untypedMessage;
 			server.getWorldSubsystem().dig(player, message.getPosition());
 
-		} else if (untypedMessage instanceof EquipMessage) {
+		} else if (untypedMessage instanceof EquipMessage || untypedMessage instanceof ApplyFormula) {
 
-			EquipMessage message = (EquipMessage) untypedMessage;
-			player.handleMessage(message);
+			player.handleMessage(untypedMessage);
 
 		} else {
 			logger.error("unknown message: " + untypedMessage);

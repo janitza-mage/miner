@@ -10,6 +10,7 @@ import com.querydsl.sql.dml.SQLUpdateClause;
 import name.martingeisse.miner.common.geometry.angle.EulerAngles;
 import name.martingeisse.miner.common.geometry.vector.Vector3d;
 import name.martingeisse.miner.common.network.Message;
+import name.martingeisse.miner.common.network.c2s.ApplyFormula;
 import name.martingeisse.miner.common.network.c2s.EquipMessage;
 import name.martingeisse.miner.server.Databases;
 import name.martingeisse.miner.server.network.Avatar;
@@ -96,6 +97,11 @@ public final class Player {
 			} else {
 				inventory.equip(message.getInventorySlotId());
 			}
+
+		} else if (untypedMessage instanceof ApplyFormula) {
+
+			ApplyFormula applyFormula = (ApplyFormula) untypedMessage;
+			inventory.applyFormula(applyFormula.getFormula());
 
 		} else {
 			logger.error("unknown message routed to Player object: " + untypedMessage);

@@ -8,9 +8,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import name.martingeisse.miner.client.ingame.Ingame;
 import name.martingeisse.miner.client.ingame.gui.InventoryDependentPage;
-import name.martingeisse.miner.client.ingame.gui.InventoryPage;
 import name.martingeisse.miner.common.cubetype.CubeType;
-import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.common.logic.CraftingFormula;
 import name.martingeisse.miner.common.logic.EquipmentSlot;
 import org.apache.commons.lang3.tuple.Pair;
@@ -75,11 +73,11 @@ public final class Inventory {
 	}
 
 	public int getPossibleApplications(CraftingFormula formula) {
-
-		// TODO hardcoded
-		int snowTotal = getTotal(CubeTypes.CUBE_TYPES[78]);
-		return snowTotal / 3;
-
+		int applications = Integer.MAX_VALUE;
+		for (Map.Entry<CubeType, Integer> bomEntry : formula.getBillOfMaterials().entrySet()) {
+			applications = Math.min(applications, getTotal(bomEntry.getKey()) / bomEntry.getValue());
+		}
+		return applications;
 	}
 
 	public ImmutableList<Pair<CraftingFormula, Integer>> getApplicableFormulas() {

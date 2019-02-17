@@ -12,13 +12,16 @@ import com.querydsl.sql.dml.SQLUpdateClause;
 import com.querydsl.sql.postgresql.PostgreSQLQuery;
 import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.cubetype.CubeTypes;
+import name.martingeisse.miner.common.logic.CraftingFormula;
 import name.martingeisse.miner.common.logic.EquipmentSlot;
 import name.martingeisse.miner.server.Databases;
 import name.martingeisse.miner.server.postgres_entities.PlayerInventorySlotRow;
 import name.martingeisse.miner.server.postgres_entities.QPlayerInventorySlotRow;
 import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Database utility class to deal with players' inventories.
@@ -234,6 +237,61 @@ public final class Inventory {
 			Long result = query.fetchFirst();
 			return (result == null ? -1 : result);
 		}
+	}
+
+	public void applyFormula(CraftingFormula formula) {
+		List<PlayerInventorySlotRow> rows = listAll();
+
+		// determine totals
+		Map<CubeType, Integer> totalsMap = new HashMap<>();
+		for (PlayerInventorySlotRow row : rows) {
+			int quantity = row.getQuantity();
+			CubeType type = CubeTypes.CUBE_TYPES[row.getType()];
+			totalsMap.compute(type, (ignored, total) -> total == null ? quantity : (total + quantity));
+		}
+
+		// check if applicable
+		for (Map.Entry<CubeType, Integer> bomEntry : formula.getBillOfMaterials().entrySet()) {
+			if (totalsMap.get(bomEntry.getKey()) < bomEntry.getValue()) {
+				return;
+			}
+		}
+
+		// remove BOM from inventory
+		try (PostgresConnection connection = Databases.main.newConnection()) {
+			QPlayerInventorySlotRow qpis = QPlayerInventorySlotRow.PlayerInventorySlot;
+			for (Map.Entry<CubeType, Integer> bomEntry : formula.getBillOfMaterials().entrySet()) {
+				int bomRemaining = bomEntry.getValue();
+				for (PlayerInventorySlotRow row : rows) {
+					CubeType rowType = CubeTypes.CUBE_TYPES[row.getType()];
+					if (bomEntry.getKey() != rowType) {
+						continue;
+					}
+					if (row.getQuantity() > bomRemaining) {
+						SQLUpdateClause update = connection.update(qpis);
+						update.where(qpis.id.eq(row.getId()));
+						update.set(qpis.quantity, qpis.quantity.subtract(bomRemaining));
+						update.execute();
+						break;
+					} else {
+						bomRemaining -= row.getQuantity();
+						SQLDeleteClause delete = connection.delete(qpis);
+						delete.where(qpis.id.eq(row.getId()));
+						delete.execute();
+						if (bomRemaining == 0) {
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		// add products to inventory
+		for (Map.Entry<CubeType, Integer> productsEntry : formula.getProducts().entrySet()) {
+			add(productsEntry.getKey(), productsEntry.getValue());
+		}
+
+		player.notifyListeners(PlayerListener::onInventoryChanged);
 	}
 
 }

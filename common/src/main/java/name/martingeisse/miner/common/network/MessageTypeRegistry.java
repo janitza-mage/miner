@@ -40,6 +40,7 @@ final class MessageTypeRegistry {
 		register(UpdatePosition.class, UpdatePosition::decodeBody);
 		register(InteractiveSectionDataRequest.class, InteractiveSectionDataRequest::decodeBody);
 		register(EquipMessage.class, EquipMessage::decodeBody);
+		register(ApplyFormula.class, ApplyFormula::decodeBody);
 
 		// server-to-client responses
 		register(OkayResponse.class, OkayResponse::decodeBody);
