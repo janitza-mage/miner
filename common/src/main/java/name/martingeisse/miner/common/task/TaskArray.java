@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -24,7 +24,7 @@ public class TaskArray implements ITaskLike {
 	 */
 	public TaskArray() {
 	}
-	
+
 	/**
 	 * Constructor.
 	 * @param tasks the tasks
@@ -40,7 +40,7 @@ public class TaskArray implements ITaskLike {
 	public ITaskLike[] getTasks() {
 		return tasks;
 	}
-	
+
 	/**
 	 * Setter method for the tasks.
 	 * @param tasks the tasks to set

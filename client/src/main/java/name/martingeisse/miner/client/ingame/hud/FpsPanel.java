@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2012 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -31,19 +31,19 @@ public final class FpsPanel extends AbstractFrameHandler {
 	 * the countedFrames
 	 */
 	private int countedFrames;
-	
+
 	/**
 	 * the fps
 	 */
 	private int fps;
-	
+
 	/**
 	 * the glWorkUnit
 	 */
 	private final GlWorkUnit glWorkUnit = new GlWorkUnit() {
 		@Override
 		public void execute() {
-			
+
 			// update FPS (in the drawing thread, so we don't count skipped frames!)
 			countedFrames++;
 			long now = System.currentTimeMillis();
@@ -52,24 +52,24 @@ public final class FpsPanel extends AbstractFrameHandler {
 				countedFrames = 0;
 				lastSamplingTime = now;
 			}
-			
+
 			// draw the FPS panel
 			String fpsText = Float.toString(fps);
 			glBindTexture(GL_TEXTURE_2D, 0);
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			glWindowPos2i(Display.getWidth(), Display.getHeight());
-			GL11.glPixelTransferf(GL11.GL_RED_BIAS, 1.0f);			
-			GL11.glPixelTransferf(GL11.GL_GREEN_BIAS, 1.0f);			
+			GL11.glPixelTransferf(GL11.GL_RED_BIAS, 1.0f);
+			GL11.glPixelTransferf(GL11.GL_GREEN_BIAS, 1.0f);
 			GL11.glPixelTransferf(GL11.GL_BLUE_BIAS, 1.0f);
 			MinerResources.getInstance().getFont().drawText(fpsText, 2, Font.ALIGN_RIGHT, Font.ALIGN_TOP);
-			GL11.glPixelTransferf(GL11.GL_RED_BIAS, 0.0f);			
-			GL11.glPixelTransferf(GL11.GL_GREEN_BIAS, 0.0f);			
+			GL11.glPixelTransferf(GL11.GL_RED_BIAS, 0.0f);
+			GL11.glPixelTransferf(GL11.GL_GREEN_BIAS, 0.0f);
 			GL11.glPixelTransferf(GL11.GL_BLUE_BIAS, 0.0f);
-			
+
 		}
 	};
-	
+
 	/**
 	 * Constructor.
 	 */
@@ -78,7 +78,7 @@ public final class FpsPanel extends AbstractFrameHandler {
 		this.countedFrames = 0;
 		this.fps = 0;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.client.frame.AbstractFrameHandler#draw(name.martingeisse.glworker.GlWorkerLoop)
 	 */
@@ -86,5 +86,5 @@ public final class FpsPanel extends AbstractFrameHandler {
 	public void draw(GlWorkerLoop glWorkerLoop) {
 		glWorkerLoop.schedule(glWorkUnit);
 	}
-	
+
 }

@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -16,10 +16,9 @@ import org.lwjgl.opengl.GL11;
 import java.util.LinkedList;
 import java.util.Queue;
 
-
 /**
  * The main container class for the GUI.
- * 
+ *
  * The GUI uses an integer coordinate system where the total height
  * of the GUI is a hundred thousand units, and the total width a determined such
  * that a unit has the same length along either axis.
@@ -30,17 +29,17 @@ public final class Gui {
 	 * the HEIGHT_UNITS
 	 */
 	public static final int HEIGHT_UNITS = 100000;
-	
+
 	/**
 	 * The "normal" grid to align things. The total height is 100 grid clicks.
 	 */
 	public static final int GRID = 1000;
-	
+
 	/**
 	 * The "mini" grid to align things. The total height is 1000 minigrid clicks. 
 	 */
 	public static final int MINIGRID = 100;
-	
+
 	private final int widthPixels;
 	private final int heightPixels;
 	private final int widthUnits;
@@ -84,7 +83,7 @@ public final class Gui {
 	public int getWidthPixels() {
 		return widthPixels;
 	}
-	
+
 	/**
 	 * Getter method for the heightPixels.
 	 * @return the heightPixels
@@ -92,7 +91,7 @@ public final class Gui {
 	public int getHeightPixels() {
 		return heightPixels;
 	}
-	
+
 	/**
 	 * Getter method for the widthUnits.
 	 * @return the widthUnits
@@ -100,7 +99,7 @@ public final class Gui {
 	public int getWidthUnits() {
 		return widthUnits;
 	}
-	
+
 	/**
 	 * Getter method for the rootElement.
 	 * @return the rootElement
@@ -147,10 +146,10 @@ public final class Gui {
 			}
 			glWorkerLoop.schedule(initializeFrameWorkUnit);
 		}
-		time = (int)System.currentTimeMillis();
+		time = (int) System.currentTimeMillis();
 		rootElement.handleEvent(event);
 	}
-	
+
 	/**
 	 * Getter method for the mouseX.
 	 * @return the mouseX
@@ -158,7 +157,7 @@ public final class Gui {
 	public int getMouseX() {
 		return pixelsToUnitsInt(Mouse.getX());
 	}
-	
+
 	/**
 	 * Getter method for the mouseY.
 	 * @return the mouseY
@@ -166,25 +165,25 @@ public final class Gui {
 	public int getMouseY() {
 		return pixelsToUnitsInt(heightPixels - Mouse.getY());
 	}
-	
+
 	/**
 	 * Converts coordinate units to pixels.
 	 * @param units the units
 	 * @return the pixels
 	 */
 	public int unitsToPixelsInt(int units) {
-		return (int)(units * (long)heightPixels / HEIGHT_UNITS);
+		return (int) (units * (long) heightPixels / HEIGHT_UNITS);
 	}
-	
+
 	/**
 	 * Converts pixels to coordinate units.
 	 * @param pixels the pixels
 	 * @return the coordinate units
 	 */
 	public int pixelsToUnitsInt(int pixels) {
-		return (int)(pixels * (long)HEIGHT_UNITS / heightPixels);
+		return (int) (pixels * (long) HEIGHT_UNITS / heightPixels);
 	}
-	
+
 	/**
 	 * Converts coordinate units to pixels.
 	 * @param units the units
@@ -193,7 +192,7 @@ public final class Gui {
 	public float unitsToPixelsFloat(float units) {
 		return units * heightPixels / HEIGHT_UNITS;
 	}
-	
+
 	/**
 	 * Converts pixels to coordinate units.
 	 * @param pixels the pixels
@@ -202,7 +201,7 @@ public final class Gui {
 	public float pixelsToUnitsFloat(float pixels) {
 		return pixels * HEIGHT_UNITS / heightPixels;
 	}
-	
+
 	/**
 	 * Getter method for the current time.
 	 * @return the time
@@ -210,7 +209,7 @@ public final class Gui {
 	public int getTime() {
 		return time;
 	}
-	
+
 	/**
 	 * Getter method for the defaultFont.
 	 * @return the defaultFont
@@ -218,7 +217,7 @@ public final class Gui {
 	public Font getDefaultFont() {
 		return defaultFont;
 	}
-	
+
 	/**
 	 * Setter method for the defaultFont.
 	 * @param defaultFont the defaultFont to set
@@ -235,7 +234,7 @@ public final class Gui {
 	public IFocusableElement getFocus() {
 		return focus;
 	}
-	
+
 	/**
 	 * Setter method for the focus.
 	 * @param focus the focus to set
@@ -254,18 +253,18 @@ public final class Gui {
 
 	/**
 	 * Adds an action to execute as part of the "followup logic action loop".
-	 * 
+	 *
 	 * For example, a text field that wants to change focus in reaction to the tab key
 	 * should do so in a followup logic action. If it changed focus directly, then handling
 	 * of the tab key would continue and might reach the newly focused element later on
 	 * (depending on element order) and immediately switch focus again.
-	 * 
+	 *
 	 * @param followupLogicAction the followup logic action to add
 	 */
 	public void addFollowupLogicAction(Runnable followupLogicAction) {
 		followupLogicActions.add(followupLogicAction);
 	}
-	
+
 	/**
 	 * Executes all pending followup logic actions. This should generally be done after
 	 * passing input events to the GUI.
@@ -279,22 +278,22 @@ public final class Gui {
 			action.run();
 		}
 	}
-	
+
 	/**
 	 * Adds an action to execute as part of the "followup OpenGL action loop". This is
 	 * similar to followup logic actions, except they're executed in the OpenGL
 	 * worker thread.
-	 * 
+	 *
 	 * Followup OpenGL actions are needed for special cases during the interaction
 	 * between GUI and the in-game OpenGL code. This comment cannot describe a
 	 * typical use case because there is none.
-	 * 
+	 *
 	 * @param followupOpenglAction the followup OpenGL action to add
 	 */
 	public void addFollowupOpenglAction(Runnable followupOpenglAction) {
 		followupOpenglActions.add(followupOpenglAction);
 	}
-	
+
 	/**
 	 * Executes all pending followup OpenGL actions. This should generally be done after
 	 * firing the DRAW event, from within the OpenGL thread.

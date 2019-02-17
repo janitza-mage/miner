@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -24,22 +24,22 @@ public abstract class Button extends Control {
 	 * the textLine
 	 */
 	private final TextLine textLine;
-	
+
 	/**
 	 * the margin
 	 */
 	private final Margin margin;
-	
+
 	/**
 	 * the stack
 	 */
 	private final OverlayStack stack;
-	
+
 	/**
 	 * the border
 	 */
 	private final ThinBorder border;
-	
+
 	/**
 	 * Constructor.
 	 */
@@ -52,7 +52,7 @@ public abstract class Button extends Control {
 		border = new ThinBorder(stack);
 		setControlRootElement(border);
 	}
-	
+
 	/**
 	 * Getter method for the textLine.
 	 * @return the textLine
@@ -60,7 +60,7 @@ public abstract class Button extends Control {
 	public TextLine getTextLine() {
 		return textLine;
 	}
-	
+
 	/**
 	 * Getter method for the margin.
 	 * @return the margin
@@ -68,7 +68,7 @@ public abstract class Button extends Control {
 	public Margin getMargin() {
 		return margin;
 	}
-	
+
 	/**
 	 * Getter method for the border.
 	 * @return the border
@@ -84,7 +84,7 @@ public abstract class Button extends Control {
 	public GuiElement getBackgroundElement() {
 		return stack.getWrappedElements().get(0);
 	}
-	
+
 	/**
 	 * Setter method for the backgroundElement.
 	 * @param backgroundElement the backgroundElement to set
@@ -97,19 +97,19 @@ public abstract class Button extends Control {
 	 * Adds a pulse effect that is visible when the mouse is over the button.
 	 * This method doesn't take a pulse amplitude; use the color's alpha
 	 * channel for that.
-	 * 
+	 *
 	 * @param color the pulse color
 	 * @return this button for chaining
 	 */
 	public Button addPulseEffect(Color color) {
 		return addPulseEffect(color, PulseFunction.ABSOLUTE_SINE, 2000);
 	}
-	
+
 	/**
 	 * Adds a pulse effect that is visible when the mouse is over the button.
 	 * This method doesn't take a pulse amplitude; use the color's alpha
 	 * channel for that.
-	 * 
+	 *
 	 * @param color the pulse color
 	 * @param function the pulse function
 	 * @param period the pulse period
@@ -131,10 +131,10 @@ public abstract class Button extends Control {
 			onClick();
 		}
 	}
-	
+
 	/**
 	 * This method gets called when the user clicks on the button.
 	 */
 	protected abstract void onClick();
-	
+
 }

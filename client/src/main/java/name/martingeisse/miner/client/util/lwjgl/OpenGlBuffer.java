@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -19,14 +19,14 @@ public class OpenGlBuffer extends AbstractSystemResource {
 	 * the name
 	 */
 	private final int name;
-	
+
 	/**
 	 * Constructor.
 	 */
 	public OpenGlBuffer() {
 		this.name = glGenBuffers();
 	}
-	
+
 	/**
 	 * Getter method for the name.
 	 * @return the name
@@ -52,5 +52,5 @@ public class OpenGlBuffer extends AbstractSystemResource {
 	public final boolean existsOpenGlServerSide() {
 		return glIsBuffer(name);
 	}
-	
+
 }

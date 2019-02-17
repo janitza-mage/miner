@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -14,10 +14,10 @@ import name.martingeisse.miner.server.world.SectionWorkingSet;
  * Base class for cached section data objects. This class stores
  * the data (in the actual subclass) as well as the {@link SectionDataId}
  * used to identify the data.
- * 
+ *
  * Each instance has a "modified" flag that keeps track of unsaved
  * changes, as well as a {@link #save()} method to save such changes.
- * 
+ *
  * Changing this object (specifically, {@link #markModified()}) also
  * adds a task item to save the changes automatically in the near future --
  * but not right now, to avoid overloading the calling thread with work,
@@ -29,7 +29,7 @@ public abstract class SectionDataCacheEntry {
 	 * the sectionWorkingSet
 	 */
 	private final SectionWorkingSet sectionWorkingSet;
-	
+
 	/**
 	 * the sectionDataId
 	 */
@@ -39,7 +39,7 @@ public abstract class SectionDataCacheEntry {
 	 * the modified
 	 */
 	private boolean modified;
-	
+
 	/**
 	 * Constructor.
 	 * @param sectionWorkingSet the working set from which this cached object comes from
@@ -58,7 +58,7 @@ public abstract class SectionDataCacheEntry {
 	public SectionWorkingSet getSectionWorkingSet() {
 		return sectionWorkingSet;
 	}
-	
+
 	/**
 	 * Getter method for the sectionDataId.
 	 * @return the sectionDataId
@@ -66,7 +66,7 @@ public abstract class SectionDataCacheEntry {
 	public SectionDataId getSectionDataId() {
 		return sectionDataId;
 	}
-	
+
 	/**
 	 * Getter method for the modified.
 	 * @return the modified
@@ -92,7 +92,7 @@ public abstract class SectionDataCacheEntry {
 		}
 		onModification();
 	}
-	
+
 	/**
 	 * Saves the modifications (if any) to the section storage.
 	 */
@@ -102,7 +102,7 @@ public abstract class SectionDataCacheEntry {
 			modified = false;
 		}
 	}
-	
+
 	/**
 	 * Creates a serialized representation of this object for saving.
 	 * @return this, serialized for saving
@@ -115,11 +115,11 @@ public abstract class SectionDataCacheEntry {
 	 */
 	protected void onModification() {
 	}
-	
+
 	/**
 	 * Returns the data that can be sent to the client for this object.
 	 * @return the data for the client
 	 */
 	public abstract byte[] getDataForClient();
-	
+
 }

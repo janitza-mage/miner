@@ -14,7 +14,9 @@ import io.netty.buffer.ByteBuf;
 public abstract class ReadableVector3i {
 
 	public abstract int getX();
+
 	public abstract int getY();
+
 	public abstract int getZ();
 
 	public abstract Vector3i freeze();

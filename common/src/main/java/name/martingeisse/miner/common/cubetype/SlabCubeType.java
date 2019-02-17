@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -10,7 +10,7 @@ import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 
 /**
  * A "slab" cube type that fills the lower half of a cube.
- * 
+ *
  * This type *cannot* be used for transparent cubes like glass!
  */
 public class SlabCubeType extends CubeType {

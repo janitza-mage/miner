@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -54,14 +54,14 @@ public final class UniformCubes extends Cubes {
 	/**
 	 * Decompresses and deserializes an object of this type from the specified array,
 	 * skipping the first byte since it is assumed to contain the compression scheme.
-	 * 
+	 *
 	 * @param clusterSize the cluster size
 	 * @param compressedData the compressed data
 	 * @return the cubes object, or null if not successful
 	 */
 	public static UniformCubes decompress(final ClusterSize clusterSize, final byte[] compressedData) {
 		if (compressedData.length < 2) {
-			return new UniformCubes((byte)0);
+			return new UniformCubes((byte) 0);
 		} else {
 			return new UniformCubes(compressedData[1]);
 		}
@@ -69,7 +69,7 @@ public final class UniformCubes extends Cubes {
 
 	/**
 	 * Tries to build an instance of this type from the specified cube data.
-	 * 
+	 *
 	 * @param cubes the cube data
 	 * @return the cubes object, or null if not successful
 	 */
@@ -81,7 +81,7 @@ public final class UniformCubes extends Cubes {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private static boolean isUniform(final byte[] array) {
 		final byte value = array[0];
@@ -98,7 +98,7 @@ public final class UniformCubes extends Cubes {
 	 */
 	@Override
 	public byte[] getCubeTypeIndicesUsed() {
-		return new byte[] { cubeType };
+		return new byte[]{cubeType};
 	}
 
 	/* (non-Javadoc)

@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -14,18 +14,18 @@ package name.martingeisse.miner.server.world.rendermodel;
  * render model is needed for rendering and the damage must either
  * be repaired (using implementation-specific logic from the render
  * model) or the render model be thrown away and a new one be built.
- * 
+ *
  * Damage for a single section is represented by a mutable instance
  * of this class that gets modified for each modification to the
  * underlying section.
- * 
+ *
  * This class stores modified cubes for this section and border
  * cubes for neighboring sections. Both types of modifications are
  * stored in the same array, using a flag to distinguish. All
  * coordinates, including those for neighbor sections, are relative
  * to the origin of this section (so they can be -1 for negative
  * direction neighbors).
- * 
+ *
  * This class handles at most MAX_NUMBER_OF_MODIFIED_CUBES modified
  * cubes before entering a "too much damage" state that leaves no
  * indication about modified cubes, and hence should be treated by
@@ -51,12 +51,12 @@ public final class RenderModelDamageAccumulator {
 	 * the numberOfModifications
 	 */
 	private int numberOfModifications;
-	
+
 	/**
 	 * the modificationIsNeighborFlags
 	 */
 	private final boolean[] modificationIsNeighborFlags;
-	
+
 	/**
 	 * the modificationPositionsX
 	 */
@@ -71,17 +71,17 @@ public final class RenderModelDamageAccumulator {
 	 * the modificationPositionsZ
 	 */
 	private final int[] modificationPositionsZ;
-	
+
 	/**
 	 * the previousCubeTypes
 	 */
 	private final byte[] previousCubeTypes;
-	
+
 	/**
 	 * the newCubeTypes
 	 */
 	private final byte[] newCubeTypes;
-	
+
 	/**
 	 * Constructor.
 	 */
@@ -94,7 +94,7 @@ public final class RenderModelDamageAccumulator {
 		this.previousCubeTypes = new byte[MAX_NUMBER_OF_MODIFICATIONS];
 		this.newCubeTypes = new byte[MAX_NUMBER_OF_MODIFICATIONS];
 	}
-	
+
 	/**
 	 * Getter method for the number of modifications.
 	 * @return the number of modifications
@@ -102,7 +102,7 @@ public final class RenderModelDamageAccumulator {
 	public int getNumberOfModifications() {
 		return numberOfModifications;
 	}
-	
+
 	/**
 	 * Checks whether this damage accumulator is empty. This is the case if the
 	 * number of modifications is 0.
@@ -120,7 +120,7 @@ public final class RenderModelDamageAccumulator {
 	public boolean isInfinite() {
 		return (numberOfModifications > MAX_NUMBER_OF_MODIFICATIONS);
 	}
-	
+
 	/**
 	 * Returns true if the specified modification occurred in a neighbor section.
 	 * @param index the index of the modification
@@ -138,7 +138,7 @@ public final class RenderModelDamageAccumulator {
 	public int getModificationX(int index) {
 		return modificationPositionsX[index];
 	}
-	
+
 	/**
 	 * Returns the y coordinate of the modification with the specified index.
 	 * @param index the index of the modification
@@ -147,7 +147,7 @@ public final class RenderModelDamageAccumulator {
 	public int getModificationY(int index) {
 		return modificationPositionsY[index];
 	}
-	
+
 	/**
 	 * Returns the z coordinate of the modification with the specified index.
 	 * @param index the index of the modification
@@ -165,7 +165,7 @@ public final class RenderModelDamageAccumulator {
 	public byte getPreviousCubeType(int index) {
 		return previousCubeTypes[index];
 	}
-	
+
 	/**
 	 * Returns the new cube type of the modification with the specified index.
 	 * @param index the index of the modification
@@ -174,7 +174,7 @@ public final class RenderModelDamageAccumulator {
 	public byte getNewCubeType(int index) {
 		return newCubeTypes[index];
 	}
-	
+
 	/**
 	 * Adds damage for a modified cube.
 	 * @param isNeighbor whether the modification happened in a neighbor section or in this section
@@ -204,5 +204,5 @@ public final class RenderModelDamageAccumulator {
 	public void clear() {
 		numberOfModifications = 0;
 	}
-	
+
 }

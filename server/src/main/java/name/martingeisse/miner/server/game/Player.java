@@ -39,7 +39,7 @@ public final class Player {
 
 	/**
 	 * TODO use repository pattern and prevent multiple instances from being created. Rather, re-use an existing instance.
-	 *
+	 * <p>
 	 * TODO Creating a new instance for the same player also has a bug: the listeners of the original one won't get
 	 * notified. Solve by moving notification to a separate PlayerNotificationHub (or -service) which gets injected
 	 * by Guice.
@@ -90,7 +90,7 @@ public final class Player {
 	public void handleMessage(Message untypedMessage) {
 		if (untypedMessage instanceof EquipMessage) {
 
-			EquipMessage message = (EquipMessage)untypedMessage;
+			EquipMessage message = (EquipMessage) untypedMessage;
 			if (message.isUnequip()) {
 				inventory.unequip(message.getInventorySlotId());
 			} else {

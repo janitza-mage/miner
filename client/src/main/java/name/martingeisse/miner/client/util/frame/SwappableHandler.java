@@ -29,6 +29,7 @@ public final class SwappableHandler implements IFrameHandler {
 
 	/**
 	 * Constructor.
+	 *
 	 * @param wrappedHandler the wrapped handler
 	 */
 	public SwappableHandler(IFrameHandler wrappedHandler) {
@@ -37,6 +38,7 @@ public final class SwappableHandler implements IFrameHandler {
 
 	/**
 	 * Getter method for the wrappedHandler.
+	 *
 	 * @return the wrappedHandler
 	 */
 	public IFrameHandler getWrappedHandler() {
@@ -45,6 +47,7 @@ public final class SwappableHandler implements IFrameHandler {
 
 	/**
 	 * Setter method for the wrappedHandler.
+	 *
 	 * @param wrappedHandler the wrappedHandler to set
 	 */
 	public void setWrappedHandler(IFrameHandler wrappedHandler) {

@@ -7,28 +7,28 @@ tasks.withType(JavaCompile) {
 }
 
 sourceSets {
-    main {
-        java {
-            srcDir 'src/main/java'
-            srcDir 'src/main/generated'
-        }
-        resources {
-            srcDir 'src/main/java' 
-            srcDir 'src/main/generated'
-            srcDir 'src/main/resources' 
-        }
-    }
-    test {
-        java {
-            srcDir 'src/test/java'
-            srcDir 'src/test/generated'
-        }
-        resources {
-            srcDir 'src/test/java'
-            srcDir 'src/test/generated'
-            srcDir 'src/test/resources'
-        }
-    }
+	main {
+		java {
+			srcDir 'src/main/java'
+			srcDir 'src/main/generated'
+		}
+		resources {
+			srcDir 'src/main/java'
+			srcDir 'src/main/generated'
+			srcDir 'src/main/resources'
+		}
+	}
+	test {
+		java {
+			srcDir 'src/test/java'
+			srcDir 'src/test/generated'
+		}
+		resources {
+			srcDir 'src/test/java'
+			srcDir 'src/test/generated'
+			srcDir 'src/test/resources'
+		}
+	}
 }
 
 processResources.doFirst {

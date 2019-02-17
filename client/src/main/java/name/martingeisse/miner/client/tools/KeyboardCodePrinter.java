@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -46,7 +46,7 @@ public final class KeyboardCodePrinter {
 				@Override
 				public void handleStep() throws BreakFrameLoopException {
 					while (Keyboard.next()) {
-						System.out.println("" + System.currentTimeMillis() + " code " + Keyboard.getEventKey() + " char '" + Keyboard.getEventCharacter() + "' (" + ((int)Keyboard.getEventCharacter()) + ")");
+						System.out.println("" + System.currentTimeMillis() + " code " + Keyboard.getEventKey() + " char '" + Keyboard.getEventCharacter() + "' (" + ((int) Keyboard.getEventCharacter()) + ")");
 						if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
 							throw new BreakFrameLoopException();
 						}
@@ -62,7 +62,7 @@ public final class KeyboardCodePrinter {
 			e.printStackTrace();
 			System.exit(0);
 		}
-		
+
 	}
-	
+
 }

@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -18,7 +18,7 @@ public final class CubeTypes {
 	 */
 	public static final String[] CUBE_TEXTURE_FILENAMES = {
 		"invalid.png", // 0
-		"stone.png", 
+		"stone.png",
 		"dirt.png",
 		"grass.png",
 		"grass-side.png", // 4
@@ -40,7 +40,7 @@ public final class CubeTypes {
 		"tile.png", // 20
 		"tile-half-height.png",
 		"four-tiles.png",
-		
+
 //		"bricks1.png",
 //		"bricks1-mossy.png", // 4
 //		"ice.png",
@@ -61,7 +61,7 @@ public final class CubeTypes {
 	public static final CubeType[] CUBE_TYPES = {
 		new EmptyCubeType(), // 0: empty space
 		new SolidOpaqueCubeType(1), // 1: stone
-		new SolidOpaqueCubeType(new int[] {4, 4, 2, 3, 4, 4}), // 2: grass
+		new SolidOpaqueCubeType(new int[]{4, 4, 2, 3, 4, 4}), // 2: grass
 		new SolidOpaqueCubeType(2), // 3: dirt
 		new SolidOpaqueCubeType(5), // 4: TODO cobblestone
 		new SolidOpaqueCubeType(9), // 5: wood planks
@@ -76,14 +76,14 @@ public final class CubeTypes {
 		new SolidOpaqueCubeType(14), // 14: gold ore
 		new SolidOpaqueCubeType(5), // 15: TODO: iron ore
 		new SolidOpaqueCubeType(15), // 16: coal ore
-		new SolidOpaqueCubeType(new int[] {7, 7, 8, 8, 7, 7}), // 17: wood
+		new SolidOpaqueCubeType(new int[]{7, 7, 8, 8, 7, 7}), // 17: wood
 		new SolidOpaqueCubeType(6), // 18: leaves
 		new SolidOpaqueCubeType(5), // 19: invalid TODO sponge
 		new SolidOpaqueCubeType(5), // 20: invalid TODO glass
 		new SolidOpaqueCubeType(5), // 21: invalid TODO lapis lazuli ore
 		new SolidOpaqueCubeType(5), // 22: invalid TODO lapis lazuli block
 		new SolidOpaqueCubeType(5), // 23: invalid (MC: dispenser)
-		new SolidOpaqueCubeType(new int[] {18, 18, 17, 17, 18, 18}), // 24: sandstone
+		new SolidOpaqueCubeType(new int[]{18, 18, 17, 17, 18, 18}), // 24: sandstone
 		new SolidOpaqueCubeType(5), // 25: invalid (MC: note block)
 		new SolidOpaqueCubeType(5), // 26: invalid
 		new SolidOpaqueCubeType(5), // 27: invalid
@@ -188,7 +188,7 @@ public final class CubeTypes {
 		new SolidOpaqueCubeType(5), // 125: invalid
 		new SolidOpaqueCubeType(5), // 126: invalid
 		new SolidOpaqueCubeType(5), // 127: invalid
-		new SolidOpaqueCubeType(new int[] {18, 18, 17, 17, 18, 18}), // 128: TODO sandstone stairs
+		new SolidOpaqueCubeType(new int[]{18, 18, 17, 17, 18, 18}), // 128: TODO sandstone stairs
 		new SolidOpaqueCubeType(5), // 129: invalid
 		new SolidOpaqueCubeType(5), // 130: invalid
 		new SolidOpaqueCubeType(5), // 131: invalid

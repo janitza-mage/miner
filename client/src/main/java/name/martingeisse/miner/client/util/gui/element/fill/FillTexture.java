@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.miner.client.util.gui.element.fill;
 
-import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.lwjgl.StackdTexture;
+import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -34,7 +34,7 @@ public final class FillTexture extends AbstractFillElement {
 			final float s = (w / effectiveRepetitionLengthX);
 			final float t = (h / effectiveRepetitionLengthY);
 
-			GL11.glColor3ub((byte)255, (byte)255, (byte)255);
+			GL11.glColor3ub((byte) 255, (byte) 255, (byte) 255);
 			GL11.glBegin(GL11.GL_TRIANGLE_FAN);
 			GL11.glTexCoord2f(0.0f, 0.0f);
 			GL11.glVertex2i(x, y);

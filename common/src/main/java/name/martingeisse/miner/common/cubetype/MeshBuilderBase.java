@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2013 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -17,7 +17,7 @@ import java.util.List;
  * (which use this class) in common code that is shared on client and server, without
  * referring to client-only OpenGL code. The actual mesh builder class on the client does
  * the actual OpenGL handling.
- * 
+ *
  * The methods in this class use detail coordinates, with {@link StackdConstants#GEOMETRY_DETAIL_FACTOR}
  * units per cube.
  */
@@ -48,7 +48,7 @@ public class MeshBuilderBase {
 	public final void setBoundingBox(final RectangularRegion boundingBox) {
 		this.boundingBox = boundingBox;
 	}
-	
+
 	/**
 	 * Getter method for the boundingBox.
 	 * @return the boundingBox
@@ -56,7 +56,7 @@ public class MeshBuilderBase {
 	protected final RectangularRegion getBoundingBox() {
 		return boundingBox;
 	}
-	
+
 	/**
 	 * Getter method for the triangles.
 	 * @return the triangles
@@ -67,9 +67,9 @@ public class MeshBuilderBase {
 
 	/**
 	 * Adds a one-sided triangle.
-	 * 
+	 *
 	 * This method uses detail coordinates, with {@link StackdConstants#GEOMETRY_DETAIL_FACTOR} units per cube.
-	 * 
+	 *
 	 * @param textureIndex the texture index
 	 * @param textureCoordinateGenerationDirection the direction used to set up texture coordinate generation
 	 * @param backfaceCullingDirection the direction used for backface culling, or null to disable BFC
@@ -104,9 +104,9 @@ public class MeshBuilderBase {
 
 	/**
 	 * Adds a two-sided triangle.
-	 * 
+	 *
 	 * This method uses detail coordinates, with {@link StackdConstants#GEOMETRY_DETAIL_FACTOR} units per cube.
-	 * 
+	 *
 	 * @param textureIndex the texture index
 	 * @param textureCoordinateGenerationDirection the direction used to set up texture coordinate generation
 	 * @param x1 the x coordinate of the first vertex
@@ -126,12 +126,12 @@ public class MeshBuilderBase {
 
 	/**
 	 * Adds a one-sided parallelogram quad.
-	 * 
+	 *
 	 * If you are looking straight at the quad, i.e. the quad's facing direction is pointing towards you,
 	 * then the "first" direction should be to the right and the "second" direction should be upwards.
-	 * 
+	 *
 	 * This method uses detail coordinates, with {@link StackdConstants#GEOMETRY_DETAIL_FACTOR} units per cube.
-	 * 
+	 *
 	 * @param textureIndex the texture index
 	 * @param textureCoordinateGenerationDirection the direction used to set up texture coordinate generation
 	 * @param backfaceCullingDirection the direction used for backface culling, or null to disable BFC
@@ -149,12 +149,12 @@ public class MeshBuilderBase {
 		addTriangle(textureIndex, textureCoordinateGenerationDirection, backfaceCullingDirection, x + dx1, y + dy1, z + dz1, x, y, z, x + dx2, y + dy2, z + dz2);
 		addTriangle(textureIndex, textureCoordinateGenerationDirection, backfaceCullingDirection, x + dx1, y + dy1, z + dz1, x + dx2, y + dy2, z + dz2, x + dx1 + dx2, y + dy1 + dy2, z + dz1 + dz2);
 	}
-	
+
 	/**
 	 * Adds a two-sided parallelogram quad.
-	 * 
+	 *
 	 * This method uses detail coordinates, with {@link StackdConstants#GEOMETRY_DETAIL_FACTOR} units per cube.
-	 * 
+	 *
 	 * @param textureIndex the texture index
 	 * @param textureCoordinateGenerationDirection the direction used to set up texture coordinate generation
 	 * @param x the base x coordinate
@@ -171,15 +171,15 @@ public class MeshBuilderBase {
 		addTwoSidedTriangle(textureIndex, textureCoordinateGenerationDirection, x, y, z, x + dx1, y + dy1, z + dz1, x + dx2, y + dy2, z + dz2);
 		addTwoSidedTriangle(textureIndex, textureCoordinateGenerationDirection, x + dx1, y + dy1, z + dz1, x + dx2, y + dy2, z + dz2, x + dx1 + dx2, y + dy1 + dy2, z + dz1 + dz2);
 	}
-	
+
 	/**
 	 * Adds some or all of the polygons that make up an axis-aligned box with the specified min/max
 	 * coordinates and texture indices. Any texture index that is 0 causes the correspding box face
 	 * to be omitted. The order of the texture indices is the natural {@link AxisAlignedDirection}
 	 * order.
-	 * 
+	 *
 	 * This method uses detail coordinates, with {@link StackdConstants#GEOMETRY_DETAIL_FACTOR} units per cube.
-	 * 
+	 *
 	 * @param x1 the min x coordinate
 	 * @param y1 the min y coordinate
 	 * @param z1 the min z coordinate
@@ -209,9 +209,9 @@ public class MeshBuilderBase {
 	 * Adds a pair of square polygons inside a cube cell, oriented as a horizontal X, to represent
 	 * things like grass in a simple way. The X fills a rectangular region with the specified
 	 * min/max coordinates.
-	 * 
+	 *
 	 * This method uses detail coordinates, with {@link StackdConstants#GEOMETRY_DETAIL_FACTOR} units per cube.
-	 * 
+	 *
 	 * @param x1 the min x coordinate
 	 * @param y1 the min y coordinate
 	 * @param z1 the min z coordinate

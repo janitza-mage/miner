@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -157,7 +157,7 @@ public final class Box extends AbstractWrapperElement {
 		wrappedElement.requestSize(remainingWidth < 0 ? 0 : remainingWidth, remainingHeight < 0 ? 0 : remainingHeight);
 		setSize(wrappedElement.getWidth() + horizontalExtra, wrappedElement.getHeight() + verticalExtra);
 	}
-	
+
 	@Override
 	protected void setChildrenLayoutPosition(int absoluteX, int absoluteY) {
 		requireWrappedElement();

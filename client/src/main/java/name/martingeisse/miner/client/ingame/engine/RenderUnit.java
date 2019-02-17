@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -18,7 +18,7 @@ import static org.lwjgl.opengl.GL11.*;
  * The {@link RenderableSection}s of the working set get subdivided into units
  * of this type, which then get sorted by required render state and which do
  * the actual rendering.
- * 
+ *
  * A render unit consists of a render-state part and a data part. Render units
  * should be sorted by render state to improve performance. The render state
  * consists of a texture index and an {@link AxisAlignedDirection} for texture
@@ -27,7 +27,7 @@ import static org.lwjgl.opengl.GL11.*;
  * that the render unit can be build in the application thread and the creation
  * of the VBO be passed on to the OpenGL worker thread. Trying to draw a render
  * unit without a VBO will simply skip that unit.
- * 
+ *
  * A render unit also stores a bounding box for quick frustum culling (TODO) and
  * quick backface culling.
  */
@@ -52,7 +52,7 @@ public final class RenderUnit extends GlWorkUnit {
 	 * the backfaceCullingDirection
 	 */
 	private final AxisAlignedDirection backfaceCullingDirection;
-	
+
 	/**
 	 * the firstVertexIndex
 	 */
@@ -97,7 +97,7 @@ public final class RenderUnit extends GlWorkUnit {
 	public int getFirstVertexIndex() {
 		return firstVertexIndex;
 	}
-	
+
 	/**
 	 * Setter method for the firstVertexIndex.
 	 * @param firstVertexIndex the firstVertexIndex to set
@@ -105,7 +105,7 @@ public final class RenderUnit extends GlWorkUnit {
 	public void setFirstVertexIndex(int firstVertexIndex) {
 		this.firstVertexIndex = firstVertexIndex;
 	}
-	
+
 	/**
 	 * Getter method for the vertexCount.
 	 * @return the vertexCount
@@ -165,7 +165,7 @@ public final class RenderUnit extends GlWorkUnit {
 	/**
 	 * Draws this render unit. This method should be called from the high-level rendering thread.
 	 * It will decide whether to place this object into the GL worker loop as a work unit.
-	 * 
+	 *
 	 * @param engineParameters the engine parameters
 	 * @param frameRenderParameters the per-frame rendering parameters
 	 * @param glWorkerLoop the GL worker loop to use to schedule GL work units
@@ -174,7 +174,7 @@ public final class RenderUnit extends GlWorkUnit {
 
 		// backface culling
 		if (backfaceCullingDirection != null) {
-			
+
 			// Possible optimization:
 			// ... depending on the viewer's plane, we either draw all planes in one direction and none
 			// ... in the opposite direction, or (if the player is "inside" the section along this
@@ -189,7 +189,7 @@ public final class RenderUnit extends GlWorkUnit {
 			final int dy = (frameRenderParameters.getY() - boundingBox.getStartY());
 			final int dz = (frameRenderParameters.getZ() - boundingBox.getStartZ());
 			final int viewerPlane = backfaceCullingDirection.selectByAxis(dx, dy, dz);
-			
+
 			// quick whole-section backface culling (note that sizeX == sizeY == sizeZ for the region)
 			if (viewerPlane < 0 && !backfaceCullingDirection.isNegative()) {
 				return;
@@ -197,7 +197,7 @@ public final class RenderUnit extends GlWorkUnit {
 			if (viewerPlane >= boundingBox.getSizeX() && backfaceCullingDirection.isNegative()) {
 				return;
 			}
-			
+
 		}
 
 		// this render unit must actually be drawn

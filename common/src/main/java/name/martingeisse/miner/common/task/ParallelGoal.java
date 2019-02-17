@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * Manages a set of subgoals that must be executed in parallel
  * to achieve the goal. Subgoals can be added to the set
  * until sealed.
- * 
+ *
  * TODO allow autostart without scheduling manually (thread
  * switch round-trip!)
  */

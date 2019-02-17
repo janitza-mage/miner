@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -41,7 +41,7 @@ public abstract class AbstractWrapperElement extends GuiElement {
 	public GuiElement getWrappedElement() {
 		return wrappedElement;
 	}
-	
+
 	/**
 	 * Setter method for the wrappedElement.
 	 * @param wrappedElement the wrappedElement to set
@@ -63,7 +63,7 @@ public abstract class AbstractWrapperElement extends GuiElement {
 		requireWrappedElement();
 		wrappedElement.handleEvent(event);
 	}
-	
+
 	/**
 	 * Throws an {@link IllegalStateException} if no wrapped element is currently set.
 	 */

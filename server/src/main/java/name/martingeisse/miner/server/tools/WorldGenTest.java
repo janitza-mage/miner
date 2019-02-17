@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -24,21 +24,21 @@ public class WorldGenTest {
 	 * @throws Exception ... 
 	 */
 	public static void main(String[] args) throws Exception {
-		
+
 		// height field parameters
 		int radius = 2000;
-		int size = 2*radius;
+		int size = 2 * radius;
 		double amplitude = 200.0;
 		double wavelength = radius;
 		int octaveCount = 10;
 		double octaveFactor = 0.4;
 		double[] values = new double[size * size];
-		
+
 		// generate height field
 		for (int octave = 0; octave < octaveCount; octave++) {
 			PerlinNoise noise = new PerlinNoise(octave);
-			for (int x=0; x<size; x++) {
-				for (int y=0; y<size; y++) {
+			for (int x = 0; x < size; x++) {
+				for (int y = 0; y < size; y++) {
 					double contribution = noise.computeNoise((x - radius) / wavelength, (y - radius) / wavelength) * amplitude;
 					values[y * size + x] += contribution;
 				}
@@ -46,20 +46,20 @@ public class WorldGenTest {
 			amplitude *= octaveFactor;
 			wavelength /= 2.0;
 		}
-		
+
 		// generate image file
 		BufferedImage bufferedImage = new BufferedImage(size, size, BufferedImage.TYPE_4BYTE_ABGR);
 		WritableRaster raster = bufferedImage.getRaster();
-		for (int x=0; x<size; x++) {
-			for (int y=0; y<size; y++) {
-				int height = (int)values[y * size + x];
+		for (int x = 0; x < size; x++) {
+			for (int y = 0; y < size; y++) {
+				int height = (int) values[y * size + x];
 				height = (height + 0x80);
 				if (height < 0) {
 					height = 0;
 				} else if (height > 255) {
 					height = 255;
 				}
-				for (int band=0; band<3; band++) {
+				for (int band = 0; band < 3; band++) {
 					raster.setSample(x, y, band, height);
 				}
 				raster.setSample(x, y, 3, 255);
@@ -68,7 +68,7 @@ public class WorldGenTest {
 		try (FileOutputStream fileOutputStream = new FileOutputStream(new File("world.png"))) {
 			ImageIO.write(bufferedImage, "png", fileOutputStream);
 		}
-		
+
 	}
 
 }

@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -28,16 +28,16 @@ import java.util.concurrent.ExecutionException;
  * This class is the front-end to section storage. It maintains a cache of recently
  * used section-related objects as well as an {@link AbstractSectionStorage} in the
  * background that handles actual storage of the sections.
- * 
+ *
  * Note that since objects are just cached, not permanently stored, fetching an
  * object may return a different object than before. This implies that code should
  * not hold on an old instance to avoid concurrent modification on two different
  * section objects, with save operations overwriting each other's changes.
- * 
+ *
  * The cache keeps section-related data objects using their {@link SectionDataId}.
  * Each entry is the actual data, wrapped in a {@link SectionDataCacheEntry}
  * subclass instance.
- * 
+ *
  * TODO save on evict
  *
  * TODO read-modify-write is not totally thread safe
@@ -137,7 +137,7 @@ public final class SectionWorkingSet {
 
 	/**
 	 * Returns a single object, loading it if necessary.
-	 * 
+	 *
 	 * @param sectionDataId the section data ID
 	 * @return the section-related object
 	 */
@@ -148,10 +148,10 @@ public final class SectionWorkingSet {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * Returns a single object if present in the cache, null if not present.
-	 * 
+	 *
 	 * @param sectionDataId the section data ID
 	 * @return the section-related object or null
 	 */
@@ -161,7 +161,7 @@ public final class SectionWorkingSet {
 
 	/**
 	 * Returns multiple objects, loading them if necessary.
-	 * 
+	 *
 	 * @param sectionDataIds the section data IDs
 	 * @return the section-related objects
 	 */
@@ -181,7 +181,7 @@ public final class SectionWorkingSet {
 
 	/**
 	 * Of multiple objects, returns those that are already present in the cache.
-	 * 
+	 *
 	 * @param sectionDataIds the section data IDs
 	 * @return the cached section-related objects
 	 */
@@ -194,10 +194,10 @@ public final class SectionWorkingSet {
 			}
 		});
 	}
-	
+
 	/**
 	 * Returns multiple objects, loading them if necessary.
-	 * 
+	 *
 	 * @param sectionDataIds the section data IDs
 	 * @return the section-related objects
 	 */
@@ -208,10 +208,10 @@ public final class SectionWorkingSet {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * Of multiple objects, returns those that are already present in the cache.
-	 * 
+	 *
 	 * @param sectionDataIds the section data IDs
 	 * @return the section-related objects
 	 */
@@ -221,7 +221,7 @@ public final class SectionWorkingSet {
 
 	/**
 	 * Pre-caches the objects for the specified IDs.
-	 * 
+	 *
 	 * @param sectionDataIds the section data IDs
 	 */
 	public final void precache(final SectionDataId[] sectionDataIds) {
@@ -261,7 +261,7 @@ public final class SectionWorkingSet {
 
 	/**
 	 * Creates a default object for an ID that does not have that object in storage.
-	 * 
+	 *
 	 * Note: there is currently no way to mark such objects as dirty before they have
 	 * been placed into the cache, in case this function creates an object in a
 	 * non-deterministic way. Just calling markModified() on the returned object
@@ -272,31 +272,31 @@ public final class SectionWorkingSet {
 	 * the cache yet and handle this in markModified() (that is, add a task item when it
 	 * later gets added). This should not require another method because the caller could
 	 * still use markModified() accidentally which would be incorrect.
-	 * 
+	 *
 	 * @param sectionDataId the section data ID
 	 * @return the cache entry
 	 */
 	private SectionDataCacheEntry createDefault(final SectionDataId sectionDataId) {
 		switch (sectionDataId.getType()) {
 
-		case DEFINITIVE:
-			return new SectionCubesCacheEntry(this, sectionDataId, new UniformCubes((byte)0));
+			case DEFINITIVE:
+				return new SectionCubesCacheEntry(this, sectionDataId, new UniformCubes((byte) 0));
 
-		case INTERACTIVE:
-			return new InteractiveSectionImageCacheEntry(this, sectionDataId, null);
+			case INTERACTIVE:
+				return new InteractiveSectionImageCacheEntry(this, sectionDataId, null);
 
-		case VIEW_LOD_0:
-			throw new NotImplementedException("LOD0 not implemented");
+			case VIEW_LOD_0:
+				throw new NotImplementedException("LOD0 not implemented");
 
-		default:
-			throw new IllegalArgumentException("invalid section data type in: " + sectionDataId);
+			default:
+				throw new IllegalArgumentException("invalid section data type in: " + sectionDataId);
 
 		}
 	}
 
 	/**
 	 * Creates a cached object from a serialized representation.
-	 * 
+	 *
 	 * @param sectionDataId the section data ID
 	 * @param data the loaded data
 	 * @return the cache entry
@@ -304,19 +304,19 @@ public final class SectionWorkingSet {
 	protected SectionDataCacheEntry unserializeForLoad(final SectionDataId sectionDataId, final byte[] data) {
 		switch (sectionDataId.getType()) {
 
-		case DEFINITIVE: {
-			final Cubes sectionCubes = Cubes.createFromCompressedData(Constants.SECTION_SIZE, data);
-			return new SectionCubesCacheEntry(this, sectionDataId, sectionCubes);
-		}
+			case DEFINITIVE: {
+				final Cubes sectionCubes = Cubes.createFromCompressedData(Constants.SECTION_SIZE, data);
+				return new SectionCubesCacheEntry(this, sectionDataId, sectionCubes);
+			}
 
-		case INTERACTIVE:
-			return new InteractiveSectionImageCacheEntry(this, sectionDataId, data);
+			case INTERACTIVE:
+				return new InteractiveSectionImageCacheEntry(this, sectionDataId, data);
 
-		case VIEW_LOD_0:
-			throw new NotImplementedException("LOD0 not implemented");
+			case VIEW_LOD_0:
+				throw new NotImplementedException("LOD0 not implemented");
 
-		default:
-			throw new IllegalArgumentException("invalid section data type in: " + sectionDataId);
+			default:
+				throw new IllegalArgumentException("invalid section data type in: " + sectionDataId);
 
 		}
 	}

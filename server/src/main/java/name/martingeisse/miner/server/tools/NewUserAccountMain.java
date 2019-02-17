@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -23,17 +23,17 @@ public class NewUserAccountMain {
 		// parameters
 		String username = "test";
 		String password = "test";
-		
+
 		// prepare data
 		String salt = BCrypt.gensalt(Constants.BCRYPT_COST);
 		System.out.println("salt: " + salt);
 		String hash = BCrypt.hashpw(password, salt);
 		System.out.println("hash: " + hash);
-		
+
 		// Insert data. Trolololo injection vulnerability, but I'm going to execute the query manually anyway.
 		System.out.println();
 		System.out.println("INSERT INTO \"miner\".\"UserAccount\" (\"username\", \"passwordHash\") VALUES ('" + username + "', '" + hash + "');");
 
 	}
-	
+
 }

@@ -79,7 +79,7 @@ public final class StartmenuNetworkClient implements MessageConsumer {
 			this.requestInProgress = false;
 			this.expectedResponseClass = null;
 			this.responseConsumer = null;
-			consumer.consumeResponse((Response)message);
+			consumer.consumeResponse((Response) message);
 		} else if (message instanceof ErrorResponse) {
 			ResponseConsumer<?> consumer = this.responseConsumer;
 			this.requestInProgress = false;

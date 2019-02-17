@@ -64,6 +64,7 @@ public enum AxisAlignedDirection {
 
 	/**
 	 * Getter method for the axis.
+	 *
 	 * @return the axis
 	 */
 	public int getAxis() {
@@ -72,6 +73,7 @@ public enum AxisAlignedDirection {
 
 	/**
 	 * Getter method for the negative.
+	 *
 	 * @return the negative
 	 */
 	public boolean isNegative() {
@@ -192,7 +194,7 @@ public enum AxisAlignedDirection {
 	/**
 	 * Returns the signed amount in this direction, e.g. the x value for
 	 * the positive x direction, -x for the negative x direction, and so on.
-	 *
+	 * <p>
 	 * Mathematically speaking, this function returns the dot product of the
 	 * specified vector with the unit vector for this direction.
 	 *
@@ -220,7 +222,7 @@ public enum AxisAlignedDirection {
 	/**
 	 * Returns the signed amount in this direction, e.g. the x value for
 	 * the positive x direction, -x for the negative x direction, and so on.
-	 *
+	 * <p>
 	 * Mathematically speaking, this function returns the dot product of the
 	 * specified vector with the unit vector for this direction.
 	 *
@@ -237,7 +239,7 @@ public enum AxisAlignedDirection {
 	/**
 	 * Returns the signed amount in this direction, e.g. the x value for
 	 * the positive x direction, -x for the negative x direction, and so on.
-	 *
+	 * <p>
 	 * Mathematically speaking, this function returns the dot product of the
 	 * specified vector with the unit vector for this direction.
 	 *

@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -18,7 +18,7 @@ public final class ThreadUtil {
 	 * the logger
 	 */
 	private static Logger logger = Logger.getLogger(ThreadUtil.class);
-	
+
 	/**
 	 * Prevent instantiation.
 	 */
@@ -34,10 +34,10 @@ public final class ThreadUtil {
 		int activeThreadCount = Thread.activeCount();
 		Thread[] activeThreads = new Thread[activeThreadCount];
 		activeThreadCount = Thread.enumerate(activeThreads);
-		for (int i=0; i<activeThreadCount; i++) {
+		for (int i = 0; i < activeThreadCount; i++) {
 			Thread thread = activeThreads[i];
 			logger.log(level, thread.getName());
 		}
 	}
-	
+
 }

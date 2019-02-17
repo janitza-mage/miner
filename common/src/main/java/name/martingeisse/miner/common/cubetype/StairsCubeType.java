@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -10,7 +10,7 @@ import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 
 /**
  * A "stairs" cube type that fills 3/4 of a cube.
- * 
+ *
  * This type *cannot* be used for transparent cubes like glass!
  */
 public class StairsCubeType extends CubeType {
@@ -100,53 +100,53 @@ public class StairsCubeType extends CubeType {
 	public void buildInnerPolygons(final MeshBuilderBase meshBuilder, final int baseX, final int baseY, final int baseZ) {
 		switch (upstairsDirection) {
 
-		case NEGATIVE_X:
-			meshBuilder.addOneSidedQuad(topTextureIndex, AxisAlignedDirection.POSITIVE_Y, AxisAlignedDirection.POSITIVE_Y, baseX, baseY + 8, baseZ, 4, 0, 0, 0, 0, 8);
-			meshBuilder.addOneSidedQuad(topTextureIndex, AxisAlignedDirection.POSITIVE_Y, AxisAlignedDirection.POSITIVE_Y, baseX + 4, baseY + 4, baseZ, 4, 0, 0, 0, 0, 8);
-			meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.NEGATIVE_Z, AxisAlignedDirection.NEGATIVE_Z, baseX, baseY, baseZ, 4, 0, 0, 0, 8, 0);
-			meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.NEGATIVE_Z, AxisAlignedDirection.NEGATIVE_Z, baseX + 4, baseY, baseZ, 4, 0, 0, 0, 4, 0);
-			meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.POSITIVE_Z, AxisAlignedDirection.POSITIVE_Z, baseX, baseY, baseZ + 8, 0, 8, 0, 4, 0, 0);
-			meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.POSITIVE_Z, AxisAlignedDirection.POSITIVE_Z, baseX + 4, baseY, baseZ + 8, 0, 4, 0, 4, 0, 0);
-			meshBuilder.addOneSidedQuad(frontTextureIndex, AxisAlignedDirection.POSITIVE_X, AxisAlignedDirection.POSITIVE_X, baseX + 4, baseY + 4, baseZ, 0, 0, 8, 0, 4, 0);
-			meshBuilder.addOneSidedQuad(frontTextureIndex, AxisAlignedDirection.POSITIVE_X, AxisAlignedDirection.POSITIVE_X, baseX + 8, baseY, baseZ, 0, 0, 8, 0, 4, 0);
-			break;
+			case NEGATIVE_X:
+				meshBuilder.addOneSidedQuad(topTextureIndex, AxisAlignedDirection.POSITIVE_Y, AxisAlignedDirection.POSITIVE_Y, baseX, baseY + 8, baseZ, 4, 0, 0, 0, 0, 8);
+				meshBuilder.addOneSidedQuad(topTextureIndex, AxisAlignedDirection.POSITIVE_Y, AxisAlignedDirection.POSITIVE_Y, baseX + 4, baseY + 4, baseZ, 4, 0, 0, 0, 0, 8);
+				meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.NEGATIVE_Z, AxisAlignedDirection.NEGATIVE_Z, baseX, baseY, baseZ, 4, 0, 0, 0, 8, 0);
+				meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.NEGATIVE_Z, AxisAlignedDirection.NEGATIVE_Z, baseX + 4, baseY, baseZ, 4, 0, 0, 0, 4, 0);
+				meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.POSITIVE_Z, AxisAlignedDirection.POSITIVE_Z, baseX, baseY, baseZ + 8, 0, 8, 0, 4, 0, 0);
+				meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.POSITIVE_Z, AxisAlignedDirection.POSITIVE_Z, baseX + 4, baseY, baseZ + 8, 0, 4, 0, 4, 0, 0);
+				meshBuilder.addOneSidedQuad(frontTextureIndex, AxisAlignedDirection.POSITIVE_X, AxisAlignedDirection.POSITIVE_X, baseX + 4, baseY + 4, baseZ, 0, 0, 8, 0, 4, 0);
+				meshBuilder.addOneSidedQuad(frontTextureIndex, AxisAlignedDirection.POSITIVE_X, AxisAlignedDirection.POSITIVE_X, baseX + 8, baseY, baseZ, 0, 0, 8, 0, 4, 0);
+				break;
 
-		case POSITIVE_X:
-			meshBuilder.addOneSidedQuad(topTextureIndex, AxisAlignedDirection.POSITIVE_Y, AxisAlignedDirection.POSITIVE_Y, baseX, baseY + 4, baseZ, 4, 0, 0, 0, 0, 8);
-			meshBuilder.addOneSidedQuad(topTextureIndex, AxisAlignedDirection.POSITIVE_Y, AxisAlignedDirection.POSITIVE_Y, baseX + 4, baseY + 8, baseZ, 4, 0, 0, 0, 0, 8);
-			meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.NEGATIVE_Z, AxisAlignedDirection.NEGATIVE_Z, baseX, baseY, baseZ, 4, 0, 0, 0, 4, 0);
-			meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.NEGATIVE_Z, AxisAlignedDirection.NEGATIVE_Z, baseX + 4, baseY, baseZ, 4, 0, 0, 0, 8, 0);
-			meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.POSITIVE_Z, AxisAlignedDirection.POSITIVE_Z, baseX, baseY, baseZ + 8, 0, 4, 0, 4, 0, 0);
-			meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.POSITIVE_Z, AxisAlignedDirection.POSITIVE_Z, baseX + 4, baseY, baseZ + 8, 0, 8, 0, 4, 0, 0);
-			meshBuilder.addOneSidedQuad(frontTextureIndex, AxisAlignedDirection.NEGATIVE_X, AxisAlignedDirection.NEGATIVE_X, baseX + 4, baseY + 4, baseZ, 0, 4, 0, 0, 0, 8);
-			meshBuilder.addOneSidedQuad(frontTextureIndex, AxisAlignedDirection.NEGATIVE_X, AxisAlignedDirection.NEGATIVE_X, baseX, baseY, baseZ, 0, 4, 0, 0, 0, 8);
-			break;
+			case POSITIVE_X:
+				meshBuilder.addOneSidedQuad(topTextureIndex, AxisAlignedDirection.POSITIVE_Y, AxisAlignedDirection.POSITIVE_Y, baseX, baseY + 4, baseZ, 4, 0, 0, 0, 0, 8);
+				meshBuilder.addOneSidedQuad(topTextureIndex, AxisAlignedDirection.POSITIVE_Y, AxisAlignedDirection.POSITIVE_Y, baseX + 4, baseY + 8, baseZ, 4, 0, 0, 0, 0, 8);
+				meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.NEGATIVE_Z, AxisAlignedDirection.NEGATIVE_Z, baseX, baseY, baseZ, 4, 0, 0, 0, 4, 0);
+				meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.NEGATIVE_Z, AxisAlignedDirection.NEGATIVE_Z, baseX + 4, baseY, baseZ, 4, 0, 0, 0, 8, 0);
+				meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.POSITIVE_Z, AxisAlignedDirection.POSITIVE_Z, baseX, baseY, baseZ + 8, 0, 4, 0, 4, 0, 0);
+				meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.POSITIVE_Z, AxisAlignedDirection.POSITIVE_Z, baseX + 4, baseY, baseZ + 8, 0, 8, 0, 4, 0, 0);
+				meshBuilder.addOneSidedQuad(frontTextureIndex, AxisAlignedDirection.NEGATIVE_X, AxisAlignedDirection.NEGATIVE_X, baseX + 4, baseY + 4, baseZ, 0, 4, 0, 0, 0, 8);
+				meshBuilder.addOneSidedQuad(frontTextureIndex, AxisAlignedDirection.NEGATIVE_X, AxisAlignedDirection.NEGATIVE_X, baseX, baseY, baseZ, 0, 4, 0, 0, 0, 8);
+				break;
 
-		case NEGATIVE_Z:
-			meshBuilder.addOneSidedQuad(topTextureIndex, AxisAlignedDirection.POSITIVE_Y, AxisAlignedDirection.POSITIVE_Y, baseX, baseY + 8, baseZ, 8, 0, 0, 0, 0, 4);
-			meshBuilder.addOneSidedQuad(topTextureIndex, AxisAlignedDirection.POSITIVE_Y, AxisAlignedDirection.POSITIVE_Y, baseX, baseY + 4, baseZ + 4, 8, 0, 0, 0, 0, 4);
-			meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.NEGATIVE_X, AxisAlignedDirection.NEGATIVE_X, baseX, baseY, baseZ, 0, 8, 0, 0, 0, 4);
-			meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.NEGATIVE_X, AxisAlignedDirection.NEGATIVE_X, baseX, baseY, baseZ + 4, 0, 4, 0, 0, 0, 4);
-			meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.POSITIVE_X, AxisAlignedDirection.POSITIVE_X, baseX + 8, baseY, baseZ, 0, 0, 4, 0, 8, 0);
-			meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.POSITIVE_X, AxisAlignedDirection.POSITIVE_X, baseX + 8, baseY, baseZ + 4, 0, 0, 4, 0, 4, 0);
-			meshBuilder.addOneSidedQuad(frontTextureIndex, AxisAlignedDirection.POSITIVE_Z, AxisAlignedDirection.POSITIVE_Z, baseX, baseY + 4, baseZ + 4, 0, 4, 0, 8, 0, 0);
-			meshBuilder.addOneSidedQuad(frontTextureIndex, AxisAlignedDirection.POSITIVE_Z, AxisAlignedDirection.POSITIVE_Z, baseX, baseY, baseZ + 8, 0, 4, 0, 8, 0, 0);
-			break;
+			case NEGATIVE_Z:
+				meshBuilder.addOneSidedQuad(topTextureIndex, AxisAlignedDirection.POSITIVE_Y, AxisAlignedDirection.POSITIVE_Y, baseX, baseY + 8, baseZ, 8, 0, 0, 0, 0, 4);
+				meshBuilder.addOneSidedQuad(topTextureIndex, AxisAlignedDirection.POSITIVE_Y, AxisAlignedDirection.POSITIVE_Y, baseX, baseY + 4, baseZ + 4, 8, 0, 0, 0, 0, 4);
+				meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.NEGATIVE_X, AxisAlignedDirection.NEGATIVE_X, baseX, baseY, baseZ, 0, 8, 0, 0, 0, 4);
+				meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.NEGATIVE_X, AxisAlignedDirection.NEGATIVE_X, baseX, baseY, baseZ + 4, 0, 4, 0, 0, 0, 4);
+				meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.POSITIVE_X, AxisAlignedDirection.POSITIVE_X, baseX + 8, baseY, baseZ, 0, 0, 4, 0, 8, 0);
+				meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.POSITIVE_X, AxisAlignedDirection.POSITIVE_X, baseX + 8, baseY, baseZ + 4, 0, 0, 4, 0, 4, 0);
+				meshBuilder.addOneSidedQuad(frontTextureIndex, AxisAlignedDirection.POSITIVE_Z, AxisAlignedDirection.POSITIVE_Z, baseX, baseY + 4, baseZ + 4, 0, 4, 0, 8, 0, 0);
+				meshBuilder.addOneSidedQuad(frontTextureIndex, AxisAlignedDirection.POSITIVE_Z, AxisAlignedDirection.POSITIVE_Z, baseX, baseY, baseZ + 8, 0, 4, 0, 8, 0, 0);
+				break;
 
-		case POSITIVE_Z:
-			meshBuilder.addOneSidedQuad(topTextureIndex, AxisAlignedDirection.POSITIVE_Y, AxisAlignedDirection.POSITIVE_Y, baseX, baseY + 4, baseZ, 8, 0, 0, 0, 0, 4);
-			meshBuilder.addOneSidedQuad(topTextureIndex, AxisAlignedDirection.POSITIVE_Y, AxisAlignedDirection.POSITIVE_Y, baseX, baseY + 8, baseZ + 4, 8, 0, 0, 0, 0, 4);
-			meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.NEGATIVE_X, AxisAlignedDirection.NEGATIVE_X, baseX, baseY, baseZ, 0, 4, 0, 0, 0, 4);
-			meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.NEGATIVE_X, AxisAlignedDirection.NEGATIVE_X, baseX, baseY, baseZ + 4, 0, 8, 0, 0, 0, 4);
-			meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.POSITIVE_X, AxisAlignedDirection.POSITIVE_X, baseX + 8, baseY, baseZ, 0, 0, 4, 0, 4, 0);
-			meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.POSITIVE_X, AxisAlignedDirection.POSITIVE_X, baseX + 8, baseY, baseZ + 4, 0, 0, 4, 0, 8, 0);
-			meshBuilder.addOneSidedQuad(frontTextureIndex, AxisAlignedDirection.NEGATIVE_Z, AxisAlignedDirection.NEGATIVE_Z, baseX, baseY + 4, baseZ + 4, 8, 0, 0, 0, 4, 0);
-			meshBuilder.addOneSidedQuad(frontTextureIndex, AxisAlignedDirection.NEGATIVE_Z, AxisAlignedDirection.NEGATIVE_Z, baseX, baseY, baseZ, 8, 0, 0, 0, 4, 0);
-			break;
+			case POSITIVE_Z:
+				meshBuilder.addOneSidedQuad(topTextureIndex, AxisAlignedDirection.POSITIVE_Y, AxisAlignedDirection.POSITIVE_Y, baseX, baseY + 4, baseZ, 8, 0, 0, 0, 0, 4);
+				meshBuilder.addOneSidedQuad(topTextureIndex, AxisAlignedDirection.POSITIVE_Y, AxisAlignedDirection.POSITIVE_Y, baseX, baseY + 8, baseZ + 4, 8, 0, 0, 0, 0, 4);
+				meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.NEGATIVE_X, AxisAlignedDirection.NEGATIVE_X, baseX, baseY, baseZ, 0, 4, 0, 0, 0, 4);
+				meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.NEGATIVE_X, AxisAlignedDirection.NEGATIVE_X, baseX, baseY, baseZ + 4, 0, 8, 0, 0, 0, 4);
+				meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.POSITIVE_X, AxisAlignedDirection.POSITIVE_X, baseX + 8, baseY, baseZ, 0, 0, 4, 0, 4, 0);
+				meshBuilder.addOneSidedQuad(sideTextureIndex, AxisAlignedDirection.POSITIVE_X, AxisAlignedDirection.POSITIVE_X, baseX + 8, baseY, baseZ + 4, 0, 0, 4, 0, 8, 0);
+				meshBuilder.addOneSidedQuad(frontTextureIndex, AxisAlignedDirection.NEGATIVE_Z, AxisAlignedDirection.NEGATIVE_Z, baseX, baseY + 4, baseZ + 4, 8, 0, 0, 0, 4, 0);
+				meshBuilder.addOneSidedQuad(frontTextureIndex, AxisAlignedDirection.NEGATIVE_Z, AxisAlignedDirection.NEGATIVE_Z, baseX, baseY, baseZ, 8, 0, 0, 0, 4, 0);
+				break;
 
-		case NEGATIVE_Y:
-		case POSITIVE_Y:
-			break;
+			case NEGATIVE_Y:
+			case POSITIVE_Y:
+				break;
 
 		}
 	}
@@ -161,20 +161,20 @@ public class StairsCubeType extends CubeType {
 		}
 		switch (upstairsDirection) {
 
-		case NEGATIVE_X:
-			return (startX < 4);
+			case NEGATIVE_X:
+				return (startX < 4);
 
-		case POSITIVE_X:
-			return (endX > 4);
+			case POSITIVE_X:
+				return (endX > 4);
 
-		case NEGATIVE_Z:
-			return (startZ < 4);
+			case NEGATIVE_Z:
+				return (startZ < 4);
 
-		case POSITIVE_Z:
-			return (endZ > 4);
+			case POSITIVE_Z:
+				return (endZ > 4);
 
-		default:
-			return false;
+			default:
+				return false;
 
 		}
 	}

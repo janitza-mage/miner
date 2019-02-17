@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -16,14 +16,14 @@ public abstract class AbstractSystemResource implements ISystemResource {
 	 * the disposed
 	 */
 	private boolean disposed;
-	
+
 	/**
 	 * Constructor.
 	 */
 	public AbstractSystemResource() {
 		this.disposed = false;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.lowlevel.ISystemResource#dispose()
 	 */
@@ -35,10 +35,10 @@ public abstract class AbstractSystemResource implements ISystemResource {
 		internalDispose();
 		disposed = true;
 	}
-	
+
 	/**
 	 * Actually disposes of this resource. Only called if not yet disposed.
 	 */
 	protected abstract void internalDispose();
-	
+
 }

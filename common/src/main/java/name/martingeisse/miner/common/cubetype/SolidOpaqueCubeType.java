@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -12,7 +12,7 @@ import java.util.Arrays;
 
 /**
  * Cube type that is used for the typical "solid opaque" cube, like dirt, stone etc.
- * 
+ *
  * This type *cannot* be used for transparent cubes like glass!
  */
 public class SolidOpaqueCubeType extends CubeType {
@@ -25,7 +25,7 @@ public class SolidOpaqueCubeType extends CubeType {
 	 * @param cubeFaceTextureIndex the texture index to use for all six cube faces
 	 */
 	public SolidOpaqueCubeType(final int cubeFaceTextureIndex) {
-		this(new int[] { cubeFaceTextureIndex, cubeFaceTextureIndex, cubeFaceTextureIndex, cubeFaceTextureIndex, cubeFaceTextureIndex, cubeFaceTextureIndex });
+		this(new int[]{cubeFaceTextureIndex, cubeFaceTextureIndex, cubeFaceTextureIndex, cubeFaceTextureIndex, cubeFaceTextureIndex, cubeFaceTextureIndex});
 	}
 
 	/**

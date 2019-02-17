@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.miner.client.util.gui.element;
 
-import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.util.VerticalAlignment;
+import name.martingeisse.miner.common.util.contract.ParameterUtil;
 
 /**
  * This layout arranges its elements horizontally, then aligns
@@ -36,7 +36,7 @@ public final class HorizontalLayout extends AbstractListElement {
 	public VerticalAlignment getAlignment() {
 		return alignment;
 	}
-	
+
 	/**
 	 * Setter method for the alignment.
 	 * @param alignment the alignment to set

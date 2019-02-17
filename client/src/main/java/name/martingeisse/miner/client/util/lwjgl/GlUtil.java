@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2013 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -12,7 +12,7 @@ import static org.lwjgl.opengl.GL11.glVertex3d;
 
 /**
  * Helper methods to draw objects using OpenGL.
- * 
+ *
  * All methods here are based on triangles. Those that claim to craw
  * quads do so using triangles, so be sure to also call {@link GL11#glBegin(int)}
  * with {@link GL11#GL_TRIANGLES}.
@@ -27,10 +27,10 @@ public final class GlUtil {
 
 	/**
 	 * Sends the vertices for a one-sided parallelogram quad.
-	 * 
+	 *
 	 * If you are looking straight at the quad, i.e. the quad's facing direction is pointing towards you,
 	 * then the "first" direction should be to the right and the "second" direction should be upwards.
-	 * 
+	 *
 	 * @param x the base x coordinate
 	 * @param y the base y coordinate
 	 * @param z the base z coordinate
@@ -53,7 +53,7 @@ public final class GlUtil {
 	/**
 	 * Adds the polygons that make up an axis-aligned box with the specified min/max
 	 * coordinates.
-	 * 
+	 *
 	 * @param x1 the min x coordinate
 	 * @param y1 the min y coordinate
 	 * @param z1 the min z coordinate

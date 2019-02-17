@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -10,7 +10,7 @@ package name.martingeisse.miner.common.util;
  * A simple class that contains a reference to another object. This
  * is useful whenever a nullable reference must be stored in a
  * place where null is not allowed.
- * 
+ *
  * @param <T> the type of the wrapped value
  */
 public final class Wrapper<T> {
@@ -19,13 +19,13 @@ public final class Wrapper<T> {
 	 * the value
 	 */
 	private T value;
-	
+
 	/**
 	 * Constructor.
 	 */
 	public Wrapper() {
 	}
-	
+
 	/**
 	 * Constructor.
 	 * @param value the value
@@ -41,7 +41,7 @@ public final class Wrapper<T> {
 	public T getValue() {
 		return value;
 	}
-	
+
 	/**
 	 * Setter method for the value.
 	 * @param value the value to set
@@ -58,13 +58,13 @@ public final class Wrapper<T> {
 		if (this == obj) {
 			return true;
 		} else if (obj instanceof Wrapper<?>) {
-			Wrapper<?> other = (Wrapper<?>)obj;
+			Wrapper<?> other = (Wrapper<?>) obj;
 			return (value == other.value ? true : value == null ? false : value.equals(other.value));
 		} else {
 			return false;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -80,7 +80,7 @@ public final class Wrapper<T> {
 	public String toString() {
 		return (value == null ? "null" : value.toString());
 	}
-	
+
 	/**
 	 * Factory method to avoid specifying the type parameter.
 	 * @param value the value to wrap
@@ -89,5 +89,5 @@ public final class Wrapper<T> {
 	public static <T> Wrapper<T> of(T value) {
 		return new Wrapper<T>(value);
 	}
-	
+
 }

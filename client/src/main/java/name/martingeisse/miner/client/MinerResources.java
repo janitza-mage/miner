@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2012 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -24,7 +24,7 @@ import java.io.InputStream;
 import static org.lwjgl.opengl.GL11.*;
 
 /**
- * 
+ *
  */
 public class MinerResources {
 
@@ -32,12 +32,12 @@ public class MinerResources {
 	 * the KEY_COLOR
 	 */
 	public static final int[] KEY_COLOR = {255, 0, 255};
-	
+
 	/**
 	 * the instance
 	 */
 	private static MinerResources instance;
-	
+
 	/**
 	 * Initializes the instance of this class and loads all resources.
 	 * @throws IOException on I/O errors
@@ -45,7 +45,7 @@ public class MinerResources {
 	public synchronized static void initializeInstance() throws IOException {
 		instance = new MinerResources();
 	}
-	
+
 	/**
 	 * Getter method for the instance.
 	 * @return the instance
@@ -53,7 +53,7 @@ public class MinerResources {
 	public static MinerResources getInstance() {
 		return instance;
 	}
-	
+
 	/**
 	 * the cubeTextures
 	 */
@@ -68,12 +68,12 @@ public class MinerResources {
 	 * the font
 	 */
 	private final Font font;
-	
+
 	/**
 	 * the footstep
 	 */
 	private final Audio footstep;
-	
+
 	/**
 	 * the hitCube
 	 */
@@ -106,7 +106,7 @@ public class MinerResources {
 		footstep = loadOggSound("footstep-1.ogg");
 		hitCube = loadOggSound("hit-cube-1.ogg");
 		landOnGround = loadOggSound("land.ogg");
-		
+
 	}
 
 	/**
@@ -128,7 +128,7 @@ public class MinerResources {
 	 */
 	private BufferedImage loadImage(final String filename) throws IOException {
 		try (InputStream inputStream = LauncherAssets.class.getResourceAsStream(filename)) {
-			return  ImageIO.read(inputStream);
+			return ImageIO.read(inputStream);
 		}
 	}
 
@@ -139,7 +139,7 @@ public class MinerResources {
 	public StackdTexture[] getCubeTextures() {
 		return cubeTextures;
 	}
-	
+
 	/**
 	 * Getter method for the clouds.
 	 * @return the clouds
@@ -155,14 +155,14 @@ public class MinerResources {
 	public Font getFont() {
 		return font;
 	}
-	
+
 	/**
 	 * Draws text to the current raster position.
 	 * @param s the text to draw
 	 * @param zoom the zoom factor for the text
 	 */
 	public void drawText(final String s, final float zoom) {
-		glColor4ub((byte)255, (byte)255, (byte)255, (byte)255);
+		glColor4ub((byte) 255, (byte) 255, (byte) 255, (byte) 255);
 		glBindTexture(GL_TEXTURE_2D, 0);
 		font.drawText(s, zoom, Font.ALIGN_CENTER, Font.ALIGN_CENTER);
 	}
@@ -174,7 +174,7 @@ public class MinerResources {
 	public Audio getFootstep() {
 		return footstep;
 	}
-	
+
 	/**
 	 * Getter method for the hitCube.
 	 * @return the hitCube
@@ -190,5 +190,5 @@ public class MinerResources {
 	public Audio getLandOnGround() {
 		return landOnGround;
 	}
-	
+
 }

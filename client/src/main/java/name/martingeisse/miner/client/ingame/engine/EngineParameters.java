@@ -23,6 +23,7 @@ public final class EngineParameters {
 
 	/**
 	 * Constructor.
+	 *
 	 * @param cubeTextures the cube textures
 	 */
 	public EngineParameters(final StackdTexture[] cubeTextures) {
@@ -38,6 +39,7 @@ public final class EngineParameters {
 
 	/**
 	 * Returns the cube texture for the specified cube texture index.
+	 *
 	 * @param cubeTextureIndex the cube texture index
 	 * @return the cube texture
 	 */
@@ -47,6 +49,7 @@ public final class EngineParameters {
 
 	/**
 	 * Returns a copy of the internal cube texture array.
+	 *
 	 * @return a new array containing all cube textures
 	 */
 	public StackdTexture[] getCubeTextures() {

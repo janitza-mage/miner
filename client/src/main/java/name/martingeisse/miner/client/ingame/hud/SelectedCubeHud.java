@@ -95,6 +95,7 @@ public final class SelectedCubeHud extends AbstractFrameHandler {
 
 	/**
 	 * Getter method for the textures.
+	 *
 	 * @return the textures
 	 */
 	public StackdTexture[] getTextures() {

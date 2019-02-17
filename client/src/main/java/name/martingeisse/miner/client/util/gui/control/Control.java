@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -33,7 +33,7 @@ public class Control extends GuiElement {
 	public final GuiElement getControlRootElement() {
 		return controlRootElement;
 	}
-	
+
 	/**
 	 * Setter method for the controlRootElement.
 	 * @param controlRootElement the controlRootElement to set

@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -17,12 +17,12 @@ public final class Margin extends AbstractWrapperElement {
 	 * the top
 	 */
 	private int top;
-	
+
 	/**
 	 * the right
 	 */
 	private int right;
-	
+
 	/**
 	 * the bottom
 	 */
@@ -32,7 +32,7 @@ public final class Margin extends AbstractWrapperElement {
 	 * the left
 	 */
 	private int left;
-	
+
 	/**
 	 * Constructor.
 	 */
@@ -54,7 +54,7 @@ public final class Margin extends AbstractWrapperElement {
 	public Margin(int margin) {
 		this.top = this.right = this.bottom = this.left = margin;
 	}
-	
+
 	/**
 	 * Constructor for a uniform margin on all sides.
 	 * @param wrappedElement the wrapped element
@@ -64,7 +64,7 @@ public final class Margin extends AbstractWrapperElement {
 		super(wrappedElement);
 		this.top = this.right = this.bottom = this.left = margin;
 	}
-	
+
 	/**
 	 * Constructor that allows to specify a vertical and a horizontal margin.
 	 * @param verticalMargin the vertical margin
@@ -74,7 +74,7 @@ public final class Margin extends AbstractWrapperElement {
 		this.top = this.bottom = verticalMargin;
 		this.right = this.left = horizontalMargin;
 	}
-	
+
 	/**
 	 * Constructor that allows to specify a vertical and a horizontal margin.
 	 * @param wrappedElement the wrapped element
@@ -86,7 +86,7 @@ public final class Margin extends AbstractWrapperElement {
 		this.top = this.bottom = verticalMargin;
 		this.right = this.left = horizontalMargin;
 	}
-	
+
 	/**
 	 * Constructor that allows to specify top, horizontal and bottom margins.
 	 * @param topMargin the top margin
@@ -98,7 +98,7 @@ public final class Margin extends AbstractWrapperElement {
 		this.right = this.left = horizontalMargin;
 		this.bottom = bottomMargin;
 	}
-	
+
 	/**
 	 * Constructor that allows to specify top, horizontal and bottom margins.
 	 * @param wrappedElement the wrapped element
@@ -112,7 +112,7 @@ public final class Margin extends AbstractWrapperElement {
 		this.right = this.left = horizontalMargin;
 		this.bottom = bottomMargin;
 	}
-	
+
 	/**
 	 * Constructor that allows to specify all four margins individually.
 	 * @param top the top margin
@@ -126,7 +126,7 @@ public final class Margin extends AbstractWrapperElement {
 		this.bottom = bottom;
 		this.left = left;
 	}
-	
+
 	/**
 	 * Constructor that allows to specify all four margins individually.
 	 * @param wrappedElement the wrapped element
@@ -214,7 +214,7 @@ public final class Margin extends AbstractWrapperElement {
 		this.left = left;
 		return this;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.client.gui.GuiElement#finishLayout(int, int)
 	 */
@@ -227,7 +227,7 @@ public final class Margin extends AbstractWrapperElement {
 		wrappedElement.requestSize(remainingWidth < 0 ? 0 : remainingWidth, remainingHeight < 0 ? 0 : remainingHeight);
 		setSize(wrappedElement.getWidth() + left + right, wrappedElement.getHeight() + top + bottom);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.client.gui.GuiElement#setChildrenLayoutPosition(int, int)
 	 */

@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -25,12 +25,12 @@ public final class LwjglNativeLibraryHelper {
 	 * the logger
 	 */
 	private static Logger logger = Logger.getLogger(LwjglNativeLibraryHelper.class);
-	
+
 	/**
 	 * the resourcePath
 	 */
 	private static String resourcePath;
-	
+
 	/**
 	 * the tempFolder
 	 */
@@ -41,30 +41,30 @@ public final class LwjglNativeLibraryHelper {
 	 * @throws Exception on errors
 	 */
 	public static void prepareNativeLibraries() throws Exception {
-		
+
 		// Unfortunately, Java is also too stupid to create a temp directory...
-	    tempFolder = File.createTempFile("miner-launcher-", "");
-	    deleteRecursively(tempFolder);
-	    tempFolder.mkdir();
+		tempFolder = File.createTempFile("miner-launcher-", "");
+		deleteRecursively(tempFolder);
+		tempFolder.mkdir();
 		logger.debug("temp: " + tempFolder.getAbsolutePath());
-	    
-	    // detect which set of native libraries to load, then extract the files
+
+		// detect which set of native libraries to load, then extract the files
 		resourcePath = OperatingSystemSelector.getHostOs().getNativeLibraryPath();
 		logger.debug("native library path: " + resourcePath);
 		for (String fileName : OperatingSystemSelector.getHostOs().getNativeLibraryFileNames()) {
 			extractFile(fileName);
 		}
-	    
+
 		// make Java use our libraries
 		System.setProperty("java.library.path", tempFolder.getAbsolutePath());
 		final Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
 		fieldSysPath.setAccessible(true);
 		fieldSysPath.set(null, null);
-		
+
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private static void deleteRecursively(File file) throws IOException {
 		if (file.isDirectory()) {
@@ -74,9 +74,9 @@ public final class LwjglNativeLibraryHelper {
 		}
 		file.delete();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static void extractFile(String name) throws IOException {
 		String fullResourceName = resourcePath + name;
@@ -87,5 +87,5 @@ public final class LwjglNativeLibraryHelper {
 			FileUtils.copyInputStreamToFile(inputStream, new File(tempFolder, name));
 		}
 	}
-	
+
 }

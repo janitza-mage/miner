@@ -7,13 +7,13 @@
 package name.martingeisse.miner.client.util.gui.element.text;
 
 import com.google.common.collect.ImmutableList;
-import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiEvent;
 import name.martingeisse.miner.client.util.gui.util.Color;
 import name.martingeisse.miner.client.util.lwjgl.Font;
+import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import org.lwjgl.opengl.GL11;
 
 import static org.lwjgl.opengl.GL14.glWindowPos2i;
@@ -62,6 +62,7 @@ public final class TextLine extends GuiElement {
 
 	/**
 	 * Getter method for the font.
+	 *
 	 * @return the font
 	 */
 	public Font getFont() {
@@ -70,6 +71,7 @@ public final class TextLine extends GuiElement {
 
 	/**
 	 * Setter method for the font.
+	 *
 	 * @param font the font to set
 	 * @return this for chaining
 	 */
@@ -82,6 +84,7 @@ public final class TextLine extends GuiElement {
 
 	/**
 	 * Getter method for the color.
+	 *
 	 * @return the color
 	 */
 	public Color getColor() {
@@ -90,6 +93,7 @@ public final class TextLine extends GuiElement {
 
 	/**
 	 * Setter method for the color.
+	 *
 	 * @param color the color to set
 	 * @return this for chaining
 	 */
@@ -101,6 +105,7 @@ public final class TextLine extends GuiElement {
 
 	/**
 	 * Getter method for the text.
+	 *
 	 * @return the text
 	 */
 	public String getText() {
@@ -109,6 +114,7 @@ public final class TextLine extends GuiElement {
 
 	/**
 	 * Setter method for the text.
+	 *
 	 * @param text the text to set
 	 * @return this for chaining
 	 */

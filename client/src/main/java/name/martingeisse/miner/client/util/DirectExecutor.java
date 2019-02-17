@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -20,5 +20,5 @@ public final class DirectExecutor implements Executor {
 	public void execute(Runnable runnable) {
 		runnable.run();
 	}
-	
+
 }

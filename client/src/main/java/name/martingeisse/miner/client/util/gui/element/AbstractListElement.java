@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * Base class for a GUI element that wraps a list of other elements.
- * 
+ *
  * This element allows to obtain the internal list, but note that
  * if you modify that list directly, you must also request a
  * re-layout manually.
@@ -27,14 +27,14 @@ public abstract class AbstractListElement extends GuiElement {
 	 * the wrappedElements
 	 */
 	private final List<GuiElement> wrappedElements;
-	
+
 	/**
 	 * Constructor.
 	 */
 	public AbstractListElement() {
 		this.wrappedElements = new ArrayList<>();
 	}
-	
+
 	/**
 	 * Constructor.
 	 * @param elements the elements to add to the list
@@ -45,7 +45,7 @@ public abstract class AbstractListElement extends GuiElement {
 			addElement(element);
 		}
 	}
-	
+
 	/**
 	 * Getter method for the wrappedElements.
 	 * @return the wrappedElements
@@ -53,10 +53,10 @@ public abstract class AbstractListElement extends GuiElement {
 	public final List<GuiElement> getWrappedElements() {
 		return wrappedElements;
 	}
-	
+
 	/**
 	 * Adds the specified element. This method requests a re-layout automatically.
-	 * 
+	 *
 	 * @param element the element to add
 	 * @return this for chaining
 	 */
@@ -67,7 +67,7 @@ public abstract class AbstractListElement extends GuiElement {
 		requestLayout();
 		return this;
 	}
-	
+
 	/**
 	 * Replaces the specified element. This method requests a re-layout automatically.
 	 * @param index the index of the element to replace
@@ -94,7 +94,7 @@ public abstract class AbstractListElement extends GuiElement {
 		requestLayout();
 		return this;
 	}
-	
+
 	/**
 	 * Clears the list of wrapped elements. This method requests a re-layout
 	 * automatically.

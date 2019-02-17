@@ -66,7 +66,7 @@ public abstract class ProtocolEndpoint {
 
 		@Override
 		public void channelRead(ChannelHandlerContext context, Object payload) throws Exception {
-			onMessage((Message)payload);
+			onMessage((Message) payload);
 		}
 
 		@Override

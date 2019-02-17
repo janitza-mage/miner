@@ -32,9 +32,10 @@ public final class OtherPlayerVisualTemplate extends AbstractSingleWorkUnitVisua
 
 	/**
 	 * Constructor.
+	 *
 	 * @param resources the resources
 	 * @param ownPlayer this process's own player (used to compute the distance to
-	 * the other player)
+	 *                  the other player)
 	 */
 	public OtherPlayerVisualTemplate(MinerResources resources, Player ownPlayer) {
 		this.resources = resources;

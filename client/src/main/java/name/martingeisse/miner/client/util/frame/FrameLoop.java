@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2011 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -22,21 +22,21 @@ import static org.lwjgl.opengl.GL11.glFlush;
  * single root handler of type {@link SwappableHandler} that allows
  * to put an arbitrary application handler -- typically itself
  * a {@link HandlerList} -- in place.
- * 
+ *
  * This class can optionally store a GL worker loop. If this is the case, then
  * the following things happen:
- * 
+ *
  * - the worker loop gets passed to all frame handlers when drawing, so the
  *   frame handlers can pass drawing WUs to the worker loop
- * 
+ *
  * - the frame loop's call to {@link Display#update()} and to
  *   {@link Display#processMessages()} is passed to the worker
  *   loop instead of executed directly
- *   
+ *
  * - if the worker loop is overloaded, whole drawing phases are skipped.
- *   
+ *
  * - after drawing, this class adds a frame boundary marker to the GL worker loop
- * 
+ *
  */
 public final class FrameLoop {
 
@@ -44,19 +44,19 @@ public final class FrameLoop {
 	 * the rootHandler
 	 */
 	private final SwappableHandler rootHandler;
-	
+
 	/**
 	 * the glWorkerLoop
 	 */
 	private final GlWorkerLoop glWorkerLoop;
-	
+
 	/**
 	 * Constructor.
 	 */
 	public FrameLoop() {
 		this(null);
 	}
-	
+
 	/**
 	 * Constructor.
 	 * @param glWorkerLoop optional GL worker loop as explained in the class comment
@@ -65,7 +65,7 @@ public final class FrameLoop {
 		this.rootHandler = new SwappableHandler();
 		this.glWorkerLoop = glWorkerLoop;
 	}
-	
+
 	/**
 	 * Getter method for the rootHandler.
 	 * @return the rootHandler
@@ -73,13 +73,13 @@ public final class FrameLoop {
 	public SwappableHandler getRootHandler() {
 		return rootHandler;
 	}
-	
+
 	/**
 	 * Executes a single frame, executing all handlers.
 	 * @throws BreakFrameLoopException if a handler wants to break the frame loop
 	 */
 	public void executeFrame() throws BreakFrameLoopException {
-		
+
 		// draw all handlers
 		try {
 			if (glWorkerLoop == null || !glWorkerLoop.isOverloaded()) {
@@ -104,11 +104,11 @@ public final class FrameLoop {
 		} catch (Exception e) {
 			throw new RuntimeException("unexpected exception while drawing", e);
 		}
-		
+
 		// handle inputs and OS messages
 		Mouse.poll();
 		Keyboard.poll();
-		
+
 		// prepare game logic steps
 		try {
 			rootHandler.handleStep();
@@ -117,13 +117,13 @@ public final class FrameLoop {
 		} catch (Exception e) {
 			throw new RuntimeException("unexpected exception during logic step", e);
 		}
-		
+
 	}
 
 	/**
 	 * Executes frames using {@link #executeFrame()} endlessly
 	 * until one of the handlers throws a {@link BreakFrameLoopException}.
-	 * 
+	 *
 	 * @param fixedFrameInterval the fixed minimum length of each frame in
 	 * milliseconds, or null to run as many frames as possible
 	 */
@@ -134,7 +134,7 @@ public final class FrameLoop {
 				executeFrame();
 				if (frameTimer != null) {
 					while (!frameTimer.test()) {
-						synchronized(frameTimer) {
+						synchronized (frameTimer) {
 							frameTimer.wait();
 						}
 					}
@@ -144,5 +144,5 @@ public final class FrameLoop {
 		} catch (BreakFrameLoopException e) {
 		}
 	}
-	
+
 }

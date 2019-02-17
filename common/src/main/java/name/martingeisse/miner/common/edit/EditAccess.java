@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -19,7 +19,7 @@ public final class EditAccess {
 	 * the host
 	 */
 	private final IEditAccessHost host;
-	
+
 	/**
 	 * Constructor.
 	 * @param host the data host to edit
@@ -27,7 +27,7 @@ public final class EditAccess {
 	public EditAccess(IEditAccessHost host) {
 		this.host = host;
 	}
-	
+
 	/**
 	 * Checks whether the specified position is inside the edit region boundaries.
 	 * @param x the x coordinate of the position
@@ -38,7 +38,7 @@ public final class EditAccess {
 	public boolean containsPosition(int x, int y, int z) {
 		return host.containsPosition(x, y, z);
 	}
-	
+
 	/**
 	 * Obtains a {@link RectangularRegion} for the whole edit region.
 	 * @return a region for the whole edit region
@@ -46,7 +46,7 @@ public final class EditAccess {
 	public RectangularRegion getRegion() {
 		return host.getRegion();
 	}
-	
+
 	/**
 	 * Returns the cube value for the specified position.
 	 * @param x the x position
@@ -57,7 +57,7 @@ public final class EditAccess {
 	public byte getCube(int x, int y, int z) {
 		return host.getCube(x, y, z);
 	}
-	
+
 	/**
 	 * Gets the cube value for the specified position. This method first ensures
 	 * that the specified position is inside the region boundaries, so it does not
@@ -74,7 +74,7 @@ public final class EditAccess {
 			return 0;
 		}
 	}
-	
+
 	/**
 	 * Sets the cube value for the specified position.
 	 * @param x the x position
@@ -100,5 +100,5 @@ public final class EditAccess {
 			host.setCube(x, y, z, value);
 		}
 	}
-	
+
 }

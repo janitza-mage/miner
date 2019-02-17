@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -13,17 +13,17 @@ import java.util.concurrent.TimeUnit;
 /**
  * A goal is similar to a task, but can be scheduled only once. In turn,
  * goals support growing requirements while already running.
- * 
+ *
  * Goals use a distinct boolean flag for this that specifies whether the
  * goal and its requirements have been "sealed". A goal can be scheduled
  * and started at any point after creation, and can be extended until
  * it gets sealed. After that, no extensions are possible anymore. It is,
  * possible to schedule and start a goal *after* it has been sealed,
  * although in that case a simple task would be sufficient.
- * 
+ *
  * A goal can be waited for, and waiting only finishes when the goal has
  * been sealed *and* achieved.
- * 
+ *
  * Subclasses likely act differently at various points, depending on
  * whether this goal has been started yet. Changing the started flag
  * occurs in a synchronized(this) block, so such methods can also
@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
  * they are running.
  */
 public abstract class Goal implements ITaskLike {
-	
+
 	/**
 	 * the pendingLifecycleEvents
 	 */
@@ -41,17 +41,17 @@ public abstract class Goal implements ITaskLike {
 	 * the scheduled
 	 */
 	private boolean scheduled = false;
-	
+
 	/**
 	 * the started
 	 */
 	private boolean started = false;
-	
+
 	/**
 	 * the sealed
 	 */
 	private boolean sealed = false;
-	
+
 	/**
 	 * Schedules this goal to run ASAP.
 	 */
@@ -60,10 +60,10 @@ public abstract class Goal implements ITaskLike {
 		prepareSchedule();
 		TaskSystem.executorService.execute(new StartGoalRunnable());
 	}
-	
+
 	/**
 	 * Schedules this goal to run N milliseconds in the future.
-	 * 
+	 *
 	 * @param milliseconds the number of milliseconds to run in the future
 	 */
 	@Override
@@ -71,10 +71,10 @@ public abstract class Goal implements ITaskLike {
 		prepareSchedule();
 		TaskSystem.executorService.schedule(new StartGoalRunnable(), milliseconds, TimeUnit.MILLISECONDS);
 	}
-	
+
 	/**
 	 * Schedules this goal to run in N milliseconds.
-	 * 
+	 *
 	 * @param delay the delay to wait before execution
 	 * @param timeUnit the unit used for the delay
 	 */
@@ -83,9 +83,9 @@ public abstract class Goal implements ITaskLike {
 		prepareSchedule();
 		TaskSystem.executorService.schedule(new StartGoalRunnable(), delay, timeUnit);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private synchronized void prepareSchedule() {
 		if (scheduled) {
@@ -93,7 +93,7 @@ public abstract class Goal implements ITaskLike {
 		}
 		scheduled = true;
 	}
-	
+
 	/**
 	 * Getter method for the started.
 	 * @return the started
@@ -101,13 +101,13 @@ public abstract class Goal implements ITaskLike {
 	protected synchronized final boolean isStarted() {
 		return started;
 	}
-	
+
 	/**
 	 * Starts working on this goal. This method gets called when the point in time
 	 * is reached for which this goal was scheduled.
 	 */
 	protected abstract void onStart();
-	
+
 	/**
 	 * Throws an {@link IllegalStateException} if this goal has already been sealed.
 	 */
@@ -125,21 +125,21 @@ public abstract class Goal implements ITaskLike {
 		sealed = true;
 		pendingLifecycleEvents.release();
 	}
-	
+
 	/**
 	 * Notes down that another subgoal is needed to achieve this goal.
 	 */
 	protected final void noteSubgoalRequired() {
 		pendingLifecycleEvents.reducePermits(1);
 	}
-	
+
 	/**
 	 * Notes down that another subgoal has been finished.
 	 */
 	protected final void noteSubgoalFinished() {
 		pendingLifecycleEvents.release();
 	}
-	
+
 	/**
 	 * Waits until this goal has been achieved.
 	 * @throws InterruptedException if interrupted while waiting
@@ -147,7 +147,7 @@ public abstract class Goal implements ITaskLike {
 	public final void await() throws InterruptedException {
 		pendingLifecycleEvents.acquire();
 	}
-	
+
 	/**
 	 * Waits until this goal has been achieved.
 	 * @param timeout the timeout for waiting
@@ -159,17 +159,17 @@ public abstract class Goal implements ITaskLike {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	class StartGoalRunnable implements Runnable {
 		@Override
 		public void run() {
-			synchronized(Goal.this) {
+			synchronized (Goal.this) {
 				started = true;
 			}
 			onStart();
 			pendingLifecycleEvents.release();
 		}
 	}
-	
+
 }

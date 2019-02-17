@@ -1,17 +1,14 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.miner.server.world.storage;
 
-import com.google.common.cache.*;
 import name.martingeisse.stackd.common.geometry.ClusterSize;
 import name.martingeisse.stackd.common.geometry.SectionId;
 import org.apache.commons.io.IOUtils;
-
-import java.io.*;
 
 /**
  * This class is responsible for actually storing sections in files.
@@ -19,17 +16,17 @@ import java.io.*;
  * section has cubes.
  */
 public final class FolderBasedSectionStorage extends AbstractSectionStorage {
-	
+
 	/**
 	 * the storageFolder
 	 */
 	private final File storageFolder;
-	
+
 	/**
 	 * the fileHandleCache
 	 */
 	private final LoadingCache<SectionId, RandomAccessFile> fileHandleCache;
-	
+
 	/**
 	 * Constructor.
 	 * @param clusterSize the cluster-size of sections
@@ -50,7 +47,7 @@ public final class FolderBasedSectionStorage extends AbstractSectionStorage {
 			@Override
 			public RandomAccessFile load(SectionId superSectionId) throws Exception {
 				File file = getSectionFile(superSectionId);
-				
+
 				// create an empty file if there is none yet
 				if (!file.exists()) {
 					final FileOutputStream fileOutputStream = new FileOutputStream(file);
@@ -61,7 +58,7 @@ public final class FolderBasedSectionStorage extends AbstractSectionStorage {
 						fileOutputStream.close();
 					}
 				}
-				
+
 				return new RandomAccessFile(file, "rw");
 			}
 		});
@@ -81,7 +78,7 @@ public final class FolderBasedSectionStorage extends AbstractSectionStorage {
 	@Override
 	public byte[][] loadSectionCubes0(SectionId[] sectionIds) {
 		byte[][] result = new byte[sectionIds.length][];
-		for (int i=0; i<result.length; i++) {
+		for (int i = 0; i < result.length; i++) {
 			final SectionId sectionId = sectionIds[i];
 			final SectionId superSectionId = getSuperSectionIdFromSectionId(sectionId);
 			final int tocIndex = getSectionTocIndex(sectionId);
@@ -95,7 +92,7 @@ public final class FolderBasedSectionStorage extends AbstractSectionStorage {
 		}
 		return result;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.server.section.AbstractSectionStorageBackend#saveSection(java.io.InputStream, name.martingeisse.stackd.common.geometry.SectionId)
 	 */
@@ -111,7 +108,7 @@ public final class FolderBasedSectionStorage extends AbstractSectionStorage {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private boolean loadSectionFromFile(final OutputStream out, final RandomAccessFile access, final int tocIndex) throws IOException {
 
@@ -119,7 +116,8 @@ public final class FolderBasedSectionStorage extends AbstractSectionStorage {
 		access.seek(tocIndex * 12);
 		final int dataStartAddress = access.readInt();
 		final int dataSize = access.readInt();
-		/* int dataFlags = */access.readInt();
+		/* int dataFlags = */
+		access.readInt();
 
 		// handle missing sections
 		if (dataStartAddress < 1) {
@@ -130,21 +128,21 @@ public final class FolderBasedSectionStorage extends AbstractSectionStorage {
 		final byte[] compressedCubeData = new byte[dataSize];
 		access.seek(dataStartAddress);
 		access.readFully(compressedCubeData);
-		
+
 		// write data to the stream
 		out.write(compressedCubeData);
-		
+
 		return true;
 
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void saveSectionToFile(final InputStream in, final RandomAccessFile access, final int tocIndex) throws IOException {
 
 		// write the section to the end of the file
-		final int dataAddress = (int)access.length();
+		final int dataAddress = (int) access.length();
 		access.seek(dataAddress);
 		final byte[] compressedCubeData = IOUtils.toByteArray(in);
 		access.write(compressedCubeData);
@@ -168,7 +166,7 @@ public final class FolderBasedSectionStorage extends AbstractSectionStorage {
 
 	/**
 	 * Returns the file for the specified super-section.
-	 * 
+	 *
 	 * @param id the super-section ID
 	 * @return the storage file
 	 */
@@ -179,7 +177,7 @@ public final class FolderBasedSectionStorage extends AbstractSectionStorage {
 	/**
 	 * Returns the index in the ToC of the section file that is used for
 	 * the section with the specified ID.
-	 * 
+	 *
 	 * @param sectionId the section ID
 	 * @return the storage file
 	 */

@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2013 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -17,12 +17,12 @@ public interface VisualTemplate<T> {
 
 	/**
 	 * Renders the specified subject using this template.
-	 * 
+	 *
 	 * This method must be called from the application thread.
-	 * 
+	 *
 	 * @param subject the subject to render
 	 * @param worker the worker that consumes GL work units
 	 */
 	public void render(T subject, GlWorkerLoop worker);
-	
+
 }

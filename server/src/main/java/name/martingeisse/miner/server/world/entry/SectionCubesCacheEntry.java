@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -97,7 +97,7 @@ public final class SectionCubesCacheEntry extends SectionDataCacheEntry {
 
 		// mark modified as usual
 		markModified();
-		
+
 		// Mark neighbor sections modified if this cube is on the border. The reason we need to do this is because the
 		// cube in the neighbor section gets sent as "unknown" to the client first since it's obscured, and by
 		// revealing that cube, the client has to know what kind of cube it is. Thus, modifying a cube at a section
@@ -105,7 +105,7 @@ public final class SectionCubesCacheEntry extends SectionDataCacheEntry {
 		SectionDataId sectionDataId = getSectionDataId();
 		for (AxisAlignedDirection neighborDirection : Constants.SECTION_SIZE.getBorderDirections(position)) {
 			SectionDataId neighborInteractiveDataId = sectionDataId.getNeighbor(neighborDirection, SectionDataType.INTERACTIVE);
-			InteractiveSectionImageCacheEntry neighborInteractiveDataEntry = (InteractiveSectionImageCacheEntry)getSectionWorkingSet().get(neighborInteractiveDataId);
+			InteractiveSectionImageCacheEntry neighborInteractiveDataEntry = (InteractiveSectionImageCacheEntry) getSectionWorkingSet().get(neighborInteractiveDataId);
 			neighborInteractiveDataEntry.invalidateData();
 		}
 
@@ -117,7 +117,7 @@ public final class SectionCubesCacheEntry extends SectionDataCacheEntry {
 	@Override
 	protected void onModification() {
 		SectionDataId sectionDataId = getSectionDataId();
-		((InteractiveSectionImageCacheEntry)getSectionWorkingSet().get(sectionDataId.getWithType(SectionDataType.INTERACTIVE))).invalidateData();
+		((InteractiveSectionImageCacheEntry) getSectionWorkingSet().get(sectionDataId.getWithType(SectionDataType.INTERACTIVE))).invalidateData();
 	}
 
 	/* (non-Javadoc)
@@ -128,5 +128,5 @@ public final class SectionCubesCacheEntry extends SectionDataCacheEntry {
 		// this object cannot be sent to the client to prevent information cheating
 		return new byte[0];
 	}
-	
+
 }

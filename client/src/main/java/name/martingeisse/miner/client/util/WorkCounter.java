@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2011 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Utility class to count how often a piece of work
  * was done. Used to optimize performance.
- * 
+ *
  * Work is measured in cycles with a period length
  * specified in the constructor. Whenever the
  * corresponding piece of work is done, the {@link #count()}
@@ -30,37 +30,37 @@ public class WorkCounter {
 	 * the period
 	 */
 	private final int period;
-	
+
 	/**
 	 * the record
 	 */
 	private final List<Integer> record;
-	
+
 	/**
 	 * the currentWork
 	 */
 	private int currentWork;
-	
+
 	/**
 	 * the stats
 	 */
 	private int[] stats;
-	
+
 	/**
 	 * the minimumWork
 	 */
 	private int minimumWork;
-	
+
 	/**
 	 * the maximumWork
 	 */
 	private int maximumWork;
-	
+
 	/**
 	 * the averageWork
 	 */
 	private int averageWork;
-	
+
 	/**
 	 * Constructor.
 	 * @param period the period
@@ -77,7 +77,7 @@ public class WorkCounter {
 		this.maximumWork = 0;
 		this.averageWork = 0;
 	}
-	
+
 	/**
 	 * Getter method for the period.
 	 * @return the period
@@ -85,14 +85,14 @@ public class WorkCounter {
 	public final int getPeriod() {
 		return period;
 	}
-	
+
 	/**
 	 * Counts a unit of work.
 	 */
 	public void count() {
 		currentWork++;
 	}
-	
+
 	/**
 	 * Counts a unit of time.
 	 */
@@ -120,7 +120,7 @@ public class WorkCounter {
 			onCycle();
 		}
 	}
-	
+
 	/**
 	 * This method is called whenever the specified period
 	 * is completed, after stats have been updated. Subclasses
@@ -129,7 +129,7 @@ public class WorkCounter {
 	 */
 	protected void onCycle() {
 	}
-	
+
 	/**
 	 * Getter method for the stats.
 	 * @return the stats
@@ -137,7 +137,7 @@ public class WorkCounter {
 	public final int[] getStats() {
 		return stats;
 	}
-	
+
 	/**
 	 * Getter method for the minimumWork.
 	 * @return the minimumWork
@@ -145,7 +145,7 @@ public class WorkCounter {
 	public final int getMinimumWork() {
 		return minimumWork;
 	}
-	
+
 	/**
 	 * Getter method for the maximumWork.
 	 * @return the maximumWork
@@ -153,7 +153,7 @@ public class WorkCounter {
 	public final int getMaximumWork() {
 		return maximumWork;
 	}
-	
+
 	/**
 	 * Getter method for the averageWork.
 	 * @return the averageWork
@@ -161,23 +161,23 @@ public class WorkCounter {
 	public final int getAverageWork() {
 		return averageWork;
 	}
-	
+
 	/**
 	 * Work counter implementation that logs min/max/average at INFO level.
 	 * The full stats are not printed by default.
 	 */
 	public static class WorkLogger extends WorkCounter {
-		
+
 		/**
 		 * the logger
 		 */
 		private static Logger logger = Logger.getLogger(WorkCounter.WorkLogger.class);
-		
+
 		/**
 		 * the description
 		 */
 		private final String description;
-		
+
 		/**
 		 * Constructor.
 		 * @param period the period
@@ -195,7 +195,7 @@ public class WorkCounter {
 		protected void onCycle() {
 			logger.info(description + ": min = " + getMinimumWork() + ", max = " + getMaximumWork() + ", avg = " + getAverageWork());
 		}
-		
+
 	}
-	
+
 }

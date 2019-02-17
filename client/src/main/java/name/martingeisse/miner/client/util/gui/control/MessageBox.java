@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -26,12 +26,12 @@ public class MessageBox extends Control {
 	 * Button labels for "OK".
 	 */
 	public static final String[] OK = {"OK"};
-	
+
 	/**
 	 * Button labels for "OK" / "Cancel".
 	 */
 	public static final String[] OK_CANCEL = {"OK", "Cancel"};
-	
+
 	/**
 	 * Button labels for "Yes" / "No".
 	 */
@@ -44,12 +44,12 @@ public class MessageBox extends Control {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * The box will have buttons with the specified labels. The button
 	 * used to close the box gets passed to the subclass's callback
 	 * method. If no button labels are specified, a single button labeled
 	 * "OK" is used.
-	 * 
+	 *
 	 * @param message the message to show
 	 * @param buttonLabels the labels for the buttons that close the message box
 	 */
@@ -57,12 +57,12 @@ public class MessageBox extends Control {
 		if (buttonLabels == null || buttonLabels.length == 0) {
 			buttonLabels = OK;
 		}
-		
+
 		VerticalLayout verticalLayout = new VerticalLayout().setAlignment(HorizontalAlignment.RIGHT);
 		TextParagraph textParagraph = new TextParagraph().setText(message);
 		Margin textMargin = new Margin(new Sizer(textParagraph, 50 * Gui.GRID, 30 * Gui.GRID), 2 * Gui.GRID);
 		verticalLayout.addElement(textMargin);
-		
+
 		HorizontalLayout buttonLayout = new HorizontalLayout();
 		int buttonIndex = 0;
 		for (String buttonLabel : buttonLabels) {
@@ -81,28 +81,28 @@ public class MessageBox extends Control {
 			buttonIndex++;
 		}
 		verticalLayout.addElement(buttonLayout);
-		
+
 		// add a background box
 		OverlayStack stack = new OverlayStack();
 		stack.addElement(new FillColor(new Color(128, 128, 128, 255)));
 		stack.addElement(verticalLayout);
 		ThinBorder boxBorder = new ThinBorder(stack).setColor(new Color(192, 192, 192, 256));
 		setControlRootElement(new Glue(boxBorder));
-		
+
 	}
-	
+
 	/**
 	 * Shows a message box on the page that contains the specified
 	 * element. Such a page must exist, otherwise this method throws
 	 * an {@link IllegalArgumentException}. If the element is contained
 	 * in nested pages, the message box gets shown in the innermost one.
-	 * 
+	 *
 	 * @param element an element inside the page
 	 */
 	public final void show(GuiElement element) {
 		while (element != null) {
 			if (element instanceof Page) {
-				show((Page)element);
+				show((Page) element);
 				return;
 			}
 			element = element.getParent();
@@ -112,7 +112,7 @@ public class MessageBox extends Control {
 
 	/**
 	 * Shows a message box on the specified page.
-	 * 
+	 *
 	 * @param page the page
 	 */
 	public final void show(Page page) {
@@ -120,12 +120,12 @@ public class MessageBox extends Control {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void removeFromPages() {
 		for (GuiElement element = getParent(); element != null; element = element.getParent()) {
 			if (element instanceof Page) {
-				Page page = (Page)element;
+				Page page = (Page) element;
 				if (page.getPopupElement() == this) {
 					page.setPopupElement(null);
 				}
@@ -138,5 +138,5 @@ public class MessageBox extends Control {
 	 */
 	protected void onClose(int buttonIndex) {
 	}
-	
+
 }

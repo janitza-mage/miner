@@ -59,6 +59,7 @@ public final class RectangularRegion {
 
 	/**
 	 * Constructor for a single cube at the specified position.
+	 *
 	 * @param x the x coordinate of the position
 	 * @param y the y coordinate of the position
 	 * @param z the z coordinate of the position
@@ -83,12 +84,13 @@ public final class RectangularRegion {
 
 	/**
 	 * Constructor.
+	 *
 	 * @param startX the starting x coordinate of the region
 	 * @param startY the starting y coordinate of the region
 	 * @param startZ the starting z coordinate of the region
-	 * @param endX the ending x coordinate of the region
-	 * @param endY the ending y coordinate of the region
-	 * @param endZ the ending z coordinate of the region
+	 * @param endX   the ending x coordinate of the region
+	 * @param endY   the ending y coordinate of the region
+	 * @param endZ   the ending z coordinate of the region
 	 */
 	public RectangularRegion(int startX, int startY, int startZ, int endX, int endY, int endZ) {
 		this.startX = startX;
@@ -101,6 +103,7 @@ public final class RectangularRegion {
 
 	/**
 	 * Getter method for the startX.
+	 *
 	 * @return the startX
 	 */
 	public int getStartX() {
@@ -109,6 +112,7 @@ public final class RectangularRegion {
 
 	/**
 	 * Getter method for the startY.
+	 *
 	 * @return the startY
 	 */
 	public int getStartY() {
@@ -117,6 +121,7 @@ public final class RectangularRegion {
 
 	/**
 	 * Getter method for the startZ.
+	 *
 	 * @return the startZ
 	 */
 	public int getStartZ() {
@@ -125,6 +130,7 @@ public final class RectangularRegion {
 
 	/**
 	 * Getter method for the endX.
+	 *
 	 * @return the endX
 	 */
 	public int getEndX() {
@@ -133,6 +139,7 @@ public final class RectangularRegion {
 
 	/**
 	 * Getter method for the endY.
+	 *
 	 * @return the endY
 	 */
 	public int getEndY() {
@@ -141,6 +148,7 @@ public final class RectangularRegion {
 
 	/**
 	 * Getter method for the endZ.
+	 *
 	 * @return the endZ
 	 */
 	public int getEndZ() {
@@ -149,6 +157,7 @@ public final class RectangularRegion {
 
 	/**
 	 * Getter method for the sizeX.
+	 *
 	 * @return the sizeX
 	 */
 	public int getSizeX() {
@@ -157,6 +166,7 @@ public final class RectangularRegion {
 
 	/**
 	 * Getter method for the sizeY.
+	 *
 	 * @return the sizeY
 	 */
 	public int getSizeY() {
@@ -165,6 +175,7 @@ public final class RectangularRegion {
 
 	/**
 	 * Getter method for the sizeZ.
+	 *
 	 * @return the sizeZ
 	 */
 	public int getSizeZ() {
@@ -177,13 +188,13 @@ public final class RectangularRegion {
 	 * or to leave that side alone. Specifically, for each direction specified, the new
 	 * coordinate value is the min (for lower-coordinate sides) or max (for higher-coordinate sides)
 	 * of the coordinate value of this region and the anchor region.
-	 *
+	 * <p>
 	 * Returns the extended region as a new {@link RectangularRegion} instance.
-	 *
+	 * <p>
 	 * Note: Calling this method with all flags set to true is equivalent
 	 * to {@link #getUnion(RectangularRegion)}.
 	 *
-	 * @param anchor the anchor to extend to
+	 * @param anchor    the anchor to extend to
 	 * @param negativeX whether to extend towards the negative X direction
 	 * @param positiveX whether to extend towards the positive X direction
 	 * @param negativeY whether to extend towards the negative Y direction
@@ -205,6 +216,7 @@ public final class RectangularRegion {
 	/**
 	 * Sets this region to the minimal region that contains the both this
 	 * region and the specified other region.
+	 *
 	 * @param other the region to union with
 	 * @return the union
 	 */
@@ -220,6 +232,7 @@ public final class RectangularRegion {
 
 	/**
 	 * Sets this region to the intersection of this region and the specified other region.
+	 *
 	 * @param other the region to intersect with
 	 * @return the intersection
 	 */
@@ -236,6 +249,7 @@ public final class RectangularRegion {
 	/**
 	 * Checks whether this region is empty. This is the case whenever the end value
 	 * isn't greater than the start value in any one direction.
+	 *
 	 * @return whether this region is empty
 	 */
 	public boolean isEmpty() {
@@ -244,6 +258,7 @@ public final class RectangularRegion {
 
 	/**
 	 * Checks whether the specified cell is within this region.
+	 *
 	 * @param x the x position of the cell
 	 * @param y the y position of the cell
 	 * @param z the z position of the cell
@@ -255,6 +270,7 @@ public final class RectangularRegion {
 
 	/**
 	 * Checks whether the specified cell is within this region.
+	 *
 	 * @param position the position of the cell
 	 * @return true if the cell is within this region, false if not
 	 */

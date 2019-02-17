@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -9,7 +9,7 @@ package name.martingeisse.miner.client.util.frame;
 /**
  * Returns the duration of the previous frame to make game logic adapt
  * to a varying frame rate.
- * 
+ *
  * The sensor is capped to a maximum of 1/2 second to avoid "exploding"
  * the game logic.
  */
@@ -32,7 +32,7 @@ public final class FrameDurationSensor {
 		tick();
 		tick();
 	}
-	
+
 	/**
 	 * This method must be called for each frame, before reading the duration.
 	 */
@@ -40,7 +40,7 @@ public final class FrameDurationSensor {
 		previousValue = currentValue;
 		currentValue = System.nanoTime();
 	}
-	
+
 	/**
 	 * Reads the frame duration sensor as a double-typed multiplier, with
 	 * 1.0 meaning one second.
@@ -50,7 +50,7 @@ public final class FrameDurationSensor {
 		double value = getNanoseconds();
 		return value / 1000000000.0;
 	}
-	
+
 	/**
 	 * Reads the frame duration sensor with millisecond precision.
 	 * @return the duration of the previous frame in milliseconds
@@ -58,7 +58,7 @@ public final class FrameDurationSensor {
 	public long getMilliseconds() {
 		return getNanoseconds() / 1000000;
 	}
-	
+
 	/**
 	 * Reads the frame duration sensor with microsecond precision.
 	 * @return the duration of the previous frame in microseconds
@@ -66,7 +66,7 @@ public final class FrameDurationSensor {
 	public long getMicroseconds() {
 		return getNanoseconds() / 1000;
 	}
-	
+
 	/**
 	 * Reads the frame duration sensor with nanosecond precision.
 	 * @return the duration of the previous frame in nanoseconds
@@ -78,5 +78,5 @@ public final class FrameDurationSensor {
 		}
 		return value;
 	}
-	
+
 }

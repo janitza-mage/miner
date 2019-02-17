@@ -32,6 +32,7 @@ final class ServerEndpoint extends ProtocolEndpoint {
 
 	/**
 	 * Constructor.
+	 *
 	 * @param server the server
 	 */
 	public ServerEndpoint(final StackdServer server) {

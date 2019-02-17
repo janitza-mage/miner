@@ -1,23 +1,23 @@
 /**
  * Copyright (c) 2013 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.miner.client.util.gui.element;
 
-import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiEvent;
 import name.martingeisse.miner.client.util.gui.util.Color;
+import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import org.lwjgl.opengl.GL11;
 
 /**
  * This element is a WxH sized grid that contains pre-generated
  * child elements. Clients must call the initialize() method
  * before using this element to generate the children.
- * 
+ *
  * This class requests a zero size from its children to find their
  * minimal size. Then, it places them in the grid assuming that
  * all elements have the same size as the (0, 0) element.
@@ -47,12 +47,12 @@ public abstract class Grid extends GuiElement {
 			int startY = getAbsoluteY() + halfThickness;
 			int endX = getAbsoluteX() + cellCountX * childLayoutWidth + halfThickness;
 			int endY = getAbsoluteY() + cellCountY * childLayoutHeight + halfThickness;
-			for (int i=0; i<cellCountX + 1; i++) {
+			for (int i = 0; i < cellCountX + 1; i++) {
 				float x = getAbsoluteX() + i * childLayoutWidth + halfThickness;
 				GL11.glVertex2f(x, startY);
 				GL11.glVertex2f(x, endY);
 			}
-			for (int i=0; i<cellCountY + 1; i++) {
+			for (int i = 0; i < cellCountY + 1; i++) {
 				float y = getAbsoluteY() + i * childLayoutHeight + halfThickness;
 				GL11.glVertex2f(startX, y);
 				GL11.glVertex2f(endX, y);
@@ -83,7 +83,7 @@ public abstract class Grid extends GuiElement {
 	public Color getColor() {
 		return color;
 	}
-	
+
 	/**
 	 * Setter method for the color.
 	 * @param color the color to set
@@ -102,7 +102,7 @@ public abstract class Grid extends GuiElement {
 	public int getThickness() {
 		return thickness;
 	}
-	
+
 	/**
 	 * Setter method for the thickness.
 	 * @param thickness the thickness to set
@@ -113,16 +113,16 @@ public abstract class Grid extends GuiElement {
 		requestLayout();
 		return this;
 	}
-	
+
 	/**
 	 * Generates the child elements.
-	 * 
+	 *
 	 * @return this
 	 */
 	public Grid initialize() {
 		this.children = new GuiElement[cellCountX * cellCountY];
-		for (int x=0; x<cellCountX; x++) {
-			for (int y=0; y<cellCountY; y++) {
+		for (int x = 0; x < cellCountX; x++) {
+			for (int y = 0; y < cellCountY; y++) {
 				GuiElement child = newChild(x, y);
 				children[y * cellCountX + x] = child;
 				child.notifyNewParent(this);
@@ -130,16 +130,16 @@ public abstract class Grid extends GuiElement {
 		}
 		return this;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private void mustBeInitialized() {
 		if (children == null) {
 			throw new IllegalStateException("grid has not been initialized yet");
 		}
 	}
-	
+
 	/**
 	 * Creates a child element
 	 * @param x the x position in the grid
@@ -154,8 +154,8 @@ public abstract class Grid extends GuiElement {
 	@Override
 	public void handleEvent(GuiEvent event) {
 		mustBeInitialized();
-		for (int x=0; x<cellCountX; x++) {
-			for (int y=0; y<cellCountY; y++) {
+		for (int x = 0; x < cellCountX; x++) {
+			for (int y = 0; y < cellCountY; y++) {
 				children[y * cellCountX + x].handleEvent(event);
 			}
 		}
@@ -173,8 +173,8 @@ public abstract class Grid extends GuiElement {
 	@Override
 	public void requestSize(int width, int height) {
 		mustBeInitialized();
-		for (int x=0; x<cellCountX; x++) {
-			for (int y=0; y<cellCountY; y++) {
+		for (int x = 0; x < cellCountX; x++) {
+			for (int y = 0; y < cellCountY; y++) {
 				children[y * cellCountX + x].requestSize(0, 0);
 			}
 		}
@@ -195,11 +195,11 @@ public abstract class Grid extends GuiElement {
 		GuiElement child = children[0];
 		int childLayoutWidth = child.getWidth() + thickness;
 		int childLayoutHeight = child.getHeight() + thickness;
-		for (int x=0; x<cellCountX; x++) {
-			for (int y=0; y<cellCountY; y++) {
+		for (int x = 0; x < cellCountX; x++) {
+			for (int y = 0; y < cellCountY; y++) {
 				children[y * cellCountX + x].setAbsolutePosition(absoluteX + thickness + x * childLayoutWidth, absoluteY + thickness + y * childLayoutHeight);
 			}
 		}
 	}
-	
+
 }

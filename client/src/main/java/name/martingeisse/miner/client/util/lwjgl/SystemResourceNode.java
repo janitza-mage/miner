@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -20,17 +20,17 @@ public final class SystemResourceNode {
 	 * the resources
 	 */
 	private final Set<ISystemResource> resources;
-	
+
 	/**
 	 * the parent
 	 */
 	private final SystemResourceNode parent;
-	
+
 	/**
 	 * the children
 	 */
 	private final Set<SystemResourceNode> children;
-	
+
 	/**
 	 * the disposed
 	 */
@@ -65,7 +65,7 @@ public final class SystemResourceNode {
 		ensureNotDisposed();
 		return resources;
 	}
-	
+
 	/**
 	 * Adds a resource that will be disposed of when this node is being disposed of.
 	 * This is a convenience method for {@link #getResources()}.add(resource).
@@ -95,14 +95,14 @@ public final class SystemResourceNode {
 		}
 		disposed = true;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private void ensureNotDisposed() {
 		if (disposed) {
 			throw new IllegalStateException("this node has already been disposed of");
 		}
 	}
-	
+
 }

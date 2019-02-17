@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -22,7 +22,7 @@ public final class Spacer extends GuiElement {
 	public Spacer(final int size) {
 		this(size, size);
 	}
-	
+
 	/**
 	 * Constructor.
 	 * @param width the width of the spacer

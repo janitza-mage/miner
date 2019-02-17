@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -44,5 +44,5 @@ public class EmptyCubeType extends CubeType {
 	public boolean collidesWithRegion(int startX, int startY, int startZ, int endX, int endY, int endZ) {
 		return false;
 	}
-	
+
 }

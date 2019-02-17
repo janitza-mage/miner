@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -19,7 +19,7 @@ public abstract class AbstractSectionStorage {
 
 	/**
 	 * Loads a single section-related object.
-	 * 
+	 *
 	 * @param id the ID of the object to load
 	 * @return the loaded object
 	 */
@@ -27,7 +27,7 @@ public abstract class AbstractSectionStorage {
 
 	/**
 	 * Loads multiple section-related objects.
-	 * 
+	 *
 	 * @param ids the IDs of the objects to load
 	 * @return the loaded objects
 	 */
@@ -35,7 +35,7 @@ public abstract class AbstractSectionStorage {
 
 	/**
 	 * Saves a section-related object.
-	 * 
+	 *
 	 * @param id the ID of the object to save
 	 * @param data the object to store
 	 */
@@ -43,7 +43,7 @@ public abstract class AbstractSectionStorage {
 
 	/**
 	 * Deletes a section-related object from storage.
-	 * 
+	 *
 	 * @param id the ID of the object to delete
 	 */
 	public abstract void deleteSectionRelatedObject(SectionDataId id);

@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -22,12 +22,12 @@ import name.martingeisse.miner.server.world.SectionWorkingSet;
  * to modifications in the DEFINITIVE section data. Note that this does not mean that the cache entry itself is
  * invalid; setting the image to null is a modification to this image that must be saved. (Since we currently can't
  * save null images, the image will be updated from the DEFINITIVE data for saving).
- * 
+ *
  * TODO To allow the client to remove additional hidden faces, information about
  * the neighbor sections should be included in the image.
  */
 public final class InteractiveSectionImageCacheEntry extends SectionDataCacheEntry {
-	
+
 	/**
 	 * the imageData
 	 */
@@ -35,7 +35,7 @@ public final class InteractiveSectionImageCacheEntry extends SectionDataCacheEnt
 
 	/**
 	 * Constructor that just stores an already serialized image.
-	 * 
+	 *
 	 * @param sectionWorkingSet the working set from which this cached object comes from
 	 * @param sectionDataId the section data id
 	 * @param imageData the serialized image
@@ -53,15 +53,16 @@ public final class InteractiveSectionImageCacheEntry extends SectionDataCacheEnt
 		if (imageData == null) {
 			SectionDataId cubeDataId = getSectionDataId().getWithType(SectionDataType.DEFINITIVE);
 			SectionWorkingSet workingSet = getSectionWorkingSet();
-			SectionCubesCacheEntry definitiveEntry = (SectionCubesCacheEntry)workingSet.get(cubeDataId);
+			SectionCubesCacheEntry definitiveEntry = (SectionCubesCacheEntry) workingSet.get(cubeDataId);
 			Cubes originalCubes = definitiveEntry.getSectionCubes();
 			Cubes clonedCubes = originalCubes.clone();
 			int size = Constants.SECTION_SIZE.getSize();
 			CubeType[] cubeTypes = CubeTypes.CUBE_TYPES;
 			AxisAlignedDirection[] directions = AxisAlignedDirection.values();
-			for (int x=0; x<size; x++) {
-				for (int y=0; y<size; y++) {
-					zloop: for (int z=0; z<size; z++) {
+			for (int x = 0; x < size; x++) {
+				for (int y = 0; y < size; y++) {
+					zloop:
+					for (int z = 0; z < size; z++) {
 						for (AxisAlignedDirection direction : directions) {
 							int x2 = x + direction.getSignX();
 							int y2 = y + direction.getSignY();
@@ -72,7 +73,7 @@ public final class InteractiveSectionImageCacheEntry extends SectionDataCacheEnt
 								y2 -= direction.select(0, size, 0);
 								z2 -= direction.select(0, 0, size);
 								SectionDataId neighborCubeDataId = cubeDataId.getNeighbor(direction);
-								SectionCubesCacheEntry neighborEntry = (SectionCubesCacheEntry)workingSet.get(neighborCubeDataId);
+								SectionCubesCacheEntry neighborEntry = (SectionCubesCacheEntry) workingSet.get(neighborCubeDataId);
 								Cubes neighborCubes = neighborEntry.getSectionCubes();
 								neighborCubeType = cubeTypes[neighborCubes.getCubeRelative(Constants.SECTION_SIZE, x2, y2, z2) & 0xff];
 							} else {
@@ -83,7 +84,7 @@ public final class InteractiveSectionImageCacheEntry extends SectionDataCacheEnt
 								continue zloop;
 							}
 						}
-						clonedCubes = clonedCubes.setCubeRelative(Constants.SECTION_SIZE, x, y, z, (byte)255);
+						clonedCubes = clonedCubes.setCubeRelative(Constants.SECTION_SIZE, x, y, z, (byte) 255);
 					}
 				}
 			}
@@ -92,7 +93,7 @@ public final class InteractiveSectionImageCacheEntry extends SectionDataCacheEnt
 		}
 		return imageData;
 	}
-	
+
 	/**
 	 * Invalidates the data in this cache entry. Note that this does not make the
 	 * cache entry itself invalid; it makes the data in it invalid and actually
@@ -118,5 +119,5 @@ public final class InteractiveSectionImageCacheEntry extends SectionDataCacheEnt
 	public byte[] getDataForClient() {
 		return getImageData();
 	}
-	
+
 }

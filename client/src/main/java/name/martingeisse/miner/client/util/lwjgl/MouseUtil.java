@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2013 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -29,7 +29,7 @@ public final class MouseUtil {
 			Mouse.setGrabbed(true);
 		}
 	}
-	
+
 	/**
 	 * Un-grabs the mouse.
 	 */
@@ -38,5 +38,5 @@ public final class MouseUtil {
 			Mouse.setGrabbed(false);
 		}
 	}
-	
+
 }

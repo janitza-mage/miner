@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -23,7 +23,7 @@ public class AbstractGameGuiPage extends Page {
 	 */
 	public AbstractGameGuiPage() {
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.client.gui.control.Page#onException(java.lang.Throwable)
 	 */
@@ -71,5 +71,5 @@ public class AbstractGameGuiPage extends Page {
 	 */
 	protected void onEnterPressed() {
 	}
-	
+
 }

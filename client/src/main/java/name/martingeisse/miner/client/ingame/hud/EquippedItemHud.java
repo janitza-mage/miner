@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -13,10 +13,6 @@ import name.martingeisse.miner.client.util.frame.AbstractFrameHandler;
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
 import name.martingeisse.miner.client.util.lwjgl.Font;
-import name.martingeisse.miner.client.util.lwjgl.StackdTexture;
-import name.martingeisse.miner.common.cubetype.CubeType;
-import name.martingeisse.miner.common.cubetype.CubeTypes;
-import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.logic.EquipmentSlot;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;

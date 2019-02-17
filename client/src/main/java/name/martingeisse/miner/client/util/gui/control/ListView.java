@@ -29,7 +29,7 @@ public abstract class ListView<T> extends Control {
 	}
 
 	public AbstractListElement getListElement() {
-		return (AbstractListElement)getControlRootElement();
+		return (AbstractListElement) getControlRootElement();
 	}
 
 	public void update() {

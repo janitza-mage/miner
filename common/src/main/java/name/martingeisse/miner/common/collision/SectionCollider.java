@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -18,7 +18,7 @@ import name.martingeisse.miner.common.section.SectionId;
  * This collider is backed by an array that stores a cube type index for each cube in the array. An additional table of
  * cube types looks up the collider logic for individual types. This table allows to decouple cube type indices from
  * the global table of cube types.
- * 
+ *
  * The collider's size is specified as a {@link ClusterSize} and its
  * position in space is specified by a {@link SectionId} measured in
  * cluster-size units.
@@ -65,7 +65,7 @@ public final class SectionCollider implements IAxisAlignedCollider {
 	 */
 	@Override
 	public boolean collides(final RectangularRegion detailCoordinateRegion) {
-		
+
 		// map the region to a cube coordinate unit region
 		final RectangularRegion cubeCoordinateRegion = detailCoordinateRegion.divideAndRoundToOuter(Constants.GEOMETRY_DETAIL_CLUSTER_SIZE);
 

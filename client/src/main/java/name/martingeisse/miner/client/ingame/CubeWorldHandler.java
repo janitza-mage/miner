@@ -6,7 +6,6 @@
 
 package name.martingeisse.miner.client.ingame;
 
-import name.martingeisse.miner.common.util.ThreadUtil;
 import name.martingeisse.miner.client.MinerResources;
 import name.martingeisse.miner.client.ingame.engine.EngineParameters;
 import name.martingeisse.miner.client.ingame.engine.FrameRenderParameters;
@@ -31,6 +30,7 @@ import name.martingeisse.miner.common.geometry.vector.Vector3i;
 import name.martingeisse.miner.common.network.c2s.DigNotification;
 import name.martingeisse.miner.common.network.c2s.PlaceCube;
 import name.martingeisse.miner.common.util.ProfilingHelper;
+import name.martingeisse.miner.common.util.ThreadUtil;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.joda.time.Duration;

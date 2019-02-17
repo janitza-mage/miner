@@ -14,7 +14,9 @@ import io.netty.buffer.ByteBuf;
 public abstract class ReadableVector3d {
 
 	public abstract double getX();
+
 	public abstract double getY();
+
 	public abstract double getZ();
 
 	public abstract Vector3d freeze();

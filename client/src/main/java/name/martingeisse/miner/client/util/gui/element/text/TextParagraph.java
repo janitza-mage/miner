@@ -7,13 +7,13 @@
 package name.martingeisse.miner.client.util.gui.element.text;
 
 import com.google.common.collect.ImmutableList;
-import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiEvent;
 import name.martingeisse.miner.client.util.gui.util.Color;
 import name.martingeisse.miner.client.util.lwjgl.Font;
+import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.opengl.GL11;
 

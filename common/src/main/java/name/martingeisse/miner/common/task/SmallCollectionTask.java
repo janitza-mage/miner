@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -17,22 +17,22 @@ import java.util.concurrent.atomic.AtomicInteger;
  * time and allows to schedule those tasks for execution. If the collection
  * is large, then this large number of objects might put too much stress
  * on the GC.
- * 
+ *
  * The collection supports adding a "followup" task that will be invoked
  * when all tasks for the collection have completed. However, collection
  * tasks with a followup task must not be started more than once in parallel
  * because finished tasks from different runs will become mixed up, and
  * the followup task will be run too early. Similarly, the followup task
  * must not be switched while the collection task is running or scheduled.
- * 
+ *
  * Note that the {@link #handleElement(Object)} method may be invoked
  * concurrently for multiple elements -- this is the whole point of using
  * this class.
- * 
+ *
  * @param <T> the type of collection elements
  */
 public abstract class SmallCollectionTask<T> extends TaskArray {
-	
+
 	/**
 	 * the pendingTasks
 	 */
@@ -42,7 +42,7 @@ public abstract class SmallCollectionTask<T> extends TaskArray {
 	 * the followupTask
 	 */
 	private ITaskLike followupTask;
-	
+
 	/**
 	 * Constructor.
 	 * @param elements the elements to handle
@@ -74,7 +74,7 @@ public abstract class SmallCollectionTask<T> extends TaskArray {
 		}
 		super.setTasks(taskList.toArray(new Task[taskList.size()]));
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.common.task.TaskArray#setTasks(name.martingeisse.stackd.common.task.ITaskLike[])
 	 */
@@ -90,13 +90,13 @@ public abstract class SmallCollectionTask<T> extends TaskArray {
 	public ITaskLike getFollowupTask() {
 		return followupTask;
 	}
-	
+
 	/**
 	 * Setter method for the followupTask.
-	 * 
+	 *
 	 * Setting the followup task will fail if the collection task is currently
 	 * running.
-	 * 
+	 *
 	 * @param followupTask the followupTask to set
 	 * @return this for chaining
 	 */
@@ -107,7 +107,7 @@ public abstract class SmallCollectionTask<T> extends TaskArray {
 		this.followupTask = followupTask;
 		return this;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.common.task.TaskArray#schedule()
 	 */
@@ -116,7 +116,7 @@ public abstract class SmallCollectionTask<T> extends TaskArray {
 		prepare();
 		super.schedule();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.common.task.TaskArray#scheduleRelative(long)
 	 */
@@ -125,7 +125,7 @@ public abstract class SmallCollectionTask<T> extends TaskArray {
 		prepare();
 		super.scheduleRelative(milliseconds);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.common.task.TaskArray#scheduleRelative(long, java.util.concurrent.TimeUnit)
 	 */
@@ -134,21 +134,21 @@ public abstract class SmallCollectionTask<T> extends TaskArray {
 		prepare();
 		super.scheduleRelative(delay, timeUnit);
 	}
-	
+
 	/**
 	 * This method throws an exception if there is a followup task and pending element tasks. Thus,
 	 * after calling this method, there are three cases:
-	 * 
+	 *
 	 * - There is no followup task and no pending element tasks. We can safely schedule this
 	 *   collection task. This creates element tasks which we mark as pending, but nothing
 	 *   happens when the counter reaches zero. They are counted only to handle the second
 	 *   case below:
-	 *   
+	 *
 	 * - There is no followup tasks, but there are pending element tasks. We can still safely
 	 *   schedule this collection task, but we have to *add* the number of pending element
 	 *   tasks from the two runs, so we know exactly when the number of pending tasks
 	 *   actually reaches zero, for the safety checks.
-	 *   
+	 *
 	 * - There is a followup task but no pending element tasks. We can safely schedule this
 	 *   collection task, creating element tasks, and when they are all finished the followup
 	 *   task gets scheduled. Replacing the followup task in the meantime would throw an
@@ -161,7 +161,7 @@ public abstract class SmallCollectionTask<T> extends TaskArray {
 		}
 		pendingTasks.addAndGet(getTasks().length);
 	}
-	
+
 	/**
 	 * This method must be implemented by subclasses to provide the actual
 	 * task logic.
@@ -193,7 +193,7 @@ public abstract class SmallCollectionTask<T> extends TaskArray {
 		@Override
 		public void run() {
 			handleElement(element);
-			
+
 			// at this point we have to keep the followup task in a local variable,
 			// because decrementing the "pending element task" counter might set
 			// that counter to 0 and thus allow replacing the followup task in the
@@ -205,7 +205,7 @@ public abstract class SmallCollectionTask<T> extends TaskArray {
 			if (remaining == 0) {
 				followupTask.schedule();
 			}
-			
+
 		}
 
 	}

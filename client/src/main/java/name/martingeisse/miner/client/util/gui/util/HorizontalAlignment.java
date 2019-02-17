@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -15,21 +15,21 @@ public enum HorizontalAlignment {
 	 * the LEFT
 	 */
 	LEFT,
-	
+
 	/**
 	 * the CENTER
 	 */
 	CENTER,
-	
+
 	/**
 	 * the RIGHT
 	 */
 	RIGHT;
-	
+
 	/**
 	 * Returns the x coordinate of a point that uses this alignment in
 	 * a container of the specified outer width.
-	 * 
+	 *
 	 * @param outerWidth the width of the container
 	 * @return the x coordinate of the point
 	 */
@@ -46,7 +46,7 @@ public enum HorizontalAlignment {
 	/**
 	 * Returns the x coordinate of a span of the specified inner width that
 	 * uses this alignment in a container of the specified outer width.
-	 * 
+	 *
 	 * @param outerWidth the width of the container
 	 * @param innerWidth the width of the span to align
 	 * @return the x coordinate of the span
@@ -60,5 +60,5 @@ public enum HorizontalAlignment {
 			return (outerWidth - innerWidth);
 		}
 	}
-	
+
 }

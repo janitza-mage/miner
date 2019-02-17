@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -21,17 +21,17 @@ public enum PulseFunction {
 		public int evaluate(int time) {
 			double x = (time * 2 * Math.PI / 1000);
 			double s = Math.abs(Math.sin(x));
-			return (int)(s * 255);
+			return (int) (s * 255);
 		}
 	};
-	
+
 	/**
 	 * Evaluates this function.
 	 * @param time the time
 	 * @return the value (0..255) at that time
 	 */
 	public abstract int evaluate(int time);
-	
+
 	/**
 	 * Evaluates this function.
 	 * @param time the time
@@ -41,5 +41,5 @@ public enum PulseFunction {
 	public final int evaluate(int time, int period) {
 		return evaluate(time * 1000 / period);
 	}
-	
+
 }

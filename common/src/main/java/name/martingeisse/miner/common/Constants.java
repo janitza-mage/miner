@@ -33,7 +33,7 @@ public class Constants {
 	 * are used that are represented using integers. Each cube, whose normal
 	 * size is 1, is {@link #GEOMETRY_DETAIL_FACTOR} units wide in detail
 	 * coordinates.
-	 *
+	 * <p>
 	 * Detail coordinates are only used in exceptional cases, so whenever
 	 * a method comment doesn't mention them, you can assume that the method
 	 * uses normal coordinates (1 unit per cube). An example where detail

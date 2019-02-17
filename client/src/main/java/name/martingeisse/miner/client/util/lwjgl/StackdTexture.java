@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -22,12 +22,12 @@ public final class StackdTexture {
 	 * the KEY_COLOR
 	 */
 	private static final int[] KEY_COLOR = {255, 0, 255};
-	
+
 	/**
 	 * the slickTexture
 	 */
 	private final Texture slickTexture;
-	
+
 	/**
 	 * Constructor.
 	 * @param anchorClass this class specifies the package to load from
@@ -41,7 +41,7 @@ public final class StackdTexture {
 				throw new RuntimeException("file not found: " + filename);
 			}
 			// TODO slick generates mipmaps *before* it removes the key color pixels, so with GL_LINEAR they bleed into the neighbor pixels
-		    this.slickTexture = InternalTextureLoader.get().getTexture(inputStream, resourceName, flipped, GL11.GL_NEAREST, KEY_COLOR);
+			this.slickTexture = InternalTextureLoader.get().getTexture(inputStream, resourceName, flipped, GL11.GL_NEAREST, KEY_COLOR);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -53,7 +53,7 @@ public final class StackdTexture {
 	public void glBindTexture() {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, slickTexture.getTextureID());
 	}
-	
+
 	/**
 	 * Getter method for the width.
 	 * @return the width
@@ -61,7 +61,7 @@ public final class StackdTexture {
 	public int getWidth() {
 		return slickTexture.getImageWidth();
 	}
-	
+
 	/**
 	 * Getter method for the height.
 	 * @return the height
@@ -69,5 +69,5 @@ public final class StackdTexture {
 	public int getHeight() {
 		return slickTexture.getImageHeight();
 	}
-	
+
 }

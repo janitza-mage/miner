@@ -11,6 +11,7 @@ import java.util.Iterator;
 /**
  * This class wraps another iterator to block off the {@link #remove()} method.
  * It is like {@link UnmodifiableIterator}, just with a type parameter.
+ *
  * @param <T> the element type
  */
 public final class ImmutableIteratorWrapper<T> implements Iterator<T> {
@@ -22,6 +23,7 @@ public final class ImmutableIteratorWrapper<T> implements Iterator<T> {
 
 	/**
 	 * Constructor.
+	 *
 	 * @param wrapped the wrapped iterator
 	 */
 	public ImmutableIteratorWrapper(Iterator<T> wrapped) {

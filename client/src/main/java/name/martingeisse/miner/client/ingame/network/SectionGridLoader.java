@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -31,11 +31,11 @@ import java.util.Set;
  * This class updates the set of sections in the {@link WorldWorkingSet} based
  * on the viewer's position. It requests new sections by sending section request
  * messages to the server and receives the responses via the in-game message router.
- * 
+ *
  * Sending a request for sections is not initiated by this class; this class
  * only provides a method to do so. Clients should call that method in regular
  * intervals. TODO provide a frame handler for that.
- * 
+ *
  * The current implementation is very simple: It keeps a cube-shaped region
  * of sections in the working set. The region contains an odd number of
  * sections along each axis, with the viewer in the middle section.
@@ -50,7 +50,7 @@ public final class SectionGridLoader {
 	 * the logger
 	 */
 	private static Logger logger = Logger.getLogger(SectionGridLoader.class);
-	
+
 	/**
 	 * the workingSet
 	 */
@@ -65,7 +65,7 @@ public final class SectionGridLoader {
 	 * the colliderRadius
 	 */
 	private final int colliderRadius;
-	
+
 	/**
 	 * the viewerPosition
 	 */
@@ -91,7 +91,7 @@ public final class SectionGridLoader {
 	public SectionId getViewerPosition() {
 		return viewerPosition;
 	}
-	
+
 	/**
 	 * Setter method for the viewerPosition.
 	 * @param viewerPosition the viewerPosition to set
@@ -103,14 +103,14 @@ public final class SectionGridLoader {
 	/**
 	 * Updates the set of visible sections, based on the viewer's position which
 	 * was previously set via {@link #setViewerPosition(SectionId)} (mandatory).
-	 * 
+	 *
 	 * @return true if anything was update-requested, false if everything stays the same
 	 */
 	public boolean update() {
 		boolean anythingUpdated = false;
-		
+
 		// ProfilingHelper.start();
-		
+
 		// check that a position was set.
 		if (viewerPosition == null) {
 			throw new IllegalStateException("viewer position not set");
@@ -122,9 +122,9 @@ public final class SectionGridLoader {
 			anythingUpdated = true;
 		}
 		anythingUpdated |= restrictMapToRadius(workingSet.getCollidingSections(), colliderRadius + 1);
-		
+
 		// ProfilingHelper.checkRelevant("update sections 1");
-		
+
 		// if the protocol client isn't ready yet, we cannot load anything
 		if (!ClientEndpoint.INSTANCE.isConnected()) {
 			logger.debug("cannot load sections, protocol client not ready yet");
@@ -148,7 +148,7 @@ public final class SectionGridLoader {
 		}
 
 		// ProfilingHelper.checkRelevant("update sections 2");
-		
+
 		// detect missing section colliders in the viewer's proximity, then request them all at once
 		// TODO implement a batch request packet
 		{
@@ -164,10 +164,10 @@ public final class SectionGridLoader {
 		}
 
 		// ProfilingHelper.checkRelevant("update sections 3");
-		
+
 		return anythingUpdated;
 	}
-	
+
 	/**
 	 * Reloads a single section by requesting its render model and/or collider from the server.
 	 * @param sectionId the ID of the section to reload
@@ -176,22 +176,22 @@ public final class SectionGridLoader {
 		// TODO check distance; adjust data type; fetch at all?
 		ClientEndpoint.INSTANCE.send(new InteractiveSectionDataRequest(sectionId));
 	}
-	
+
 	/**
 	 * Handles a single interactive section image that was received from the server.
 	 */
 	public void handleInteractiveSectionImage(InteractiveSectionDataResponse response) {
-		
+
 		// read the section data from the packet
 		final SectionId sectionId = response.getSectionId();
 		logger.debug("received interactive section image for section " + sectionId);
 		byte[] data = response.getData();
 		final Cubes cubes = Cubes.createFromCompressedData(Constants.SECTION_SIZE, data);
 		logger.debug("created Cubes instance for section " + sectionId);
-		
+
 		// add a renderable section
 		workingSet.getRenderableSectionsLoadedQueue().add(new RenderableSection(workingSet, sectionId, cubes));
-		
+
 		// add a colliding section if this section is close enough
 		int dx = Math.abs(sectionId.getX() - viewerPosition.getX());
 		int dy = Math.abs(sectionId.getY() - viewerPosition.getY());
@@ -203,9 +203,9 @@ public final class SectionGridLoader {
 					logger.debug("building collider for section " + sectionId);
 					int size = Constants.SECTION_SIZE.getSize();
 					byte[] colliderCubes = new byte[size * size * size];
-					for (int x=0; x<size; x++) {
-						for (int y=0; y<size; y++) {
-							for (int z=0; z<size; z++) {
+					for (int x = 0; x < size; x++) {
+						for (int y = 0; y < size; y++) {
+							for (int z = 0; z < size; z++) {
 								colliderCubes[x * size * size + y * size + z] = cubes.getCubeRelative(Constants.SECTION_SIZE, x, y, z);
 							}
 						}
@@ -217,10 +217,10 @@ public final class SectionGridLoader {
 				}
 			}.schedule();
 		}
-		
+
 		logger.debug("consumed interactive section image for section " + sectionId);
 	}
-	
+
 	/**
 	 * Handles a single section modification event that was received from the server.
 	 * Note that such packets are ignored here until the player's position has been set.
@@ -233,7 +233,7 @@ public final class SectionGridLoader {
 	 * Removes all entries from the map whose keys are too far away from the center,
 	 * currently using "city block distance" (leaving a rectangular region), not
 	 * euclidian distance (which would leave a sphere).
-	 * 
+	 *
 	 * Returns true if any entries have been removed.
 	 */
 	private boolean restrictMapToRadius(final Map<SectionId, ?> map, final int radius) {

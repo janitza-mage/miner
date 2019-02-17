@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -131,7 +131,7 @@ public class FixedWidthFont extends Font {
 	 * @param characterHeight the height of all characters
 	 */
 	public FixedWidthFont(final BufferedImage image, final int charactersPerRow, final int charactersTotal, final int leftBoundaryOffset, final int leftBoundaryStride, final int topBoundaryOffset, final int topBoundaryStride,
-		final int characterWidth, final int characterHeight) {
+						  final int characterWidth, final int characterHeight) {
 		this(extractPixels(image), image.getWidth(), charactersPerRow, charactersTotal, leftBoundaryOffset, leftBoundaryStride, topBoundaryOffset, topBoundaryStride, characterWidth, characterHeight);
 	}
 
@@ -149,7 +149,7 @@ public class FixedWidthFont extends Font {
 	 * @param characterHeight the height of all characters
 	 */
 	public FixedWidthFont(final ByteBuffer image, final int imageWidth, final int charactersPerRow, final int charactersTotal, final int leftBoundaryOffset, final int leftBoundaryStride,
-		final int topBoundaryOffset, final int topBoundaryStride, final int characterWidth, final int characterHeight) {
+						  final int topBoundaryOffset, final int topBoundaryStride, final int characterWidth, final int characterHeight) {
 		this.image = image;
 		this.imageWidth = imageWidth;
 		this.charactersPerRow = charactersPerRow;
@@ -163,7 +163,7 @@ public class FixedWidthFont extends Font {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private static ByteBuffer extractPixels(final BufferedImage image) {
 		final int[] pixels = new int[image.getWidth() * image.getHeight()];
@@ -177,7 +177,7 @@ public class FixedWidthFont extends Font {
 				final int g = (pixel >> 8) & 0xFF;
 				final int b = (pixel >> 0) & 0xFF;
 				final int value = (r + g + b) / 3;
-				buffer.put((byte)value);
+				buffer.put((byte) value);
 			}
 		}
 		buffer.flip();
@@ -231,14 +231,14 @@ public class FixedWidthFont extends Font {
 	public int getCharacterWidth(final int characterIndex) {
 		return characterWidth;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.client.system.Font#getStringWidth(java.lang.String)
 	 */
 	@Override
 	public int getStringWidth(String s) {
 		int width = 0;
-		for (int i=0; i<s.length(); i++) {
+		for (int i = 0; i < s.length(); i++) {
 			int characterIndex = getCharacterIndex(s.charAt(i));
 			if (characterIndex >= 0) {
 				width += getCharacterWidth(characterIndex);

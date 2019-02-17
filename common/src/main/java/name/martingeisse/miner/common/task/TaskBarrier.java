@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -21,7 +21,7 @@ public final class TaskBarrier extends Task {
 	 * the latch
 	 */
 	private final CountDownLatch latch;
-	
+
 	/**
 	 * Constructor.
 	 * @param times the number of times the barrier task has to be executed
@@ -46,11 +46,11 @@ public final class TaskBarrier extends Task {
 	public void await() throws InterruptedException {
 		latch.await();
 	}
-	
+
 	/**
 	 * Waits until the barrier task has been executed often enough,
 	 * or until the specified timeout occurs.
-	 * 
+	 *
 	 * @param timeout the time to wait
 	 * @param timeUnit the time unit
 	 * @throws InterruptedException if interrupted while waiting
@@ -58,5 +58,5 @@ public final class TaskBarrier extends Task {
 	public void await(long timeout, TimeUnit timeUnit) throws InterruptedException {
 		latch.await(timeout, timeUnit);
 	}
-	
+
 }

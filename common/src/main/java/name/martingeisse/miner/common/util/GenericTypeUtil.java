@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2011 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -16,7 +16,7 @@ public class GenericTypeUtil {
 	 */
 	private GenericTypeUtil() {
 	}
-	
+
 	/**
 	 * Converts the argument reference to type T without a runtime type check.
 	 * @param <T> the target type
@@ -25,7 +25,7 @@ public class GenericTypeUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T unsafeCast(Object o) {
-		return (T)o;
+		return (T) o;
 	}
-	
+
 }

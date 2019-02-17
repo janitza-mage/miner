@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -19,19 +19,19 @@ public final class TaskSystem {
 	 */
 	private TaskSystem() {
 	}
-	
+
 	/**
 	 * the executorService
 	 */
 	static final ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(4);
-	
+
 	/**
 	 * Initializes the task system. The thread calling this method is not, and cannot become,
 	 * a worker thread since all workers are managed internally by the task system.
 	 */
 	public static void initialize() {
 	}
-	
+
 	/**
 	 * Getter method for the executorService.
 	 * @return the executorService
@@ -39,5 +39,5 @@ public final class TaskSystem {
 	public static ScheduledExecutorService getExecutorService() {
 		return executorService;
 	}
-	
+
 }

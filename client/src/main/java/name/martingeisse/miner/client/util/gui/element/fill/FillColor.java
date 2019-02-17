@@ -1,14 +1,14 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.miner.client.util.gui.element.fill;
 
-import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.util.gui.util.Color;
+import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import org.lwjgl.opengl.GL11;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -45,7 +45,7 @@ public final class FillColor extends AbstractFillElement {
 		ParameterUtil.ensureNotNull(color, "color");
 		setColor(color);
 	}
-	
+
 	/**
 	 * Getter method for the color.
 	 * @return the color
@@ -53,7 +53,7 @@ public final class FillColor extends AbstractFillElement {
 	public Color getColor() {
 		return color;
 	}
-	
+
 	/**
 	 * Setter method for the color.
 	 * @param color the color to set
@@ -69,5 +69,5 @@ public final class FillColor extends AbstractFillElement {
 	protected void draw() {
 		getGui().getGlWorkerLoop().schedule(workUnit);
 	}
-	
+
 }

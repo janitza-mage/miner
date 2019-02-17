@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -30,7 +30,7 @@ public class SectionRenderer {
 	 * the glWorkerLoop
 	 */
 	private GlWorkerLoop glWorkerLoop;
-	
+
 	/**
 	 * the wireframe
 	 */
@@ -60,27 +60,27 @@ public class SectionRenderer {
 	 * the sunlightDiffuse
 	 */
 	private float sunlightDiffuse;
-	
+
 	/**
 	 * the auxFloatBuffer
 	 */
 	private final FloatBuffer auxFloatBuffer = ByteBuffer.allocateDirect(16).order(ByteOrder.nativeOrder()).asFloatBuffer();
-	
+
 	/**
 	 * the preparationWorkUnit
 	 */
 	private final GlWorkUnit preparationWorkUnit = new GlWorkUnit() {
 		@Override
 		public void execute() {
-			
+
 			// enable backface culling since we don't do quick BFC for faces in the same section
 			glEnable(GL11.GL_CULL_FACE);
 			GL11.glCullFace(GL11.GL_BACK);
 			GL11.glFrontFace(GL11.GL_CCW);
-					
+
 			// wireframe or solid polygons
 			glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL11.GL_LINE : GL11.GL_FILL);
-			
+
 			// texturing
 			TextureImpl.unbind(); // TODO this nonsense alone is a good reason to get rid of Slick textures
 			glEnable(GL_TEXTURE_2D);
@@ -94,22 +94,22 @@ public class SectionRenderer {
 			// key color support
 			glEnable(GL_ALPHA_TEST);
 			glAlphaFunc(GL_NOTEQUAL, 0);
-			
+
 			// various
 			glDepthMask(true);
 			glColor3f(1.0f, 1.0f, 1.0f);
 			glEnableClientState(GL_VERTEX_ARRAY);
-			
+
 		}
 	};
-	
+
 	/**
 	 * the directionPreparationWorkUnits
 	 */
 	private final EnumWorkUnits<AxisAlignedDirection> directionPreparationWorkUnits = new EnumWorkUnits<AxisAlignedDirection>(AxisAlignedDirection.class) {
 		@Override
 		protected void handleSubject(AxisAlignedDirection direction) {
-			
+
 			// configure texture coordinate generation
 			glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
 			glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
@@ -121,7 +121,7 @@ public class SectionRenderer {
 				glTexGen(GL_S, 1 / 8f, 0, 0);
 				glTexGen(GL_T, 0, 0, -1 / 8f);
 			}
-			
+
 			// apply sunlight
 			float brightness = direction.getOpposite().select(sunlightDirectionX, sunlightDirectionY, sunlightDirectionZ);
 			if (brightness < 0) {
@@ -129,7 +129,7 @@ public class SectionRenderer {
 			}
 			brightness = (sunlightAmbient + sunlightDiffuse * brightness);
 			glColor3f(brightness, brightness, brightness);
-			
+
 		}
 	};
 
@@ -147,7 +147,7 @@ public class SectionRenderer {
 	 * the texturePreparationWorkUnits
 	 */
 	private FixedSubjectsWorkUnits<StackdTexture> texturePreparationWorkUnits;
-	
+
 	/**
 	 * Constructor.
 	 */
@@ -164,7 +164,7 @@ public class SectionRenderer {
 	public GlWorkerLoop getGlWorkerLoop() {
 		return glWorkerLoop;
 	}
-	
+
 	/**
 	 * Setter method for the glWorkerLoop.
 	 * @param glWorkerLoop the glWorkerLoop to set
@@ -221,9 +221,9 @@ public class SectionRenderer {
 	 */
 	public void setSunlightDirection(final float sunlightDirectionX, final float sunlightDirectionY, final float sunlightDirectionZ) {
 		double norm = Math.sqrt(sunlightDirectionX * sunlightDirectionX + sunlightDirectionY * sunlightDirectionY + sunlightDirectionZ * sunlightDirectionZ);
-		this.sunlightDirectionX = (float)(sunlightDirectionX / norm);
-		this.sunlightDirectionY = (float)(sunlightDirectionY / norm);
-		this.sunlightDirectionZ = (float)(sunlightDirectionZ / norm);
+		this.sunlightDirectionX = (float) (sunlightDirectionX / norm);
+		this.sunlightDirectionY = (float) (sunlightDirectionY / norm);
+		this.sunlightDirectionZ = (float) (sunlightDirectionZ / norm);
 	}
 
 	/**
@@ -233,7 +233,7 @@ public class SectionRenderer {
 	public float getSunlightAmbient() {
 		return sunlightAmbient;
 	}
-	
+
 	/**
 	 * Setter method for the sunlightAmbient.
 	 * @param sunlightAmbient the sunlightAmbient to set
@@ -241,7 +241,7 @@ public class SectionRenderer {
 	public void setSunlightAmbient(float sunlightAmbient) {
 		this.sunlightAmbient = sunlightAmbient;
 	}
-	
+
 	/**
 	 * Getter method for the sunlightDiffuse.
 	 * @return the sunlightDiffuse
@@ -249,7 +249,7 @@ public class SectionRenderer {
 	public float getSunlightDiffuse() {
 		return sunlightDiffuse;
 	}
-	
+
 	/**
 	 * Setter method for the sunlightDiffuse.
 	 * @param sunlightDiffuse the sunlightDiffuse to set
@@ -257,7 +257,7 @@ public class SectionRenderer {
 	public void setSunlightDiffuse(float sunlightDiffuse) {
 		this.sunlightDiffuse = sunlightDiffuse;
 	}
-	
+
 	/**
 	 * Performs set-up work for the specified set of textures. The argument array must
 	 * include all textures that might be passed to {@link #prepareForTexture(StackdTexture)}.
@@ -309,9 +309,9 @@ public class SectionRenderer {
 	public void prepareForDirection(AxisAlignedDirection direction) {
 		directionPreparationWorkUnits.schedule(glWorkerLoop, direction);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private void glTexGen(int axis, float x, float y, float z) {
 		auxFloatBuffer.rewind();
@@ -322,5 +322,5 @@ public class SectionRenderer {
 		auxFloatBuffer.rewind();
 		GL11.glTexGen(axis, GL_OBJECT_PLANE, auxFloatBuffer);
 	}
-	
+
 }

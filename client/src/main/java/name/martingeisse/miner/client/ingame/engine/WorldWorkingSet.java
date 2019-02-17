@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2012 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * cube matrix world. This class supports loading parts of the world dynamically. It
  * does NOT support "parallel dimensions", i.e. separate cube matrices -- use a
  * separate instance for that.
- * 
+ *
  * TODO: dispose of system resources; allow passing a parent resource node to the constructor
  */
 public final class WorldWorkingSet {
@@ -66,7 +66,7 @@ public final class WorldWorkingSet {
 	 * the combined collider
 	 */
 	private final IAxisAlignedCollider compositeCollider;
-	
+
 	/**
 	 * the renderUnits
 	 */
@@ -151,11 +151,11 @@ public final class WorldWorkingSet {
 	/**
 	 * Draws the working set, using the currently installed transformation. The specified
 	 * viewer position is used only for culling; it doesn't affect the transformation.
-	 * 
+	 *
 	 * @param frameRenderParameters per-frame rendering parameters
 	 */
 	public void draw(final FrameRenderParameters frameRenderParameters) {
-		
+
 		// prepare
 		if (renderUnits == null) {
 			List<RenderUnit> renderUnitList = new ArrayList<>();
@@ -189,14 +189,14 @@ public final class WorldWorkingSet {
 			});
 			logger.info("working set now has " + renderUnits.length + " render units");
 		}
-		
+
 		// render
 		sectionRenderer.onBeforeRenderWorkingSet(this, frameRenderParameters);
 		for (RenderUnit renderUnit : renderUnits) {
 			renderUnit.draw(sectionRenderer, engineParameters, frameRenderParameters, sectionRenderer.getGlWorkerLoop());
 		}
 		sectionRenderer.onAfterRenderWorkingSet(this, frameRenderParameters);
-		
+
 	}
 
 	/**
@@ -226,7 +226,7 @@ public final class WorldWorkingSet {
 	 * Checks whether all render models around the specified center are present in the working
 	 * set. Currently using "city block distance" (checking a rectangular region), not
 	 * euclidian distance (which would check a sphere).
-	 * 
+	 *
 	 * @param center the center section
 	 * @param radius the "radius"
 	 * @return true if all render models are present, false if some are missing
@@ -245,12 +245,12 @@ public final class WorldWorkingSet {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Checks whether all colliders around the specified center are present in the working
 	 * set. Currently using "city block distance" (checking a rectangular region), not
 	 * euclidian distance (which would check a sphere).
-	 * 
+	 *
 	 * @param center the center section
 	 * @param radius the "radius"
 	 * @return true if all colliders are present, false if some are missing
@@ -272,14 +272,14 @@ public final class WorldWorkingSet {
 
 	/**
 	 * This method should be called when render models have been added or removed.
-	 * 
+	 *
 	 * TODO: there should be high-level modification methods, and they should do this themselves.
 	 */
 	public void markRenderModelsModified() {
-		
+
 		// TODO dispose of the VBOs!!!
 		renderUnits = null;
-		
+
 	}
-	
+
 }

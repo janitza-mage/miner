@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -24,10 +24,10 @@ public class HmacUtil {
 	 * Use this constant for the "algorithm" parameter for SHA256.
 	 */
 	public static final String ALGORITHM_SHA256 = "HmacSHA256";
-	
+
 	/**
 	 * Base function to generate a HMAC.
-	 * 
+	 *
 	 * @param payload the payload data
 	 * @param secret the secret to sign the HMAC
 	 * @param algorithm the HMAC algorithm to use
@@ -44,10 +44,10 @@ public class HmacUtil {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * Generates a HMAC, assuming UTF-8 encoding for all strings.
-	 * 
+	 *
 	 * @param payload the payload data
 	 * @param secret the secret to sign the HMAC
 	 * @param algorithm the HMAC algorithm to use
@@ -57,11 +57,11 @@ public class HmacUtil {
 		Charset utf8 = StandardCharsets.UTF_8;
 		return generateHmac(payload.getBytes(utf8), secret.getBytes(utf8), algorithm);
 	}
-	
+
 	/**
 	 * Generates a HMAC, assuming UTF-8 encoding for all strings, and base64-encodes
 	 * the result.
-	 * 
+	 *
 	 * @param payload the payload data
 	 * @param secret the secret to sign the HMAC
 	 * @param algorithm the HMAC algorithm to use

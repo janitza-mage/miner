@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -10,12 +10,12 @@ import name.martingeisse.miner.common.geometry.RectangularRegion;
 
 /**
  * {@link IEditAccessHost} implementation that stores the cubes in a byte array.
- * 
+ *
  * This class keeps a region that is used to clip cubes outside that region,
  * using the input coordinates to {@link #setCube(int, int, int, byte)}.
  * It is also reported by {@link #getRegion()}. {@link #getCube(int, int, int)}
  * returns 0 for cubes outside that region.
- * 
+ *
  * For cubes inside the region, this class subtracts origin coordinates from
  * the coordinate arguments. It then multiplies the coordinates by stride
  * values, and adds them together with a global index offset to obtain the
@@ -62,7 +62,7 @@ public final class ByteArrayEditAccessHost implements IEditAccessHost {
 	 * the indexOffset
 	 */
 	private final int indexOffset;
-	
+
 	/**
 	 * the array
 	 */

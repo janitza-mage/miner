@@ -15,7 +15,9 @@ import io.netty.buffer.ByteBuf;
 public abstract class ReadableEulerAngles {
 
 	public abstract double getHorizontalAngle();
+
 	public abstract double getVerticalAngle();
+
 	public abstract double getRollAngle();
 
 	/**

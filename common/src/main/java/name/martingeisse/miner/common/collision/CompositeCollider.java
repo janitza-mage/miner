@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -11,16 +11,15 @@ import name.martingeisse.miner.common.geometry.RectangularRegion;
 import java.util.ArrayList;
 import java.util.Collection;
 
-
 /**
  * This class is used for collider hierarchies. It stores a collection of
  * objects, each of which has a collider. This collider reports a collision if
  * at least one of the contained colliders does.
- * 
+ *
  * This class does not store the colliders directly, but rather a collection
  * of {@link IAxisAlignedCollidingObject}s. This allows the contained objects
  * to switch colliders without changing the collection stored in this class.
- * 
+ *
  * The collection stored in this class can be shared with other objects if needed.
  */
 public final class CompositeCollider implements IAxisAlignedCollider {
@@ -29,24 +28,24 @@ public final class CompositeCollider implements IAxisAlignedCollider {
 	 * the collidingObjects
 	 */
 	private final Collection<? extends IAxisAlignedCollidingObject> collidingObjects;
-	
+
 	/**
 	 * Constructor. This constructor creates an internal list of colliders.
 	 */
 	public CompositeCollider() {
 		this(new ArrayList<IAxisAlignedCollidingObject>());
 	}
-	
+
 	/**
 	 * Constructor. This constructor shares a collection of colliders with other
 	 * objects.
-	 * 
+	 *
 	 * @param collidingObjects the collection of colliding objects
 	 */
 	public CompositeCollider(Collection<? extends IAxisAlignedCollidingObject> collidingObjects) {
 		this.collidingObjects = collidingObjects;
 	}
-	
+
 	/**
 	 * Getter method for the collidingObjects.
 	 * @return the collidingObjects
@@ -75,5 +74,5 @@ public final class CompositeCollider implements IAxisAlignedCollider {
 		}
 		return false;
 	}
-	
+
 }

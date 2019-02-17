@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -18,5 +18,5 @@ public interface IAxisAlignedCollidingObject {
 	 * @return the collider
 	 */
 	public IAxisAlignedCollider getCurrentCollider();
-	
+
 }

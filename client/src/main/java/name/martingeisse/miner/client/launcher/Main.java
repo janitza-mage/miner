@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -23,7 +23,7 @@ public class Main {
 	 * the logger
 	 */
 	private static Logger logger = Logger.getLogger(Main.class);
-	
+
 	/**
 	 * Main method.
 	 * @param args command-line arguments (ignored)
@@ -33,19 +33,19 @@ public class Main {
 		System.setProperty("name.martingeisse.miner.serverBaseUrl", "LIVE");
 		System.setProperty("name.martingeisse.miner.serverName", "LIVE");
 		String clientDownloadUrl = "http://vshg03.mni.fh-giessen.de/martin/miner-data/miner-client-3.jar";
-		
-		URLClassLoader classLoader = new URLClassLoader(new URL[] {new URL(clientDownloadUrl)}, Main.class.getClassLoader());
+
+		URLClassLoader classLoader = new URLClassLoader(new URL[]{new URL(clientDownloadUrl)}, Main.class.getClassLoader());
 		Properties launchProperties = getLaunchProperties(classLoader);
 		String mainClassName = launchProperties.getProperty("Main-Class");
 		if (mainClassName == null) {
 			throw new Exception("no Main-Class property in downloaded launcher properties");
 		}
 		Class<?> mainClass = classLoader.loadClass(mainClassName);
-		mainClass.getMethod("main", String[].class).invoke(null, (Object)args);
+		mainClass.getMethod("main", String[].class).invoke(null, (Object) args);
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private static Properties getLaunchProperties(ClassLoader classLoader) throws IOException {
 		Properties launchProperties = new Properties();
@@ -58,5 +58,5 @@ public class Main {
 		}
 		return launchProperties;
 	}
-	
+
 }

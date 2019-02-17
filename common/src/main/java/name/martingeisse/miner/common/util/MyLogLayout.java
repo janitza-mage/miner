@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -13,10 +13,10 @@ import org.apache.log4j.spi.LoggingEvent;
 
 /**
  * Custom log layout that extends {@link PatternLayout}. Special handling:
- * 
+ *
  * - replaces space characters by hyphens in the thread name to support log file
  *   analysis tools
- *   
+ *
  */
 public class MyLogLayout extends PatternLayout {
 
@@ -61,5 +61,5 @@ public class MyLogLayout extends PatternLayout {
 			}
 		};
 	}
-	
+
 }

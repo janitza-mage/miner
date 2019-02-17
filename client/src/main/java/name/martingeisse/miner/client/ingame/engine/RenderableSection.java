@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -32,7 +32,7 @@ public final class RenderableSection {
 	 * the logger
 	 */
 	private static Logger logger = Logger.getLogger(RenderableSection.class);
-	
+
 	/**
 	 * the workingSet
 	 */
@@ -57,12 +57,12 @@ public final class RenderableSection {
 	 * the systemResourceNode
 	 */
 	private SystemResourceNode systemResourceNode;
-	
+
 	/**
 	 * the renderUnits
 	 */
 	private RenderUnit[] renderUnits;
-	
+
 	/**
 	 * Constructor.
 	 * @param workingSet the working set that contains this object
@@ -101,7 +101,7 @@ public final class RenderableSection {
 	public RectangularRegion getRegion() {
 		return region;
 	}
-	
+
 	/**
 	 * Creates a system resource node if none is present yet.
 	 */
@@ -127,7 +127,7 @@ public final class RenderableSection {
 	 * times; it will only prepare the first time. However, this method can be used to prepare
 	 * this object at a time when a delay is not harmful, or even in another thread. Note though
 	 * that this whole object is not synchronized, so you'll have to do that yourself.
-	 * 
+	 *
 	 * @param renderer the section renderer
 	 */
 	public void prepare(final SectionRenderer renderer) {
@@ -148,7 +148,7 @@ public final class RenderableSection {
 		renderUnits = meshBuilder.build(systemResourceNode, renderer.getGlWorkerLoop());
 		logger.debug("prepared render units for section " + sectionId + "(" + renderUnits.length + " RUs)");
 	}
-	
+
 	/**
 	 * Builds the triangle mesh for this section.
 	 * @param meshBuilder the mesh builder
@@ -159,11 +159,11 @@ public final class RenderableSection {
 		// build cube faces
 		{
 			IWrapPlane uniformWrapPlane = new EmptyWrapPlane();
-			IWrapPlane[] wrapPlanes = new IWrapPlane[] {uniformWrapPlane, uniformWrapPlane, uniformWrapPlane, uniformWrapPlane, uniformWrapPlane, uniformWrapPlane};
+			IWrapPlane[] wrapPlanes = new IWrapPlane[]{uniformWrapPlane, uniformWrapPlane, uniformWrapPlane, uniformWrapPlane, uniformWrapPlane, uniformWrapPlane};
 			byte[] cubeFaceTextureIndexPlane = new byte[size * size];
 			for (AxisAlignedDirection direction : AxisAlignedDirection.values()) {
 				for (int plane = 0; plane < size; plane++) {
-					
+
 					// determine the wrapping plane
 					IWrapPlane wrapPlane;
 					if (plane == (direction.isNegative() ? 0 : size - 1)) {
@@ -171,11 +171,11 @@ public final class RenderableSection {
 					} else {
 						wrapPlane = null;
 					}
-					
+
 					// determine the texture indices for the current plane
-					Arrays.fill(cubeFaceTextureIndexPlane, (byte)0);
-					for (int u=0; u<size; u++) {
-						for (int v=0; v<size; v++) {
+					Arrays.fill(cubeFaceTextureIndexPlane, (byte) 0);
+					for (int u = 0; u < size; u++) {
+						for (int v = 0; v < size; v++) {
 							final int x = direction.selectByAxis(plane, u, v);
 							final int y = direction.selectByAxis(v, plane, u);
 							final int z = direction.selectByAxis(u, v, plane);
@@ -198,13 +198,13 @@ public final class RenderableSection {
 										neighborCubeType = wrapPlane.getCubeType(direction, u, v);
 									}
 									if (!neighborCubeType.obscuresNeighbor(direction.getOpposite())) {
-										cubeFaceTextureIndexPlane[v * size + u] = (byte)textureIndex;
+										cubeFaceTextureIndexPlane[v * size + u] = (byte) textureIndex;
 									}
 								}
 							}
 						}
 					}
-					
+
 					// some geometry juggling need to build the polygons: compute d(x,y,z)/d(u,v)
 					final int dx_du = direction.getAbsY();
 					final int dy_du = direction.getAbsZ();
@@ -212,46 +212,47 @@ public final class RenderableSection {
 					final int dx_dv = direction.getAbsZ();
 					final int dy_dv = direction.getAbsX();
 					final int dz_dv = direction.getAbsY();
-					
+
 					// detect large rectangles and build the actual polygons using the MeshBuilder
 					for (int u = 0; u < size; u++) {
 						for (int v = 0; v < size; v++) {
-							
+
 							// skip already cleared faces
 							int textureIndex = cubeFaceTextureIndexPlane[v * size + u];
 							if (textureIndex == 0) {
 								continue;
 							}
-							
+
 							// find a large rectangle
 							int w = 1;
 							while (u + w < size && cubeFaceTextureIndexPlane[v * size + (u + w)] == textureIndex) {
 								w++;
 							}
 							int h = 1;
-							extendHeight: while (v + h < size) {
-								for (int i=0; i<w; i++) {
+							extendHeight:
+							while (v + h < size) {
+								for (int i = 0; i < w; i++) {
 									if (cubeFaceTextureIndexPlane[(v + h) * size + (u + i)] != textureIndex) {
 										break extendHeight;
 									}
 								}
 								h++;
 							}
-							
+
 							// clear the faces covered by that rectangle
-							for (int i=0; i<w; i++) {
-								for (int j=0; j<h; j++) {
+							for (int i = 0; i < w; i++) {
+								for (int j = 0; j < h; j++) {
 									cubeFaceTextureIndexPlane[(v + j) * size + (u + i)] = 0;
 								}
 							}
-							
+
 							// find the base coordinates and transform everything to scaled space
 							final int scaledX = (region.getStartX() + direction.getStepX() + direction.selectByAxis(plane, u, v)) << 3;
 							final int scaledY = (region.getStartY() + direction.getStepY() + direction.selectByAxis(v, plane, u)) << 3;
 							final int scaledZ = (region.getStartZ() + direction.getStepZ() + direction.selectByAxis(u, v, plane)) << 3;
 							final int scaledW = w << 3;
 							final int scaledH = h << 3;
-							
+
 							// scale d-vectors by w, h
 							final int scaledW_dx_du = scaledW * dx_du;
 							final int scaledW_dy_du = scaledW * dy_du;
@@ -259,7 +260,7 @@ public final class RenderableSection {
 							final int scaledH_dx_dv = scaledH * dx_dv;
 							final int scaledH_dy_dv = scaledH * dy_dv;
 							final int scaledH_dz_dv = scaledH * dz_dv;
-							
+
 							// determine vertex coordinates (possibly swapped for correct winding)
 							int x2, y2, z2, x3, y3, z3, x4, y4, z4;
 							if (direction.isNegative()) {
@@ -280,11 +281,11 @@ public final class RenderableSection {
 							x4 = scaledX + scaledW_dx_du + scaledH_dx_dv;
 							y4 = scaledY + scaledW_dy_du + scaledH_dy_dv;
 							z4 = scaledZ + scaledW_dz_du + scaledH_dz_dv;
-							
+
 							// build the triangles
 							meshBuilder.addTriangle(textureIndex, direction, direction, scaledX, scaledY, scaledZ, x2, y2, z2, x3, y3, z3);
 							meshBuilder.addTriangle(textureIndex, direction, direction, x3, y3, z3, x2, y2, z2, x4, y4, z4);
-							
+
 						}
 					}
 				}
@@ -292,9 +293,9 @@ public final class RenderableSection {
 		}
 
 		// build other polygons
-		for (int x=0; x<size; x++) {
-			for (int y=0; y<size; y++) {
-				for (int z=0; z<size; z++) {
+		for (int x = 0; x < size; x++) {
+			for (int y = 0; y < size; y++) {
+				for (int z = 0; z < size; z++) {
 					final int cubeTypeCode = cubes.getCubeRelative(Constants.SECTION_SIZE, x, y, z) & 0xff;
 					if (cubeTypeCode != 255) {
 						final CubeType cubeType = CubeTypes.CUBE_TYPES[cubeTypeCode];
@@ -306,7 +307,7 @@ public final class RenderableSection {
 				}
 			}
 		}
-		
+
 	}
 
 	/**
@@ -316,7 +317,7 @@ public final class RenderableSection {
 	public RenderUnit[] getRenderUnits() {
 		return renderUnits;
 	}
-	
+
 	/**
 	 * Disposes of this object. This method must be called before dropping the last reference
 	 * to this object. TODO not called!? This probably means that VBOs are never disposed of.

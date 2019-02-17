@@ -46,7 +46,7 @@ public final class Vector3d extends ReadableVector3d {
 	@Override
 	public boolean equals(Object other) {
 		if (other instanceof Vector3d) {
-			Vector3d otherVector = (Vector3d)other;
+			Vector3d otherVector = (Vector3d) other;
 			return (x == otherVector.x && y == otherVector.y && z == otherVector.z);
 		} else {
 			return false;

@@ -1,11 +1,10 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.miner.common.section;
-
 
 /**
  * Selector for the different data objects associated with a section.
@@ -18,7 +17,7 @@ public enum SectionDataType {
 	 * information cheating.
 	 */
 	DEFINITIVE,
-	
+
 	/**
 	 * In interactive image that contains all visible information, colliders,
 	 * and simplified second-layer cubes for smooth interpolation while digging cubes.
@@ -26,14 +25,14 @@ public enum SectionDataType {
 	 * sections when the player gets close to them.
 	 */
 	INTERACTIVE,
-	
+
 	/**
 	 * This image type contains all visible information but nothing else. It is
 	 * used for sections that are close enough to be visible with all details,
 	 * but not close enough for type {@link #INTERACTIVE}. 
 	 */
 	VIEW_LOD_0;
-	
+
 	/**
 	 * the storageId
 	 */
@@ -53,5 +52,5 @@ public enum SectionDataType {
 	public String getStorageId() {
 		return storageId;
 	}
-	
+
 }

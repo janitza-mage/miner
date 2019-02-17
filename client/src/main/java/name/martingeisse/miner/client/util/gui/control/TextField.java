@@ -102,6 +102,7 @@ public final class TextField extends Control implements IFocusableElement {
 
 	/**
 	 * Getter method for the textLine.
+	 *
 	 * @return the textLine
 	 */
 	public TextLine getTextLine() {
@@ -110,6 +111,7 @@ public final class TextField extends Control implements IFocusableElement {
 
 	/**
 	 * Getter method for the margin.
+	 *
 	 * @return the margin
 	 */
 	public Margin getMargin() {
@@ -118,6 +120,7 @@ public final class TextField extends Control implements IFocusableElement {
 
 	/**
 	 * Getter method for the border.
+	 *
 	 * @return the border
 	 */
 	public ThinBorder getBorder() {
@@ -126,6 +129,7 @@ public final class TextField extends Control implements IFocusableElement {
 
 	/**
 	 * Getter method for the backgroundElement.
+	 *
 	 * @return the backgroundElement
 	 */
 	public GuiElement getBackgroundElement() {
@@ -134,6 +138,7 @@ public final class TextField extends Control implements IFocusableElement {
 
 	/**
 	 * Setter method for the backgroundElement.
+	 *
 	 * @param backgroundElement the backgroundElement to set
 	 */
 	public void setBackgroundElement(final GuiElement backgroundElement) {
@@ -142,6 +147,7 @@ public final class TextField extends Control implements IFocusableElement {
 
 	/**
 	 * Getter method for the displayed text.
+	 *
 	 * @return the displayed text
 	 */
 	public String getDisplayedText() {
@@ -150,6 +156,7 @@ public final class TextField extends Control implements IFocusableElement {
 
 	/**
 	 * Getter method for the actual value of the text field
+	 *
 	 * @return the value
 	 */
 	public String getValue() {
@@ -158,6 +165,7 @@ public final class TextField extends Control implements IFocusableElement {
 
 	/**
 	 * Setter method for the value.
+	 *
 	 * @param value the value to set
 	 * @return this for chaining
 	 */
@@ -183,6 +191,7 @@ public final class TextField extends Control implements IFocusableElement {
 
 	/**
 	 * Getter method for the passwordCharacter.
+	 *
 	 * @return the passwordCharacter
 	 */
 	public char getPasswordCharacter() {
@@ -191,6 +200,7 @@ public final class TextField extends Control implements IFocusableElement {
 
 	/**
 	 * Setter method for the passwordCharacter.
+	 *
 	 * @param passwordCharacter the passwordCharacter to set
 	 */
 	public void setPasswordCharacter(final char passwordCharacter) {
@@ -200,6 +210,7 @@ public final class TextField extends Control implements IFocusableElement {
 
 	/**
 	 * Getter method for the nextFocusableElement.
+	 *
 	 * @return the nextFocusableElement
 	 */
 	public IFocusableElement getNextFocusableElement() {
@@ -208,6 +219,7 @@ public final class TextField extends Control implements IFocusableElement {
 
 	/**
 	 * Setter method for the nextFocusableElement.
+	 *
 	 * @param nextFocusableElement the nextFocusableElement to set
 	 * @return this for chaining
 	 */
@@ -218,6 +230,7 @@ public final class TextField extends Control implements IFocusableElement {
 
 	/**
 	 * Getter method for the cursorPosition.
+	 *
 	 * @return the cursorPosition
 	 */
 	public int getCursorPosition() {
@@ -226,6 +239,7 @@ public final class TextField extends Control implements IFocusableElement {
 
 	/**
 	 * Setter method for the cursorPosition.
+	 *
 	 * @param cursorPosition the cursorPosition to set
 	 * @return this
 	 */
@@ -236,6 +250,7 @@ public final class TextField extends Control implements IFocusableElement {
 
 	/**
 	 * Moves the cursor to the position after the last character.
+	 *
 	 * @return this
 	 */
 	public TextField moveCursorToEnd() {

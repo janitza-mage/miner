@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -15,7 +15,7 @@ public enum VerticalAlignment {
 	 * the TOP
 	 */
 	TOP,
-	
+
 	/**
 	 * the CENTER
 	 */
@@ -25,11 +25,11 @@ public enum VerticalAlignment {
 	 * the BOTTOM
 	 */
 	BOTTOM;
-	
+
 	/**
 	 * Returns the y coordinate of a point that uses this alignment in
 	 * a container of the specified outer height.
-	 * 
+	 *
 	 * @param outerHeight the height of the container
 	 * @return the y coordinate of the point
 	 */
@@ -46,7 +46,7 @@ public enum VerticalAlignment {
 	/**
 	 * Returns the y coordinate of a span of the specified inner height that
 	 * uses this alignment in a container of the specified outer height.
-	 * 
+	 *
 	 * @param outerHeight the height of the container
 	 * @param innerHeight the height of the span to align
 	 * @return the y coordinate of the span
@@ -60,5 +60,5 @@ public enum VerticalAlignment {
 			return (outerHeight - innerHeight);
 		}
 	}
-	
+
 }

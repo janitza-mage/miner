@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -15,7 +15,7 @@ public enum SortOrder {
 	 * sort in ascending order
 	 */
 	ASCENDING,
-	
+
 	/**
 	 * sort in descending order
 	 */
@@ -29,5 +29,5 @@ public enum SortOrder {
 	public static SortOrder fromString(String s) {
 		return EnumUtil.fromString(SortOrder.class, s, ASCENDING);
 	}
-	
+
 }

@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -21,7 +21,7 @@ public class OpenGlVertexBuffer extends OpenGlBuffer {
 	 * the size
 	 */
 	private long size;
-	
+
 	/**
 	 * Binds this buffer to the GL_ARRAY_BUFFER target.
 	 */
@@ -53,7 +53,7 @@ public class OpenGlVertexBuffer extends OpenGlBuffer {
 		this.size = sourceBuffer.remaining();
 		glBufferData(GL_ARRAY_BUFFER, sourceBuffer, usage);
 	}
-	
+
 	/**
 	 * Creates a new OpenGL-server-side data store for this buffer and uploads data from
 	 * the specified NIO buffer into the new data store.
@@ -66,7 +66,7 @@ public class OpenGlVertexBuffer extends OpenGlBuffer {
 		this.size = sourceBuffer.remaining() * 2;
 		glBufferData(GL_ARRAY_BUFFER, sourceBuffer, usage);
 	}
-	
+
 	/**
 	 * Creates a new OpenGL-server-side data store for this buffer and uploads data from
 	 * the specified NIO buffer into the new data store.
@@ -79,7 +79,7 @@ public class OpenGlVertexBuffer extends OpenGlBuffer {
 		this.size = sourceBuffer.remaining() * 4;
 		glBufferData(GL_ARRAY_BUFFER, sourceBuffer, usage);
 	}
-	
+
 	/**
 	 * Creates a new OpenGL-server-side data store for this buffer and uploads data from
 	 * the specified NIO buffer into the new data store.
@@ -92,7 +92,7 @@ public class OpenGlVertexBuffer extends OpenGlBuffer {
 		this.size = sourceBuffer.remaining() * 4;
 		glBufferData(GL_ARRAY_BUFFER, sourceBuffer, usage);
 	}
-	
+
 	/**
 	 * Creates a new OpenGL-server-side data store for this buffer and uploads data from
 	 * the specified NIO buffer into the new data store.
@@ -105,10 +105,10 @@ public class OpenGlVertexBuffer extends OpenGlBuffer {
 		this.size = sourceBuffer.remaining() * 8;
 		glBufferData(GL_ARRAY_BUFFER, sourceBuffer, usage);
 	}
-	
+
 	/**
 	 * Maps this buffer to main memory.
-	 * 
+	 *
 	 * @param readable whether the mapped buffer should be readable
 	 * @param writeable whether the mapped buffer should be writable
 	 */
@@ -119,12 +119,12 @@ public class OpenGlVertexBuffer extends OpenGlBuffer {
 		int access = (!readable ? GL15.GL_WRITE_ONLY : !writeable ? GL15.GL_READ_ONLY : GL15.GL_READ_WRITE);
 		GL15.glMapBuffer(GL_ARRAY_BUFFER, access, size, null);
 	}
-	
+
 	/**
 	 * Unmaps this buffer from main memory.
 	 */
 	public final void unmap() {
 		GL15.glUnmapBuffer(GL_ARRAY_BUFFER);
 	}
-	
+
 }

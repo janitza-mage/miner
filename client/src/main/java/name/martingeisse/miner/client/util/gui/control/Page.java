@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -19,16 +19,16 @@ import org.apache.log4j.Logger;
  * This element shows a main element over a background filler, and
  * optionally a popup element that can be added/removed/exchanged
  * at runtime.
- * 
+ *
  * Pages all to catch all exceptions that occur during event handling
  * in the enclosed elements. These exceptions are passed to
  * {@link #onException(Throwable)}. The default behavior is to catch
  * and log the exceptions.
- * 
+ *
  * To support all this, subclasses that want to override
  * {@link #handleEvent(GuiEvent)} must override {@link #handlePageEvent(GuiEvent)}
  * instead.
- * 
+ *
  * Pages call the helper method {@link #onAttach()} once (and only once)
  * when the GUI becomes available. This can be used, for example, to
  * set the initial input focus.
@@ -39,20 +39,20 @@ public class Page extends Control {
 	 * the logger
 	 */
 	private static Logger logger = Logger.getLogger(Page.class);
-	
+
 	/**
 	 * the DARK_OVERLAY
 	 */
 	private static final Color DARK_OVERLAY = new Color(0, 0, 0, 192);
-	
+
 	/**
 	 * the attached
 	 */
 	private boolean attached = false;
-	
+
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param backgroundElement the background element, or null if none
 	 * @param mainElement the main element
 	 */
@@ -67,7 +67,7 @@ public class Page extends Control {
 
 	/**
 	 * Sets the popup element.
-	 * 
+	 *
 	 * @param popupElement the popup element to use, or null for none
 	 */
 	public final void setPopupElement(final GuiElement popupElement) {
@@ -87,21 +87,21 @@ public class Page extends Control {
 						getStack().addElement(popupElement);
 					}
 				}
-				FillColor fillColor = (FillColor)getStack().getWrappedElements().get(2);
+				FillColor fillColor = (FillColor) getStack().getWrappedElements().get(2);
 				fillColor.setColor(popupElement == null ? Color.TRANSPARENT : DARK_OVERLAY);
 			}
 		});
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private OverlayStack getStack() {
-		return (OverlayStack)getControlRootElement();
+		return (OverlayStack) getControlRootElement();
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private boolean hasPopup() {
 		return getStack().getWrappedElements().size() > 3;
@@ -115,7 +115,7 @@ public class Page extends Control {
 		OverlayStack stack = getStack();
 		return (stack.getWrappedElements().size() > 3 ? stack.getWrappedElements().get(3) : null);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.client.gui.control.Control#handleEvent(name.martingeisse.stackd.client.gui.GuiEvent)
 	 */
@@ -145,20 +145,20 @@ public class Page extends Control {
 	 * Reacts to an event in the page. Only called for non-draw events
 	 * if no popup element is visible. Exceptions that occur in this
 	 * method are passed to {@link #onException(Throwable)} as usual.
-	 * 
+	 *
 	 * The default implementation implements the normal event handling
 	 * that passes the event to enclosed elements.
-	 * 
+	 *
 	 * When overriding this method, be sure to call
-	 * 
+	 *
 	 * 		super.handlePageEvent(event);
-	 * 
+	 *
 	 * and not
-	 * 
+	 *
 	 * 		super.handleEvent(event);
-	 * 
+	 *
 	 * as that would create an infinite loop.
-	 * 
+	 *
 	 * @param event the event
 	 */
 	protected void handlePageEvent(GuiEvent event) {
@@ -171,11 +171,11 @@ public class Page extends Control {
 	protected void onException(Throwable t) {
 		logger.error("exception during GUI event handling", t);
 	}
-	
+
 	/**
 	 * This method gets fired once when the GUI is available to this page.
 	 */
 	protected void onAttach() {
 	}
-	
+
 }

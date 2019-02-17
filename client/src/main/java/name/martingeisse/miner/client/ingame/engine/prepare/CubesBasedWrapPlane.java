@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -32,12 +32,12 @@ public abstract class CubesBasedWrapPlane implements IWrapPlane {
 		final int cubeTypeCode = (cubes.getCubeRelative(Constants.SECTION_SIZE, x, y, z) & 0xff);
 		return CubeTypes.CUBE_TYPES[cubeTypeCode];
 	}
-	
+
 	/**
 	 * Fetches the {@link Cubes} for the neighbor section.
 	 * @param direction the direction that points from the current section to the neighbor section
 	 * @return the cubes
 	 */
 	protected abstract Cubes fetchCubes(AxisAlignedDirection direction);
-	
+
 }

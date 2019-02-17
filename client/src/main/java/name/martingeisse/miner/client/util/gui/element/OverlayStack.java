@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -22,7 +22,7 @@ public final class OverlayStack extends AbstractListElement {
 	 * the alignment
 	 */
 	private AreaAlignment alignment;
-	
+
 	/**
 	 * Constructor using CENTER alignment.
 	 */
@@ -37,7 +37,7 @@ public final class OverlayStack extends AbstractListElement {
 	public AreaAlignment getAlignment() {
 		return alignment;
 	}
-	
+
 	/**
 	 * Setter method for the alignment.
 	 * @param alignment the alignment to set
@@ -49,7 +49,7 @@ public final class OverlayStack extends AbstractListElement {
 		requestLayout();
 		return this;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.client.gui.GuiElement#finishLayout(int, int)
 	 */
@@ -78,5 +78,5 @@ public final class OverlayStack extends AbstractListElement {
 			element.setAbsolutePosition(absoluteX + dx, absoluteY + dy);
 		}
 	}
-	
+
 }

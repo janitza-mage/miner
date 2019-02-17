@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -17,12 +17,12 @@ public interface IWrapPlane {
 
 	/**
 	 * Returns the cube type of a cube in the wrap plane.
-	 * 
+	 *
 	 * @param direction the direction that points from the current section to the neighbor section
 	 * @param u the u coordinate of the cube
 	 * @param v the v coordinate of the cube
 	 * @return the cube type
 	 */
 	CubeType getCubeType(AxisAlignedDirection direction, int u, int v);
-	
+
 }

@@ -6,7 +6,6 @@
 
 package name.martingeisse.miner.common.util.contract;
 
-
 /**
  * Utility methods to handle method return values. This is mostly useful
  * to ensure that methods have actually returned what they're supposed to return.

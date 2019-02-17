@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -26,7 +26,7 @@ public class NullEditAccessHost implements IEditAccessHost {
 	public NullEditAccessHost(RectangularRegion region) {
 		this.region = region;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.common.edit.IEditAccessHost#containsPosition(int, int, int)
 	 */
@@ -57,5 +57,5 @@ public class NullEditAccessHost implements IEditAccessHost {
 	@Override
 	public void setCube(int x, int y, int z, byte value) {
 	}
-	
+
 }

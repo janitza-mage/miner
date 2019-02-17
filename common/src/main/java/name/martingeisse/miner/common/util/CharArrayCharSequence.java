@@ -13,12 +13,12 @@ public final class CharArrayCharSequence implements CharSequence {
 	 * the array
 	 */
 	private final char[] array;
-	
+
 	/**
 	 * the start
 	 */
 	private final int start;
-	
+
 	/**
 	 * the length
 	 */
@@ -26,16 +26,18 @@ public final class CharArrayCharSequence implements CharSequence {
 
 	/**
 	 * Constructor.
+	 *
 	 * @param array the char array to wrap
 	 */
 	public CharArrayCharSequence(char[] array) {
 		this(array, 0, array.length);
 	}
-	
+
 	/**
 	 * Constructor.
-	 * @param array the char array to wrap
-	 * @param start the index of the first character of the sequence
+	 *
+	 * @param array  the char array to wrap
+	 * @param start  the index of the first character of the sequence
 	 * @param length the length of the sequence
 	 */
 	public CharArrayCharSequence(char[] array, int start, int length) {
@@ -84,5 +86,5 @@ public final class CharArrayCharSequence implements CharSequence {
 	public String toString() {
 		return new String(array, start, length);
 	}
-	
+
 }

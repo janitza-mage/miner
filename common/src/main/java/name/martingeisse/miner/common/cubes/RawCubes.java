@@ -1,13 +1,13 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.miner.common.cubes;
 
-import name.martingeisse.miner.common.util.CompressionUtil;
 import name.martingeisse.miner.common.geometry.ClusterSize;
+import name.martingeisse.miner.common.util.CompressionUtil;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -25,16 +25,17 @@ public class RawCubes extends Cubes {
 	 * The DEFLATE dictionary used for compressing raw cubes.
 	 */
 	public static final byte[] COMPRESSION_DICTIONARY;
+
 	static {
 		ByteArrayOutputStream s = new ByteArrayOutputStream();
 		// TODO reverse order (0xff first) might shorten the pointers and improve compression!
-		for (int i=0; i<30; i++) {
+		for (int i = 0; i < 30; i++) {
 			s.write(0x00);
 		}
-		for (int i=0; i<10; i++) {
+		for (int i = 0; i < 10; i++) {
 			s.write(0x09);
 		}
-		for (int i=0; i<1000; i++) {
+		for (int i = 0; i < 1000; i++) {
 			s.write(0xff);
 		}
 		COMPRESSION_DICTIONARY = s.toByteArray();
@@ -51,7 +52,7 @@ public class RawCubes extends Cubes {
 	private RawCubes(final byte[] cubes) {
 		this.cubes = cubes;
 	}
-	
+
 	/**
 	 * Getter method for the cubes.
 	 * @return the cubes
@@ -59,24 +60,24 @@ public class RawCubes extends Cubes {
 	public byte[] getCubes() {
 		return cubes;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.common.cubes.Cubes#compressToStreamInternal(name.martingeisse.stackd.common.geometry.ClusterSize, java.io.OutputStream)
 	 */
 	@Override
 	protected void compressToStreamInternal(final ClusterSize clusterSize, final OutputStream stream) throws IOException {
-		
+
 		// TODO try uniform
 		// write cubes
 		stream.write(1);
 		stream.write(CompressionUtil.deflate(cubes, COMPRESSION_DICTIONARY));
-		 
+
 	}
 
 	/**
 	 * Decompresses and deserializes an object of this type from the specified array,
 	 * skipping the first byte since it is assumed to contain the compression scheme.
-	 * 
+	 *
 	 * @param clusterSize the cluster size
 	 * @param compressedData the compressed data
 	 * @return the cubes object, or null if not successful
@@ -89,7 +90,7 @@ public class RawCubes extends Cubes {
 
 	/**
 	 * Builds an instance of this type from the specified cube data.
-	 * 
+	 *
 	 * @param cubes the cube data
 	 * @return the cubes object
 	 */
@@ -132,7 +133,7 @@ public class RawCubes extends Cubes {
 		usedCount = 0;
 		for (int i = 0; i < 256; i++) {
 			if (usedFlags[i]) {
-				result[usedCount] = (byte)i;
+				result[usedCount] = (byte) i;
 				usedCount++;
 			}
 		}
@@ -158,7 +159,7 @@ public class RawCubes extends Cubes {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	final int getRelativeCubeIndex(final ClusterSize clusterSize, final int x, final int y, final int z) {
 		final int size = clusterSize.getSize();

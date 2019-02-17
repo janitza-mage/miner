@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -8,7 +8,7 @@ package name.martingeisse.miner.client.ingame.engine;
 
 /**
  * This class captures the per-frame parameters that affect rendering.
- * 
+ *
  * This class keeps the viewer's position, but for now that position does
  * not affect the modelview transformation -- that transformation must be
  * set outside the call to {@link WorldWorkingSet#draw(FrameRenderParameters)}.

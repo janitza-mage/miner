@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -8,7 +8,6 @@ package name.martingeisse.miner.client.util.glworker;
 
 import java.util.HashMap;
 import java.util.Map;
-
 
 /**
  * This class maintains a fixed set of {@link GlWorkUnit}s for a fixed
@@ -19,7 +18,7 @@ import java.util.Map;
  * subject. The work units can also be scheduled individually by specifying
  * their subject, which is the reason why this class doesn't use a single
  * big work unit for all subjects.
- * 
+ *
  * @param <T> the subject type
  */
 public abstract class FixedSubjectsWorkUnits<T> {
@@ -28,12 +27,12 @@ public abstract class FixedSubjectsWorkUnits<T> {
 	 * the workUnits
 	 */
 	private final GlWorkUnit[] workUnits;
-	
+
 	/**
 	 * the workUnitBySubject
 	 */
 	private final Map<T, GlWorkUnit> workUnitBySubject;
-	
+
 	/**
 	 * Constructor.
 	 * @param subjects the subjects
@@ -41,7 +40,7 @@ public abstract class FixedSubjectsWorkUnits<T> {
 	public FixedSubjectsWorkUnits(T[] subjects) {
 		workUnits = new GlWorkUnit[subjects.length];
 		workUnitBySubject = new HashMap<>();
-		for (int i=0; i<subjects.length; i++) {
+		for (int i = 0; i < subjects.length; i++) {
 			workUnits[i] = new MyWorkUnit(subjects[i]);
 			workUnitBySubject.put(subjects[i], workUnits[i]);
 		}
@@ -70,7 +69,7 @@ public abstract class FixedSubjectsWorkUnits<T> {
 		}
 		workerLoop.schedule(workUnit);
 	}
-	
+
 	/**
 	 * Handles a subject. This method gets called in the GL worker thread.
 	 * @param subject the subject
@@ -78,10 +77,10 @@ public abstract class FixedSubjectsWorkUnits<T> {
 	protected abstract void handleSubject(T subject);
 
 	/**
-	 * 
+	 *
 	 */
 	final class MyWorkUnit extends GlWorkUnit {
-		
+
 		final T subject;
 
 		MyWorkUnit(T subject) {
@@ -92,6 +91,6 @@ public abstract class FixedSubjectsWorkUnits<T> {
 		public void execute() {
 			handleSubject(subject);
 		}
-		
+
 	}
 }

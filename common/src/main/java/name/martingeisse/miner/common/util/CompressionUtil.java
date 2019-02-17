@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -23,16 +23,16 @@ public final class CompressionUtil {
 	 */
 	@SuppressWarnings("unused")
 	private static Logger logger = Logger.getLogger(CompressionUtil.class);
-	
+
 	/**
 	 * Prevent instantiation.
 	 */
 	private CompressionUtil() {
 	}
-	
+
 	/**
 	 * DEFLATEs the specified input data.
-	 * 
+	 *
 	 * @param data the input data
 	 * @param dictionary the dictionary, or null if none
 	 * @return the compressed data
@@ -53,7 +53,7 @@ public final class CompressionUtil {
 		byte[] result = byteArrayOutputStream.toByteArray();
 		return result;
 	}
-	
+
 	/**
 	 * Inflates (un-DEFLATEs) the specified compressed data.
 	 * @param compressedData the compressed data
@@ -82,5 +82,5 @@ public final class CompressionUtil {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 }

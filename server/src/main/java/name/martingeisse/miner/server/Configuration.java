@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -11,7 +11,7 @@ import java.util.Properties;
 
 /**
  * Provides access to miner-server.properties through static getter methods.
- * 
+ *
  * This class must be initialized before use.
  */
 public class Configuration {
@@ -20,17 +20,17 @@ public class Configuration {
 	 * the databaseMainUrl
 	 */
 	private static String mainDatabaseUrl;
-	
+
 	/**
 	 * the mainDatabaseUsername
 	 */
 	private static String mainDatabaseUsername;
-	
+
 	/**
 	 * the mainDatabasePassword
 	 */
 	private static String mainDatabasePassword;
-	
+
 	/**
 	 * Prevent instantiation.
 	 */
@@ -51,7 +51,7 @@ public class Configuration {
 		}
 		initialize(properties);
 	}
-	
+
 	/**
 	 * Initializes the configuration from the specified configuration file.
 	 * @param configFile the configuration file to load
@@ -72,9 +72,9 @@ public class Configuration {
 		mainDatabaseUsername = loadString(properties, "database.main.username");
 		mainDatabasePassword = loadString(properties, "database.main.password");
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@SuppressWarnings("unused")
 	private static String loadString(Properties properties, String key) {
@@ -84,9 +84,9 @@ public class Configuration {
 		}
 		return value.trim();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@SuppressWarnings("unused")
 	private static boolean loadBoolean(Properties properties, String key) {
@@ -99,7 +99,7 @@ public class Configuration {
 			throw new RuntimeException("property \"" + key + "\": expected boolean value, found: " + textValue);
 		}
 	}
-	
+
 	/**
 	 * Getter method for the mainDatabaseUrl.
 	 * @return the mainDatabaseUrl
@@ -107,7 +107,7 @@ public class Configuration {
 	public static String getMainDatabaseUrl() {
 		return mainDatabaseUrl;
 	}
-	
+
 	/**
 	 * Getter method for the mainDatabaseUsername.
 	 * @return the mainDatabaseUsername
@@ -115,7 +115,7 @@ public class Configuration {
 	public static String getMainDatabaseUsername() {
 		return mainDatabaseUsername;
 	}
-	
+
 	/**
 	 * Getter method for the mainDatabasePassword.
 	 * @return the mainDatabasePassword
@@ -123,5 +123,5 @@ public class Configuration {
 	public static String getMainDatabasePassword() {
 		return mainDatabasePassword;
 	}
-	
+
 }

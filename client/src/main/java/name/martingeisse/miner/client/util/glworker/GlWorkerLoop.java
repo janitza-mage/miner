@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -13,12 +13,12 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * This class must be used by the OpenGL worker thread to handle work units.
- * 
+ *
  * Clients should pass work units to the worker by calling {@link #schedule(GlWorkUnit)}.
- * 
+ *
  * The queue will stop when requested to do so by {@link #scheduleStop()}.
  * This schedules a special work unit that stops the loop when executed.
- * 
+ *
  * Workload and frame skipping: This class supports measuring the current
  * workload in frames, and also supports skipping frames when the workload
  * becomes too high. To do this, clients must invoke {@link #scheduleFrameBoundary()}
@@ -27,7 +27,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * avoid inserting too many frames to render; even if they get skipped, this
  * places additional work on the worker thread and possibly on the GC
  * and also increases rendering latency.
- * 
+ *
  * In addition, clients can use {@link #setFrameSkipThreshold(int)} to set
  * the minimum workload to start skipping frames. When this threshold is
  * reached or exceeded at a frame boundary, this worker loop skips work units
@@ -36,7 +36,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * and {@link #scheduleEndSideEffectsMarker()}. WUs between these markers will be
  * executed even when skipping. Note that a frame boundary marker also acts
  * as an implicit "end side effects" marker.
- * 
+ *
  * This class also keeps a second threshold called the "overload threshold" that
  * should be slightly less than the frame skip threshold. When the number of
  * "todo" frames exceeds this threshold, the worker loop is overloaded and the
@@ -54,42 +54,42 @@ public final class GlWorkerLoop {
 	 * the logger
 	 */
 	private static Logger logger = Logger.getLogger(GlWorkerLoop.class);
-	
+
 	/**
 	 * the queue
 	 */
 	private final BlockingQueue<GlWorkUnit> queue;
-	
+
 	/**
 	 * the workload
 	 */
 	private volatile int workload = 0;
-	
+
 	/**
 	 * the frameSkipThreshold
 	 */
 	private volatile int frameSkipThreshold = 5;
-	
+
 	/**
 	 * the wantsToSkip
 	 */
 	private boolean wantsToSkip = false;
-	
+
 	/**
 	 * the actuallySkipping
 	 */
 	private boolean actuallySkipping = false;
-	
+
 	/**
 	 * the overloadThreshold
 	 */
 	private volatile int overloadThreshold = 3;
-	
+
 	/**
 	 * "Executing" this work unit stops the worker loop.
 	 */
 	private static final GlWorkUnit STOP_LOOP = new NullWorkUnit();
-	
+
 	/**
 	 * This WU is inserted between frames to measure the workload
 	 * and to ensure that only whole frames get skipped. It also
@@ -101,19 +101,19 @@ public final class GlWorkerLoop {
 	 * Marks the WUs following this WU as having side effects, and thus "not skippable".
 	 */
 	private static final GlWorkUnit BEGIN_SIDE_EFFECTS = new NullWorkUnit();
-	
+
 	/**
 	 * Marks the WUs following this WU as no longer having side effects, and thus "skippable".
 	 */
 	private static final GlWorkUnit END_SIDE_EFFECTS = new NullWorkUnit();
-	
+
 	/**
 	 * Constructor.
 	 */
 	public GlWorkerLoop() {
 		this.queue = new LinkedBlockingQueue<GlWorkUnit>();
 	}
-	
+
 	/**
 	 * Getter method for the queue.
 	 * @return the queue
@@ -121,7 +121,7 @@ public final class GlWorkerLoop {
 	public BlockingQueue<GlWorkUnit> getQueue() {
 		return queue;
 	}
-	
+
 	/**
 	 * Executes work units until the queue is empty, then returns.
 	 * This method must only be called by the OpenGL thread.
@@ -135,12 +135,12 @@ public final class GlWorkerLoop {
 			execute(workUnit);
 		}
 	}
-	
+
 	/**
 	 * Executes work units, waiting for new ones when the queue becomes empty.
 	 * Call {@link #scheduleStop()} to stop the loop.
 	 * This method must only be called by the OpenGL thread.
-	 * 
+	 *
 	 * @throws InterruptedException if interrupted while waiting
 	 */
 	public void workAndWait() throws InterruptedException {
@@ -152,7 +152,7 @@ public final class GlWorkerLoop {
 			execute(workUnit);
 		}
 	}
-	
+
 	/**
 	 * This method must only be called by the OpenGL thread.
 	 * @param workUnit the work unit to execute
@@ -183,7 +183,7 @@ public final class GlWorkerLoop {
 	public void schedule(GlWorkUnit workUnit) {
 		queue.add(workUnit);
 	}
-	
+
 	/**
 	 * Schedules a special work unit that stops the loop when executed.
 	 */
@@ -214,7 +214,7 @@ public final class GlWorkerLoop {
 	public int getFrameSkipThreshold() {
 		return frameSkipThreshold;
 	}
-	
+
 	/**
 	 * Setter method for the frameSkipThreshold.
 	 * @param frameSkipThreshold the frameSkipThreshold to set
@@ -222,16 +222,16 @@ public final class GlWorkerLoop {
 	public void setFrameSkipThreshold(int frameSkipThreshold) {
 		this.frameSkipThreshold = frameSkipThreshold;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public void scheduleBeginSideEffectsMarker() {
 		queue.add(BEGIN_SIDE_EFFECTS);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public void scheduleEndSideEffectsMarker() {
 		queue.add(END_SIDE_EFFECTS);
@@ -244,7 +244,7 @@ public final class GlWorkerLoop {
 	public int getOverloadThreshold() {
 		return overloadThreshold;
 	}
-	
+
 	/**
 	 * Setter method for the overloadThreshold.
 	 * @param overloadThreshold the overloadThreshold to set
@@ -252,7 +252,7 @@ public final class GlWorkerLoop {
 	public void setOverloadThreshold(int overloadThreshold) {
 		this.overloadThreshold = overloadThreshold;
 	}
-	
+
 	/**
 	 * Checks whether this worker loop is currently overloaded by comparing
 	 * the current workload and the frame skip threshold.
@@ -269,6 +269,8 @@ public final class GlWorkerLoop {
 		@Override
 		public void execute() {
 		}
-	};
-	
+	}
+
+	;
+
 }

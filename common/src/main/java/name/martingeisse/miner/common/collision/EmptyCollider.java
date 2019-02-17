@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -17,7 +17,7 @@ public class EmptyCollider implements IAxisAlignedCollider {
 	 * shared instance of this class
 	 */
 	public static final EmptyCollider instance = new EmptyCollider();
-	
+
 	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.common.collision.IAxisAlignedCollidingObject#getCurrentCollider()
 	 */
@@ -25,7 +25,7 @@ public class EmptyCollider implements IAxisAlignedCollider {
 	public IAxisAlignedCollider getCurrentCollider() {
 		return this;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.common.collision.IAxisAlignedCollider#collides(name.martingeisse.stackd.common.geometry.RectangularRegion)
 	 */
@@ -33,5 +33,5 @@ public class EmptyCollider implements IAxisAlignedCollider {
 	public boolean collides(RectangularRegion region) {
 		return false;
 	}
-	
+
 }

@@ -1,24 +1,24 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.miner.client.util.gui.element;
 
-import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.util.AreaAlignment;
+import name.martingeisse.miner.common.util.contract.ParameterUtil;
 
 /**
  * This element asks its wrapped element to be as small as possible,
  * then takes up the remaining space to behave as the size its
  * enclosing element expects. An {@link AreaAlignment} controls
  * the positioning of the wrapped element.
- * 
+ *
  * Boolean parameters are used to control whether any space is
  * actually filled along both the horizontal and vertical axes.
- * 
+ *
  * TODO why make the wrapped element as small as possible and not
  * pass on the requested size?
  */
@@ -45,7 +45,7 @@ public final class Glue extends AbstractWrapperElement {
 	public Glue() {
 		this(null);
 	}
-	
+
 	/**
 	 * Constructor using CENTER alignment.
 	 * @param wrappedElement the wrapped element

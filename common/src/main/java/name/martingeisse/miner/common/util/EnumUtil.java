@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -19,7 +19,7 @@ public class EnumUtil {
 	 */
 	private EnumUtil() {
 	}
-	
+
 	/**
 	 * @param <T> the static enum type
 	 * @param enumClass the runtime class for the enum type
@@ -52,5 +52,5 @@ public class EnumUtil {
 			return defaultValue;
 		}
 	}
-	
+
 }

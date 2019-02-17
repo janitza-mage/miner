@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2013 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -36,12 +36,12 @@ public final class MeshBuilder extends MeshBuilderBase {
 	 * the logger
 	 */
 	private static Logger logger = Logger.getLogger(MeshBuilder.class);
-	
+
 	/**
 	 * the NO_RENDER_UNITS
 	 */
 	private static final RenderUnit[] NO_RENDER_UNITS = new RenderUnit[0];
-	
+
 	/**
 	 * Constructor.
 	 */
@@ -50,7 +50,7 @@ public final class MeshBuilder extends MeshBuilderBase {
 
 	/**
 	 * Builds {@link RenderUnit}s from the triangles.
-	 * 
+	 *
 	 * @param systemResourceNode the resource node that manages the actual VBOs
 	 * @param glWorkerLoop the OpenGL worker loop that builds the actual VBOs
 	 * @return the render units
@@ -62,13 +62,13 @@ public final class MeshBuilder extends MeshBuilderBase {
 		if (triangles.isEmpty()) {
 			return NO_RENDER_UNITS;
 		}
-		
+
 		// get bounding box
 		RectangularRegion boundingBox = getBoundingBox();
 		if (boundingBox == null) {
 			throw new IllegalStateException("no bounding box set");
 		}
-		
+
 		// sort the triangles by render state
 		Collections.sort(triangles, new Comparator<Triangle>() {
 			@Override
@@ -133,7 +133,6 @@ public final class MeshBuilder extends MeshBuilderBase {
 				logger.debug("vertex buffer built.");
 			}
 		});
-		
 
 		return renderUnits.toArray(new RenderUnit[renderUnits.size()]);
 	}

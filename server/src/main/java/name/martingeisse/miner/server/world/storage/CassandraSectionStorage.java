@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -67,7 +67,7 @@ public final class CassandraSectionStorage extends AbstractSectionStorage {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private ResultSet fetch(final Clause clause) {
 		return cassandrasSession.execute(QueryBuilder.select().all().from(tableName).where(clause));
@@ -94,7 +94,7 @@ public final class CassandraSectionStorage extends AbstractSectionStorage {
 			logger.debug("loading section-related objects: " + StringUtils.join(ids, ", "));
 		}
 		try {
-			
+
 			// convert the IDs to an array of strings
 			Object[] idTexts = new String[ids.size()];
 			{
@@ -104,7 +104,7 @@ public final class CassandraSectionStorage extends AbstractSectionStorage {
 					i++;
 				}
 			}
-			
+
 			// fetch the rows
 			final Map<SectionDataId, byte[]> result = new HashMap<>();
 			for (final Row row : fetch(QueryBuilder.in("id", idTexts))) {
@@ -115,7 +115,7 @@ public final class CassandraSectionStorage extends AbstractSectionStorage {
 				result.put(new SectionDataId(id), data);
 			}
 			return result;
-			
+
 		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}

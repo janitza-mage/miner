@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2012 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -24,7 +24,7 @@ public abstract class PlayerBase {
 	 * the logger
 	 */
 	private static Logger logger = Logger.getLogger(PlayerBase.class);
-	
+
 	/**
 	 * the world
 	 */
@@ -34,12 +34,12 @@ public abstract class PlayerBase {
 	 * the position
 	 */
 	private final MutableVector3d position;
-	
+
 	/**
 	 * the orientation
 	 */
 	private final MutableEulerAngles orientation;
-	
+
 	/**
 	 * Constructor.
 	 * @param worldWorkingSet the world working set
@@ -65,7 +65,7 @@ public abstract class PlayerBase {
 	public final MutableVector3d getPosition() {
 		return position;
 	}
-	
+
 	/**
 	 * Getter method for the orientation.
 	 * @return the orientation
@@ -73,14 +73,14 @@ public abstract class PlayerBase {
 	public final MutableEulerAngles getOrientation() {
 		return orientation;
 	}
-	
+
 	/**
 	 * @return the section ID of the section the player is currently in
 	 */
 	public final SectionId getSectionId() {
 		return SectionId.fromPosition(position);
 	}
-	
+
 	/**
 	 * Moves the player by the specified amounts forward and to the right.
 	 * @param forwardAmount the amount to move forward
@@ -88,13 +88,13 @@ public abstract class PlayerBase {
 	 * @param maxStairsHeight the maximum height for stairs to climb
 	 */
 	public final void moveHorizontal(final double forwardAmount, final double rightAmount, final double maxStairsHeight) {
-		
+
 		// coordinate system note: (leftAngle == 0) means "forward", i.e. towards -Z, with +X pointing right
 		final double radians = orientation.getHorizontalAngle() * 2 * Math.PI / 360.0;
 		final double sin = Math.sin(radians), cos = Math.cos(radians);
 		final double dx = -sin * forwardAmount + cos * rightAmount;
 		final double dz = -cos * forwardAmount - sin * rightAmount;
-		
+
 		// try to move along x and z independently (for wall sliding). If any one of them failed, try
 		// stair climbing.
 		boolean xok = checkAndMoveTo(position.getX() + dx, position.getY(), position.getZ());
@@ -112,7 +112,7 @@ public abstract class PlayerBase {
 			moveUp(-maxStairsHeight / 4);
 			moveUp(-maxStairsHeight / 4);
 		}
-		
+
 	}
 
 	/**
@@ -140,7 +140,7 @@ public abstract class PlayerBase {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Checks whether the player would be blocked if he were at the specified position.
 	 * @param nx the new x position
@@ -151,7 +151,7 @@ public abstract class PlayerBase {
 	public final boolean isBlockedAt(final double nx, final double ny, final double nz) {
 		return world.getCompositeCollider().collides(createDetailCollisionRegion(nx, ny, nz));
 	}
-	
+
 	/**
 	 * Checks whether the player is blocked at his current position
 	 * @return true if blocked, false if not
@@ -161,7 +161,7 @@ public abstract class PlayerBase {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void dump() {
 		logger.info("position: " + position);
@@ -170,7 +170,7 @@ public abstract class PlayerBase {
 
 	/**
 	 * Creates a collision region for this player with normal precision.
-	 * 
+	 *
 	 * @return a new {@link RectangularRegion} that describes the occupied region.
 	 */
 	public final RectangularRegion createCollisionRegion() {
@@ -179,31 +179,31 @@ public abstract class PlayerBase {
 
 	/**
 	 * Creates a collision region for this player with detail precision.
-	 * 
+	 *
 	 * @return a new {@link RectangularRegion} that describes the occupied region.
 	 */
 	public final RectangularRegion createDetailCollisionRegion() {
 		return createDetailCollisionRegion(position.getX(), position.getY(), position.getZ());
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final RectangularRegion createDetailCollisionRegion(double x, double y, double z) {
-		
+
 		// collider size
 		int width = 2;
 		int height = 2;
 		int depth = 13;
-		
+
 		// scale the player's position to detail coordinates
-		int detailX = (int)(x * Constants.GEOMETRY_DETAIL_FACTOR);
-		int detailY = (int)(y * Constants.GEOMETRY_DETAIL_FACTOR);
-		int detailZ = (int)(z * Constants.GEOMETRY_DETAIL_FACTOR);
-		
+		int detailX = (int) (x * Constants.GEOMETRY_DETAIL_FACTOR);
+		int detailY = (int) (y * Constants.GEOMETRY_DETAIL_FACTOR);
+		int detailZ = (int) (z * Constants.GEOMETRY_DETAIL_FACTOR);
+
 		// create the occupied region. note: +1 because "end" is exclusive
 		return new RectangularRegion(detailX - width, detailY - depth, detailZ - width, detailX + width + 1, detailY + height + 1, detailZ + width + 1);
-		
+
 	}
 
 }

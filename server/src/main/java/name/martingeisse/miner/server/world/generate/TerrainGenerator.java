@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -30,17 +30,18 @@ public final class TerrainGenerator {
 	 * the logger
 	 */
 	private static Logger logger = Logger.getLogger(TerrainGenerator.class);
-	
+
 	/**
 	 * the octaves
 	 */
 	private static final PerlinNoise[] heightFieldOctaves = new PerlinNoise[10];
+
 	static {
-		for (int i=0; i<heightFieldOctaves.length; i++) {
+		for (int i = 0; i < heightFieldOctaves.length; i++) {
 			heightFieldOctaves[i] = new PerlinNoise(i);
 		}
 	}
-	
+
 	/**
 	 * the snowNoise
 	 */
@@ -84,7 +85,7 @@ public final class TerrainGenerator {
 	public Random getRandom() {
 		return random;
 	}
-	
+
 	/**
 	 * Getter method for the heightFieldAmplitude.
 	 * @return the heightFieldAmplitude
@@ -151,7 +152,7 @@ public final class TerrainGenerator {
 
 	/**
 	 * Generates terrain sections for a rectangular block of sections.
-	 * 
+	 *
 	 * @param storage the section storage
 	 * @param min the section ID with lowest coordinates along all three axes (inclusive)
 	 * @param max the section ID with highest coordinates along all three axes (inclusive)
@@ -181,7 +182,7 @@ public final class TerrainGenerator {
 
 	/**
 	 * Generates terrain sections for a single section. Note that block-wise generation is usually faster.
-	 * 
+	 *
 	 * @param storage the section storage
 	 * @param sectionId the ID of the section to generate
 	 */
@@ -191,7 +192,7 @@ public final class TerrainGenerator {
 
 	/**
 	 * Generates terrain sections for a "column" of sections.
-	 * 
+	 *
 	 * @param storage the section storage
 	 * @param sectionX the x component of section IDs to handle
 	 * @param minSectionY the minimum Y component of section IDs to handle
@@ -200,12 +201,12 @@ public final class TerrainGenerator {
 	 */
 	public void generate(final AbstractSectionStorage storage, final int sectionX, final int minSectionY, final int maxSectionY, final int sectionZ) {
 		logger.debug("generating random terrain for section column at " + sectionX + ", " + sectionZ);
-		
+
 		// some common values
 		final int size = Constants.SECTION_SIZE.getSize();
 		final int baseX = sectionX * size;
 		final int baseZ = sectionZ * size;
-		
+
 		// generate height field
 		final double[] heightField = new double[size * size];
 		{
@@ -224,7 +225,7 @@ public final class TerrainGenerator {
 		}
 		final int[] intHeightField = new int[heightField.length];
 		for (int i = 0; i < heightField.length; i++) {
-			intHeightField[i] = (int)heightField[i];
+			intHeightField[i] = (int) heightField[i];
 		}
 		logger.trace("height field generated");
 
@@ -242,7 +243,7 @@ public final class TerrainGenerator {
 		}
 		final int[] intSnowDeltaField = new int[snowDeltaField.length];
 		for (int i = 0; i < snowDeltaField.length; i++) {
-			intSnowDeltaField[i] = (int)snowDeltaField[i];
+			intSnowDeltaField[i] = (int) snowDeltaField[i];
 		}
 		logger.trace("snow delta field generated");
 
@@ -254,46 +255,46 @@ public final class TerrainGenerator {
 			final int baseY = sectionY * size;
 			final byte[] cubes = new byte[size * size * size];
 			final EditAccess relativeEditAccess = new EditAccess(new ByteArrayEditAccessHost(relativeRegion, 0, 0, 0, size * size, size, 1, 0, cubes));
-			
+
 			// fill ocean cubes
 			if (sectionY < 0) {
 				for (int x = 0; x < size; x++) {
 					for (int y = 0; y < size; y++) {
 						for (int z = 0; z < size; z++) {
-							relativeEditAccess.setCube(x, y, z, (byte)9);
+							relativeEditAccess.setCube(x, y, z, (byte) 9);
 						}
 					}
 				}
 			}
-			
+
 			// make the base height field
 			for (int x = 0; x < size; x++) {
 				for (int z = 0; z < size; z++) {
 					int height = intHeightField[z * size + x];
 					int relativeHeight = height - baseY;
 					boolean shore = (height < 4);
-					int heightForSnow = height + intSnowDeltaField[z * size + x];					
+					int heightForSnow = height + intSnowDeltaField[z * size + x];
 					int snowHeight = (heightForSnow < 30 ? 0 : heightForSnow > 90 ? 3 : heightForSnow / 30);
-					for (int y = 0;  y < relativeHeight && y < size; y++) {
-						relativeEditAccess.setCube(x, y, z, shore ? (byte)12 : (byte)3); // dirt or sand
+					for (int y = 0; y < relativeHeight && y < size; y++) {
+						relativeEditAccess.setCube(x, y, z, shore ? (byte) 12 : (byte) 3); // dirt or sand
 					}
 					for (int y = 0; y < relativeHeight - 3 && y < size; y++) {
-						relativeEditAccess.setCube(x, y, z, (byte)1); // stone
+						relativeEditAccess.setCube(x, y, z, (byte) 1); // stone
 					}
 					if (snowHeight > 0) {
-						for (int i=0; i<snowHeight; i++) {
+						for (int i = 0; i < snowHeight; i++) {
 							if (relativeHeight - i > 0 && relativeHeight - i <= size) {
-								relativeEditAccess.setCube(x, relativeHeight - i - 1, z, (byte)78); // snow
+								relativeEditAccess.setCube(x, relativeHeight - i - 1, z, (byte) 78); // snow
 							}
 						}
 					} else {
 						if (!shore && relativeHeight > 0 && relativeHeight <= size) {
-							relativeEditAccess.setCube(x, relativeHeight - 1, z, (byte)2); // grass
+							relativeEditAccess.setCube(x, relativeHeight - 1, z, (byte) 2); // grass
 						}
 					}
 				}
 			}
-			
+
 			// place some tall grass
 			Random grassRandom = new Random(sectionX << 32 + sectionZ);
 			for (int g = 0; g < 40; g++) {
@@ -301,22 +302,22 @@ public final class TerrainGenerator {
 				int grassZ = grassRandom.nextInt(size);
 				int grassY = intHeightField[grassZ * size + grassX];
 				if (grassY >= 4 && grassY < 30) {
-					relativeEditAccess.setCube(grassX, grassY - baseY, grassZ, (byte)31);
+					relativeEditAccess.setCube(grassX, grassY - baseY, grassZ, (byte) 31);
 				}
 			}
-			
+
 			// spread some coal
 			for (int x = 0; x < size; x++) {
 				for (int z = 0; z < size; z++) {
 					final int y = random.nextInt(size);
 					if (relativeEditAccess.getCube(x, y, z) == 1) {
-						relativeEditAccess.setCube(x, y, z, (byte)16);
+						relativeEditAccess.setCube(x, y, z, (byte) 16);
 					}
 				}
 			}
-			
+
 			// spread some gold and gems
-			final byte[] goldAndGems = { 14, 14, 14 };
+			final byte[] goldAndGems = {14, 14, 14};
 			for (final byte cubeType : goldAndGems) {
 				final int x = random.nextInt(size);
 				final int y = random.nextInt(size);
@@ -325,7 +326,7 @@ public final class TerrainGenerator {
 					relativeEditAccess.setCube(x, y, z, cubeType);
 				}
 			}
-			
+
 			// place trees within the section, but stay away from the boundaries so the tree doesn't overlap them
 			Random treeRandom = new Random(sectionX << 32 + sectionZ);
 			for (int t = 0; t < 5; t++) {
@@ -334,36 +335,36 @@ public final class TerrainGenerator {
 				int treeRootHeight = intHeightField[treeZ * size + treeX];
 				if (treeRootHeight > 1 && treeRootHeight < 50) {
 					int treeHeight = treeRandom.nextInt(5) + 5;
-					
+
 					// trunk
 					for (int y = 0; y < treeHeight; y++) {
-						relativeEditAccess.setCube(treeX, treeRootHeight - baseY + y, treeZ, (byte)17);
+						relativeEditAccess.setCube(treeX, treeRootHeight - baseY + y, treeZ, (byte) 17);
 					}
-					
+
 					// leaves
 					int relativeTreeTopY = treeRootHeight - baseY + treeHeight;
-					for (int dx=-1; dx<=1; dx++) {
-						for (int dy=-1; dy<=1; dy++) {
-							for (int dz=-1; dz<=1; dz++) {
-								relativeEditAccess.setCube(treeX + dx, relativeTreeTopY + dy, treeZ + dz, (byte)18);
+					for (int dx = -1; dx <= 1; dx++) {
+						for (int dy = -1; dy <= 1; dy++) {
+							for (int dz = -1; dz <= 1; dz++) {
+								relativeEditAccess.setCube(treeX + dx, relativeTreeTopY + dy, treeZ + dz, (byte) 18);
 							}
 						}
 					}
-					relativeEditAccess.setCube(treeX - 2, relativeTreeTopY, treeZ, (byte)18);
-					relativeEditAccess.setCube(treeX + 2, relativeTreeTopY, treeZ, (byte)18);
-					relativeEditAccess.setCube(treeX, relativeTreeTopY + 2, treeZ, (byte)18);
-					relativeEditAccess.setCube(treeX, relativeTreeTopY, treeZ - 2, (byte)18);
-					relativeEditAccess.setCube(treeX, relativeTreeTopY, treeZ + 2, (byte)18);
-					
+					relativeEditAccess.setCube(treeX - 2, relativeTreeTopY, treeZ, (byte) 18);
+					relativeEditAccess.setCube(treeX + 2, relativeTreeTopY, treeZ, (byte) 18);
+					relativeEditAccess.setCube(treeX, relativeTreeTopY + 2, treeZ, (byte) 18);
+					relativeEditAccess.setCube(treeX, relativeTreeTopY, treeZ - 2, (byte) 18);
+					relativeEditAccess.setCube(treeX, relativeTreeTopY, treeZ + 2, (byte) 18);
+
 				}
 			}
-			
+
 			// compress section data and send it to storage
 			final byte[] compressedCubes = Cubes.createFromCubes(Constants.SECTION_SIZE, cubes).compressToByteArray(Constants.SECTION_SIZE);
 			storage.saveSectionRelatedObject(new SectionDataId(sectionId, SectionDataType.DEFINITIVE), compressedCubes);
 		}
 		logger.debug("random terrain generated for section column at " + sectionX + ", " + sectionZ);
-		
+
 	}
-	
+
 }

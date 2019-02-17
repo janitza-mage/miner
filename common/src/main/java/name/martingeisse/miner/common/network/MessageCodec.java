@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -41,7 +41,7 @@ public class MessageCodec extends ChannelDuplexHandler {
 	 * Creates a Netty handler that splits and merges raw buffers
 	 * according to packet frame boundaries. Such a handler is needed
 	 * downstream of the {@link MessageCodec}.
-	 * 
+	 *
 	 * @return the handler
 	 */
 	public static ChannelHandler createFrameDecoder() {
@@ -51,7 +51,7 @@ public class MessageCodec extends ChannelDuplexHandler {
 	@Override
 	public void channelRead(ChannelHandlerContext context, Object payload) throws Exception {
 		if (payload instanceof ByteBuf) {
-			ByteBuf buffer = (ByteBuf)payload;
+			ByteBuf buffer = (ByteBuf) payload;
 			buffer.setIndex(2, buffer.capacity());
 			int messageTypeCode = buffer.readUnsignedShort();
 			logger.debug("received message of type: " + messageTypeCode);
@@ -70,9 +70,8 @@ public class MessageCodec extends ChannelDuplexHandler {
 		logger.debug("sending message: " + payload);
 		if (payload instanceof Message) {
 
-
 			// analyze message
-			Message message = (Message)payload;
+			Message message = (Message) payload;
 			int messageTypeCode = MessageTypeRegistry.INSTANCE.getTypeCodeForClass(message.getClass());
 			int expectedBodySize = message.getExpectedBodySize();
 
@@ -99,5 +98,5 @@ public class MessageCodec extends ChannelDuplexHandler {
 			context.write(payload, promise);
 		}
 	}
-	
+
 }

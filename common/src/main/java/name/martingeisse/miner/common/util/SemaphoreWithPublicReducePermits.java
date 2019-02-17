@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -39,6 +39,8 @@ public class SemaphoreWithPublicReducePermits extends Semaphore {
 	@Override
 	public void reducePermits(final int reduction) {
 		super.reducePermits(reduction);
-	};
+	}
+
+	;
 
 }

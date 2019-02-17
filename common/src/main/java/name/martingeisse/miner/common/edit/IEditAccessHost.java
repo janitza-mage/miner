@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -16,7 +16,7 @@ public interface IEditAccessHost {
 
 	/**
 	 * Checks whether the specified position is inside the edit boundaries.
-	 * 
+	 *
 	 * @param x the x coordinate of the position
 	 * @param y the y coordinate of the position
 	 * @param z the z coordinate of the position
@@ -26,29 +26,29 @@ public interface IEditAccessHost {
 
 	/**
 	 * Obtains a {@link RectangularRegion} for the whole edit region.
-	 * 
+	 *
 	 * @return a region for the whole edit region
 	 */
 	public RectangularRegion getRegion();
 
 	/**
 	 * Returns the cube value for the specified position.
-	 * 
+	 *
 	 * @param x the x position
 	 * @param y the y position
 	 * @param z the z position
 	 * @return the cube value
 	 */
 	public byte getCube(int x, int y, int z);
-	
+
 	/**
 	 * Sets the cube value for the specified position.
-	 * 
+	 *
 	 * @param x the x position
 	 * @param y the y position
 	 * @param z the z position
 	 * @param value the cube value to set
 	 */
 	public void setCube(int x, int y, int z, byte value);
-	
+
 }

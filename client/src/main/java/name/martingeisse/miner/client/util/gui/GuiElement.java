@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -50,7 +50,7 @@ public abstract class GuiElement {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	final void usedAsRootElement(Gui gui) {
 		this.gui = gui;
@@ -60,7 +60,7 @@ public abstract class GuiElement {
 	/**
 	 * Setter method for the parent. This method should only be used by the
 	 * new parent to inform the child about it.
-	 * 
+	 *
 	 * @param parent the parent to set
 	 */
 	public final void notifyNewParent(GuiElement parent) {
@@ -112,7 +112,7 @@ public abstract class GuiElement {
 
 	/**
 	 * Requests a re-layout from the GUI.
-	 * 
+	 *
 	 * If no GUI is set, this method does nothing. This is OK because as soon as this
 	 * element gets added to a GUI, the new parent element will request a re-layout.
 	 */
@@ -126,7 +126,7 @@ public abstract class GuiElement {
 	 * Attempts to set the size of this object based on the size the containing
 	 * element has determined for this one. It depends on the actual element what
 	 * size is actually set.
-	 * 
+	 *
 	 * @param width the width
 	 * @param height the height
 	 */
@@ -134,7 +134,7 @@ public abstract class GuiElement {
 
 	/**
 	 * Sets the effective size of this element, called from {@link #requestSize(int, int)}.
-	 * 
+	 *
 	 * @param width the width to set
 	 * @param height the height to set
 	 */
@@ -161,7 +161,7 @@ public abstract class GuiElement {
 
 	/**
 	 * Recursively sets the absolute position of this element and all its descendants.
-	 * 
+	 *
 	 * @param absoluteX the absolute x position of this element
 	 * @param absoluteY the absolute y position of this element
 	 */
@@ -176,7 +176,7 @@ public abstract class GuiElement {
 	 * element after computing their absolute position. The default
 	 * implementation does nothing. Elements with children should override
 	 * this method.
-	 * 
+	 *
 	 * @param absoluteX the absolute x position of this element
 	 * @param absoluteY the absolute y position of this element
 	 */

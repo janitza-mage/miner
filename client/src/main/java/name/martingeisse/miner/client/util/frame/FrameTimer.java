@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2012 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -40,7 +40,7 @@ public final class FrameTimer extends Timer {
 		fired = false;
 		return result;
 	}
-	
+
 	/**
 	 *
 	 */
@@ -52,11 +52,11 @@ public final class FrameTimer extends Timer {
 		@Override
 		public void run() {
 			fired = true;
-			synchronized(FrameTimer.this) {
+			synchronized (FrameTimer.this) {
 				FrameTimer.this.notify();
 			}
 		}
 
 	}
-	
+
 }

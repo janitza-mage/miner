@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -33,7 +33,7 @@ public abstract class AbstractFillElement extends GuiElement {
 	public final void requestSize(int width, int height) {
 		setSize(width, height);
 	}
-	
+
 	/**
 	 * Draws this element.
 	 */

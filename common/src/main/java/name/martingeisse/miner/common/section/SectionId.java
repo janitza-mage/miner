@@ -60,9 +60,9 @@ public final class SectionId {
 	/**
 	 * Factory method for scaling a cube-unit (x, y, z) position to section units.
 	 *
-	 * @param x           the x coordinate of the cube position
-	 * @param y           the y coordinate of the cube position
-	 * @param z           the z coordinate of the cube position
+	 * @param x the x coordinate of the cube position
+	 * @param y the y coordinate of the cube position
+	 * @param z the z coordinate of the cube position
 	 */
 	public static SectionId fromPosition(int x, int y, int z) {
 		int shift = Constants.SECTION_SIZE.getShiftBits();
@@ -72,7 +72,7 @@ public final class SectionId {
 	/**
 	 * Factory method for scaling a cube-unit (x, y, z) position to cluster-size units.
 	 *
-	 * @param position    the cube position
+	 * @param position the cube position
 	 */
 	public static SectionId fromPosition(ReadableVector3i position) {
 		return fromPosition(position.getX(), position.getY(), position.getZ());
@@ -81,10 +81,10 @@ public final class SectionId {
 	/**
 	 * Factory method for scaling a cube-unit (x, y, z) position to cluster-size units.
 	 *
-	 * @param position    the cube position
+	 * @param position the cube position
 	 */
 	public static SectionId fromPosition(ReadableVector3d position) {
-		return fromPosition((int)Math.floor(position.getX()), (int)Math.floor(position.getY()), (int)Math.floor(position.getZ()));
+		return fromPosition((int) Math.floor(position.getX()), (int) Math.floor(position.getY()), (int) Math.floor(position.getZ()));
 	}
 
 	/**

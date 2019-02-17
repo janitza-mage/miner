@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -21,7 +21,7 @@ public final class SectionDataId {
 	 * the sectionId
 	 */
 	private final SectionId sectionId;
-	
+
 	/**
 	 * the type
 	 */
@@ -67,7 +67,7 @@ public final class SectionDataId {
 	public SectionId getSectionId() {
 		return sectionId;
 	}
-	
+
 	/**
 	 * Getter method for the type.
 	 * @return the type
@@ -75,7 +75,7 @@ public final class SectionDataId {
 	public SectionDataType getType() {
 		return type;
 	}
-	
+
 	/**
 	 * Converts this ID to a string that is unique among all IDs, i.e. that can be
 	 * converted back to an ID equal to this one.
@@ -92,7 +92,7 @@ public final class SectionDataId {
 		builder.append(type.name());
 		return builder.toString();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -101,13 +101,13 @@ public final class SectionDataId {
 		if (obj == this) {
 			return true;
 		} else if (obj instanceof SectionDataId) {
-			SectionDataId other = (SectionDataId)obj;
+			SectionDataId other = (SectionDataId) obj;
 			return (other.type == this.type && other.sectionId.equals(this.sectionId));
 		} else {
 			return false;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -115,7 +115,7 @@ public final class SectionDataId {
 	public int hashCode() {
 		return new HashCodeBuilder().append(sectionId).append(type).toHashCode();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -127,29 +127,29 @@ public final class SectionDataId {
 	/**
 	 * Returns a {@link SectionDataId} for the same section as this one, but with
 	 * the specified type.
-	 * 
+	 *
 	 * @param otherType the type of the section data id to return
 	 * @return the new section data id
 	 */
 	public SectionDataId getWithType(SectionDataType otherType) {
 		return new SectionDataId(sectionId, otherType);
 	}
-	
+
 	/**
 	 * Returns the ID of the data object with the same type as this one, but in the
 	 * neighboring section by stepping in the specified direction.
-	 * 
+	 *
 	 * @param direction the direction
 	 * @return the neighbor's ID
 	 */
 	public SectionDataId getNeighbor(AxisAlignedDirection direction) {
 		return getNeighbor(direction, type);
 	}
-	
+
 	/**
 	 * Returns the ID of the data object with the specified type, but in the
 	 * neighboring section by stepping in the specified direction.
-	 * 
+	 *
 	 * @param direction the direction
 	 * @param neighborType the type of the object to return
 	 * @return the neighbor's ID

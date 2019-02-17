@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -51,7 +51,7 @@ public class DiagonalCrossCubeType extends CubeType {
 	public boolean obscuresNeighbor(AxisAlignedDirection direction) {
 		return false;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.common.cubetype.CubeType#blocksMovementToNeighbor(name.martingeisse.stackd.common.geometry.AxisAlignedDirection)
 	 */
@@ -67,7 +67,7 @@ public class DiagonalCrossCubeType extends CubeType {
 	public int getCubeFaceTextureIndex(int directionOrdinal) {
 		return 0;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.common.cubetype.CubeType#buildInnerPolygons(name.martingeisse.stackd.common.cubes.MeshBuilderBase, int, int, int)
 	 */
@@ -83,5 +83,5 @@ public class DiagonalCrossCubeType extends CubeType {
 	public boolean collidesWithRegion(int startX, int startY, int startZ, int endX, int endY, int endZ) {
 		return solidForCollision;
 	}
-	
+
 }

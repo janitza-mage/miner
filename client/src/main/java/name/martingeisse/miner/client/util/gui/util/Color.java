@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -17,7 +17,7 @@ public final class Color {
 	 * the TRANSPARENT
 	 */
 	public static final Color TRANSPARENT = new Color(0, 0, 0, 0);
-	
+
 	/**
 	 * the BLACK
 	 */
@@ -27,52 +27,52 @@ public final class Color {
 	 * the BLUE
 	 */
 	public static final Color BLUE = new Color(0, 0, 255, 255);
-	
+
 	/**
 	 * the GREEN
 	 */
 	public static final Color GREEN = new Color(0, 255, 0, 255);
-	
+
 	/**
 	 * the CYAN
 	 */
 	public static final Color CYAN = new Color(0, 255, 255, 255);
-	
+
 	/**
 	 * the RED
 	 */
 	public static final Color RED = new Color(255, 0, 0, 255);
-	
+
 	/**
 	 * the PURPLE
 	 */
 	public static final Color PURPLE = new Color(255, 0, 255, 255);
-	
+
 	/**
 	 * the YELLOW
 	 */
 	public static final Color YELLOW = new Color(255, 255, 0, 255);
-	
+
 	/**
 	 * the WHITE
 	 */
 	public static final Color WHITE = new Color(255, 255, 255, 255);
-	
+
 	/**
 	 * the red
 	 */
 	private final int red;
-	
+
 	/**
 	 * the green
 	 */
 	private final int green;
-	
+
 	/**
 	 * the blue
 	 */
 	private final int blue;
-	
+
 	/**
 	 * the alpha
 	 */
@@ -91,7 +91,7 @@ public final class Color {
 		this.blue = blue;
 		this.alpha = alpha;
 	}
-	
+
 	/**
 	 * Constructor.
 	 * @param red the red component of the color
@@ -112,7 +112,7 @@ public final class Color {
 	public int getRed() {
 		return red;
 	}
-	
+
 	/**
 	 * Getter method for the green.
 	 * @return the green
@@ -120,7 +120,7 @@ public final class Color {
 	public int getGreen() {
 		return green;
 	}
-	
+
 	/**
 	 * Getter method for the blue.
 	 * @return the blue
@@ -128,7 +128,7 @@ public final class Color {
 	public int getBlue() {
 		return blue;
 	}
-	
+
 	/**
 	 * Getter method for the alpha.
 	 * @return the alpha
@@ -143,9 +143,9 @@ public final class Color {
 	 * This method must be called from the OpenGL thread.
 	 */
 	public void glColor() {
-		GL11.glColor4ub((byte)red, (byte)green, (byte)blue, (byte)alpha);
+		GL11.glColor4ub((byte) red, (byte) green, (byte) blue, (byte) alpha);
 	}
-	
+
 	/**
 	 * Sets this color as the current drawing color in OpenGL,
 	 * applying another external alpha value as well as the alpha value
@@ -157,7 +157,7 @@ public final class Color {
 	 */
 	public void glColorWithCombinedAlpha(int externalAlpha) {
 		int effectiveAlpha = (alpha * externalAlpha) >> 8;
-		GL11.glColor4ub((byte)red, (byte)green, (byte)blue, (byte)effectiveAlpha);
+		GL11.glColor4ub((byte) red, (byte) green, (byte) blue, (byte) effectiveAlpha);
 	}
-	
+
 }

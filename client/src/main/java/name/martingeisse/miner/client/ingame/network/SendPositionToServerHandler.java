@@ -23,6 +23,7 @@ public class SendPositionToServerHandler extends AbstractIntervalFrameHandler {
 
 	/**
 	 * Constructor.
+	 *
 	 * @param player the player whose position to send
 	 */
 	public SendPositionToServerHandler(Player player) {

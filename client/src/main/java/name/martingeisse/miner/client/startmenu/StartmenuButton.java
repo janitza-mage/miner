@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -24,5 +24,5 @@ public abstract class StartmenuButton extends Button {
 		setBackgroundElement(new FillColor(Color.BLUE));
 		addPulseEffect(new Color(255, 255, 255, 64));
 	}
-	
+
 }

@@ -32,10 +32,8 @@ public class BeanSerializer extends SerializerHelper implements Serializer {
 		 */
 	@Override
 	public void serialize(final EntityType entityType, final SerializerConfig config, final CodeWriter w) throws IOException {
-		@SuppressWarnings("unused")
-		final String tableName = entityType.getData().get("table").toString();
-		@SuppressWarnings("unchecked")
-		final Collection<PrimaryKeyData> primaryKeys = (Collection<PrimaryKeyData>) entityType.getData().get(PrimaryKeyData.class);
+		@SuppressWarnings("unused") final String tableName = entityType.getData().get("table").toString();
+		@SuppressWarnings("unchecked") final Collection<PrimaryKeyData> primaryKeys = (Collection<PrimaryKeyData>) entityType.getData().get(PrimaryKeyData.class);
 
 		// determine primary key
 		PrimaryKeyData primaryKey;
@@ -215,7 +213,7 @@ public class BeanSerializer extends SerializerHelper implements Serializer {
 	 * Prints import clauses.
 	 */
 	private void printImports(final EntityType entityType, final SerializerConfig config, final CodeWriter w, final boolean hasId, final boolean hasDeletedFlag, final boolean hasOrderIndex)
-			throws IOException {
+		throws IOException {
 
 		// to avoid duplicate imports, we first collect all imports in a set
 		final Set<String> imports = new HashSet<>();

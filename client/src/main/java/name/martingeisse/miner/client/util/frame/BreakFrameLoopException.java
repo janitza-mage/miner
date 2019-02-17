@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2011 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -16,5 +16,5 @@ public final class BreakFrameLoopException extends RuntimeException {
 	 */
 	public BreakFrameLoopException() {
 	}
-	
+
 }

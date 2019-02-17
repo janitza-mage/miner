@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -25,10 +25,10 @@ public class ArrayUtil {
 	 */
 	public static String[] toStringArray(Object[] objects) {
 		String[] result = new String[objects.length];
-		for (int i=0; i<result.length; i++) {
+		for (int i = 0; i < result.length; i++) {
 			result[i] = objects[i].toString();
 		}
 		return result;
 	}
-	
+
 }

@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2012 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -19,7 +19,7 @@ public final class Player extends PlayerBase {
 	 */
 	@SuppressWarnings("unused")
 	private static Logger logger = Logger.getLogger(Player.class);
-	
+
 	/**
 	 * the verticalSpeed
 	 */
@@ -34,12 +34,12 @@ public final class Player extends PlayerBase {
 	 * the wantsToJump
 	 */
 	private boolean wantsToJump;
-	
+
 	/**
 	 * the onGround
 	 */
 	private boolean onGround;
-	
+
 	/**
 	 * the justLanded
 	 */
@@ -94,7 +94,7 @@ public final class Player extends PlayerBase {
 	public boolean isOnGround() {
 		return onGround;
 	}
-	
+
 	/**
 	 * Getter method for the justLanded.
 	 * @return the justLanded
@@ -102,13 +102,13 @@ public final class Player extends PlayerBase {
 	public boolean isJustLanded() {
 		return justLanded;
 	}
-	
+
 	/**
 	 * Handles a game step.
 	 * @param frameDurationMultiplier the frame duration multiplier that adapts movement to varying frame rates
 	 */
 	public void step(double frameDurationMultiplier) {
-		
+
 		// observer mode
 		if (observerMode) {
 			verticalSpeed = 0;
@@ -118,17 +118,17 @@ public final class Player extends PlayerBase {
 
 		// apply gravity
 		verticalSpeed -= 10.0 * frameDurationMultiplier;
-		
+
 		// jumping and landing
 		onGround = false;
 		justLanded = false;
 		if (!moveUp(verticalSpeed * frameDurationMultiplier)) {
-			
+
 			// check if just landed (to play a landing sound)
 			if (verticalSpeed < -1.0) {
 				justLanded = true;
 			}
-			
+
 			// stay on gound or jump off
 			verticalSpeed = 0;
 			if (verticalSpeed <= 0 && wantsToJump) {
@@ -136,9 +136,9 @@ public final class Player extends PlayerBase {
 			} else {
 				onGround = true;
 			}
-			
+
 		}
-		
+
 	}
 
 }

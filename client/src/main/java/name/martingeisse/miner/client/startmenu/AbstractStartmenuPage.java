@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
@@ -35,7 +35,7 @@ public class AbstractStartmenuPage extends Page {
 			});
 		}
 	};
-	
+
 	/**
 	 * Constructor.
 	 */
@@ -43,13 +43,13 @@ public class AbstractStartmenuPage extends Page {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	protected final void initializeStartmenuPage(GuiElement mainElement) {
 		StackdTexture backgroundTexture = new StackdTexture(LauncherAssets.class, "dirt.png", false);
 		initializePage(new FillTexture(backgroundTexture), new Margin(mainElement, 30 * Gui.GRID, 30 * Gui.GRID));
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.client.gui.control.Page#onException(java.lang.Throwable)
 	 */
@@ -79,5 +79,5 @@ public class AbstractStartmenuPage extends Page {
 	 */
 	protected void onEnterPressed() {
 	}
-	
+
 }

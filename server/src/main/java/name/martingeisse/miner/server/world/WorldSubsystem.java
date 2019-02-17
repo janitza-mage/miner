@@ -12,7 +12,6 @@ import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.vector.Vector3i;
-import name.martingeisse.miner.common.network.c2s.PlaceCube;
 import name.martingeisse.miner.common.network.s2c.InteractiveSectionDataResponse;
 import name.martingeisse.miner.common.section.SectionDataId;
 import name.martingeisse.miner.common.section.SectionDataType;
@@ -189,7 +188,7 @@ public final class WorldSubsystem {
 		SectionId sectionId = SectionId.fromPosition(position);
 		SectionDataId sectionDataId = new SectionDataId(sectionId, SectionDataType.DEFINITIVE);
 		SectionCubesCacheEntry sectionDataCacheEntry = (SectionCubesCacheEntry) workingSet.get(sectionDataId);
-		sectionDataCacheEntry.setCubeAbsolute(position, (byte)cubeType.getIndex());
+		sectionDataCacheEntry.setCubeAbsolute(position, (byte) cubeType.getIndex());
 		notifyModificationListenersAboutModifiedPositions(ImmutableList.of(position));
 	}
 

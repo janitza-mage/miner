@@ -1,16 +1,16 @@
 /**
  * Copyright (c) 2010 Martin Geisse
- *
+ * <p>
  * This file is distributed under the terms of the MIT license.
  */
 
 package name.martingeisse.miner.client.util.gui.element;
 
-import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiEvent;
 import name.martingeisse.miner.client.util.gui.util.Color;
+import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -58,7 +58,7 @@ public final class ThinBorder extends AbstractWrapperElement {
 		this.color = Color.WHITE;
 		this.thickness = 1;
 	}
-	
+
 	/**
 	 * Getter method for the color.
 	 * @return the color
@@ -66,7 +66,7 @@ public final class ThinBorder extends AbstractWrapperElement {
 	public Color getColor() {
 		return color;
 	}
-	
+
 	/**
 	 * Setter method for the color.
 	 * @param color the color to set
@@ -85,7 +85,7 @@ public final class ThinBorder extends AbstractWrapperElement {
 	public int getThickness() {
 		return thickness;
 	}
-	
+
 	/**
 	 * Setter method for the thickness.
 	 * @param thickness the thickness to set
@@ -117,7 +117,7 @@ public final class ThinBorder extends AbstractWrapperElement {
 		getWrappedElement().requestSize(width, height);
 		setSize(getWrappedElement().getWidth(), getWrappedElement().getHeight());
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see name.martingeisse.stackd.client.gui.GuiElement#setChildrenLayoutPosition(int, int)
 	 */
@@ -126,5 +126,5 @@ public final class ThinBorder extends AbstractWrapperElement {
 		requireWrappedElement();
 		getWrappedElement().setAbsolutePosition(absoluteX, absoluteY);
 	}
-	
+
 }
