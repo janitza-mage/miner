@@ -17,21 +17,20 @@ import name.martingeisse.miner.client.util.gui.control.ListView;
 import name.martingeisse.miner.client.util.gui.element.*;
 import name.martingeisse.miner.client.util.gui.element.fill.FillColor;
 import name.martingeisse.miner.client.util.gui.util.Color;
-import name.martingeisse.miner.client.util.gui.util.GuiDumper;
 import name.martingeisse.miner.common.network.c2s.EquipMessage;
 import org.lwjgl.input.Mouse;
 
 /**
- * The "inventory" menu page.
+ * The "crafting" menu page.
  */
-public class InventoryPage extends AbstractGameGuiPage {
+public class CraftingPage extends AbstractGameGuiPage {
 
 	private final ListView<InventorySlot> slotListView;
 
 	/**
 	 * Constructor.
 	 */
-	public InventoryPage() {
+	public CraftingPage() {
 		final VerticalLayout menu = new VerticalLayout();
 
 		slotListView = new ListView<InventorySlot>(Inventory.INSTANCE::getSlots) {

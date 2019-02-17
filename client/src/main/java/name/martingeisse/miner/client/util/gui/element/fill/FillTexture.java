@@ -6,7 +6,7 @@
 
 package name.martingeisse.miner.client.util.gui.element.fill;
 
-import name.martingeisse.common.util.ParameterUtil;
+import name.martingeisse.miner.common.util.ParameterUtil;
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.lwjgl.StackdTexture;

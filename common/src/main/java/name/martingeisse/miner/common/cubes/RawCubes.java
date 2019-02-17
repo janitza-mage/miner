@@ -6,7 +6,7 @@
 
 package name.martingeisse.miner.common.cubes;
 
-import name.martingeisse.common.util.CompressionUtil;
+import name.martingeisse.miner.common.util.CompressionUtil;
 import name.martingeisse.miner.common.geometry.ClusterSize;
 import org.apache.commons.lang3.ArrayUtils;
 

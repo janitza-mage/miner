@@ -6,7 +6,7 @@
 
 package name.martingeisse.miner.common.task;
 
-import name.martingeisse.common.util.SemaphoreWithPublicReducePermits;
+import name.martingeisse.miner.common.util.SemaphoreWithPublicReducePermits;
 
 import java.util.concurrent.TimeUnit;
 

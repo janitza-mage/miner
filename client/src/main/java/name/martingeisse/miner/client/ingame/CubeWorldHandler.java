@@ -6,7 +6,7 @@
 
 package name.martingeisse.miner.client.ingame;
 
-import name.martingeisse.common.util.ThreadUtil;
+import name.martingeisse.miner.common.util.ThreadUtil;
 import name.martingeisse.miner.client.MinerResources;
 import name.martingeisse.miner.client.ingame.engine.EngineParameters;
 import name.martingeisse.miner.client.ingame.engine.FrameRenderParameters;
