@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.launcher.assets;
+package name.martingeisse.miner.client.launcher.assets;
 
 /**
  * Dummy class that is used to find the assets with a class loader.

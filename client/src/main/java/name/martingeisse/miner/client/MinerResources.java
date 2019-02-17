@@ -6,7 +6,7 @@
 
 package name.martingeisse.miner.client;
 
-import name.martingeisse.launcher.assets.LauncherAssets;
+import name.martingeisse.miner.client.launcher.assets.LauncherAssets;
 import name.martingeisse.miner.client.util.lwjgl.FixedWidthFont;
 import name.martingeisse.miner.client.util.lwjgl.Font;
 import name.martingeisse.miner.client.util.lwjgl.StackdTexture;

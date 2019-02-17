@@ -1,4 +1,4 @@
-package name.martingeisse.miner;
+package name.martingeisse.miner.all;
 
 /**
  *

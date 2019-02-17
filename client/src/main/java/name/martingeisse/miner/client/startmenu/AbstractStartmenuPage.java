@@ -6,7 +6,7 @@
 
 package name.martingeisse.miner.client.startmenu;
 
-import name.martingeisse.launcher.assets.LauncherAssets;
+import name.martingeisse.miner.client.launcher.assets.LauncherAssets;
 import name.martingeisse.miner.client.util.frame.BreakFrameLoopException;
 import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.GuiElement;

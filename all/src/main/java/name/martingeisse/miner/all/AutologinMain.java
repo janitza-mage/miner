@@ -1,4 +1,4 @@
-package name.martingeisse.miner;
+package name.martingeisse.miner.all;
 
 import name.martingeisse.miner.client.ClientStartup;
 import name.martingeisse.miner.client.ingame.Ingame;
