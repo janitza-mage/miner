@@ -43,13 +43,12 @@ CREATE TABLE "miner"."PlayerAwardedAchievement" (
 CREATE UNIQUE INDEX "PlayerAwardedAchievement_main" ON "miner"."PlayerAwardedAchievement" ("playerId", "achievementCode");
 
 CREATE TABLE "miner"."PlayerInventorySlot" (
-	"id" bigserial NOT NULL PRIMARY KEY,
 	"playerId" bigint NOT NULL REFERENCES "miner"."Player" ON DELETE CASCADE,
 	"type" integer NOT NULL,
 	"quantity" integer NOT NULL CHECK ("quantity" > 0),
-	"equipped" boolean NOT NULL
+	"equipped" boolean NOT NULL,
+	PRIMARY KEY ("playerId", "type")
 );
-CREATE INDEX "PlayerInventorySlot_main" ON "miner"."PlayerInventorySlot" ("playerId", "id");
 
 
 
