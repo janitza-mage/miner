@@ -1,0 +1,19 @@
+
+
+Original question: Should inventory slots have separate IDs or should they be identified by CubeType?
+
+Items can be much more complex than a simple CubeType: Damage/wear, material purity, manufactirung quality, ...
+- or can they? This is a question of game design and I don't know how it will be answered.
+
+But if items are that complex, cubes must be too since an item can be placed in the world as a cube (and we don't want
+item properties to change by placing and picking up).
+
+Alternatively, "small" items can be treated differently than cubes.
+
+"small items" (and also cubes if they can be complex) must be identified by a separate ID then. The client cannot just
+list all properties because some may be unknown yet, and listing all known properties may be ambiguous. Listing
+properties also makes the code very complex and the network messages large.
+
+BUT: If even cubes become complex, it may be useful to remove item stacks altogether, at least in game logic (the
+client may *display* a set of items as a stack, and then it is a decision made in the client whether to stack items
+with slightly different properties.)
