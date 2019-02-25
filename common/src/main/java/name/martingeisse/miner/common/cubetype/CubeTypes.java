@@ -42,6 +42,9 @@ public final class CubeTypes {
 		"four-tiles.png",
 		"workbench-side.png",
 		"workbench-top.png", // 24
+		"furnace-front.png",
+		"furnace-side.png",
+		"furnace-top.png",
 
 //		"bricks1.png",
 //		"bricks1-mossy.png", // 4
@@ -88,7 +91,7 @@ public final class CubeTypes {
 		new SolidOpaqueCubeType(new int[]{18, 18, 17, 17, 18, 18}), // 24: sandstone
 		new SolidOpaqueCubeType(5), // 25: invalid (MC: note block)
 		new SolidOpaqueCubeType(new int[]{23, 23, 24, 24, 23, 23}), // 26: workbench
-		new SolidOpaqueCubeType(5), // 27: invalid
+		new SolidOpaqueCubeType(new int[]{21, 21, 23, 23, 21, 21}), // 27: furnace
 		new SolidOpaqueCubeType(5), // 28: invalid
 		new SolidOpaqueCubeType(5), // 29: invalid
 		new SolidOpaqueCubeType(5), // 30: invalid
