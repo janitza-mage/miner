@@ -24,13 +24,15 @@ public class QPlayerInventorySlotRow extends com.querydsl.sql.RelationalPathBase
 
 	public final BooleanPath equipped = createBoolean("equipped");
 
+	public final NumberPath<Long> id = createNumber("id", Long.class);
+
 	public final NumberPath<Long> playerId = createNumber("playerId", Long.class);
 
 	public final NumberPath<Integer> quantity = createNumber("quantity", Integer.class);
 
 	public final NumberPath<Integer> type = createNumber("type", Integer.class);
 
-	public final com.querydsl.sql.PrimaryKey<PlayerInventorySlotRow> playerInventorySlotPkey = createPrimaryKey(playerId, type);
+	public final com.querydsl.sql.PrimaryKey<PlayerInventorySlotRow> playerInventorySlotPkey = createPrimaryKey(id);
 
 	public final com.querydsl.sql.ForeignKey<PlayerRow> playerInventorySlotPlayerIdFkey = createForeignKey(playerId, "id");
 
@@ -55,10 +57,11 @@ public class QPlayerInventorySlotRow extends com.querydsl.sql.RelationalPathBase
 	}
 
 	public void addMetadata() {
-		addMetadata(equipped, ColumnMetadata.named("equipped").withIndex(4).ofType(Types.BIT).withSize(1).notNull());
-		addMetadata(playerId, ColumnMetadata.named("playerId").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
-		addMetadata(quantity, ColumnMetadata.named("quantity").withIndex(3).ofType(Types.INTEGER).withSize(10).notNull());
-		addMetadata(type, ColumnMetadata.named("type").withIndex(2).ofType(Types.INTEGER).withSize(10).notNull());
+		addMetadata(equipped, ColumnMetadata.named("equipped").withIndex(5).ofType(Types.BIT).withSize(1).notNull());
+		addMetadata(id, ColumnMetadata.named("id").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
+		addMetadata(playerId, ColumnMetadata.named("playerId").withIndex(2).ofType(Types.BIGINT).withSize(19).notNull());
+		addMetadata(quantity, ColumnMetadata.named("quantity").withIndex(4).ofType(Types.INTEGER).withSize(10).notNull());
+		addMetadata(type, ColumnMetadata.named("type").withIndex(3).ofType(Types.INTEGER).withSize(10).notNull());
 	}
 
 }

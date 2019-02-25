@@ -3,6 +3,9 @@
  */
 package name.martingeisse.miner.server.postgres_entities;
 
+import com.querydsl.sql.dml.SQLInsertClause;
+import name.martingeisse.miner.server.util.database.postgres.PostgresConnection;
+
 import java.io.Serializable;
 
 /**
@@ -20,6 +23,11 @@ public class PlayerInventorySlotRow implements Serializable {
 	 * the equipped
 	 */
 	private Boolean equipped;
+
+	/**
+	 * the id
+	 */
+	private Long id;
 
 	/**
 	 * the playerId
@@ -52,6 +60,24 @@ public class PlayerInventorySlotRow implements Serializable {
 	 */
 	public void setEquipped(Boolean equipped) {
 		this.equipped = equipped;
+	}
+
+	/**
+	 * Getter method for the id.
+	 *
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * Setter method for the id.
+	 *
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	/**
@@ -108,12 +134,40 @@ public class PlayerInventorySlotRow implements Serializable {
 		this.type = type;
 	}
 
+	/**
+	 * Loads the instance with the specified ID.
+	 *
+	 * @param connection the database connection
+	 * @param id         the ID of the instance to load
+	 * @return the loaded instance
+	 */
+	public static PlayerInventorySlotRow loadById(PostgresConnection connection, Long id) {
+		QPlayerInventorySlotRow q = QPlayerInventorySlotRow.PlayerInventorySlot;
+		return connection.query().select(q).from(q).where(q.id.eq(id)).fetchFirst();
+	}
+
+	/**
+	 * Inserts this instance into the database. This object must not have an ID yet.
+	 */
+	public void insert(PostgresConnection connection) {
+		if (id != null) {
+			throw new IllegalStateException("this object already has an id: " + id);
+		}
+		QPlayerInventorySlotRow q = QPlayerInventorySlotRow.PlayerInventorySlot;
+		SQLInsertClause insert = connection.insert(q);
+		insert.set(q.equipped, equipped);
+		insert.set(q.playerId, playerId);
+		insert.set(q.quantity, quantity);
+		insert.set(q.type, type);
+		id = insert.executeWithKey(Long.class);
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "{PlayerInventorySlotRow. equipped = " + equipped + ", playerId = " + playerId + ", quantity = " + quantity + ", type = " + type + "}";
+		return "{PlayerInventorySlotRow. equipped = " + equipped + ", id = " + id + ", playerId = " + playerId + ", quantity = " + quantity + ", type = " + type + "}";
 	}
 
 }
