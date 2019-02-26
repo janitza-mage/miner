@@ -9,6 +9,7 @@ package name.martingeisse.miner.client.ingame;
 import name.martingeisse.miner.client.MinerResources;
 import name.martingeisse.miner.client.ingame.engine.EngineParameters;
 import name.martingeisse.miner.client.ingame.engine.FrameRenderParameters;
+import name.martingeisse.miner.client.ingame.engine.RenderableSection;
 import name.martingeisse.miner.client.ingame.engine.WorldWorkingSet;
 import name.martingeisse.miner.client.ingame.gui.CraftingPage;
 import name.martingeisse.miner.client.ingame.gui.InventoryPage;
@@ -30,6 +31,7 @@ import name.martingeisse.miner.common.geometry.RectangularRegion;
 import name.martingeisse.miner.common.geometry.vector.Vector3i;
 import name.martingeisse.miner.common.network.c2s.DigNotification;
 import name.martingeisse.miner.common.network.c2s.PlaceCube;
+import name.martingeisse.miner.common.section.SectionId;
 import name.martingeisse.miner.common.util.ProfilingHelper;
 import name.martingeisse.miner.common.util.ThreadUtil;
 import org.apache.log4j.Level;
@@ -164,6 +166,8 @@ public class CubeWorldHandler implements IFrameHandler {
 	 * the otherPlayerVisualTemplate
 	 */
 	private final OtherPlayerVisualTemplate otherPlayerVisualTemplate;
+
+	private boolean craftingButtonPreviouslyPressed = false;
 
 	/**
 	 * The sectionLoadHandler -- checks often (100 ms), but doesn't re-request frequently (5 sec)
@@ -440,7 +444,26 @@ public class CubeWorldHandler implements IFrameHandler {
 						}
 					}
 				});
+			} else if (Keyboard.isKeyDown(Keyboard.KEY_X) && !craftingButtonPreviouslyPressed) {
+				captureRayActionSupport = true;
+				rayActionSupport.execute(player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), new RayAction(true) {
+					@Override
+					public void handleImpact(final int x, final int y, final int z, final double distance) {
+						if (distance < 2.0) {
+							Vector3i position = new Vector3i(x, y, z);
+							SectionId sectionId = SectionId.fromPosition(position);
+							RenderableSection section = workingSet.getRenderableSections().get(sectionId);
+							// TODO we don't have any useful cube type information on the client!
+//							section.get
+//							Ingame.get().openGui(new CraftingPage());
+							craftingButtonPreviouslyPressed = true;
+						}
+					}
+				});
 			}
+		}
+		if (!Keyboard.isKeyDown(Keyboard.KEY_X)) {
+			craftingButtonPreviouslyPressed = false;
 		}
 
 		// special actions
