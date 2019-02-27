@@ -11,6 +11,8 @@ import name.martingeisse.miner.client.ingame.engine.prepare.IWrapPlane;
 import name.martingeisse.miner.client.ingame.engine.prepare.MeshBuilder;
 import name.martingeisse.miner.client.util.lwjgl.SystemResourceNode;
 import name.martingeisse.miner.common.Constants;
+import name.martingeisse.miner.common.collision.IAxisAlignedCollider;
+import name.martingeisse.miner.common.collision.SectionCollider;
 import name.martingeisse.miner.common.cubes.Cubes;
 import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.cubetype.CubeTypes;
@@ -25,48 +27,24 @@ import java.util.Arrays;
  * This class wraps a {@link Cubes} object and augments it with additional data for rendering and collision detection.
  * Instances of this class are stored for sections in the {@link WorldWorkingSet}.
  */
-public final class InteractiveSection {
+public final class InteractiveSection implements IAxisAlignedCollider {
 
-	/**
-	 * the logger
-	 */
 	private static Logger logger = Logger.getLogger(InteractiveSection.class);
 
-	/**
-	 * the workingSet
-	 */
 	private final WorldWorkingSet workingSet;
-
-	/**
-	 * the sectionId
-	 */
 	private final SectionId sectionId;
-
-	/**
-	 * the region
-	 */
 	private final RectangularRegion region;
-
-	/**
-	 * the cubes
-	 */
 	private Cubes cubes;
-
-	/**
-	 * the systemResourceNode
-	 */
 	private SystemResourceNode systemResourceNode;
-
-	/**
-	 * the renderUnits
-	 */
 	private RenderUnit[] renderUnits;
+	private final IAxisAlignedCollider internalCollider;
 
 	/**
 	 * Constructor.
+	 *
 	 * @param workingSet the working set that contains this object
-	 * @param sectionId the section id
-	 * @param cubes the cubes for this section
+	 * @param sectionId  the section id
+	 * @param cubes      the cubes for this section
 	 */
 	public InteractiveSection(final WorldWorkingSet workingSet, final SectionId sectionId, final Cubes cubes) {
 		this.workingSet = workingSet;
@@ -75,30 +53,46 @@ public final class InteractiveSection {
 		this.cubes = cubes;
 		this.systemResourceNode = null;
 		this.renderUnits = null;
+		this.internalCollider = buildInternalCollider(sectionId, cubes);
 	}
 
-	/**
-	 * Getter method for the workingSet.
-	 * @return the workingSet
-	 */
+	private static IAxisAlignedCollider buildInternalCollider(SectionId sectionId, Cubes cubes) {
+		int size = Constants.SECTION_SIZE.getSize();
+		byte[] colliderCubes = new byte[size * size * size];
+		for (int x = 0; x < size; x++) {
+			for (int y = 0; y < size; y++) {
+				for (int z = 0; z < size; z++) {
+					colliderCubes[x * size * size + y * size + z] = cubes.getCubeRelative(Constants.SECTION_SIZE, x, y, z);
+				}
+			}
+		}
+		return new SectionCollider(sectionId, colliderCubes, CubeTypes.CUBE_TYPES);
+	}
+
 	public WorldWorkingSet getWorkingSet() {
 		return workingSet;
 	}
 
-	/**
-	 * Getter method for the sectionId.
-	 * @return the sectionId
-	 */
 	public SectionId getSectionId() {
 		return sectionId;
 	}
 
-	/**
-	 * Getter method for the region.
-	 * @return the region
-	 */
 	public RectangularRegion getRegion() {
 		return region;
+	}
+
+	public Cubes getCubes() {
+		return cubes;
+	}
+
+	@Override
+	public IAxisAlignedCollider getCurrentCollider() {
+		return this;
+	}
+
+	@Override
+	public boolean collides(final RectangularRegion region) {
+		return internalCollider.collides(region);
 	}
 
 	/**
@@ -150,6 +144,7 @@ public final class InteractiveSection {
 
 	/**
 	 * Builds the triangle mesh for this section.
+	 *
 	 * @param meshBuilder the mesh builder
 	 */
 	private void buildMesh(MeshBuilder meshBuilder) {
@@ -311,6 +306,7 @@ public final class InteractiveSection {
 
 	/**
 	 * Getter method for the renderUnits.
+	 *
 	 * @return the renderUnits
 	 */
 	public RenderUnit[] getRenderUnits() {

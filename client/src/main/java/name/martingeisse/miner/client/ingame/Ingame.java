@@ -87,7 +87,7 @@ public final class Ingame {
 		// TODO: implement better checking for connection problems: only stall when surrounding sections
 		// are missing AND the player is in that half of the current section. currently using collider
 		// radius 2 to avoid "connection problems" when crossing a section boundary
-		sectionGridLoader = new SectionGridLoader(cubeWorldHandler.getWorkingSet(), 3, 2);
+		sectionGridLoader = new SectionGridLoader(cubeWorldHandler.getWorkingSet(), 3);
 
 	}
 

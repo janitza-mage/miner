@@ -45,22 +45,12 @@ public final class WorldWorkingSet {
 	/**
 	 * the renderableSections
 	 */
-	private final Map<SectionId, RenderableSection> renderableSections;
+	private final Map<SectionId, InteractiveSection> interactiveSections;
 
 	/**
 	 * the renderableSectionsLoadedQueue
 	 */
-	private final ConcurrentLinkedQueue<RenderableSection> renderableSectionsLoadedQueue;
-
-	/**
-	 * the collidingSections
-	 */
-	private final Map<SectionId, CollidingSection> collidingSections;
-
-	/**
-	 * the collidingSectionsLoadedQueue
-	 */
-	private final ConcurrentLinkedQueue<CollidingSection> collidingSectionsLoadedQueue;
+	private final ConcurrentLinkedQueue<InteractiveSection> interactiveSectionsLoadedQueue;
 
 	/**
 	 * the combined collider
@@ -80,11 +70,9 @@ public final class WorldWorkingSet {
 		this.sectionRenderer = new SectionRenderer();
 		this.engineParameters = engineParameters;
 		this.systemResourceNode = new SystemResourceNode();
-		this.renderableSections = new HashMap<SectionId, RenderableSection>();
-		this.renderableSectionsLoadedQueue = new ConcurrentLinkedQueue<RenderableSection>();
-		this.collidingSections = new HashMap<SectionId, CollidingSection>();
-		this.collidingSectionsLoadedQueue = new ConcurrentLinkedQueue<CollidingSection>();
-		this.compositeCollider = new CompositeCollider(collidingSections.values());
+		this.interactiveSections = new HashMap<>();
+		this.interactiveSectionsLoadedQueue = new ConcurrentLinkedQueue<>();
+		this.compositeCollider = new CompositeCollider(interactiveSections.values());
 		this.renderUnits = null;
 	}
 
@@ -108,36 +96,12 @@ public final class WorldWorkingSet {
 		return systemResourceNode;
 	}
 
-	/**
-	 * Getter method for the renderableSections.
-	 * @return the renderableSections
-	 */
-	public Map<SectionId, RenderableSection> getRenderableSections() {
-		return renderableSections;
+	public Map<SectionId, InteractiveSection> getInteractiveSections() {
+		return interactiveSections;
 	}
 
-	/**
-	 * Getter method for the renderableSectionsLoadedQueue.
-	 * @return the renderableSectionsLoadedQueue
-	 */
-	public ConcurrentLinkedQueue<RenderableSection> getRenderableSectionsLoadedQueue() {
-		return renderableSectionsLoadedQueue;
-	}
-
-	/**
-	 * Getter method for the collidingSections.
-	 * @return the collidingSections
-	 */
-	public Map<SectionId, CollidingSection> getCollidingSections() {
-		return collidingSections;
-	}
-
-	/**
-	 * Getter method for the collidingSectionsLoadedQueue.
-	 * @return the collidingSectionsLoadedQueue
-	 */
-	public ConcurrentLinkedQueue<CollidingSection> getCollidingSectionsLoadedQueue() {
-		return collidingSectionsLoadedQueue;
+	public ConcurrentLinkedQueue<InteractiveSection> getInteractiveSectionsLoadedQueue() {
+		return interactiveSectionsLoadedQueue;
 	}
 
 	/**
@@ -159,9 +123,9 @@ public final class WorldWorkingSet {
 		// prepare
 		if (renderUnits == null) {
 			List<RenderUnit> renderUnitList = new ArrayList<>();
-			for (final RenderableSection renderableSection : renderableSections.values()) {
-				renderableSection.prepare(sectionRenderer);
-				for (RenderUnit renderUnit : renderableSection.getRenderUnits()) {
+			for (final InteractiveSection interactiveSection : interactiveSections.values()) {
+				interactiveSection.prepare(sectionRenderer);
+				for (RenderUnit renderUnit : interactiveSection.getRenderUnits()) {
 					renderUnitList.add(renderUnit);
 				}
 			}
@@ -205,25 +169,19 @@ public final class WorldWorkingSet {
 	public void acceptLoadedSections() {
 		{
 			boolean modified = false;
-			RenderableSection renderableSection;
-			while ((renderableSection = renderableSectionsLoadedQueue.poll()) != null) {
-				renderableSections.put(renderableSection.getSectionId(), renderableSection);
+			InteractiveSection interactiveSection;
+			while ((interactiveSection = interactiveSectionsLoadedQueue.poll()) != null) {
+				interactiveSections.put(interactiveSection.getSectionId(), interactiveSection);
 				modified = true;
 			}
 			if (modified) {
 				markRenderModelsModified();
 			}
 		}
-		{
-			CollidingSection collidingSection;
-			while ((collidingSection = collidingSectionsLoadedQueue.poll()) != null) {
-				collidingSections.put(collidingSection.getSectionId(), collidingSection);
-			}
-		}
 	}
 
 	/**
-	 * Checks whether all render models around the specified center are present in the working
+	 * Checks whether all interactive sections around the specified center are present in the working
 	 * set. Currently using "city block distance" (checking a rectangular region), not
 	 * euclidian distance (which would check a sphere).
 	 *
@@ -231,37 +189,13 @@ public final class WorldWorkingSet {
 	 * @param radius the "radius"
 	 * @return true if all render models are present, false if some are missing
 	 */
-	public boolean hasAllRenderModels(SectionId center, final int radius) {
+	public boolean hasAllInteractiveSections(SectionId center, final int radius) {
 		for (int dx = -radius; dx <= radius; dx++) {
 			for (int dy = -radius; dy <= radius; dy++) {
 				for (int dz = -radius; dz <= radius; dz++) {
 					final int cx = center.getX() + dx, cy = center.getY() + dy, cz = center.getZ() + dz;
 					final SectionId id = new SectionId(cx, cy, cz);
-					if (!renderableSections.containsKey(id)) {
-						return false;
-					}
-				}
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * Checks whether all colliders around the specified center are present in the working
-	 * set. Currently using "city block distance" (checking a rectangular region), not
-	 * euclidian distance (which would check a sphere).
-	 *
-	 * @param center the center section
-	 * @param radius the "radius"
-	 * @return true if all colliders are present, false if some are missing
-	 */
-	public boolean hasAllColliders(SectionId center, final int radius) {
-		for (int dx = -radius; dx <= radius; dx++) {
-			for (int dy = -radius; dy <= radius; dy++) {
-				for (int dz = -radius; dz <= radius; dz++) {
-					final int cx = center.getX() + dx, cy = center.getY() + dy, cz = center.getZ() + dz;
-					final SectionId id = new SectionId(cx, cy, cz);
-					if (!collidingSections.containsKey(id)) {
+					if (!interactiveSections.containsKey(id)) {
 						return false;
 					}
 				}

@@ -9,7 +9,7 @@ package name.martingeisse.miner.client.ingame;
 import name.martingeisse.miner.client.MinerResources;
 import name.martingeisse.miner.client.ingame.engine.EngineParameters;
 import name.martingeisse.miner.client.ingame.engine.FrameRenderParameters;
-import name.martingeisse.miner.client.ingame.engine.RenderableSection;
+import name.martingeisse.miner.client.ingame.engine.InteractiveSection;
 import name.martingeisse.miner.client.ingame.engine.WorldWorkingSet;
 import name.martingeisse.miner.client.ingame.gui.CraftingPage;
 import name.martingeisse.miner.client.ingame.gui.InventoryPage;
@@ -354,7 +354,7 @@ public class CubeWorldHandler implements IFrameHandler {
 
 		// check if the world is loaded "enough"
 		workingSet.acceptLoadedSections();
-		if (!workingSet.hasAllRenderModels(player.getSectionId(), 1) || !workingSet.hasAllColliders(player.getSectionId(), 1)) {
+		if (!workingSet.hasAllInteractiveSections(player.getSectionId(), 1)) {
 			final Instant now = new Instant();
 			if (new Duration(previousConnectionProblemInstant, now).getMillis() >= 1000) {
 				logger.warn("connection problems");
@@ -455,7 +455,7 @@ public class CubeWorldHandler implements IFrameHandler {
 						if (distance < 2.0) {
 							Vector3i absolutePosition = new Vector3i(x, y, z);
 							SectionId sectionId = SectionId.fromPosition(absolutePosition);
-							RenderableSection section = workingSet.getRenderableSections().get(sectionId);
+							InteractiveSection section = workingSet.getInteractiveSections().get(sectionId);
 							Vector3i relativePosition = absolutePosition.bitwiseAnd(Constants.SECTION_SIZE.getMask());
 							int cubeTypeIndex = section.getCubes().getCubeRelative(Constants.SECTION_SIZE, relativePosition) & 0xff;
 							CubeType cubeType = CubeTypes.CUBE_TYPES[cubeTypeIndex];

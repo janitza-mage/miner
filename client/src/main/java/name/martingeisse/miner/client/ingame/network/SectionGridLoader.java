@@ -6,20 +6,15 @@
 
 package name.martingeisse.miner.client.ingame.network;
 
-import name.martingeisse.miner.client.ingame.engine.CollidingSection;
-import name.martingeisse.miner.client.ingame.engine.RenderableSection;
+import name.martingeisse.miner.client.ingame.engine.InteractiveSection;
 import name.martingeisse.miner.client.ingame.engine.WorldWorkingSet;
 import name.martingeisse.miner.client.network.ClientEndpoint;
 import name.martingeisse.miner.common.Constants;
-import name.martingeisse.miner.common.collision.IAxisAlignedCollider;
-import name.martingeisse.miner.common.collision.SectionCollider;
 import name.martingeisse.miner.common.cubes.Cubes;
-import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.common.network.c2s.InteractiveSectionDataRequest;
 import name.martingeisse.miner.common.network.s2c.InteractiveSectionDataResponse;
 import name.martingeisse.miner.common.network.s2c.SingleSectionModificationEvent;
 import name.martingeisse.miner.common.section.SectionId;
-import name.martingeisse.miner.common.task.Task;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -31,11 +26,11 @@ import java.util.Set;
  * This class updates the set of sections in the {@link WorldWorkingSet} based
  * on the viewer's position. It requests new sections by sending section request
  * messages to the server and receives the responses via the in-game message router.
- *
+ * <p>
  * Sending a request for sections is not initiated by this class; this class
  * only provides a method to do so. Clients should call that method in regular
  * intervals. TODO provide a frame handler for that.
- *
+ * <p>
  * The current implementation is very simple: It keeps a cube-shaped region
  * of sections in the working set. The region contains an odd number of
  * sections along each axis, with the viewer in the middle section.
@@ -51,41 +46,25 @@ public final class SectionGridLoader {
 	 */
 	private static Logger logger = Logger.getLogger(SectionGridLoader.class);
 
-	/**
-	 * the workingSet
-	 */
 	private final WorldWorkingSet workingSet;
-
-	/**
-	 * the renderModelRadius
-	 */
-	private final int renderModelRadius;
-
-	/**
-	 * the colliderRadius
-	 */
-	private final int colliderRadius;
-
-	/**
-	 * the viewerPosition
-	 */
+	private final int interactiveRadius;
 	private SectionId viewerPosition;
 
 	/**
 	 * Constructor.
-	 * @param workingSet the working set to load sections for
-	 * @param renderModelRadius the "radius" of the active set of render models
-	 * @param colliderRadius the "radius" of the active set of colliders
+	 *
+	 * @param workingSet        the working set to load sections for
+	 * @param interactiveRadius the "radius" of the active set of interactive sections
 	 */
-	public SectionGridLoader(final WorldWorkingSet workingSet, final int renderModelRadius, final int colliderRadius) {
+	public SectionGridLoader(final WorldWorkingSet workingSet, final int interactiveRadius) {
 		this.workingSet = workingSet;
-		this.renderModelRadius = renderModelRadius;
-		this.colliderRadius = colliderRadius;
+		this.interactiveRadius = interactiveRadius;
 		this.viewerPosition = null;
 	}
 
 	/**
 	 * Getter method for the viewerPosition.
+	 *
 	 * @return the viewerPosition
 	 */
 	public SectionId getViewerPosition() {
@@ -94,6 +73,7 @@ public final class SectionGridLoader {
 
 	/**
 	 * Setter method for the viewerPosition.
+	 *
 	 * @param viewerPosition the viewerPosition to set
 	 */
 	public void setViewerPosition(SectionId viewerPosition) {
@@ -117,11 +97,10 @@ public final class SectionGridLoader {
 		}
 
 		// remove all sections that are too far away
-		if (restrictMapToRadius(workingSet.getRenderableSections(), renderModelRadius + 1)) {
+		if (restrictMapToRadius(workingSet.getInteractiveSections(), interactiveRadius + 1)) {
 			workingSet.markRenderModelsModified();
 			anythingUpdated = true;
 		}
-		anythingUpdated |= restrictMapToRadius(workingSet.getCollidingSections(), colliderRadius + 1);
 
 		// ProfilingHelper.checkRelevant("update sections 1");
 
@@ -136,7 +115,7 @@ public final class SectionGridLoader {
 		// TODO implement a batch request packet
 		// TODO fetch non-interactive data for "far" sections
 		{
-			final List<SectionId> missingSectionIds = findMissingSectionIds(workingSet.getRenderableSections().keySet(), renderModelRadius);
+			final List<SectionId> missingSectionIds = findMissingSectionIds(workingSet.getInteractiveSections().keySet(), interactiveRadius);
 			if (missingSectionIds != null && !missingSectionIds.isEmpty()) {
 				final SectionId[] sectionIds = missingSectionIds.toArray(new SectionId[missingSectionIds.size()]);
 				for (SectionId sectionId : sectionIds) {
@@ -149,27 +128,12 @@ public final class SectionGridLoader {
 
 		// ProfilingHelper.checkRelevant("update sections 2");
 
-		// detect missing section colliders in the viewer's proximity, then request them all at once
-		// TODO implement a batch request packet
-		{
-			final List<SectionId> missingSectionIds = findMissingSectionIds(workingSet.getCollidingSections().keySet(), colliderRadius);
-			if (missingSectionIds != null && !missingSectionIds.isEmpty()) {
-				final SectionId[] sectionIds = missingSectionIds.toArray(new SectionId[missingSectionIds.size()]);
-				for (SectionId sectionId : sectionIds) {
-					logger.debug("requested collider update for section " + sectionId);
-					ClientEndpoint.INSTANCE.send(new InteractiveSectionDataRequest(sectionId));
-					anythingUpdated = true;
-				}
-			}
-		}
-
-		// ProfilingHelper.checkRelevant("update sections 3");
-
 		return anythingUpdated;
 	}
 
 	/**
 	 * Reloads a single section by requesting its render model and/or collider from the server.
+	 *
 	 * @param sectionId the ID of the section to reload
 	 */
 	public void reloadSection(SectionId sectionId) {
@@ -181,43 +145,12 @@ public final class SectionGridLoader {
 	 * Handles a single interactive section image that was received from the server.
 	 */
 	public void handleInteractiveSectionImage(InteractiveSectionDataResponse response) {
-
-		// read the section data from the packet
 		final SectionId sectionId = response.getSectionId();
 		logger.debug("received interactive section image for section " + sectionId);
 		byte[] data = response.getData();
 		final Cubes cubes = Cubes.createFromCompressedData(Constants.SECTION_SIZE, data);
 		logger.debug("created Cubes instance for section " + sectionId);
-
-		// add a renderable section
-		workingSet.getRenderableSectionsLoadedQueue().add(new RenderableSection(workingSet, sectionId, cubes));
-
-		// add a colliding section if this section is close enough
-		int dx = Math.abs(sectionId.getX() - viewerPosition.getX());
-		int dy = Math.abs(sectionId.getY() - viewerPosition.getY());
-		int dz = Math.abs(sectionId.getZ() - viewerPosition.getZ());
-		if (dx < colliderRadius + 1 && dy < colliderRadius + 1 && dz < colliderRadius + 1) {
-			new Task() {
-				@Override
-				public void run() {
-					logger.debug("building collider for section " + sectionId);
-					int size = Constants.SECTION_SIZE.getSize();
-					byte[] colliderCubes = new byte[size * size * size];
-					for (int x = 0; x < size; x++) {
-						for (int y = 0; y < size; y++) {
-							for (int z = 0; z < size; z++) {
-								colliderCubes[x * size * size + y * size + z] = cubes.getCubeRelative(Constants.SECTION_SIZE, x, y, z);
-							}
-						}
-					}
-					final IAxisAlignedCollider collider = new SectionCollider(sectionId, colliderCubes, CubeTypes.CUBE_TYPES);
-					final CollidingSection collidingSection = new CollidingSection(workingSet, sectionId, collider);
-					workingSet.getCollidingSectionsLoadedQueue().add(collidingSection);
-					logger.debug("collider registered for section " + sectionId);
-				}
-			}.schedule();
-		}
-
+		workingSet.getInteractiveSectionsLoadedQueue().add(new InteractiveSection(workingSet, sectionId, cubes));
 		logger.debug("consumed interactive section image for section " + sectionId);
 	}
 
@@ -233,7 +166,7 @@ public final class SectionGridLoader {
 	 * Removes all entries from the map whose keys are too far away from the center,
 	 * currently using "city block distance" (leaving a rectangular region), not
 	 * euclidian distance (which would leave a sphere).
-	 *
+	 * <p>
 	 * Returns true if any entries have been removed.
 	 */
 	private boolean restrictMapToRadius(final Map<SectionId, ?> map, final int radius) {
