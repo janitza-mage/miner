@@ -30,6 +30,7 @@ import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.RectangularRegion;
+import name.martingeisse.miner.common.geometry.vector.Vector3d;
 import name.martingeisse.miner.common.geometry.vector.Vector3i;
 import name.martingeisse.miner.common.network.c2s.DigNotification;
 import name.martingeisse.miner.common.network.c2s.PlaceCube;
@@ -170,6 +171,9 @@ public class CubeWorldHandler implements IFrameHandler {
 	private final OtherPlayerVisualTemplate otherPlayerVisualTemplate;
 
 	private boolean craftingButtonPreviouslyPressed = false;
+
+	private Vector3d interactionWithPosition = null;
+	private Runnable interactionCancelCallback = null;
 
 	/**
 	 * The sectionLoadHandler -- checks often (100 ms), but doesn't re-request frequently (5 sec)
@@ -457,6 +461,10 @@ public class CubeWorldHandler implements IFrameHandler {
 							CubeType cubeType = CubeTypes.CUBE_TYPES[cubeTypeIndex];
 							if (cubeType.supportsCrafting()) {
 								Ingame.get().openGui(new CraftingPage());
+								interactionWithPosition = absolutePosition.getCubeCenter();
+								interactionCancelCallback = () -> {
+									Ingame.get().closeGui();
+								};
 							}
 						}
 						craftingButtonPreviouslyPressed = true;
@@ -466,6 +474,13 @@ public class CubeWorldHandler implements IFrameHandler {
 		}
 		if (!Keyboard.isKeyDown(Keyboard.KEY_C)) {
 			craftingButtonPreviouslyPressed = false;
+		}
+		if (interactionWithPosition != null && interactionWithPosition.distanceSquared(player.getPosition()) > 6.0) {
+			if (interactionCancelCallback != null) {
+				interactionCancelCallback.run();
+				interactionCancelCallback = null;
+			}
+			interactionWithPosition = null;
 		}
 
 		// special actions

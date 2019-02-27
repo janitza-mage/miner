@@ -101,4 +101,8 @@ public final class Vector3i extends ReadableVector3i {
 		return x * other.x + y * other.y + z * other.z;
 	}
 
+	public Vector3d getCubeCenter() {
+		return new Vector3d(x + 0.5, y + 0.5, z + 0.5);
+	}
+
 }

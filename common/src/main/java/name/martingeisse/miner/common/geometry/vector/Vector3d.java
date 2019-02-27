@@ -101,10 +101,10 @@ public final class Vector3d extends ReadableVector3d {
 		return Math.sqrt(normSquared());
 	}
 
-	public double distanceSquared(Vector3d other) {
-		double dx = x - other.x;
-		double dy = y - other.y;
-		double dz = z - other.z;
+	public double distanceSquared(ReadableVector3d other) {
+		double dx = x - other.getX();
+		double dy = y - other.getY();
+		double dz = z - other.getZ();
 		return dx * dx + dy * dy + dz * dz;
 	}
 
