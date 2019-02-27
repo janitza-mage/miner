@@ -89,6 +89,14 @@ public final class Vector3i extends ReadableVector3i {
 		return new Vector3i(x / a, y / a, z / a);
 	}
 
+	/**
+	 * Note: This method may seem useless at first, but it is actually very helpful to obtain section-relative
+	 * coordinates from absolute coordinates (using AND to calculate the positive remainder).
+	 */
+	public Vector3i bitwiseAnd(int a) {
+		return new Vector3i(x & a, y & a, z & a);
+	}
+
 	public int dot(Vector3i other) {
 		return x * other.x + y * other.y + z * other.z;
 	}

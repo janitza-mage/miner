@@ -128,4 +128,8 @@ public abstract class CubeType {
 		return EquipmentSlot.HAND;
 	}
 
+	public boolean supportsCrafting() {
+		return false;
+	}
+
 }

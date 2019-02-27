@@ -22,16 +22,15 @@ import org.apache.log4j.Logger;
 import java.util.Arrays;
 
 /**
- * This class wraps a {@link Cubes} object and augments it with
- * additional data for rendering. Instances of this class are stored
- * for sections in the {@link WorldWorkingSet}.
+ * This class wraps a {@link Cubes} object and augments it with additional data for rendering and collision detection.
+ * Instances of this class are stored for sections in the {@link WorldWorkingSet}.
  */
-public final class RenderableSection {
+public final class InteractiveSection {
 
 	/**
 	 * the logger
 	 */
-	private static Logger logger = Logger.getLogger(RenderableSection.class);
+	private static Logger logger = Logger.getLogger(InteractiveSection.class);
 
 	/**
 	 * the workingSet
@@ -69,7 +68,7 @@ public final class RenderableSection {
 	 * @param sectionId the section id
 	 * @param cubes the cubes for this section
 	 */
-	public RenderableSection(final WorldWorkingSet workingSet, final SectionId sectionId, final Cubes cubes) {
+	public InteractiveSection(final WorldWorkingSet workingSet, final SectionId sectionId, final Cubes cubes) {
 		this.workingSet = workingSet;
 		this.sectionId = sectionId;
 		this.region = new RectangularRegion(sectionId.getX(), sectionId.getY(), sectionId.getZ()).multiply(Constants.SECTION_SIZE);
@@ -316,10 +315,6 @@ public final class RenderableSection {
 	 */
 	public RenderUnit[] getRenderUnits() {
 		return renderUnits;
-	}
-
-	public Cubes getCubes() {
-		return cubes;
 	}
 
 	/**

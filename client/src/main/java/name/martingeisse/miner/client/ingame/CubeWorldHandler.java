@@ -26,6 +26,8 @@ import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
 import name.martingeisse.miner.client.util.lwjgl.*;
 import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.collision.SingleCubeCollider;
+import name.martingeisse.miner.common.cubetype.CubeType;
+import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.RectangularRegion;
 import name.martingeisse.miner.common.geometry.vector.Vector3i;
@@ -343,9 +345,6 @@ public class CubeWorldHandler implements IFrameHandler {
 				if (Keyboard.getEventKey() == Keyboard.KEY_I && Keyboard.getEventKeyState()) {
 					Ingame.get().openGui(new InventoryPage());
 				}
-				if (Keyboard.getEventKey() == Keyboard.KEY_C && Keyboard.getEventKeyState()) {
-					Ingame.get().openGui(new CraftingPage());
-				}
 			}
 		}
 
@@ -391,10 +390,10 @@ public class CubeWorldHandler implements IFrameHandler {
 		player.moveHorizontal(forward, right, player.isOnGround() ? MAX_STAIRS_HEIGHT : 0);
 
 		// special movement
-		if (keysEnabled && Keyboard.isKeyDown(Keyboard.KEY_C)) {
+		if (keysEnabled && Keyboard.isKeyDown(Keyboard.KEY_Z)) {
 			player.moveUp(-speed);
 		}
-		if (keysEnabled && Keyboard.isKeyDown(Keyboard.KEY_E)) {
+		if (keysEnabled && Keyboard.isKeyDown(Keyboard.KEY_Q)) {
 			player.moveUp(speed);
 		}
 
@@ -444,25 +443,28 @@ public class CubeWorldHandler implements IFrameHandler {
 						}
 					}
 				});
-			} else if (Keyboard.isKeyDown(Keyboard.KEY_X) && !craftingButtonPreviouslyPressed) {
+			} else if (Keyboard.isKeyDown(Keyboard.KEY_C) && !craftingButtonPreviouslyPressed) {
 				captureRayActionSupport = true;
 				rayActionSupport.execute(player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), new RayAction(true) {
 					@Override
 					public void handleImpact(final int x, final int y, final int z, final double distance) {
 						if (distance < 2.0) {
-							Vector3i position = new Vector3i(x, y, z);
-							SectionId sectionId = SectionId.fromPosition(position);
+							Vector3i absolutePosition = new Vector3i(x, y, z);
+							SectionId sectionId = SectionId.fromPosition(absolutePosition);
 							RenderableSection section = workingSet.getRenderableSections().get(sectionId);
-							// TODO we don't have any useful cube type information on the client!
-//							section.get
-//							Ingame.get().openGui(new CraftingPage());
-							craftingButtonPreviouslyPressed = true;
+							Vector3i relativePosition = absolutePosition.bitwiseAnd(Constants.SECTION_SIZE.getMask());
+							int cubeTypeIndex = section.getCubes().getCubeRelative(Constants.SECTION_SIZE, relativePosition) & 0xff;
+							CubeType cubeType = CubeTypes.CUBE_TYPES[cubeTypeIndex];
+							if (cubeType.supportsCrafting()) {
+								Ingame.get().openGui(new CraftingPage());
+							}
 						}
+						craftingButtonPreviouslyPressed = true;
 					}
 				});
 			}
 		}
-		if (!Keyboard.isKeyDown(Keyboard.KEY_X)) {
+		if (!Keyboard.isKeyDown(Keyboard.KEY_C)) {
 			craftingButtonPreviouslyPressed = false;
 		}
 
