@@ -6,9 +6,11 @@
 
 package name.martingeisse.miner.common.cubetype;
 
+import com.google.common.collect.ImmutableList;
 import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.RectangularRegion;
+import name.martingeisse.miner.common.logic.CraftingFormula;
 import name.martingeisse.miner.common.logic.EquipmentSlot;
 
 /**
@@ -128,8 +130,12 @@ public abstract class CubeType {
 		return EquipmentSlot.HAND;
 	}
 
-	public boolean supportsCrafting() {
-		return false;
+	public final boolean supportsCrafting() {
+		return !getSupportedCraftingFormulas().isEmpty();
+	}
+
+	public ImmutableList<CraftingFormula> getSupportedCraftingFormulas() {
+		return ImmutableList.of();
 	}
 
 }

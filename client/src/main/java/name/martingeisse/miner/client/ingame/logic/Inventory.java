@@ -80,9 +80,17 @@ public final class Inventory {
 		return applications;
 	}
 
-	public ImmutableList<Pair<CraftingFormula, Integer>> getApplicableFormulas() {
+	public ImmutableList<Pair<CraftingFormula, Integer>> getAllApplicableFormulas() {
+		return getApplicableFormulas(CraftingFormula.ALL);
+	}
+
+	public ImmutableList<Pair<CraftingFormula, Integer>> getApplicableFormulasFor(CubeType craftingStation) {
+		return getApplicableFormulas(craftingStation.getSupportedCraftingFormulas());
+	}
+
+	public ImmutableList<Pair<CraftingFormula, Integer>> getApplicableFormulas(ImmutableList<CraftingFormula> supportedFormulas) {
 		List<Pair<CraftingFormula, Integer>> result = new ArrayList<>();
-		for (CraftingFormula formula : CraftingFormula.ALL) {
+		for (CraftingFormula formula : supportedFormulas) {
 			int applications = getPossibleApplications(formula);
 			if (applications > 0) {
 				result.add(Pair.of(formula, applications));

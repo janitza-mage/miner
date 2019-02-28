@@ -10,7 +10,8 @@ import name.martingeisse.miner.common.cubetype.CubeTypes;
  */
 public enum CraftingFormula {
 
-	MELT_SNOW(ImmutableMap.of(CubeTypes.CUBE_TYPES[78], 2), CubeTypes.CUBE_TYPES[9]);
+	MELT_SNOW(ImmutableMap.of(CubeTypes.CUBE_TYPES[78], 2), CubeTypes.CUBE_TYPES[9]),
+	CUT_WOOD(ImmutableMap.of(CubeTypes.CUBE_TYPES[17], 1), CubeTypes.CUBE_TYPES[5]);
 
 	public static final ImmutableList<CraftingFormula> ALL = ImmutableList.copyOf(values());
 

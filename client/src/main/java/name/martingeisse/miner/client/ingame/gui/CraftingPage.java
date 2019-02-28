@@ -14,6 +14,7 @@ import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.control.Button;
 import name.martingeisse.miner.client.util.gui.control.ListView;
 import name.martingeisse.miner.client.util.gui.element.*;
+import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.logic.CraftingFormula;
 import name.martingeisse.miner.common.network.c2s.ApplyFormula;
 import org.apache.commons.lang3.tuple.Pair;
@@ -28,10 +29,10 @@ public class CraftingPage extends AbstractGameGuiPage implements InventoryDepend
 	/**
 	 * Constructor.
 	 */
-	public CraftingPage() {
+	public CraftingPage(CubeType craftingStation) {
 		final VerticalLayout menu = new VerticalLayout();
 
-		formulaListView = new ListView<Pair<CraftingFormula, Integer>>(Inventory.INSTANCE::getApplicableFormulas) {
+		formulaListView = new ListView<Pair<CraftingFormula, Integer>>(() -> Inventory.INSTANCE.getApplicableFormulasFor(craftingStation)) {
 			@Override
 			protected GuiElement createGuiElement(Pair<CraftingFormula, Integer> dataElement) {
 				String text = dataElement.getLeft().name() + " (" + dataElement.getRight() + ")";

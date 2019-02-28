@@ -6,7 +6,9 @@
 
 package name.martingeisse.miner.common.cubetype;
 
+import com.google.common.collect.ImmutableList;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
+import name.martingeisse.miner.common.logic.CraftingFormula;
 
 /**
  * Defines the cube types.
@@ -92,14 +94,14 @@ public final class CubeTypes {
 		new SolidOpaqueCubeType(5), // 25: invalid (MC: note block)
 		new SolidOpaqueCubeType(new int[]{23, 23, 24, 24, 23, 23}) {
 			@Override
-			public boolean supportsCrafting() {
-				return true;
+			public ImmutableList<CraftingFormula> getSupportedCraftingFormulas() {
+				return ImmutableList.of(CraftingFormula.CUT_WOOD);
 			}
 		}, // 26: workbench
 		new SolidOpaqueCubeType(new int[]{25, 25, 27, 27, 25, 25}) {
 			@Override
-			public boolean supportsCrafting() {
-				return true;
+			public ImmutableList<CraftingFormula> getSupportedCraftingFormulas() {
+				return ImmutableList.of(CraftingFormula.MELT_SNOW);
 			}
 		}, // 27: furnace
 		new SolidOpaqueCubeType(5), // 28: invalid

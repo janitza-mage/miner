@@ -460,7 +460,7 @@ public class CubeWorldHandler implements IFrameHandler {
 							int cubeTypeIndex = section.getCubes().getCubeRelative(Constants.SECTION_SIZE, relativePosition) & 0xff;
 							CubeType cubeType = CubeTypes.CUBE_TYPES[cubeTypeIndex];
 							if (cubeType.supportsCrafting()) {
-								Ingame.get().openGui(new CraftingPage());
+								Ingame.get().openGui(new CraftingPage(cubeType));
 								interactionWithPosition = absolutePosition.getCubeCenter();
 								interactionCancelCallback = () -> {
 									Ingame.get().closeGui();

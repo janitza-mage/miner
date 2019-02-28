@@ -16,13 +16,13 @@ import java.util.function.Supplier;
  */
 public abstract class ListView<T> extends Control {
 
-	private final Supplier<List<T>> dataProvider;
+	private final Supplier<? extends List<T>> dataProvider;
 
-	public ListView(Supplier<List<T>> dataProvider) {
+	public ListView(Supplier<? extends List<T>> dataProvider) {
 		this(new VerticalLayout(), dataProvider);
 	}
 
-	public ListView(AbstractListElement listElement, Supplier<List<T>> dataProvider) {
+	public ListView(AbstractListElement listElement, Supplier<? extends List<T>> dataProvider) {
 		this.dataProvider = dataProvider;
 		setControlRootElement(listElement);
 		update();
