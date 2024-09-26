@@ -21,3 +21,5 @@ hs_err_pid*.log
 /all/build
 
 /common/src/main/resources/version.txt
+
+target
