@@ -72,17 +72,17 @@ public class MinerResources {
 	/**
 	 * the footstep
 	 */
-	private final Audio footstep;
+	private final SoundTemplate footstep;
 
 	/**
 	 * the hitCube
 	 */
-	private final Audio hitCube;
+	private final SoundTemplate hitCube;
 
 	/**
 	 * the landOnGround
 	 */
-	private final Audio landOnGround;
+	private final SoundTemplate landOnGround;
 
 	/**
 	 * Constructor. The resources are immediately loaded.
@@ -171,7 +171,7 @@ public class MinerResources {
 	 * Getter method for the footstep.
 	 * @return the footstep
 	 */
-	public Audio getFootstep() {
+	public SoundTemplate getFootstep() {
 		return footstep;
 	}
 
@@ -179,7 +179,7 @@ public class MinerResources {
 	 * Getter method for the hitCube.
 	 * @return the hitCube
 	 */
-	public Audio getHitCube() {
+	public SoundTemplate getHitCube() {
 		return hitCube;
 	}
 
@@ -187,7 +187,7 @@ public class MinerResources {
 	 * Getter method for the landOnGround.
 	 * @return the landOnGround
 	 */
-	public Audio getLandOnGround() {
+	public SoundTemplate getLandOnGround() {
 		return landOnGround;
 	}
 
