@@ -80,11 +80,22 @@
     </build>
 
     <dependencies>
+
+        <!-- other modules -->
+        <dependency>
+            <groupId>name.martingeisse</groupId>
+            <artifactId>miner-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 3d math -->
         <dependency>
             <groupId>org.joml</groupId>
             <artifactId>joml</artifactId>
             <version>${joml.version}</version>
         </dependency>
+
+        <!-- LWJGL -->
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl</artifactId>
@@ -195,5 +206,9 @@
             <version>${lwjgl.version}</version>
             <classifier>natives-${platform}</classifier>
         </dependency>
+
+
+
+
     </dependencies>
 </project>

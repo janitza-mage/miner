@@ -1,0 +1,7 @@
+a
+dependencies {
+
+	compile 'slick:slick:20121001-264'
+	compile 'com.googlecode.soundlibs:jorbis:0.0.17-2'
+
+}
