@@ -1,35 +1,4 @@
-apply plugin: 'java'
 
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
-tasks.withType(JavaCompile) {
-	options.encoding = "UTF-8"
-}
-
-sourceSets {
-	main {
-		java {
-			srcDir 'src/main/java'
-			srcDir 'src/main/generated'
-		}
-		resources {
-			srcDir 'src/main/java'
-			srcDir 'src/main/generated'
-			srcDir 'src/main/resources'
-		}
-	}
-	test {
-		java {
-			srcDir 'src/test/java'
-			srcDir 'src/test/generated'
-		}
-		resources {
-			srcDir 'src/test/java'
-			srcDir 'src/test/generated'
-			srcDir 'src/test/resources'
-		}
-	}
-}
 
 processResources.doFirst {
 	exec {
@@ -38,34 +7,7 @@ processResources.doFirst {
 	}
 }
 
-repositories {
-	mavenCentral()
-}
-
 dependencies {
 
-	// common helper libraries
-	compile 'org.apache.commons:commons-lang3:3.3.2'
-	compile 'commons-beanutils:commons-beanutils:1.9.1'
-	compile 'commons-codec:commons-codec:1.9'
-	compile 'commons-io:commons-io:2.4'
-	compile 'org.apache.commons:commons-compress:1.8.1'
-	compile 'joda-time:joda-time:2.3'
-	compile 'com.google.code.findbugs:jsr305:2.0.3'
-	compile 'com.googlecode.json-simple:json-simple:1.1.1'
-	compile 'com.google.guava:guava:17.0'
-	compile 'com.google.code.gson:gson:2.3.1'
-
-	// logging
-	compile 'log4j:log4j:1.2.17'
-
-	// networking (include each Netty module manually since netty-all copies all classes instead
-	// of referencing the other modules, so we would end up with duplicate classes)
-	compile group: 'io.netty', name: 'netty-handler', version: '4.0.56.Final'
-	compile group: 'io.netty', name: 'netty-buffer', version: '4.0.56.Final'
-	compile group: 'io.netty', name: 'netty-transport', version: '4.0.56.Final'
-	compile group: 'io.netty', name: 'netty-common', version: '4.0.56.Final'
-	compile group: 'io.netty', name: 'netty-codec', version: '4.0.56.Final'
-	// netty-resolver? netty-resolver-dns?
 
 }
