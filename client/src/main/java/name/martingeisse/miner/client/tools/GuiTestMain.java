@@ -10,7 +10,6 @@ import name.martingeisse.miner.client.MinerResources;
 import name.martingeisse.miner.client.util.frame.FrameLoop;
 import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
 import name.martingeisse.miner.client.util.gui.GuiFrameHandler;
-import name.martingeisse.miner.client.util.lwjgl.LwjglNativeLibraryHelper;
 import name.martingeisse.miner.common.task.TaskBarrier;
 import name.martingeisse.miner.common.task.TaskSystem;
 import org.lwjgl.input.Mouse;
@@ -37,9 +36,6 @@ public class GuiTestMain {
 
 			// create a worker loop -- we need to access this in closures
 			GlWorkerLoop glWorkerLoop = new GlWorkerLoop();
-
-			// prepare native libraries
-			LwjglNativeLibraryHelper.prepareNativeLibraries();
 
 			// configure the display
 			Display.setDisplayMode(new DisplayMode(800, 600));

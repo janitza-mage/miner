@@ -9,7 +9,6 @@ package name.martingeisse.miner.client.tools;
 import name.martingeisse.miner.client.util.frame.AbstractFrameHandler;
 import name.martingeisse.miner.client.util.frame.BreakFrameLoopException;
 import name.martingeisse.miner.client.util.frame.FrameLoop;
-import name.martingeisse.miner.client.util.lwjgl.LwjglNativeLibraryHelper;
 import name.martingeisse.miner.client.util.lwjgl.MouseUtil;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -28,9 +27,6 @@ public final class KeyboardCodePrinter {
 	 */
 	public static void main(String[] args) {
 		try {
-
-			// prepare native libraries
-			LwjglNativeLibraryHelper.prepareNativeLibraries();
 
 			// configure the display
 			Display.setDisplayMode(new DisplayMode(800, 600));

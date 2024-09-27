@@ -5,7 +5,6 @@ import name.martingeisse.miner.client.startmenu.LoginPage;
 import name.martingeisse.miner.client.util.frame.FrameLoop;
 import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
 import name.martingeisse.miner.client.util.gui.GuiFrameHandler;
-import name.martingeisse.miner.client.util.lwjgl.LwjglNativeLibraryHelper;
 import name.martingeisse.miner.common.task.TaskSystem;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -57,9 +56,6 @@ public final class ClientStartup {
 
 		// configure LWJGL
 		System.setProperty("org.lwjgl.opengl.Window.undecorated", "true");
-
-		// load native libraries
-		LwjglNativeLibraryHelper.prepareNativeLibraries();
 
 		// initialize the display
 		DisplayMode bestMode = null;
