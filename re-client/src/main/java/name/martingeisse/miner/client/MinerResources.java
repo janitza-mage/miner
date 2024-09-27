@@ -6,14 +6,11 @@
 
 package name.martingeisse.miner.client;
 
-import name.martingeisse.miner.client.launcher.assets.LauncherAssets;
-import name.martingeisse.miner.client.util.lwjgl.FixedWidthFont;
-import name.martingeisse.miner.client.util.lwjgl.Font;
+import name.martingeisse.miner.client.engine.graphics.FixedWidthFont;
+import name.martingeisse.miner.client.engine.graphics.Font;
+import name.martingeisse.miner.client.engine.graphics.Texture;
+import name.martingeisse.miner.client.engine.sound.SoundTemplate;
 import name.martingeisse.miner.common.cubetype.CubeTypes;
-import org.newdawn.slick.openal.Audio;
-import org.newdawn.slick.openal.AudioLoader;
-import org.newdawn.slick.util.ClasspathLocation;
-import org.newdawn.slick.util.ResourceLoader;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -88,30 +85,18 @@ public class MinerResources {
 		final String[] cubeTextureNames = CubeTypes.CUBE_TEXTURE_FILENAMES;
 		cubeTextures = new Texture[cubeTextureNames.length];
 		for (int i = 0; i < cubeTextures.length; i++) {
-			cubeTextures[i] = Texture.loadFromClasspath(LauncherAssets.class, cubeTextureNames[i]);
+			cubeTextures[i] = Texture.loadFromClasspath(MinerResources.class, "/" + cubeTextureNames[i]);
 		}
 
 		// load special textures
-		clouds = Texture.loadFromClasspath(LauncherAssets.class, "clouds.png");
+		clouds = Texture.loadFromClasspath(MinerResources.class, "/clouds.png");
 		font = new FixedWidthFont(loadImage("font.png"), 8, 16);
 
 		// load sounds
-		ResourceLoader.addResourceLocation(new ClasspathLocation());
-		footstep = loadOggSound("footstep-1.ogg");
-		hitCube = loadOggSound("hit-cube-1.ogg");
-		landOnGround = loadOggSound("land.ogg");
+		footstep = SoundTemplate.loadFromClasspath(MinerResources.class, "/footstep-1.ogg");
+		hitCube = SoundTemplate.loadFromClasspath(MinerResources.class, "/hit-cube-1.ogg");
+		landOnGround = SoundTemplate.loadFromClasspath(MinerResources.class, "/land.ogg");
 
-	}
-
-	/**
-	 * @param filename the filename of the OGG, relative to the assets folder
-	 * @return the sound
-	 * @throws IOException on I/O errors
-	 */
-	private Audio loadOggSound(final String filename) throws IOException {
-		try (InputStream inputStream = LauncherAssets.class.getResourceAsStream(filename)) {
-			return AudioLoader.getAudio("OGG", inputStream);
-		}
 	}
 
 	/**
@@ -121,7 +106,7 @@ public class MinerResources {
 	 * @throws IOException on I/O errors
 	 */
 	private BufferedImage loadImage(final String filename) throws IOException {
-		try (InputStream inputStream = LauncherAssets.class.getResourceAsStream(filename)) {
+		try (InputStream inputStream = MinerResources.class.getResourceAsStream(filename)) {
 			return ImageIO.read(inputStream);
 		}
 	}
