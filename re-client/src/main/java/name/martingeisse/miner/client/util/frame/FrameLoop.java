@@ -8,10 +8,9 @@ package name.martingeisse.miner.client.util.frame;
 
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
 
+import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.opengl.GL11.glFlush;
 
 /**
@@ -29,8 +28,7 @@ import static org.lwjgl.opengl.GL11.glFlush;
  * - the worker loop gets passed to all frame handlers when drawing, so the
  *   frame handlers can pass drawing WUs to the worker loop
  *
- * - the frame loop's call to {@link Display#update()} and to
- *   {@link Display#processMessages()} is passed to the worker
+ * - the frame loop's call to glfwSwapBuffers() is passed to the worker
  *   loop instead of executed directly
  *
  * - if the worker loop is overloaded, whole drawing phases are skipped.
@@ -39,6 +37,8 @@ import static org.lwjgl.opengl.GL11.glFlush;
  *
  */
 public final class FrameLoop {
+
+	private final long windowId;
 
 	/**
 	 * the rootHandler
@@ -53,15 +53,16 @@ public final class FrameLoop {
 	/**
 	 * Constructor.
 	 */
-	public FrameLoop() {
-		this(null);
+	public FrameLoop(long windowId) {
+		this(windowId, null);
 	}
 
 	/**
 	 * Constructor.
 	 * @param glWorkerLoop optional GL worker loop as explained in the class comment
 	 */
-	public FrameLoop(GlWorkerLoop glWorkerLoop) {
+	public FrameLoop(long windowId, GlWorkerLoop glWorkerLoop) {
+		this.windowId = windowId;
 		this.rootHandler = new SwappableHandler();
 		this.glWorkerLoop = glWorkerLoop;
 	}
@@ -90,15 +91,13 @@ public final class FrameLoop {
 						@Override
 						public void execute() {
 							glFlush();
-							Display.update();
-							Display.processMessages();
+							glfwSwapBuffers(windowId);
 						}
 					});
 					glWorkerLoop.scheduleFrameBoundary();
 				} else {
 					glFlush();
-					Display.update();
-					Display.processMessages();
+					glfwSwapBuffers(windowId);
 				}
 			}
 		} catch (Exception e) {
@@ -106,8 +105,7 @@ public final class FrameLoop {
 		}
 
 		// handle inputs and OS messages
-		Mouse.poll();
-		Keyboard.poll();
+		glfwPollEvents();
 
 		// prepare game logic steps
 		try {
