@@ -29,11 +29,6 @@ import static org.lwjgl.opengl.GL11.*;
 public class MinerResources {
 
 	/**
-	 * the KEY_COLOR
-	 */
-	public static final int[] KEY_COLOR = {255, 0, 255};
-
-	/**
 	 * the instance
 	 */
 	private static MinerResources instance;
