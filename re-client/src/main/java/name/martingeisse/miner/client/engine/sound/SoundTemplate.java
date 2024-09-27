@@ -1,4 +1,4 @@
-package name.martingeisse.miner.re_client.sound;
+package name.martingeisse.miner.client.engine.sound;
 
 import javax.sound.sampled.*;
 import java.io.IOException;

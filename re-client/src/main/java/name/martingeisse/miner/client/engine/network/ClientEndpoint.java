@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.network;
+package name.martingeisse.miner.client.engine.network;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelOption;

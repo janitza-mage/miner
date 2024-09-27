@@ -1,4 +1,4 @@
-package name.martingeisse.miner.re_client.sound;
+package name.martingeisse.miner.client.engine.sound;
 
 /**
  * Handles playback of sounds, currently using static methods.

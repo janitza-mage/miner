@@ -1,4 +1,4 @@
-package name.martingeisse.miner.client.network;
+package name.martingeisse.miner.client.engine.network;
 
 import name.martingeisse.miner.common.network.Message;
 

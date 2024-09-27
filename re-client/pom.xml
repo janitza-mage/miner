@@ -74,6 +74,7 @@
                 </executions>
                 <configuration>
                     <mainClass>name.martingeisse.miner.re_client.MyIntro</mainClass>
+                    <!-- <mainClass>name.martingeisse.miner.in.vulkan.ClearScreenDemo</mainClass> -->
                 </configuration>
             </plugin>
         </plugins>

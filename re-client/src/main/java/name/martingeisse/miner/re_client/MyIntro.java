@@ -1,30 +1,13 @@
 package name.martingeisse.miner.re_client;
 
-import org.lwjgl.BufferUtils;
+import name.martingeisse.miner.client.engine.graphics.Texture;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL.createCapabilities;
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11.GL_VERTEX_ARRAY;
-import static org.lwjgl.opengl.GL11.glDrawArrays;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11C.GL_LINEAR;
-import static org.lwjgl.opengl.GL11C.GL_RGBA;
 import static org.lwjgl.opengl.GL11C.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11C.GL_TEXTURE_MAG_FILTER;
-import static org.lwjgl.opengl.GL11C.GL_TEXTURE_MIN_FILTER;
-import static org.lwjgl.opengl.GL11C.GL_UNSIGNED_BYTE;
-import static org.lwjgl.opengl.GL11C.glBindTexture;
-import static org.lwjgl.opengl.GL11C.glGenTextures;
-import static org.lwjgl.opengl.GL11C.glTexImage2D;
-import static org.lwjgl.opengl.GL11C.glTexParameteri;
 import static org.lwjgl.opengl.GL15.GL_TEXTURE_COORD_ARRAY;
 import static org.lwjgl.opengl.GL15.glEnable;
 import static org.lwjgl.opengl.GL15.glTexCoordPointer;
@@ -32,28 +15,6 @@ import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 public class MyIntro {
-
-    private static int convertToTexture(BufferedImage bufferedImage) {
-        int width = bufferedImage.getWidth();
-        int height = bufferedImage.getHeight();
-        ByteBuffer data = BufferUtils.createByteBuffer(width * height * 4);
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                int argb = bufferedImage.getRGB(x, y);
-                data.put((byte) (argb >> 16));
-                data.put((byte) (argb >> 8));
-                data.put((byte) argb);
-                data.put((byte) (argb >> 24));
-            }
-        }
-        data.flip();
-        int id = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, id);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-        return id;
-    }
 
     public static void main(String[] args) {
 
@@ -67,19 +28,7 @@ public class MyIntro {
         createCapabilities();
 
         // load texture
-        int textureId;
-        {
-            BufferedImage bufferedImage;
-            try (InputStream inputStream = MyIntro.class.getResourceAsStream("/bricks1.png")) {
-                if (inputStream == null) {
-                    throw new RuntimeException("resource not found");
-                }
-                bufferedImage = ImageIO.read(inputStream);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            textureId = convertToTexture(bufferedImage);
-        }
+        Texture texture = Texture.loadFromClasspath(MyIntro.class, "/bricks1.png");
 
         // create and fill JVM buffer
         FloatBuffer buffer = memAllocFloat(3 * 2);
@@ -108,7 +57,7 @@ public class MyIntro {
 
         // prepare texture
         glEnable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, textureId);
+        texture.bind();
 
         // draw rotating triangle until stopped by the user
         glEnableClientState(GL_VERTEX_ARRAY);
