@@ -9,7 +9,6 @@ package name.martingeisse.miner.client;
 import name.martingeisse.miner.client.launcher.assets.LauncherAssets;
 import name.martingeisse.miner.client.util.lwjgl.FixedWidthFont;
 import name.martingeisse.miner.client.util.lwjgl.Font;
-import name.martingeisse.miner.client.util.lwjgl.StackdTexture;
 import name.martingeisse.miner.common.cubetype.CubeTypes;
 import org.newdawn.slick.openal.Audio;
 import org.newdawn.slick.openal.AudioLoader;
@@ -52,12 +51,12 @@ public class MinerResources {
 	/**
 	 * the cubeTextures
 	 */
-	private final StackdTexture[] cubeTextures;
+	private final Texture[] cubeTextures;
 
 	/**
 	 * the clouds
 	 */
-	private final StackdTexture clouds;
+	private final Texture clouds;
 
 	/**
 	 * the font
@@ -87,13 +86,13 @@ public class MinerResources {
 
 		// load cube textures
 		final String[] cubeTextureNames = CubeTypes.CUBE_TEXTURE_FILENAMES;
-		cubeTextures = new StackdTexture[cubeTextureNames.length];
+		cubeTextures = new Texture[cubeTextureNames.length];
 		for (int i = 0; i < cubeTextures.length; i++) {
-			cubeTextures[i] = new StackdTexture(LauncherAssets.class, cubeTextureNames[i], false);
+			cubeTextures[i] = Texture.loadFromClasspath(LauncherAssets.class, cubeTextureNames[i]);
 		}
 
 		// load special textures
-		clouds = new StackdTexture(LauncherAssets.class, "clouds.png", false);
+		clouds = Texture.loadFromClasspath(LauncherAssets.class, "clouds.png");
 		font = new FixedWidthFont(loadImage("font.png"), 8, 16);
 
 		// load sounds
@@ -131,7 +130,7 @@ public class MinerResources {
 	 * Getter method for the cubeTextures.
 	 * @return the cubeTextures
 	 */
-	public StackdTexture[] getCubeTextures() {
+	public Texture[] getCubeTextures() {
 		return cubeTextures;
 	}
 
@@ -139,7 +138,7 @@ public class MinerResources {
 	 * Getter method for the clouds.
 	 * @return the clouds
 	 */
-	public StackdTexture getClouds() {
+	public Texture getClouds() {
 		return clouds;
 	}
 
