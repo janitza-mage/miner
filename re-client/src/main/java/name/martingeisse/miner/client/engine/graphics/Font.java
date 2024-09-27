@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util.lwjgl;
+package name.martingeisse.miner.client.engine.graphics;
 
 import org.lwjgl.opengl.GL11;
 
