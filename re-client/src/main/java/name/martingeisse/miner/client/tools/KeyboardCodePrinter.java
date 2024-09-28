@@ -10,7 +10,7 @@ import name.martingeisse.miner.client.util.Keyboard;
 import name.martingeisse.miner.client.util.frame.AbstractFrameHandler;
 import name.martingeisse.miner.client.util.frame.BreakFrameLoopException;
 import name.martingeisse.miner.client.util.frame.FrameLoop;
-import org.lwjgl.glfw.GLFW;
+import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL.createCapabilities;
@@ -27,7 +27,7 @@ public final class KeyboardCodePrinter {
 	 * The main method.
 	 * @param args ignored
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 
 		// initialize
 		if (!glfwInit()) {
@@ -37,12 +37,11 @@ public final class KeyboardCodePrinter {
 		long window = glfwCreateWindow(800, 600, "KeyboardCodePrinter", NULL, NULL);
 		glfwMakeContextCurrent(window);
 		createCapabilities();
-
-		// show keycodes
 		Keyboard.installCallback(window);
 		Keyboard keyboard = new Keyboard();
-		final FrameLoop loop = new FrameLoop(window);
-		loop.getRootHandler().setWrappedHandler(new AbstractFrameHandler() {
+		var glWorkerLoop = new GlWorkerLoop();
+		var frameLoop = new FrameLoop(window, glWorkerLoop);
+		frameLoop.getRootHandler().setWrappedHandler(new AbstractFrameHandler() {
 			@Override
 			public void handleStep() throws BreakFrameLoopException {
 				keyboard.update();
@@ -56,11 +55,13 @@ public final class KeyboardCodePrinter {
 				}
 			}
 		});
-		loop.executeLoop(null);
-
-		// shutdown
+		new Thread(() -> {
+			frameLoop.executeLoop(null);
+			glWorkerLoop.scheduleStop();
+		}, "Application").start();
+		Thread.currentThread().setName("OpenGL");
+		glWorkerLoop.workAndWait();
 		glfwTerminate();
-
 	}
 
 }
