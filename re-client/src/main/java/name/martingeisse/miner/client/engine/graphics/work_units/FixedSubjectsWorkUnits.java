@@ -4,7 +4,10 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util.glworker;
+package name.martingeisse.miner.client.engine.graphics.work_units;
+
+import name.martingeisse.miner.client.engine.GlWorkUnit;
+import name.martingeisse.miner.client.engine.GraphicsFrameContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,26 +51,26 @@ public abstract class FixedSubjectsWorkUnits<T> {
 
 	/**
 	 * Schedules the work units.
-	 * @param workerLoop the worker loop
+	 * @param context the context
 	 */
-	public final void schedule(GlWorkerLoop workerLoop) {
+	public final void schedule(GraphicsFrameContext context) {
 		for (GlWorkUnit glWorkUnit : workUnits) {
-			workerLoop.schedule(glWorkUnit);
+			context.schedule(glWorkUnit);
 		}
 	}
 
 	/**
 	 * Schedules the work unit for a single subject.
-	 * @param workerLoop the worker loop
+	 * @param context the context
 	 * @param subject the subject to schedule the work unit for
 	 */
 	@SuppressWarnings("unchecked")
-	public final void schedule(GlWorkerLoop workerLoop, T subject) {
+	public final void schedule(GraphicsFrameContext context, T subject) {
 		GlWorkUnit workUnit = workUnitBySubject.get(subject);
 		if (workUnit == null) {
 			throw new IllegalArgumentException("no work unit for subject: " + subject);
 		}
-		workerLoop.schedule(workUnit);
+		context.schedule(workUnit);
 	}
 
 	/**

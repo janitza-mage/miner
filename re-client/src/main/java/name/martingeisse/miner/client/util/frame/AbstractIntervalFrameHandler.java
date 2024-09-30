@@ -54,8 +54,8 @@ public abstract class AbstractIntervalFrameHandler extends AbstractFrameHandler 
 	 * @see name.martingeisse.stackd.client.frame.AbstractFrameHandler#handleStep()
 	 */
 	@Override
-	public void handleStep() throws BreakFrameLoopException {
-		super.handleStep();
+	public void handleStep(FrameLogicContext context) throws BreakFrameLoopException {
+		super.handleStep(context);
 		long currentTime = System.currentTimeMillis();
 		if (currentTime > lastFiredTime + intervalMilliseconds) {
 			onIntervalTimerExpired();

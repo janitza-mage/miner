@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util.glworker;
+package name.martingeisse.miner.client.engine.graphics.work_units;
 
 /**
  * Specialization of {@link FixedSubjectsWorkUnits} for enum constants.

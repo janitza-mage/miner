@@ -6,12 +6,7 @@
 
 package name.martingeisse.miner.client.util.frame;
 
-import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
-import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
-
-import static org.lwjgl.glfw.GLFW.glfwPollEvents;
-import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
-import static org.lwjgl.opengl.GL11.glFlush;
+import name.martingeisse.miner.client.engine.GlWorkerLoop;
 
 /**
  * Performs a loop, typically drawing the world each
@@ -75,72 +70,5 @@ public final class FrameLoop {
 		return rootHandler;
 	}
 
-	/**
-	 * Executes a single frame, executing all handlers.
-	 * @throws BreakFrameLoopException if a handler wants to break the frame loop
-	 */
-	public void executeFrame() throws BreakFrameLoopException {
-
-		// draw all handlers
-		try {
-			if (glWorkerLoop == null || !glWorkerLoop.isOverloaded()) {
-				rootHandler.draw(glWorkerLoop);
-				if (glWorkerLoop != null) {
-					// TODO don't create a new object every frame
-					glWorkerLoop.schedule(new GlWorkUnit() {
-						@Override
-						public void execute() {
-							glFlush();
-							glfwSwapBuffers(windowId);
-						}
-					});
-					glWorkerLoop.scheduleFrameBoundary();
-				} else {
-					glFlush();
-					glfwSwapBuffers(windowId);
-				}
-			}
-		} catch (Exception e) {
-			throw new RuntimeException("unexpected exception while drawing", e);
-		}
-
-		// handle inputs and OS messages
-		glfwPollEvents();
-
-		// prepare game logic steps
-		try {
-			rootHandler.handleStep();
-		} catch (BreakFrameLoopException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new RuntimeException("unexpected exception during logic step", e);
-		}
-
-	}
-
-	/**
-	 * Executes frames using {@link #executeFrame()} endlessly
-	 * until one of the handlers throws a {@link BreakFrameLoopException}.
-	 *
-	 * @param fixedFrameInterval the fixed minimum length of each frame in
-	 * milliseconds, or null to run as many frames as possible
-	 */
-	public void executeLoop(Integer fixedFrameInterval) {
-		FrameTimer frameTimer = (fixedFrameInterval == null ? null : new FrameTimer(fixedFrameInterval));
-		try {
-			while (true) {
-				executeFrame();
-				if (frameTimer != null) {
-					while (!frameTimer.test()) {
-						synchronized (frameTimer) {
-							frameTimer.wait();
-						}
-					}
-				}
-			}
-		} catch (InterruptedException e) {
-		} catch (BreakFrameLoopException e) {
-		}
-	}
 
 }

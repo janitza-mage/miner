@@ -6,7 +6,8 @@
 
 package name.martingeisse.miner.client.util.frame;
 
-import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
+import name.martingeisse.miner.client.engine.FrameHandler;
+import name.martingeisse.miner.client.engine.GlWorkerLoop;
 
 import java.util.ArrayList;
 
@@ -14,7 +15,7 @@ import java.util.ArrayList;
  * This handler is a list of other handlers. Each method call is
  * forwarded to all of them.
  */
-public class HandlerList extends ArrayList<IFrameHandler> implements IFrameHandler {
+public class HandlerList extends ArrayList<FrameHandler> implements FrameHandler {
 
 	/**
 	 * Constructor.
@@ -23,15 +24,15 @@ public class HandlerList extends ArrayList<IFrameHandler> implements IFrameHandl
 	}
 
 	@Override
-	public void handleStep() throws BreakFrameLoopException {
-		for (IFrameHandler handler : this) {
-			handler.handleStep();
+	public void handleStep(FrameLogicContext context) throws BreakFrameLoopException {
+		for (FrameHandler handler : this) {
+			handler.handleStep(context);
 		}
 	}
 
 	@Override
 	public void draw(GlWorkerLoop glWorkerLoop) {
-		for (IFrameHandler handler : this) {
+		for (FrameHandler handler : this) {
 			handler.draw(glWorkerLoop);
 		}
 	}

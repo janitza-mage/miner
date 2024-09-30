@@ -77,19 +77,12 @@ public final class ClientStartup {
 		}
 		Display.create(new PixelFormat(0, 24, 0));
 
-		// initialize keyboard
-		Keyboard.create();
-		Keyboard.poll();
 
-		// initialize mouse
-		Mouse.create();
-		Mouse.poll();
+
+
 
 		// load resources
 		MinerResources.initializeInstance();
-
-		// build the frame loop
-		frameLoop = new FrameLoop(glWorkerLoop);
 
 		// add the start menu as a handler
 		GuiFrameHandler startmenuHandler = new GuiFrameHandler();

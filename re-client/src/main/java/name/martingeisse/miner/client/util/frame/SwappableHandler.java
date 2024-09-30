@@ -6,7 +6,8 @@
 
 package name.martingeisse.miner.client.util.frame;
 
-import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
+import name.martingeisse.miner.client.engine.FrameHandler;
+import name.martingeisse.miner.client.engine.GlWorkerLoop;
 
 /**
  * This is a simple handler that contains another wrapped handler
@@ -14,12 +15,12 @@ import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
  * All handler methods are simply forwarded to the wrapped handler,
  * or skipped when the wrapped handler was set to null.
  */
-public final class SwappableHandler implements IFrameHandler {
+public final class SwappableHandler implements FrameHandler {
 
 	/**
 	 * the wrappedHandler
 	 */
-	private IFrameHandler wrappedHandler;
+	private FrameHandler wrappedHandler;
 
 	/**
 	 * Constructor.
@@ -32,7 +33,7 @@ public final class SwappableHandler implements IFrameHandler {
 	 *
 	 * @param wrappedHandler the wrapped handler
 	 */
-	public SwappableHandler(IFrameHandler wrappedHandler) {
+	public SwappableHandler(FrameHandler wrappedHandler) {
 		this.wrappedHandler = wrappedHandler;
 	}
 
@@ -41,7 +42,7 @@ public final class SwappableHandler implements IFrameHandler {
 	 *
 	 * @return the wrappedHandler
 	 */
-	public IFrameHandler getWrappedHandler() {
+	public FrameHandler getWrappedHandler() {
 		return wrappedHandler;
 	}
 
@@ -50,14 +51,14 @@ public final class SwappableHandler implements IFrameHandler {
 	 *
 	 * @param wrappedHandler the wrappedHandler to set
 	 */
-	public void setWrappedHandler(IFrameHandler wrappedHandler) {
+	public void setWrappedHandler(FrameHandler wrappedHandler) {
 		this.wrappedHandler = wrappedHandler;
 	}
 
 	@Override
-	public void handleStep() throws BreakFrameLoopException {
+	public void handleStep(FrameLogicContext context) throws BreakFrameLoopException {
 		if (wrappedHandler != null) {
-			wrappedHandler.handleStep();
+			wrappedHandler.handleStep(context);
 		}
 	}
 

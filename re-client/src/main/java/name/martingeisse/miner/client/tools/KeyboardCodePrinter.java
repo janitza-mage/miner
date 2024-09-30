@@ -6,11 +6,12 @@
 
 package name.martingeisse.miner.client.tools;
 
-import name.martingeisse.miner.client.util.Keyboard;
+import name.martingeisse.miner.client.engine.Keyboard;
 import name.martingeisse.miner.client.util.frame.AbstractFrameHandler;
 import name.martingeisse.miner.client.util.frame.BreakFrameLoopException;
+import name.martingeisse.miner.client.util.frame.FrameLogicContext;
 import name.martingeisse.miner.client.util.frame.FrameLoop;
-import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
+import name.martingeisse.miner.client.engine.GlWorkerLoop;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL.createCapabilities;
@@ -43,7 +44,7 @@ public final class KeyboardCodePrinter {
 		var frameLoop = new FrameLoop(window, glWorkerLoop);
 		frameLoop.getRootHandler().setWrappedHandler(new AbstractFrameHandler() {
 			@Override
-			public void handleStep() throws BreakFrameLoopException {
+			public void handleStep(FrameLogicContext context) throws BreakFrameLoopException {
 				keyboard.update();
 				for (int i = 0; i <= GLFW_KEY_LAST; i++) {
 					if (keyboard.isNewlyDown(i)) {

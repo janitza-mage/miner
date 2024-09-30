@@ -6,15 +6,16 @@
 
 package name.martingeisse.miner.client.util.frame;
 
-import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
+import name.martingeisse.miner.client.engine.FrameHandler;
+import name.martingeisse.miner.client.engine.GlWorkerLoop;
 
 /**
- * Base implementation of {@link IFrameHandler}.
+ * Base implementation of {@link FrameHandler}.
  */
-public abstract class AbstractFrameHandler implements IFrameHandler {
+public abstract class AbstractFrameHandler implements FrameHandler {
 
 	@Override
-	public void handleStep() throws BreakFrameLoopException {
+	public void handleStep(FrameLogicContext context) throws BreakFrameLoopException {
 	}
 
 	@Override
