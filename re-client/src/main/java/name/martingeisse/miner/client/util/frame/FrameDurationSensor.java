@@ -9,7 +9,7 @@ package name.martingeisse.miner.client.util.frame;
 /**
  * Returns the duration of the previous frame to make game logic adapt
  * to a varying frame rate.
- *
+ * <p>
  * The sensor is capped to a maximum of 1/2 second to avoid "exploding"
  * the game logic.
  */

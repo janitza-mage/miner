@@ -6,7 +6,7 @@
 
 package name.martingeisse.miner.client.game;
 
-import name.martingeisse.miner.client.engine.GlWorkerLoop;
+import name.martingeisse.miner.client.engine.GraphicsFrameContext;
 
 /**
  * A template that can be rendered to represent objects of type T.
@@ -19,12 +19,12 @@ public interface VisualTemplate<T> {
 
 	/**
 	 * Renders the specified subject using this template.
-	 *
+	 * <p></p>
 	 * This method must be called from the application thread.
 	 *
 	 * @param subject the subject to render
-	 * @param worker the worker that consumes GL work units
+	 * @param context the graphics frame context
 	 */
-	public void render(T subject, GlWorkerLoop worker);
+	void render(T subject, GraphicsFrameContext context);
 
 }

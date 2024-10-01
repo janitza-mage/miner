@@ -1,7 +1,5 @@
 package name.martingeisse.miner.client.engine;
 
-import name.martingeisse.miner.client.util.frame.FrameLogicContext;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +9,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 /**
  * This class must be used from the main thread (which then becomes the OpenGL thread). It will call frame handlers
- * in the game logic thread, but those should interact with the engine solely through the {@link FrameLogicContext}
+ * in the game logic thread, but those should interact with the engine solely through the {@link LogicFrameContext}
  * interface.
  */
 public final class Engine implements AutoCloseable {
@@ -43,7 +41,13 @@ public final class Engine implements AutoCloseable {
         }
         closeables.add(() -> glfwTerminate());
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-        windowId = glfwCreateWindow(800, 600, engineParameters.windowTitle(), NULL, NULL);
+        windowId = glfwCreateWindow(
+                engineParameters.userParameters().width(),
+                engineParameters.userParameters().height(),
+                engineParameters.windowTitle(),
+                NULL,
+                NULL
+        );
         closeables.add(() -> glfwDestroyWindow(windowId));
         glfwMakeContextCurrent(windowId);
         createCapabilities();
@@ -82,7 +86,7 @@ public final class Engine implements AutoCloseable {
 
     private void executeFrameLoop() {
         long previousLogicFrameTime = System.nanoTime();
-        while (!gameLogicContext.isShutdownRequested()) {
+        while (!gameLogicContext.isShutdownRequested() && !glfwWindowShouldClose(windowId)) {
 
             // system stuff
             glfwPollEvents();

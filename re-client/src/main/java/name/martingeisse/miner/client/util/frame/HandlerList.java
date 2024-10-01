@@ -7,7 +7,8 @@
 package name.martingeisse.miner.client.util.frame;
 
 import name.martingeisse.miner.client.engine.FrameHandler;
-import name.martingeisse.miner.client.engine.GlWorkerLoop;
+import name.martingeisse.miner.client.engine.GraphicsFrameContext;
+import name.martingeisse.miner.client.engine.LogicFrameContext;
 
 import java.util.ArrayList;
 
@@ -24,16 +25,16 @@ public class HandlerList extends ArrayList<FrameHandler> implements FrameHandler
 	}
 
 	@Override
-	public void handleStep(FrameLogicContext context) throws BreakFrameLoopException {
+	public void handleLogicFrame(LogicFrameContext context) {
 		for (FrameHandler handler : this) {
-			handler.handleStep(context);
+			handler.handleLogicFrame(context);
 		}
 	}
 
 	@Override
-	public void draw(GlWorkerLoop glWorkerLoop) {
+	public void handleGraphicsFrame(GraphicsFrameContext context) {
 		for (FrameHandler handler : this) {
-			handler.draw(glWorkerLoop);
+			handler.handleGraphicsFrame(context);
 		}
 	}
 

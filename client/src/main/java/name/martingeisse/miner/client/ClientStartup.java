@@ -30,26 +30,6 @@ public final class ClientStartup {
 	}
 
 	public void parseCommandLine(String[] args) {
-		for (final String arg : args) {
-			if (arg.equals("-fs")) {
-				fullscreen = true;
-			} else if (arg.equals("-6")) {
-				screenWidth = 640;
-				screenHeight = 480;
-			} else if (arg.equals("-8")) {
-				screenWidth = 800;
-				screenHeight = 600;
-			} else if (arg.equals("-1")) {
-				screenWidth = 1024;
-				screenHeight = 768;
-			} else if (arg.equals("-12")) {
-				screenWidth = 1280;
-				screenHeight = 720;
-			} else if (arg.equals("-16")) {
-				screenWidth = 1680;
-				screenHeight = 1050;
-			}
-		}
 	}
 
 	public void openWindow() throws Exception {

@@ -7,7 +7,8 @@
 package name.martingeisse.miner.client.util.frame;
 
 import name.martingeisse.miner.client.engine.FrameHandler;
-import name.martingeisse.miner.client.engine.GlWorkerLoop;
+import name.martingeisse.miner.client.engine.GraphicsFrameContext;
+import name.martingeisse.miner.client.engine.LogicFrameContext;
 
 /**
  * Base implementation of {@link FrameHandler}.
@@ -15,11 +16,11 @@ import name.martingeisse.miner.client.engine.GlWorkerLoop;
 public abstract class AbstractFrameHandler implements FrameHandler {
 
 	@Override
-	public void handleStep(FrameLogicContext context) throws BreakFrameLoopException {
+	public void handleLogicFrame(LogicFrameContext context) {
 	}
 
 	@Override
-	public void draw(GlWorkerLoop glWorkerLoop) {
+	public void handleGraphicsFrame(GraphicsFrameContext context) {
 	}
 
 }

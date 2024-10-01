@@ -57,8 +57,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <source>17</source>
-                    <target>17</target>
+                    <source>21</source>
+                    <target>21</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -73,7 +73,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>name.martingeisse.miner.re_client.MyIntro</mainClass>
+                    <mainClass>name.martingeisse.miner.client.tools.KeyboardCodePrinter</mainClass>
                     <!-- <mainClass>name.martingeisse.miner.in.vulkan.ClearScreenDemo</mainClass> -->
                 </configuration>
             </plugin>

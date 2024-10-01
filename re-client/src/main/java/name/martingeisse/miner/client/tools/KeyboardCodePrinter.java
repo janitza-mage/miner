@@ -6,16 +6,10 @@
 
 package name.martingeisse.miner.client.tools;
 
-import name.martingeisse.miner.client.engine.Keyboard;
-import name.martingeisse.miner.client.util.frame.AbstractFrameHandler;
-import name.martingeisse.miner.client.util.frame.BreakFrameLoopException;
-import name.martingeisse.miner.client.util.frame.FrameLogicContext;
-import name.martingeisse.miner.client.util.frame.FrameLoop;
-import name.martingeisse.miner.client.engine.GlWorkerLoop;
+import name.martingeisse.miner.client.engine.*;
 
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL.createCapabilities;
-import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_LAST;
 
 /**
  * Opens a window, lets you hit keys on the keyboard, and prints the
@@ -29,40 +23,31 @@ public final class KeyboardCodePrinter {
 	 * @param args ignored
 	 */
 	public static void main(String[] args) throws Exception {
+		EngineUserParameters engineUserParameters = EngineUserParameters.parseCommandLine(args,
+				new EngineUserParameters(800, 600, false)
+		);
+		EngineParameters parameters = new EngineParameters("KeyboardCodePrinter", null, engineUserParameters);
+		try (Engine engine = new Engine(parameters, args, new FrameHandler() {
 
-		// initialize
-		if (!glfwInit()) {
-			throw new RuntimeException("could not initialize GLFW");
-		}
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-		long window = glfwCreateWindow(800, 600, "KeyboardCodePrinter", NULL, NULL);
-		glfwMakeContextCurrent(window);
-		createCapabilities();
-		Keyboard.installCallback(window);
-		Keyboard keyboard = new Keyboard();
-		var glWorkerLoop = new GlWorkerLoop();
-		var frameLoop = new FrameLoop(window, glWorkerLoop);
-		frameLoop.getRootHandler().setWrappedHandler(new AbstractFrameHandler() {
 			@Override
-			public void handleStep(FrameLogicContext context) throws BreakFrameLoopException {
-				keyboard.update();
+			public void handleLogicFrame(LogicFrameContext context) {
 				for (int i = 0; i <= GLFW_KEY_LAST; i++) {
-					if (keyboard.isNewlyDown(i)) {
+					if (context.isKeyNewlyDown(i)) {
 						System.out.println(i);
 					}
 				}
-				if (keyboard.isDown(GLFW_KEY_ESCAPE) || glfwWindowShouldClose(window)) {
-					throw new BreakFrameLoopException();
+				if (context.isKeyDown(GLFW_KEY_ESCAPE)) {
+					context.shutdown();
 				}
 			}
-		});
-		new Thread(() -> {
-			frameLoop.executeLoop(null);
-			glWorkerLoop.scheduleStop();
-		}, "Application").start();
-		Thread.currentThread().setName("OpenGL");
-		glWorkerLoop.workAndWait();
-		glfwTerminate();
+
+			@Override
+			public void handleGraphicsFrame(GraphicsFrameContext context) {
+			}
+
+		})) {
+			engine.run();
+		}
 	}
 
 }

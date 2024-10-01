@@ -6,12 +6,14 @@
 
 package name.martingeisse.miner.client.util.frame;
 
+import name.martingeisse.miner.client.engine.LogicFrameContext;
+
 /**
  * Base class for frame handlers that perform a specific action
  * in regular intervals, rounded up to full frames. The interval
  * is specified in milliseconds since a more precise unit would
  * not be useful when rounded to the length of a frame.
- *
+ * <p>
  * This class is coded in such a way that "long" frames, lasting
  * long enough to see the interval timer expire twice or more,
  * still fire the handling method only once. It is also coded
@@ -50,12 +52,8 @@ public abstract class AbstractIntervalFrameHandler extends AbstractFrameHandler 
 		return intervalMilliseconds;
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.client.frame.AbstractFrameHandler#handleStep()
-	 */
 	@Override
-	public void handleStep(FrameLogicContext context) throws BreakFrameLoopException {
-		super.handleStep(context);
+	public void handleLogicFrame(LogicFrameContext context) {
 		long currentTime = System.currentTimeMillis();
 		if (currentTime > lastFiredTime + intervalMilliseconds) {
 			onIntervalTimerExpired();

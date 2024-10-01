@@ -7,24 +7,18 @@
 package name.martingeisse.miner.client.game;
 
 import name.martingeisse.miner.client.engine.GlWorkUnit;
-import name.martingeisse.miner.client.engine.GlWorkerLoop;
+import name.martingeisse.miner.client.engine.GraphicsFrameContext;
 
 /**
  * Base implementation for {@link SingleWorkUnitVisualTemplate}.
  */
 public abstract class AbstractSingleWorkUnitVisualTemplate<T> implements SingleWorkUnitVisualTemplate<T> {
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.client.glworker.VisualTemplate#render(java.lang.Object, name.martingeisse.stackd.client.glworker.GlWorkerLoop)
-	 */
 	@Override
-	public final void render(T subject, GlWorkerLoop worker) {
-		worker.schedule(createWorkUnit(subject));
+	public final void render(T subject, GraphicsFrameContext context) {
+		context.schedule(createWorkUnit(subject));
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.client.glworker.SingleWorkUnitVisualTemplate#createWorkUnit(java.lang.Object)
-	 */
 	@Override
 	public final GlWorkUnit createWorkUnit(final T subject) {
 		return new GlWorkUnit() {
