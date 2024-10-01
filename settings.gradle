@@ -1,4 +1,0 @@
-include 'common'
-include 'client'
-include 'server'
-include 'all'
