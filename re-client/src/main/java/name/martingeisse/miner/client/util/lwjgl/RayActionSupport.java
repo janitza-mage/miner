@@ -122,16 +122,19 @@ public class RayActionSupport {
 		float depthBufferValue = depthValueBuffer.get(0);
 
 		// read the viewport and transform values
-		glGetInteger(GL_VIEWPORT, viewport);
-		glGetFloat(GL_MODELVIEW_MATRIX, modelviewTransform);
-		glGetFloat(GL_PROJECTION_MATRIX, projectionTransform);
+		glGetIntegerv(GL_VIEWPORT, viewport);
+		glGetFloatv(GL_MODELVIEW_MATRIX, modelviewTransform);
+		glGetFloatv(GL_PROJECTION_MATRIX, projectionTransform);
 
 		// compute the impact position
+		/*
+		TODO gluUnProject is not available
 		gluUnProject(width >> 1, height >> 1, depthBufferValue, modelviewTransform, projectionTransform, viewport, objectPosition);
 		impactX = objectPosition.get(0);
 		impactY = objectPosition.get(1);
 		impactZ = objectPosition.get(2);
 		captured = true;
+		 */
 
 	}
 
