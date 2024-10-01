@@ -6,7 +6,7 @@
 
 package name.martingeisse.miner.client.util.lwjgl;
 
-import org.newdawn.slick.openal.Audio;
+import name.martingeisse.miner.client.engine.sound.SoundTemplate;
 
 /**
  * Helper class to play a sound regularly, possibly under
@@ -21,7 +21,7 @@ public final class RegularSound {
 	/**
 	 * the audio
 	 */
-	private final Audio audio;
+	private final SoundTemplate soundTemplate;
 
 	/**
 	 * the interval
@@ -35,12 +35,12 @@ public final class RegularSound {
 
 	/**
 	 * Constructor.
-	 * @param audio the sound to play
+	 * @param soundTemplate the sound to play
 	 * @param interval the time (in milliseconds) between two
 	 * occurences of the sound
 	 */
-	public RegularSound(Audio audio, long interval) {
-		this.audio = audio;
+	public RegularSound(SoundTemplate soundTemplate, long interval) {
+		this.soundTemplate = soundTemplate;
 		this.interval = interval;
 		this.lastPlayed = System.currentTimeMillis();
 	}
@@ -53,7 +53,7 @@ public final class RegularSound {
 		long now = System.currentTimeMillis();
 		if (now >= lastPlayed + interval) {
 			lastPlayed = now;
-			audio.playAsSoundEffect(1.0f, 1.0f, false);
+			soundTemplate.play();
 		}
 	}
 
