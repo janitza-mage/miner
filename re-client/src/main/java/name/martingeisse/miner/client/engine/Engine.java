@@ -21,6 +21,7 @@ public final class Engine implements AutoCloseable {
     private final GraphicsFrameContextImpl graphicsFrameContext;
     private final long windowId;
     private final GlWorkerLoop glWorkerLoop;
+    private final List<GlWorkUnit> initializationWorkUnits = new ArrayList<>();
     private FrameHandler frameHandler;
 
     public Engine(EngineParameters engineParameters, String[] commandLineArguments, FrameHandler initialFrameHandler) {
@@ -70,7 +71,19 @@ public final class Engine implements AutoCloseable {
 
     }
 
+    public void addInitializationWorkUnit(GlWorkUnit workUnit) {
+        initializationWorkUnits.add(workUnit);
+    }
+
     public void run() throws InterruptedException{
+
+        // run the initialization work units
+        glWorkerLoop.scheduleBeginSideEffectsMarker();
+        for (GlWorkUnit workUnit : initializationWorkUnits) {
+            glWorkerLoop.schedule(workUnit);
+        }
+        initializationWorkUnits.clear();
+        glWorkerLoop.scheduleEndSideEffectsMarker();
 
         // create the game thread
         new Thread(() -> {
