@@ -12,22 +12,19 @@ import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiLogicFrameContext;
 
 /**
- * A simple invisible element with fixed size.
+ * A simple invisible element with fixed size that is meant to take up space.
  */
 public final class Spacer extends GuiElement {
 
 	/**
 	 * Constructor for a square spacer.
-	 * @param size the size of the spacer
 	 */
 	public Spacer(final int size) {
 		this(size, size);
 	}
 
 	/**
-	 * Constructor.
-	 * @param width the width of the spacer
-	 * @param height the height of the spacer
+	 * Constructor for a rectangular spacer.
 	 */
 	public Spacer(final int width, final int height) {
 		setSize(width, height);

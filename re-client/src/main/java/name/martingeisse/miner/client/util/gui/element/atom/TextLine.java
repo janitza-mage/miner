@@ -20,14 +20,13 @@ import org.lwjgl.opengl.GL11;
 import static org.lwjgl.opengl.GL14.glWindowPos2i;
 
 /**
- * This element draws a line of text. Its size depends solely on the
- * text and is not affected during layout.
+ * This element draws a line of text. Its size depends solely on the font and text and is not affected during layout.
  */
 public final class TextLine extends GuiElement {
 
-	private volatile Font font;
-	private volatile Color color;
-	private volatile String text;
+	private Font font;
+	private Color color;
+	private String text;
 
 	private volatile int windowPosX;
 	private volatile int windowPosY;
