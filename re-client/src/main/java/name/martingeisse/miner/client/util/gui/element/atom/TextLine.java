@@ -14,6 +14,7 @@ import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiLogicFrameContext;
 import name.martingeisse.miner.client.util.gui.util.Color;
+import name.martingeisse.miner.client.util.gui.util.WorkUnitCache;
 import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import org.lwjgl.opengl.GL11;
 
@@ -27,13 +28,35 @@ public final class TextLine extends GuiElement {
 	private Font font;
 	private Color color;
 	private String text;
+	private final WorkUnitCache workUnitCache = new WorkUnitCache(() -> {
+		Gui gui = getGui();
+		int windowPosX = gui.unitsToPixelsInt(getAbsoluteX());
+		int windowPosY = getGui().getHeightPixels() - gui.unitsToPixelsInt(getAbsoluteY());
+		return new MyWorkUnit(font, color, text, windowPosX, windowPosY);
+	});
 
-	private volatile int windowPosX;
-	private volatile int windowPosY;
-	private final GlWorkUnit workUnit = new GlWorkUnit() {
+	private static final class MyWorkUnit extends GlWorkUnit {
+
+		private final Font font;
+		private final Color color;
+		private final String text;
+		private final int windowPosX;
+		private final int windowPosY;
+
+		public MyWorkUnit(Font font, Color color, String text, int windowPosX, int windowPosY) {
+			ParameterUtil.ensureNotNull(font, "font");
+			ParameterUtil.ensureNotNull(color, "color");
+			ParameterUtil.ensureNotNull(text, "text");
+
+			this.font = font;
+			this.color = color;
+			this.text = text;
+			this.windowPosX = windowPosX;
+			this.windowPosY = windowPosY;
+		}
+
 		@Override
 		public void execute() {
-			final Font effectiveFont = getEffectiveFont();
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -47,89 +70,54 @@ public final class TextLine extends GuiElement {
 			GL11.glPixelTransferf(GL11.GL_ALPHA_BIAS, 0.0f);
 			// TODO scale font so text doesn't become smaller with higher resolution
 			glWindowPos2i(windowPosX, windowPosY);
-			if (effectiveFont != null) {
-				effectiveFont.drawText(text, 1.0f, Font.ALIGN_LEFT, Font.ALIGN_TOP);
-			}
+			font.drawText(text, 1.0f, Font.ALIGN_LEFT, Font.ALIGN_TOP);
 		}
-	};
+	}
 
-	/**
-	 * Constructor.
-	 */
 	public TextLine() {
 		this.font = null;
 		this.color = Color.WHITE;
 		this.text = "";
 	}
 
-	/**
-	 * Getter method for the font.
-	 *
-	 * @return the font
-	 */
 	public Font getFont() {
 		return font;
 	}
 
-	/**
-	 * Setter method for the font.
-	 *
-	 * @param font the font to set
-	 * @return this for chaining
-	 */
 	public TextLine setFont(final Font font) {
 		ParameterUtil.ensureNotNull(font, "font");
+
 		this.font = font;
 		requestLayout();
+		workUnitCache.invalidate();
 		return this;
 	}
 
-	/**
-	 * Getter method for the color.
-	 *
-	 * @return the color
-	 */
 	public Color getColor() {
 		return color;
 	}
 
-	/**
-	 * Setter method for the color.
-	 *
-	 * @param color the color to set
-	 * @return this for chaining
-	 */
 	public TextLine setColor(Color color) {
 		ParameterUtil.ensureNotNull(color, "color");
+
 		this.color = color;
+		workUnitCache.invalidate();
 		return this;
 	}
 
-	/**
-	 * Getter method for the text.
-	 *
-	 * @return the text
-	 */
 	public String getText() {
 		return text;
 	}
 
-	/**
-	 * Setter method for the text.
-	 *
-	 * @param text the text to set
-	 * @return this for chaining
-	 */
 	public TextLine setText(final String text) {
 		ParameterUtil.ensureNotNull(text, "text");
+
 		this.text = text;
 		requestLayout();
+		workUnitCache.invalidate();
 		return this;
 	}
 
-	/**
-	 *
-	 */
 	public Font getEffectiveFont() {
 		if (font == null) {
 			final Gui gui = getGuiOrNull();
@@ -139,10 +127,8 @@ public final class TextLine extends GuiElement {
 		}
 	}
 
-	/**
-	 *
-	 */
-	private void computeSize() {
+	@Override
+	public void requestSize(final int width, final int height) {
 		final Font effectiveFont = getEffectiveFont();
 		if (effectiveFont == null || text == null) {
 			setSize(0, 0);
@@ -155,20 +141,17 @@ public final class TextLine extends GuiElement {
 	}
 
 	@Override
+	protected void onAbsolutePositionChanged(int absoluteX, int absoluteY) {
+		workUnitCache.invalidate();
+	}
+
+	@Override
 	public void handleInput(GuiLogicFrameContext context) {
 	}
 
 	@Override
 	public void draw(GraphicsFrameContext context) {
-		Gui gui = getGui();
-		windowPosX = gui.unitsToPixelsInt(getAbsoluteX());
-		windowPosY = getGui().getHeightPixels() - gui.unitsToPixelsInt(getAbsoluteY());
-		context.schedule(workUnit);
-	}
-
-	@Override
-	public void requestSize(final int width, final int height) {
-		computeSize();
+		workUnitCache.schedule(context);
 	}
 
 	@Override

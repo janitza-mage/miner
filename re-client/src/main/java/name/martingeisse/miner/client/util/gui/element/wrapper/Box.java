@@ -160,7 +160,7 @@ public final class Box extends AbstractWrapperElement {
 	}
 
 	@Override
-	protected void setChildrenLayoutPosition(int absoluteX, int absoluteY) {
+	protected void onAbsolutePositionChanged(int absoluteX, int absoluteY) {
 		requireWrappedElement().setAbsolutePosition(
 			absoluteX + margin.getLeft() + border.getLeft() + padding.getLeft(),
 			absoluteY + margin.getTop() + border.getTop() + padding.getTop()

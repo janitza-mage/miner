@@ -71,7 +71,7 @@ public class ScrollContainer extends GuiElement {
 	}
 
 	@Override
-	protected void setChildrenLayoutPosition(int absoluteX, int absoluteY) {
+	protected void onAbsolutePositionChanged(int absoluteX, int absoluteY) {
 		contentWrapper.setAbsolutePosition(absoluteX, absoluteY);
 		scrollBar.setAbsolutePosition(absoluteX + getWidth() - SCROLL_BAR_WIDTH, absoluteY);
 	}

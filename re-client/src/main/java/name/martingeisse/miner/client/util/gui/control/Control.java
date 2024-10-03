@@ -64,7 +64,7 @@ public class Control extends GuiElement {
 	}
 
 	@Override
-	protected final void setChildrenLayoutPosition(int absoluteX, int absoluteY) {
+	protected final void onAbsolutePositionChanged(int absoluteX, int absoluteY) {
 		controlRootElement.setAbsolutePosition(absoluteX, absoluteY);
 	}
 

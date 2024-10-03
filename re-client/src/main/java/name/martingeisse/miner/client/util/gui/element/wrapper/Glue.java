@@ -112,7 +112,7 @@ public final class Glue extends AbstractWrapperElement {
 	}
 
 	@Override
-	protected void setChildrenLayoutPosition(final int absoluteX, final int absoluteY) {
+	protected void onAbsolutePositionChanged(final int absoluteX, final int absoluteY) {
 		final GuiElement wrappedElement = requireWrappedElement();
 		final int dx = alignment.getHorizontalAlignment().alignSpan(getWidth(), wrappedElement.getWidth());
 		final int dy = alignment.getVerticalAlignment().alignSpan(getHeight(), wrappedElement.getHeight());

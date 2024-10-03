@@ -71,7 +71,7 @@ public final class OverlayStack extends AbstractListElement {
 	 * @see name.martingeisse.stackd.client.gui.GuiElement#setChildrenLayoutPosition(int, int)
 	 */
 	@Override
-	protected void setChildrenLayoutPosition(int absoluteX, int absoluteY) {
+	protected void onAbsolutePositionChanged(int absoluteX, int absoluteY) {
 		for (GuiElement element : getWrappedElements()) {
 			int dx = alignment.getHorizontalAlignment().alignSpan(getWidth(), element.getWidth());
 			int dy = alignment.getVerticalAlignment().alignSpan(getHeight(), element.getHeight());

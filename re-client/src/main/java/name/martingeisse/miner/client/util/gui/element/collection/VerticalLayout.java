@@ -66,7 +66,7 @@ public final class VerticalLayout extends AbstractListElement {
 	 * @see name.martingeisse.stackd.client.gui.GuiElement#setChildrenLayoutPosition(int, int)
 	 */
 	@Override
-	protected void setChildrenLayoutPosition(int absoluteX, int absoluteY) {
+	protected void onAbsolutePositionChanged(int absoluteX, int absoluteY) {
 		int width = getWidth();
 		for (GuiElement element : getWrappedElements()) {
 			element.setAbsolutePosition(absoluteX + alignment.alignSpan(width, element.getWidth()), absoluteY);

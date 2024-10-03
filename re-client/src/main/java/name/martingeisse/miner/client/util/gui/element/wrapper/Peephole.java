@@ -131,7 +131,7 @@ public final class Peephole extends AbstractWrapperElement {
 	}
 
 	@Override
-	protected void setChildrenLayoutPosition(final int absoluteX, final int absoluteY) {
+	protected void onAbsolutePositionChanged(final int absoluteX, final int absoluteY) {
 		requireWrappedElement().setAbsolutePosition(absoluteX + displacementX, absoluteY + displacementY);
 	}
 

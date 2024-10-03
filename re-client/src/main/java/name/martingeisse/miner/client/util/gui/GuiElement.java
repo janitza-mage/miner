@@ -163,15 +163,18 @@ public abstract class GuiElement {
 	public final void setAbsolutePosition(int absoluteX, int absoluteY) {
 		this.absoluteX = absoluteX;
 		this.absoluteY = absoluteY;
-		setChildrenLayoutPosition(absoluteX, absoluteY);
+		onAbsolutePositionChanged(absoluteX, absoluteY);
 	}
 
 	/**
-	 * This method must be implemented by elements with children to call {@link #setAbsolutePosition(int, int)} on all
+	 * This method must be implemented by elements that need to react to changes in their absolute position, e.g. to
+	 * invalidate cached work units.
+	 * <p>
+	 * It must also be implemented by elements with children to call {@link #setAbsolutePosition(int, int)} on all
 	 * children. The implementation decides how to compute the absolute position of the children from its own absolute
 	 * position and size.
 	 */
-	protected void setChildrenLayoutPosition(int absoluteX, int absoluteY) {
+	protected void onAbsolutePositionChanged(int absoluteX, int absoluteY) {
 	}
 
 	public final int getAbsoluteX() {

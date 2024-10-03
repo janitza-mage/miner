@@ -110,7 +110,7 @@ public final class ThinBorder extends AbstractWrapperElement {
 	}
 
 	@Override
-	protected void setChildrenLayoutPosition(int absoluteX, int absoluteY) {
+	protected void onAbsolutePositionChanged(int absoluteX, int absoluteY) {
 		requireWrappedElement();
 		getWrappedElement().setAbsolutePosition(absoluteX, absoluteY);
 	}

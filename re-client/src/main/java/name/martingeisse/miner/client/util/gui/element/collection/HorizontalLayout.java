@@ -66,7 +66,7 @@ public final class HorizontalLayout extends AbstractListElement {
 	 * @see name.martingeisse.stackd.client.gui.GuiElement#setChildrenLayoutPosition(int, int)
 	 */
 	@Override
-	protected void setChildrenLayoutPosition(int absoluteX, int absoluteY) {
+	protected void onAbsolutePositionChanged(int absoluteX, int absoluteY) {
 		int height = getHeight();
 		for (GuiElement element : getWrappedElements()) {
 			element.setAbsolutePosition(absoluteX, absoluteY + alignment.alignSpan(height, element.getHeight()));

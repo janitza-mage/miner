@@ -137,7 +137,7 @@ public final class Sizer extends AbstractWrapperElement {
 	}
 
 	@Override
-	protected void setChildrenLayoutPosition(final int absoluteX, final int absoluteY) {
+	protected void onAbsolutePositionChanged(final int absoluteX, final int absoluteY) {
 		requireWrappedElement();
 		final int x = alignment.getHorizontalAlignment().alignSpan(getWidth(), getWrappedElement().getWidth());
 		final int y = alignment.getVerticalAlignment().alignSpan(getHeight(), getWrappedElement().getHeight());

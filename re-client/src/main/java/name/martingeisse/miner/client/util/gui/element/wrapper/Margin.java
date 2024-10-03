@@ -211,7 +211,7 @@ public final class Margin extends AbstractWrapperElement {
 	}
 
 	@Override
-	protected void setChildrenLayoutPosition(int absoluteX, int absoluteY) {
+	protected void onAbsolutePositionChanged(int absoluteX, int absoluteY) {
 		requireWrappedElement().setAbsolutePosition(absoluteX + left, absoluteY + top);
 	}
 
