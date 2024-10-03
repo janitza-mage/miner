@@ -22,6 +22,7 @@ public final class Engine implements AutoCloseable {
     private final long windowId;
     private final GlWorkerLoop glWorkerLoop;
     private final List<GlWorkUnit> initializationWorkUnits = new ArrayList<>();
+    private final int width, height;
     private FrameHandler frameHandler;
 
     public Engine(EngineParameters engineParameters, String[] commandLineArguments, FrameHandler initialFrameHandler) {
@@ -35,6 +36,8 @@ public final class Engine implements AutoCloseable {
             this.fixedFrameIntervalSeconds = engineParameters.fixedFrameIntervalMilliseconds() * 1E-3;
         }
         this.frameHandler = initialFrameHandler;
+        this.width = engineParameters.userParameters().width();
+        this.height = engineParameters.userParameters().height();
 
         // initialize GLFW / OpenGL
         if (!glfwInit()) {
@@ -56,7 +59,7 @@ public final class Engine implements AutoCloseable {
         // initialize the GL worker loop and game code contexts
         this.glWorkerLoop = new GlWorkerLoop(windowId);
         this.gameLogicContext = new LogicFrameContextImpl(this);
-        this.graphicsFrameContext = new GraphicsFrameContextImpl(glWorkerLoop);
+        this.graphicsFrameContext = new GraphicsFrameContextImpl(this, glWorkerLoop);
 
         // install event handlers
         closeables.add(glfwSetKeyCallback(windowId, (long windowId, int key, int scancode, int action, int mods) -> {
@@ -69,6 +72,14 @@ public final class Engine implements AutoCloseable {
             gameLogicContext.addMouseButtonEvent(new MouseButtonEvent(button, action, mods));
         }));
 
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     public void addInitializationWorkUnit(GlWorkUnit workUnit) {

@@ -90,6 +90,17 @@ final class LogicFrameContextImpl implements LogicFrameContext {
     // general
     // ----------------------------------------------------------------------------------------------------------------
 
+
+    @Override
+    public int getWidth() {
+        return engine.getWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return engine.getHeight();
+    }
+
     void setTimeDelta(double timeDelta) {
         this.timeDelta = timeDelta;
     }

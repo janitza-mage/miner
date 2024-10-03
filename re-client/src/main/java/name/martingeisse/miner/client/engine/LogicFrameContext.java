@@ -8,6 +8,10 @@ public interface LogicFrameContext {
     // general
     // ----------------------------------------------------------------------------------------------------------------
 
+    int getWidth();
+
+    int getHeight();
+
     double getTimeDelta();
 
     void setFrameHandler(FrameHandler frameHandler);

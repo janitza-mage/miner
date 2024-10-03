@@ -2,6 +2,9 @@ package name.martingeisse.miner.client.engine;
 
 public interface GraphicsFrameContext {
 
+    int getWidth();
+    int getHeight();
+
     /**
      * Schedules an OpenGL work unit for execution.
      *

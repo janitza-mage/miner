@@ -1,6 +1,7 @@
 package name.martingeisse.miner.client.engine.graphics;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11C;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -13,13 +14,25 @@ import static org.lwjgl.opengl.GL11C.*;
 public final class Texture {
 
     private final int id;
+    private final int width;
+    private final int height;
 
-    private Texture(int id) {
+    private Texture(int id, int width, int height) {
         this.id = id;
+        this.width = width;
+        this.height = height;
     }
 
-    public void bind() {
-        glBindTexture(GL_TEXTURE_2D, id);
+    public void glBindTexture() {
+        GL11C.glBindTexture(GL_TEXTURE_2D, id);
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     public static Texture fromBufferedImage(BufferedImage bufferedImage) {
@@ -37,11 +50,11 @@ public final class Texture {
         }
         data.flip();
         int id = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, id);
+        GL11C.glBindTexture(GL_TEXTURE_2D, id);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-        return new Texture(id);
+        return new Texture(id, width, height);
     }
 
     public static Texture loadFromClasspath(Class<?> anchor, String path) {

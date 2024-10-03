@@ -2,10 +2,22 @@ package name.martingeisse.miner.client.engine;
 
 final class GraphicsFrameContextImpl implements GraphicsFrameContext {
 
+    private final Engine engine;
     private final GlWorkerLoop glWorkerLoop;
 
-    GraphicsFrameContextImpl(GlWorkerLoop glWorkerLoop) {
+    GraphicsFrameContextImpl(Engine engine, GlWorkerLoop glWorkerLoop) {
+        this.engine = engine;
         this.glWorkerLoop = glWorkerLoop;
+    }
+
+    @Override
+    public int getWidth() {
+        return engine.getWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return engine.getHeight();
     }
 
     @Override
