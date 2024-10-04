@@ -19,28 +19,43 @@ import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.lwjgl.opengl.GL14.glWindowPos2i;
 
 /**
- * This element draws a paragraph of text, breaking the text into lines
- * of the width requested by the enclosing element.
+ * This element draws a paragraph of text, breaking the text into lines of the width requested by the enclosing element.
  */
 public final class TextParagraph extends GuiElement {
 
-	private static final String[] NO_LINES = new String[0];
+	private Font font;
+	private Color color;
+	private String text;
+	private String[] cachedLines;
+	private MyWorkUnit cachedWorkUnit;
 
-	private volatile Font font;
-	private volatile Color color;
-	private volatile String text;
-	private volatile String[] lines;
+	private static final class MyWorkUnit extends GlWorkUnit {
 
-	private volatile int windowPosX;
-	private volatile int windowPosY;
-	private final GlWorkUnit workUnit = new GlWorkUnit() {
+		private final Font font;
+		private final Color color;
+		private final String[] lines;
+		private final int windowPosX;
+		private final int windowPosY;
+
+		public MyWorkUnit(Font font, Color color, String[] lines, int windowPosX, int windowPosY) {
+			ParameterUtil.ensureNotNull(font, "font");
+			ParameterUtil.ensureNotNull(color, "color");
+			ParameterUtil.ensureNotNull(lines, "lines");
+
+			this.font = font;
+			this.color = color;
+			this.lines = lines;
+			this.windowPosX = windowPosX;
+			this.windowPosY = windowPosY;
+		}
+
 		@Override
 		public void execute() {
-			final Font effectiveFont = getEffectiveFont();
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -52,19 +67,18 @@ public final class TextParagraph extends GuiElement {
 			GL11.glPixelTransferf(GL11.GL_GREEN_BIAS, color.getGreen() / 255.0f);
 			GL11.glPixelTransferf(GL11.GL_BLUE_BIAS, color.getBlue() / 255.0f);
 			GL11.glPixelTransferf(GL11.GL_ALPHA_BIAS, 0.0f);
-			if (effectiveFont != null) {
-				// TODO scale font so text doesn't become smaller with higher resolution
-				final int lineHeight = effectiveFont.getCharacterHeight();
-				int i = 0;
-				String[] lines = TextParagraph.this.lines;
-				for (String line : lines) {
-					glWindowPos2i(windowPosX, windowPosY - i * lineHeight);
-					effectiveFont.drawText(line, 1.0f, Font.ALIGN_LEFT, Font.ALIGN_TOP);
-					i++;
-				}
+
+			// TODO scale font so text doesn't become smaller with higher resolution
+			final int lineHeight = font.getCharacterHeight();
+			int i = 0;
+			for (String line : lines) {
+				glWindowPos2i(windowPosX, windowPosY - i * lineHeight);
+				font.drawText(line, 1.0f, Font.ALIGN_LEFT, Font.ALIGN_TOP);
+				i++;
 			}
 		}
-	};
+
+	}
 
 	/**
 	 * Constructor.
@@ -73,8 +87,11 @@ public final class TextParagraph extends GuiElement {
 		this.font = null;
 		this.color = Color.WHITE;
 		this.text = "";
-		this.lines = NO_LINES;
 	}
+
+	// ----------------------------------------------------------------------------------------------------------------
+	// getters / setters
+	// ----------------------------------------------------------------------------------------------------------------
 
 	/**
 	 * Getter method for the font.
@@ -93,8 +110,11 @@ public final class TextParagraph extends GuiElement {
 	 */
 	public TextParagraph setFont(final Font font) {
 		ParameterUtil.ensureNotNull(font, "font");
+
 		this.font = font;
 		requestLayout();
+		cachedLines = null;
+		cachedWorkUnit = null;
 		return this;
 	}
 
@@ -115,7 +135,10 @@ public final class TextParagraph extends GuiElement {
 	 */
 	public TextParagraph setColor(final Color color) {
 		ParameterUtil.ensureNotNull(color, "color");
+
 		this.color = color;
+		// cached lines are still valid since line-breaking is not affected by color
+		cachedWorkUnit = null;
 		return this;
 	}
 
@@ -136,57 +159,80 @@ public final class TextParagraph extends GuiElement {
 	 */
 	public TextParagraph setText(final String text) {
 		ParameterUtil.ensureNotNull(text, "text");
+
 		this.text = text;
 		requestLayout();
+		cachedLines = null;
+		cachedWorkUnit = null;
 		return this;
 	}
 
 	private Font getEffectiveFont() {
-		if (font == null) {
-			final Gui gui = getGuiOrNull();
-			return (gui == null ? null : gui.getDefaultFont());
-		} else {
+		if (font != null) {
 			return font;
 		}
+		var result = getGui().getDefaultFont();
+		if (result == null) {
+			throw new IllegalStateException("no element font set and no default font set");
+		}
+		return result;
 	}
+
+	// ----------------------------------------------------------------------------------------------------------------
+	// cached derived data
+	// ----------------------------------------------------------------------------------------------------------------
+
+	private String[] getLines(int width) {
+		if (cachedLines == null) {
+			Gui gui = getGui();
+			Font effectiveFont = getEffectiveFont();
+			List<String> lines = new ArrayList<>();
+			if (effectiveFont != null && text != null) {
+				StringBuilder lineBuilder = new StringBuilder();
+				for (String word : StringUtils.split(text.trim())) {
+					if (!lineBuilder.isEmpty()) {
+						lineBuilder.append(' ');
+					}
+					int previousCharacterCount = lineBuilder.length();
+					lineBuilder.append(word);
+					int newSize = gui.pixelsToUnitsInt(effectiveFont.getStringWidth(lineBuilder.toString()));
+					if (newSize > width) {
+						lineBuilder.setLength(previousCharacterCount);
+						lines.add(lineBuilder.toString());
+						lineBuilder.setLength(0);
+						lineBuilder.append(word);
+					}
+				}
+				if (!lineBuilder.isEmpty()) {
+					lines.add(lineBuilder.toString());
+				}
+			}
+			cachedLines = lines.toArray(new String[0]);
+		}
+		return cachedLines;
+	}
+
+	// this may only be called after the absolute position has been set
+	private MyWorkUnit getWorkUnit(int width) {
+		if (cachedWorkUnit == null) {
+			Gui gui = getGui();
+			String[] lines = getLines(width);
+			int windowPosX = gui.unitsToPixelsInt(getAbsoluteX());
+			int windowPosY = getGui().getHeightPixels() - gui.unitsToPixelsInt(getAbsoluteY());
+			cachedWorkUnit = new MyWorkUnit(getEffectiveFont(), color, lines, windowPosX, windowPosY);
+		}
+		return cachedWorkUnit;
+	}
+
+	// ----------------------------------------------------------------------------------------------------------------
+	// element logic
+	// ----------------------------------------------------------------------------------------------------------------
 
 	@Override
 	public void requestSize(final int width, final int height) {
-
-		// obtain the font
-		final Font effectiveFont = getEffectiveFont();
-		if (effectiveFont == null || text == null) {
-			setSize(0, 0);
-			return;
-		}
-
-		// break the text into lines
-		final Gui gui = getGui();
-		ArrayList<String> lines = new ArrayList<>();
-		StringBuilder lineBuilder = new StringBuilder();
-		for (String word : StringUtils.split(text.trim())) {
-			if (!lineBuilder.isEmpty()) {
-				lineBuilder.append(' ');
-			}
-			int previousCharacterCount = lineBuilder.length();
-			lineBuilder.append(word);
-			int newSize = gui.pixelsToUnitsInt(effectiveFont.getStringWidth(lineBuilder.toString()));
-			if (newSize > width) {
-				lineBuilder.setLength(previousCharacterCount);
-				lines.add(lineBuilder.toString());
-				lineBuilder.setLength(0);
-				lineBuilder.append(word);
-			}
-		}
-		if (!lineBuilder.isEmpty()) {
-			lines.add(lineBuilder.toString());
-		}
-		this.lines = lines.toArray(new String[0]);
-
-		// determine the size of the paragraph
-		final int lineHeight = gui.pixelsToUnitsInt(effectiveFont.getCharacterHeight());
-		setSize(width, lineHeight * this.lines.length);
-
+		int lineHeight = getGui().pixelsToUnitsInt(getEffectiveFont().getCharacterHeight());
+		String[] lines = getLines(width);
+		setSize(width, lineHeight * lines.length);
 	}
 
 	@Override
@@ -195,10 +241,7 @@ public final class TextParagraph extends GuiElement {
 
 	@Override
 	public void draw(GraphicsFrameContext context) {
-		final Gui gui = getGui();
-		windowPosX = gui.unitsToPixelsInt(getAbsoluteX());
-		windowPosY = getGui().getHeightPixels() - gui.unitsToPixelsInt(getAbsoluteY());
-		context.schedule(workUnit);
+		context.schedule(getWorkUnit(getWidth()));
 	}
 
 	@Override

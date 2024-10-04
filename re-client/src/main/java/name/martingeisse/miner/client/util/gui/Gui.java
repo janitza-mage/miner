@@ -182,6 +182,11 @@ public final class Gui {
 		return defaultFont;
 	}
 
+	/**
+	 * Setting the default font should not be done while the GUI is already being used -- the default font setting
+	 * gets copied into GUI elements at undefined times and there is no proper propagation of a change in default
+	 * font, so elements would use either the old or new default font with no easily predictable pattern.
+	 */
 	public void setDefaultFont(Font defaultFont) {
 		this.defaultFont = defaultFont;
 		requestLayout();

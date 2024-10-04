@@ -8,20 +8,20 @@ import java.util.function.Supplier;
 
 public final class WorkUnitCache {
 
-    private final Supplier<GlWorkUnit> supplier;
+    private final Supplier<GlWorkUnit> factory;
     private GlWorkUnit cached;
 
-    public WorkUnitCache(Supplier<GlWorkUnit> supplier) {
-        ParameterUtil.ensureNotNull(supplier, "supplier");
+    public WorkUnitCache(Supplier<GlWorkUnit> factory) {
+        ParameterUtil.ensureNotNull(factory, "factory");
 
-        this.supplier = supplier;
+        this.factory = factory;
     }
 
     public void schedule(GraphicsFrameContext context) {
         ParameterUtil.ensureNotNull(context, "context");
 
         if (cached == null) {
-            cached = supplier.get();
+            cached = factory.get();
         }
         context.schedule(cached);
     }

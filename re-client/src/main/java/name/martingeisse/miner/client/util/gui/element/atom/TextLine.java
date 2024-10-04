@@ -28,11 +28,12 @@ public final class TextLine extends GuiElement {
 	private Font font;
 	private Color color;
 	private String text;
+
 	private final WorkUnitCache workUnitCache = new WorkUnitCache(() -> {
 		Gui gui = getGui();
 		int windowPosX = gui.unitsToPixelsInt(getAbsoluteX());
 		int windowPosY = getGui().getHeightPixels() - gui.unitsToPixelsInt(getAbsoluteY());
-		return new MyWorkUnit(font, color, text, windowPosX, windowPosY);
+		return new MyWorkUnit(getEffectiveFont(), color, text, windowPosX, windowPosY);
 	});
 
 	private static final class MyWorkUnit extends GlWorkUnit {
