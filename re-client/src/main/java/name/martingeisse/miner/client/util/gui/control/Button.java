@@ -127,7 +127,7 @@ public abstract class Button extends Control {
 	}
 
 	@Override
-	public void handleInput(GuiLogicFrameContext context) {
+	public void handleLogicFrame(GuiLogicFrameContext context) {
 		if (context.isMouseButtonNewlyDown(GLFW.GLFW_MOUSE_BUTTON_LEFT) && isMouseInside(context)) {
 			onClick();
 		}

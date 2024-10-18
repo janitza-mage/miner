@@ -67,7 +67,7 @@ public final class FillColor extends AbstractFillElement {
 	}
 
 	@Override
-	public void draw(GraphicsFrameContext context) {
+	public void handleGraphicsFrame(GraphicsFrameContext context) {
 		context.schedule(workUnit);
 	}
 

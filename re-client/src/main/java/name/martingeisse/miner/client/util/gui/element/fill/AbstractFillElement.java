@@ -17,7 +17,7 @@ import name.martingeisse.miner.client.util.gui.GuiLogicFrameContext;
 public abstract class AbstractFillElement extends GuiElement {
 
 	@Override
-	public void handleInput(GuiLogicFrameContext context) {
+	public void handleLogicFrame(GuiLogicFrameContext context) {
 	}
 
 	@Override

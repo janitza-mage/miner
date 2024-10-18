@@ -129,7 +129,7 @@ public final class FillTexture extends AbstractFillElement {
 	}
 
 	@Override
-	public void draw(GraphicsFrameContext context) {
+	public void handleGraphicsFrame(GraphicsFrameContext context) {
 		context.schedule(workUnit);
 	}
 

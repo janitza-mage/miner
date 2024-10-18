@@ -44,9 +44,9 @@ public final class MouseOverWrapper extends AbstractWrapperElement {
 	}
 
 	@Override
-	public void handleInput(GuiLogicFrameContext context) {
+	public void handleLogicFrame(GuiLogicFrameContext context) {
 		if (isMouseInside(context)) {
-			requireWrappedElement().handleInput(context);
+			requireWrappedElement().handleLogicFrame(context);
 		}
 	}
 

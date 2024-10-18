@@ -236,11 +236,11 @@ public final class TextParagraph extends GuiElement {
 	}
 
 	@Override
-	public void handleInput(GuiLogicFrameContext context) {
+	public void handleLogicFrame(GuiLogicFrameContext context) {
 	}
 
 	@Override
-	public void draw(GraphicsFrameContext context) {
+	public void handleGraphicsFrame(GraphicsFrameContext context) {
 		context.schedule(getWorkUnit(getWidth()));
 	}
 

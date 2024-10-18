@@ -206,8 +206,8 @@ public abstract class GuiElement {
 
 	// region input, logic and drawing
 
-	public abstract void handleInput(GuiLogicFrameContext context);
-	public abstract void draw(GraphicsFrameContext context);
+	public abstract void handleLogicFrame(GuiLogicFrameContext context);
+	public abstract void handleGraphicsFrame(GraphicsFrameContext context);
 
 	// endregion
 

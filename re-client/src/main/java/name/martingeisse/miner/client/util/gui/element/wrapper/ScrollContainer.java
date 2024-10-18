@@ -77,9 +77,9 @@ public class ScrollContainer extends GuiElement {
 	}
 
 	@Override
-	public void handleInput(GuiLogicFrameContext context) {
-		contentWrapper.handleInput(context);
-		scrollBar.handleInput(context);
+	public void handleLogicFrame(GuiLogicFrameContext context) {
+		contentWrapper.handleLogicFrame(context);
+		scrollBar.handleLogicFrame(context);
 		if (context.isMouseButtonNewlyDown(GLFW.GLFW_MOUSE_BUTTON_LEFT) && knob.isMouseInside(context)) {
 			knobGrabbed = true;
 		}
@@ -123,7 +123,7 @@ public class ScrollContainer extends GuiElement {
 	}
 
 	@Override
-	public void draw(GraphicsFrameContext context) {
+	public void handleGraphicsFrame(GraphicsFrameContext context) {
 		// nothing to do here -- the parts will draw themselves
 	}
 

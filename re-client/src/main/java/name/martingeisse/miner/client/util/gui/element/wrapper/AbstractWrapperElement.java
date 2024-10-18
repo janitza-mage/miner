@@ -56,13 +56,13 @@ public abstract class AbstractWrapperElement extends GuiElement {
 	}
 
 	@Override
-	public void handleInput(GuiLogicFrameContext context) {
-		requireWrappedElement().handleInput(context);
+	public void handleLogicFrame(GuiLogicFrameContext context) {
+		requireWrappedElement().handleLogicFrame(context);
 	}
 
 	@Override
-	public void draw(GraphicsFrameContext context) {
-		requireWrappedElement().draw(context);
+	public void handleGraphicsFrame(GraphicsFrameContext context) {
+		requireWrappedElement().handleGraphicsFrame(context);
 	}
 
 	/**

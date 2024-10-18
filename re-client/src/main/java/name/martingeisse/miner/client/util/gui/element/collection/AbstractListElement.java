@@ -18,28 +18,17 @@ import java.util.List;
 /**
  * Base class for a GUI element that wraps a list of other elements.
  * <p>
- * This element allows to obtain the internal list, but note that
- * if you modify that list directly, you must also request a
- * re-layout manually.
+ * This element allows to obtain the internal list, but note that if you modify that list directly, you must also
+ * request a re-layout manually.
  */
 public abstract class AbstractListElement extends GuiElement {
 
-	/**
-	 * the wrappedElements
-	 */
 	private final List<GuiElement> wrappedElements;
 
-	/**
-	 * Constructor.
-	 */
 	public AbstractListElement() {
 		this.wrappedElements = new ArrayList<>();
 	}
 
-	/**
-	 * Constructor.
-	 * @param elements the elements to add to the list
-	 */
 	public AbstractListElement(GuiElement... elements) {
 		this.wrappedElements = new ArrayList<>();
 		for (GuiElement element : elements) {
@@ -47,19 +36,13 @@ public abstract class AbstractListElement extends GuiElement {
 		}
 	}
 
-	/**
-	 * Getter method for the wrappedElements.
-	 * @return the wrappedElements
-	 */
 	public final List<GuiElement> getWrappedElements() {
 		return wrappedElements;
 	}
 
 	/**
 	 * Adds the specified element. This method requests a re-layout automatically.
-	 *
-	 * @param element the element to add
-	 * @return this for chaining
+	 * @return this
 	 */
 	public final AbstractListElement addElement(GuiElement element) {
 		ParameterUtil.ensureNotNull(element, "element");
@@ -71,9 +54,7 @@ public abstract class AbstractListElement extends GuiElement {
 
 	/**
 	 * Replaces the specified element. This method requests a re-layout automatically.
-	 * @param index the index of the element to replace
-	 * @param newElement the new element
-	 * @return this for chaining
+	 * @return this
 	 */
 	public final AbstractListElement replaceElement(int index, GuiElement newElement) {
 		ParameterUtil.ensureNotNull(newElement, "newElement");
@@ -86,8 +67,7 @@ public abstract class AbstractListElement extends GuiElement {
 
 	/**
 	 * Removes the specified element. This method requests a re-layout automatically.
-	 * @param index the index of the element to remove
-	 * @return this for chaining
+	 * @return this
 	 */
 	public final AbstractListElement removeElement(int index) {
 		getWrappedElements().get(index).notifyRemovedFromParent();
@@ -101,21 +81,22 @@ public abstract class AbstractListElement extends GuiElement {
 	 * automatically.
 	 */
 	public final void clearElements() {
+		TODO notify
 		wrappedElements.clear();
 		requestLayout();
 	}
 
 	@Override
-	public void handleInput(GuiLogicFrameContext context) {
+	public void handleLogicFrame(GuiLogicFrameContext context) {
 		for (GuiElement element : getWrappedElements()) {
-			element.handleInput(context);
+			element.handleLogicFrame(context);
 		}
 	}
 
 	@Override
-	public void draw(GraphicsFrameContext context) {
+	public void handleGraphicsFrame(GraphicsFrameContext context) {
 		for (GuiElement element : getWrappedElements()) {
-			element.draw(context);
+			element.handleGraphicsFrame(context);
 		}
 	}
 

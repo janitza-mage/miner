@@ -48,13 +48,13 @@ public class Control extends GuiElement {
 	}
 
 	@Override
-	public void handleInput(GuiLogicFrameContext context) {
-		controlRootElement.handleInput(context);
+	public void handleLogicFrame(GuiLogicFrameContext context) {
+		controlRootElement.handleLogicFrame(context);
 	}
 
 	@Override
-	public void draw(GraphicsFrameContext context) {
-		controlRootElement.draw(context);
+	public void handleGraphicsFrame(GraphicsFrameContext context) {
+		controlRootElement.handleGraphicsFrame(context);
 	}
 
 	@Override

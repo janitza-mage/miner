@@ -316,7 +316,7 @@ public final class TextField extends Control implements IFocusableElement {
 				break;
 
 		}
-		super.handleInput(event);
+		super.handleLogicFrame(event);
 	}
 
 	/* (non-Javadoc)

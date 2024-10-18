@@ -38,7 +38,7 @@ public final class GuiFrameHandler extends AbstractFrameHandler {
 		ParameterUtil.ensureNotNull(context, "context");
 
 		if (enableGui) {
-			gui.draw(context);
+			gui.handleGraphicsFrame(context);
 			gui.executeFollowupOpenglActions(context);
 		}
 	}
@@ -49,7 +49,7 @@ public final class GuiFrameHandler extends AbstractFrameHandler {
 
 		if (enableGui) {
 			var myContext = GuiLogicFrameContext.from(context, false);
-			gui.handleInput(myContext);
+			gui.handleLogicFrame(myContext);
 			gui.executeFollowupLogicActions(myContext);
 		}
 	}

@@ -97,8 +97,8 @@ public final class ThinBorder extends AbstractWrapperElement {
 	}
 
 	@Override
-	public void draw(GraphicsFrameContext context) {
-		super.draw(context);
+	public void handleGraphicsFrame(GraphicsFrameContext context) {
+		super.handleGraphicsFrame(context);
 		context.schedule(workUnit);
 	}
 

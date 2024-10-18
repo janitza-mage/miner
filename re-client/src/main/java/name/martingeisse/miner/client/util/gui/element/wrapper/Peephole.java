@@ -136,22 +136,22 @@ public final class Peephole extends AbstractWrapperElement {
 	}
 
 	@Override
-	public void handleInput(GuiLogicFrameContext context) {
+	public void handleLogicFrame(GuiLogicFrameContext context) {
 		if (clip) {
-			super.handleInput(GuiLogicFrameContext.from(context, isMouseInside(context)));
+			super.handleLogicFrame(GuiLogicFrameContext.from(context, isMouseInside(context)));
 		} else {
-			super.handleInput(context);
+			super.handleLogicFrame(context);
 		}
 	}
 
 	@Override
-	public void draw(GraphicsFrameContext context) {
+	public void handleGraphicsFrame(GraphicsFrameContext context) {
 		if (clip) {
 			context.schedule(preClipWorkUnit);
-			super.draw(context);
+			super.handleGraphicsFrame(context);
 			context.schedule(postClipWorkUnit);
 		} else {
-			super.draw(context);
+			super.handleGraphicsFrame(context);
 		}
 	}
 

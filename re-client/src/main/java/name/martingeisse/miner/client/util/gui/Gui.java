@@ -106,14 +106,14 @@ public final class Gui {
 		layoutRequested = true;
 	}
 
-	public void handleInput(GuiLogicFrameContext context) {
+	public void handleLogicFrame(GuiLogicFrameContext context) {
 		ParameterUtil.ensureNotNull(context, "context");
 
 		timeMilliseconds = (int) System.currentTimeMillis();
-		rootElement.handleInput(context);
+		rootElement.handleLogicFrame(context);
 	}
 
-	public void draw(GraphicsFrameContext context) {
+	public void handleGraphicsFrame(GraphicsFrameContext context) {
 		ParameterUtil.ensureNotNull(context, "context");
 
 		timeMilliseconds = (int) System.currentTimeMillis();
@@ -123,7 +123,7 @@ public final class Gui {
 			layoutRequested = false;
 		}
 		context.schedule(initializeFrameWorkUnit);
-		rootElement.draw(context);
+		rootElement.handleGraphicsFrame(context);
 	}
 
 	/**

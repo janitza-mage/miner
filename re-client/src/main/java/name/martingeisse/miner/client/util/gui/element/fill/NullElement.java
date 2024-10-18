@@ -21,7 +21,7 @@ public final class NullElement extends AbstractFillElement {
 	public static final NullElement instance = new NullElement();
 
 	@Override
-	public void draw(GraphicsFrameContext context) {
+	public void handleGraphicsFrame(GraphicsFrameContext context) {
 	}
 
 }

@@ -126,14 +126,14 @@ public class Page extends Control {
 				onAttach();
 			}
 			if (event == GuiEvent.DRAW) {
-				super.handleInput(event);
+				super.handleLogicFrame(event);
 				return;
 			}
 			GuiElement popupElement = getPopupElement();
 			if (popupElement == null) {
 				handlePageEvent(event);
 			} else {
-				popupElement.handleInput(event);
+				popupElement.handleLogicFrame(event);
 			}
 		} catch (Throwable t) {
 			onException(t);
@@ -161,7 +161,7 @@ public class Page extends Control {
 	 * @param event the event
 	 */
 	protected void handlePageEvent(GuiEvent event) {
-		super.handleInput(event);
+		super.handleLogicFrame(event);
 	}
 
 	/**

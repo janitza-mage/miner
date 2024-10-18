@@ -143,9 +143,9 @@ public final class Box extends AbstractWrapperElement {
 	}
 
 	@Override
-	public void draw(GraphicsFrameContext context) {
+	public void handleGraphicsFrame(GraphicsFrameContext context) {
 		context.schedule(workUnit);
-		super.draw(context);
+		super.handleGraphicsFrame(context);
 	}
 
 	@Override
