@@ -11,6 +11,8 @@ package name.martingeisse.miner.client.engine;
  */
 public abstract class GlWorkUnit {
 
+	public static volatile int openglTimeMilliseconds = 0;
+
 	/**
 	 * Executes this work unit.
 	 */

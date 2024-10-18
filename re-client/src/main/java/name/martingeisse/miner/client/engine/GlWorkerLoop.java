@@ -39,12 +39,14 @@ final class GlWorkerLoop {
 
 	// OpenGL thread-local state
 	private final long windowId;
+	private final long openglTimeBase;
 	private boolean insideSideEffects = false;
 	private boolean wantsToSkip = false;
 	private boolean shutdownRequested = false;
 
 	public GlWorkerLoop(long windowId) {
 		this.windowId = windowId;
+		this.openglTimeBase = System.currentTimeMillis();
 	}
 
 	// ----------------------------------------------------------------------------------------------------------------
@@ -150,6 +152,7 @@ final class GlWorkerLoop {
 			if (wantsToSkip) {
 				System.out.println("low-level skip frame");
 			}
+			openglTimeMilliseconds = (int) (System.currentTimeMillis() - openglTimeBase);
 		}
 	};
 
