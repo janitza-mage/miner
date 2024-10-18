@@ -35,8 +35,9 @@ import name.martingeisse.miner.common.util.contract.ParameterUtil;
  * available size for a child, it passes 0, expecting a child with an intrinsic size to ignore it.
  * <p>
  * In the second step, each element (from root to leaves) gets told its absolute position and stores it, then
- * determines the resulting absolute position of all children, possibly using the size of the children to arrange them.
- * The relative position is not stored to reduce the amount of state to keep in sync.
+ * determines the resulting absolute position of all children in {@link #onAbsolutePositionChanged(int, int)},
+ * possibly using the size of the children to arrange them. The relative position is not stored to reduce the amount
+ * of state to keep in sync.
  * <p>
  * The {@link #requestLayout()} method should be called by any element whose state changes in such a way that
  * recomputing the layout is necessary, such as adding children or changing any property that affects the element's
@@ -174,8 +175,7 @@ public abstract class GuiElement {
 	 * children. The implementation decides how to compute the absolute position of the children from its own absolute
 	 * position and size.
 	 */
-	protected void onAbsolutePositionChanged(int absoluteX, int absoluteY) {
-	}
+	protected abstract void onAbsolutePositionChanged(int absoluteX, int absoluteY);
 
 	public final int getAbsoluteX() {
 		return absoluteX;

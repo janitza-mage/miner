@@ -44,7 +44,6 @@ public final class Gui {
 	private Font defaultFont;
 	private IFocusableElement focus;
 	private final Queue<Consumer<GuiLogicFrameContext>> followupLogicActions;
-	private final Queue<Consumer<GraphicsFrameContext>> followupOpenglActions;
 
 	private final GlWorkUnit initializeFrameWorkUnit = new GlWorkUnit() {
 		@Override
@@ -63,7 +62,6 @@ public final class Gui {
 		this.widthUnits = pixelsToUnitsInt(widthPixels);
 		this.rootElement = new NullElement();
 		this.followupLogicActions = new LinkedList<>();
-		this.followupOpenglActions = new LinkedList<>();
 	}
 
 	public int getWidthPixels() {
@@ -212,7 +210,7 @@ public final class Gui {
 	}
 
 	/**
-	 * Adds an action to execute as part of the "followup logic action loop".
+	 * Adds an action to execute at the end of a logic frame.
 	 * <p>
 	 * For example, a text field that wants to change focus in reaction to the tab key
 	 * should do so in a followup logic action. If it changed focus directly, then handling
@@ -228,47 +226,13 @@ public final class Gui {
 	}
 
 	/**
-	 * Executes all pending followup logic actions. This should generally be done after
-	 * passing input events to the GUI.
+	 * Executes all pending followup logic actions.
 	 */
 	public void executeFollowupLogicActions(GuiLogicFrameContext context) {
 		ParameterUtil.ensureNotNull(context, "context");
 
 		while (true) {
 			Consumer<GuiLogicFrameContext> action = followupLogicActions.poll();
-			if (action == null) {
-				break;
-			}
-			action.accept(context);
-		}
-	}
-
-	/**
-	 * Adds an action to execute as part of the "followup OpenGL action loop". This is
-	 * similar to followup logic actions, except they're executed in the OpenGL
-	 * worker thread.
-	 * <p>
-	 * Followup OpenGL actions are needed for special cases during the interaction
-	 * between GUI and the in-game OpenGL code. This comment cannot describe a
-	 * typical use case because there is none.
-	 *
-	 * @param followupOpenglAction the followup OpenGL action to add
-	 */
-	public void addFollowupOpenglAction(Consumer<GraphicsFrameContext> followupOpenglAction) {
-		ParameterUtil.ensureNotNull(followupOpenglAction, "followupOpenglAction");
-
-		followupOpenglActions.add(followupOpenglAction);
-	}
-
-	/**
-	 * Executes all pending followup OpenGL actions. This should generally be done after
-	 * firing the DRAW event, from within the OpenGL thread.
-	 */
-	public void executeFollowupOpenglActions(GraphicsFrameContext context) {
-		ParameterUtil.ensureNotNull(context, "context");
-
-		while (true) {
-			Consumer<GraphicsFrameContext> action = followupOpenglActions.poll();
 			if (action == null) {
 				break;
 			}

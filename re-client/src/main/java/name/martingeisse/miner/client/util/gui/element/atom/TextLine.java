@@ -6,15 +6,13 @@
 
 package name.martingeisse.miner.client.util.gui.element.atom;
 
-import com.google.common.collect.ImmutableList;
 import name.martingeisse.miner.client.engine.GlWorkUnit;
 import name.martingeisse.miner.client.engine.GraphicsFrameContext;
 import name.martingeisse.miner.client.engine.graphics.Font;
 import name.martingeisse.miner.client.util.gui.Gui;
-import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiLogicFrameContext;
 import name.martingeisse.miner.client.util.gui.util.Color;
-import name.martingeisse.miner.client.util.gui.util.WorkUnitCache;
+import name.martingeisse.miner.client.util.gui.util.LeafElement;
 import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import org.lwjgl.opengl.GL11;
 
@@ -23,18 +21,12 @@ import static org.lwjgl.opengl.GL14.glWindowPos2i;
 /**
  * This element draws a line of text. Its size depends solely on the font and text and is not affected during layout.
  */
-public final class TextLine extends GuiElement {
+public final class TextLine extends LeafElement {
 
 	private Font font;
 	private Color color;
 	private String text;
-
-	private final WorkUnitCache workUnitCache = new WorkUnitCache(() -> {
-		Gui gui = getGui();
-		int windowPosX = gui.unitsToPixelsInt(getAbsoluteX());
-		int windowPosY = getGui().getHeightPixels() - gui.unitsToPixelsInt(getAbsoluteY());
-		return new MyWorkUnit(getEffectiveFont(), color, text, windowPosX, windowPosY);
-	});
+	private MyWorkUnit workUnit;
 
 	private static final class MyWorkUnit extends GlWorkUnit {
 
@@ -90,7 +82,7 @@ public final class TextLine extends GuiElement {
 
 		this.font = font;
 		requestLayout();
-		workUnitCache.invalidate();
+		workUnit = null;
 		return this;
 	}
 
@@ -102,7 +94,7 @@ public final class TextLine extends GuiElement {
 		ParameterUtil.ensureNotNull(color, "color");
 
 		this.color = color;
-		workUnitCache.invalidate();
+		workUnit = null;
 		return this;
 	}
 
@@ -115,7 +107,7 @@ public final class TextLine extends GuiElement {
 
 		this.text = text;
 		requestLayout();
-		workUnitCache.invalidate();
+		workUnit = null;
 		return this;
 	}
 
@@ -143,7 +135,7 @@ public final class TextLine extends GuiElement {
 
 	@Override
 	protected void onAbsolutePositionChanged(int absoluteX, int absoluteY) {
-		workUnitCache.invalidate();
+		workUnit = null;
 	}
 
 	@Override
@@ -152,12 +144,13 @@ public final class TextLine extends GuiElement {
 
 	@Override
 	public void handleGraphicsFrame(GraphicsFrameContext context) {
-		workUnitCache.schedule(context);
-	}
-
-	@Override
-	public ImmutableList<GuiElement> getChildren() {
-		return ImmutableList.of();
+		if (workUnit == null) {
+			Gui gui = getGui();
+			int windowPosX = gui.unitsToPixelsInt(getAbsoluteX());
+			int windowPosY = getGui().getHeightPixels() - gui.unitsToPixelsInt(getAbsoluteY());
+			workUnit = new MyWorkUnit(getEffectiveFont(), color, text, windowPosX, windowPosY);
+		}
+		context.schedule(workUnit);
 	}
 
 }

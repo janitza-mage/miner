@@ -39,7 +39,6 @@ public final class GuiFrameHandler extends AbstractFrameHandler {
 
 		if (enableGui) {
 			gui.handleGraphicsFrame(context);
-			gui.executeFollowupOpenglActions(context);
 		}
 	}
 

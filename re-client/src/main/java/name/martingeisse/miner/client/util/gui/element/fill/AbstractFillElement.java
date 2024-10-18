@@ -6,15 +6,14 @@
 
 package name.martingeisse.miner.client.util.gui.element.fill;
 
-import com.google.common.collect.ImmutableList;
-import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiLogicFrameContext;
+import name.martingeisse.miner.client.util.gui.util.LeafElement;
 
 /**
  * Base class for elements that do not have any children and just fill
  * their available area with some graphic effect.
  */
-public abstract class AbstractFillElement extends GuiElement {
+public abstract class AbstractFillElement extends LeafElement {
 
 	@Override
 	public void handleLogicFrame(GuiLogicFrameContext context) {
@@ -23,11 +22,6 @@ public abstract class AbstractFillElement extends GuiElement {
 	@Override
 	public final void requestSize(int width, int height) {
 		setSize(width, height);
-	}
-
-	@Override
-	public ImmutableList<GuiElement> getChildren() {
-		return ImmutableList.of();
 	}
 
 }

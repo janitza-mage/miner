@@ -6,15 +6,14 @@
 
 package name.martingeisse.miner.client.util.gui.element.atom;
 
-import com.google.common.collect.ImmutableList;
 import name.martingeisse.miner.client.engine.GraphicsFrameContext;
-import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiLogicFrameContext;
+import name.martingeisse.miner.client.util.gui.util.LeafElement;
 
 /**
  * A simple invisible element with fixed size that is meant to take up space.
  */
-public final class Spacer extends GuiElement {
+public final class Spacer extends LeafElement {
 
 	/**
 	 * Constructor for a square spacer.
@@ -40,11 +39,6 @@ public final class Spacer extends GuiElement {
 
 	@Override
 	public void handleGraphicsFrame(GraphicsFrameContext context) {
-	}
-
-	@Override
-	public ImmutableList<GuiElement> getChildren() {
-		return ImmutableList.of();
 	}
 
 }
