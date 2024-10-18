@@ -6,14 +6,13 @@
 
 package name.martingeisse.miner.client.util.gui.element.atom;
 
-import com.google.common.collect.ImmutableList;
 import name.martingeisse.miner.client.engine.GlWorkUnit;
 import name.martingeisse.miner.client.engine.GraphicsFrameContext;
 import name.martingeisse.miner.client.engine.graphics.Font;
 import name.martingeisse.miner.client.util.gui.Gui;
-import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiLogicFrameContext;
 import name.martingeisse.miner.client.util.gui.util.Color;
+import name.martingeisse.miner.client.util.gui.util.LeafElement;
 import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.opengl.GL11;
@@ -26,7 +25,7 @@ import static org.lwjgl.opengl.GL14.glWindowPos2i;
 /**
  * This element draws a paragraph of text, breaking the text into lines of the width requested by the enclosing element.
  */
-public final class TextParagraph extends GuiElement {
+public final class TextParagraph extends LeafElement {
 
 	private Font font;
 	private Color color;
@@ -230,9 +229,16 @@ public final class TextParagraph extends GuiElement {
 
 	@Override
 	public void requestSize(final int width, final int height) {
+		cachedLines = null;
+		cachedWorkUnit = null;
 		int lineHeight = getGui().pixelsToUnitsInt(getEffectiveFont().getCharacterHeight());
 		String[] lines = getLines(width);
 		setSize(width, lineHeight * lines.length);
+	}
+
+	@Override
+	protected void onAbsolutePositionChanged(int absoluteX, int absoluteY) {
+		cachedWorkUnit = null;
 	}
 
 	@Override
@@ -242,11 +248,6 @@ public final class TextParagraph extends GuiElement {
 	@Override
 	public void handleGraphicsFrame(GraphicsFrameContext context) {
 		context.schedule(getWorkUnit(getWidth()));
-	}
-
-	@Override
-	public ImmutableList<GuiElement> getChildren() {
-		return ImmutableList.of();
 	}
 
 }

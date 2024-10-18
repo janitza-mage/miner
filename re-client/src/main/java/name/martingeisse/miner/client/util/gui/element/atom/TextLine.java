@@ -26,7 +26,7 @@ public final class TextLine extends LeafElement {
 	private Font font;
 	private Color color;
 	private String text;
-	private MyWorkUnit workUnit;
+	private MyWorkUnit cachedWorkUnit;
 
 	private static final class MyWorkUnit extends GlWorkUnit {
 
@@ -82,7 +82,7 @@ public final class TextLine extends LeafElement {
 
 		this.font = font;
 		requestLayout();
-		workUnit = null;
+		cachedWorkUnit = null;
 		return this;
 	}
 
@@ -94,7 +94,7 @@ public final class TextLine extends LeafElement {
 		ParameterUtil.ensureNotNull(color, "color");
 
 		this.color = color;
-		workUnit = null;
+		cachedWorkUnit = null;
 		return this;
 	}
 
@@ -107,7 +107,7 @@ public final class TextLine extends LeafElement {
 
 		this.text = text;
 		requestLayout();
-		workUnit = null;
+		cachedWorkUnit = null;
 		return this;
 	}
 
@@ -122,6 +122,7 @@ public final class TextLine extends LeafElement {
 
 	@Override
 	public void requestSize(final int width, final int height) {
+		cachedWorkUnit = null;
 		final Font effectiveFont = getEffectiveFont();
 		if (effectiveFont == null || text == null) {
 			setSize(0, 0);
@@ -135,7 +136,7 @@ public final class TextLine extends LeafElement {
 
 	@Override
 	protected void onAbsolutePositionChanged(int absoluteX, int absoluteY) {
-		workUnit = null;
+		cachedWorkUnit = null;
 	}
 
 	@Override
@@ -144,13 +145,13 @@ public final class TextLine extends LeafElement {
 
 	@Override
 	public void handleGraphicsFrame(GraphicsFrameContext context) {
-		if (workUnit == null) {
+		if (cachedWorkUnit == null) {
 			Gui gui = getGui();
 			int windowPosX = gui.unitsToPixelsInt(getAbsoluteX());
 			int windowPosY = getGui().getHeightPixels() - gui.unitsToPixelsInt(getAbsoluteY());
-			workUnit = new MyWorkUnit(getEffectiveFont(), color, text, windowPosX, windowPosY);
+			cachedWorkUnit = new MyWorkUnit(getEffectiveFont(), color, text, windowPosX, windowPosY);
 		}
-		context.schedule(workUnit);
+		context.schedule(cachedWorkUnit);
 	}
 
 }
