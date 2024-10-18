@@ -9,6 +9,7 @@
 
     <modules>
         <module>re-client</module>
+        <module>re-client-2</module>
         <module>common</module>
     </modules>
 

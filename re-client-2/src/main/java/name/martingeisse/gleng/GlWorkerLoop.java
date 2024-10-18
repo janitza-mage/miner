@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.engine;
+package name.martingeisse.gleng;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -16,16 +16,19 @@ import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
  * This class must be used by the OpenGL worker thread to handle work units. Work units are scheduled by calling
  * {@link #schedule(GlWorkUnit)}.
  * <p>
- * The work queue will stop when requested to do so by {@link #schedule(GlWorkUnit)}. This schedules a special
+ * The work queue will stop when requested to do so by {@link #scheduleShutdown()}. This schedules a special
  * work unit that stops the loop when executed.
  * <p>
- * This class measures the current workload in frames. The caller must invoke {@link #scheduleFrameBoundary()}
- * between frames to support this. If the workload exceeds the soft workload limit, then {@link #isOverloaded()}
- * returns true and the caller should stop rendering until no longer overloaded.
+ * Gleng uses double buffering. To see any rendered images, the current frame must be finished by calling
+ * {@link #scheduleFrameBoundary()}.
+ * <p>
+ * This class measures the current workload in frames. If the workload exceeds the soft workload limit, then
+ * {@link #isOverloaded()} returns true and the caller should stop rendering until no longer overloaded.
  * <p>
  * If the client continues rendering, the workload will eventually exceed the hard workload limit. This causes this
- * worker loop to skip work units. The caller can mark work units as unskippable by inserting the appropriate
- * markers; this is used for work units that set up textures and buffers, so their side effects won't get lost.
+ * worker loop to skip any skippable work units. The application should mark pure rendering work units as skippable
+ * to support this; unskippable work units, on the other hand, are used for things with side effects, such as setting
+ * up textures and buffers.
  */
 final class GlWorkerLoop {
 
@@ -40,7 +43,6 @@ final class GlWorkerLoop {
 	// OpenGL thread-local state
 	private final long windowId;
 	private final long openglTimeBase;
-	private boolean insideSideEffects = false;
 	private boolean wantsToSkip = false;
 	private boolean shutdownRequested = false;
 
@@ -90,22 +92,8 @@ final class GlWorkerLoop {
 	 * Schedules a frame boundary "work unit".
 	 */
 	void scheduleFrameBoundary() {
-		queue.add(FRAME_BOUNDARY);
 		workload.incrementAndGet();
-	}
-
-	/**
-	 *
-	 */
-	void scheduleBeginSideEffectsMarker() {
-		queue.add(BEGIN_SIDE_EFFECTS);
-	}
-
-	/**
-	 *
-	 */
-	void scheduleEndSideEffectsMarker() {
-		queue.add(END_SIDE_EFFECTS);
+		queue.add(FRAME_BOUNDARY);
 	}
 
 	// ----------------------------------------------------------------------------------------------------------------
@@ -120,17 +108,10 @@ final class GlWorkerLoop {
 	 */
 	void workAndWait() throws InterruptedException {
 		while (!shutdownRequested) {
-			execute(queue.take());
-		}
-	}
-
-	/**
-	 * This method must only be called by the OpenGL thread.
-	 * @param workUnit the work unit to execute
-	 */
-	void execute(GlWorkUnit workUnit) {
-		if (insideSideEffects || !wantsToSkip) {
-			workUnit.execute();
+			GlWorkUnit workUnit = queue.take();
+			if (!wantsToSkip || !workUnit.isSkippable()) {
+				workUnit.execute();
+			}
 		}
 	}
 
@@ -144,41 +125,12 @@ final class GlWorkerLoop {
 	private final GlWorkUnit FRAME_BOUNDARY = new GlWorkUnit() {
 		@Override
 		public void execute() {
-			if (insideSideEffects) {
-				throw new IllegalStateException("OpenGL side effects not properly terminated");
-			}
 			glfwSwapBuffers(windowId);
 			wantsToSkip = (workload.decrementAndGet() >= HARD_WORKLOAD_LIMIT);
 			if (wantsToSkip) {
 				System.out.println("low-level skip frame");
 			}
 			openglTimeMilliseconds = (int) (System.currentTimeMillis() - openglTimeBase);
-		}
-	};
-
-	/**
-	 * Marks the WUs following this WU as having side effects, and thus "not skippable".
-	 */
-	private final GlWorkUnit BEGIN_SIDE_EFFECTS = new GlWorkUnit() {
-		@Override
-		public void execute() {
-			if (insideSideEffects) {
-				throw new IllegalStateException("OpenGL side effects not properly terminated");
-			}
-			insideSideEffects = true;
-		}
-	};
-
-	/**
-	 * Marks the WUs following this WU as no longer having side effects, and thus "skippable".
-	 */
-	private final GlWorkUnit END_SIDE_EFFECTS = new GlWorkUnit() {
-		@Override
-		public void execute() {
-			if (!insideSideEffects) {
-				throw new IllegalStateException("OpenGL side effects not properly started");
-			}
-			insideSideEffects = false;
 		}
 	};
 
