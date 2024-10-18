@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.engine.graphics;
+package name.martingeisse.gleng.graphics;
 
 import org.lwjgl.opengl.GL11;
 
@@ -15,16 +15,16 @@ import static org.lwjgl.opengl.GL11.*;
 /**
  * An OpenGL-capabable font, using a "character atlas" image.
  * The character's image coordinates are resolved as follows:
- *
+ * <p>
  * - first, the character is mapped to an integer index. This allows to
  *   handle sparse Unicode fonts, non-Unicode fonts using different
  *   codepages, and so on.
- *
+ * <p>
  * - the integer index is used to determine the boundary coordinates
- *
+ * <p>
  * - The character is automatically y-flipped to handle OpenGL's reversed
  *   coordinate system compared to image files.
- *
+ * <p>
  * Drawing characters with this font uses OpenGL's current raster position
  * and assumes that this position has been set before. This allows using the
  * font both for the HUD (using glWindowPos) or "floating" text

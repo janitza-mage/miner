@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.engine.graphics;
+package name.martingeisse.gleng.graphics;
 
 import org.lwjgl.BufferUtils;
 
@@ -18,7 +18,7 @@ import java.nio.ByteBuffer;
  * - characters are expected to be stored in a matrix in the image.
  * - row/column to upper/left boundary mapping uses an offset and stride
  * - all characters use the same fixed size
- *
+ * <p>
  * You can subclass this class to override any of these assumptions.
  */
 public class FixedWidthFont extends Font {
@@ -175,7 +175,7 @@ public class FixedWidthFont extends Font {
 				final int pixel = pixels[lineBase + x];
 				final int r = (pixel >> 16) & 0xFF;
 				final int g = (pixel >> 8) & 0xFF;
-				final int b = (pixel >> 0) & 0xFF;
+				final int b = pixel & 0xFF;
 				final int value = (r + g + b) / 3;
 				buffer.put((byte) value);
 			}
