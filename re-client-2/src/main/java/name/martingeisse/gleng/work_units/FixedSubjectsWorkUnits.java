@@ -4,10 +4,9 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.engine.graphics.work_units;
+package name.martingeisse.gleng.work_units;
 
-import name.martingeisse.miner.client.engine.GlWorkUnit;
-import name.martingeisse.miner.client.engine.GraphicsFrameContext;
+import name.martingeisse.gleng.GlWorkUnit;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,20 +25,9 @@ import java.util.Map;
  */
 public abstract class FixedSubjectsWorkUnits<T> {
 
-	/**
-	 * the workUnits
-	 */
 	private final GlWorkUnit[] workUnits;
-
-	/**
-	 * the workUnitBySubject
-	 */
 	private final Map<T, GlWorkUnit> workUnitBySubject;
 
-	/**
-	 * Constructor.
-	 * @param subjects the subjects
-	 */
 	public FixedSubjectsWorkUnits(T[] subjects) {
 		workUnits = new GlWorkUnit[subjects.length];
 		workUnitBySubject = new HashMap<>();
@@ -50,27 +38,23 @@ public abstract class FixedSubjectsWorkUnits<T> {
 	}
 
 	/**
-	 * Schedules the work units.
-	 * @param context the context
+	 * Schedules all work units.
 	 */
-	public final void schedule(GraphicsFrameContext context) {
+	public final void schedule() {
 		for (GlWorkUnit glWorkUnit : workUnits) {
-			context.schedule(glWorkUnit);
+			glWorkUnit.schedule();
 		}
 	}
 
 	/**
 	 * Schedules the work unit for a single subject.
-	 * @param context the context
-	 * @param subject the subject to schedule the work unit for
 	 */
-	@SuppressWarnings("unchecked")
-	public final void schedule(GraphicsFrameContext context, T subject) {
+	public final void schedule(T subject) {
 		GlWorkUnit workUnit = workUnitBySubject.get(subject);
 		if (workUnit == null) {
 			throw new IllegalArgumentException("no work unit for subject: " + subject);
 		}
-		context.schedule(workUnit);
+		workUnit.schedule();
 	}
 
 	/**

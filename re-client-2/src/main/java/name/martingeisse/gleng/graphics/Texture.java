@@ -1,5 +1,6 @@
-package name.martingeisse.miner.client.engine.graphics;
+package name.martingeisse.gleng.graphics;
 
+import name.martingeisse.gleng.work_units.WorkUnits;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11C;
 
@@ -23,8 +24,8 @@ public final class Texture {
         this.height = height;
     }
 
-    public void glBindTexture() {
-        GL11C.glBindTexture(GL_TEXTURE_2D, id);
+    public int getId() {
+        return id;
     }
 
     public int getWidth() {
@@ -35,7 +36,21 @@ public final class Texture {
         return height;
     }
 
-    public static Texture fromBufferedImage(BufferedImage bufferedImage) {
+    /**
+     * Invokes glBindTexture(). To be called from the OpenGL thread.
+     */
+    public void glBindTexture() {
+        GL11C.glBindTexture(GL_TEXTURE_2D, id);
+    }
+
+    // ----------------------------------------------------------------------------------------------------------------
+    // factory methods
+    // ----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates an OpenGL texture. To be called from the OpenGL thread.
+     */
+    public static int glXXX_register(BufferedImage bufferedImage) {
         int width = bufferedImage.getWidth();
         int height = bufferedImage.getHeight();
         ByteBuffer data = BufferUtils.createByteBuffer(width * height * 4);
@@ -54,7 +69,12 @@ public final class Texture {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-        return new Texture(id, width, height);
+        return id;
+    }
+
+    public static Texture fromBufferedImage(BufferedImage bufferedImage) {
+        int id = WorkUnits.scheduleAndWait(() -> glXXX_register(bufferedImage));
+        return new Texture(id, bufferedImage.getWidth(), bufferedImage.getHeight());
     }
 
     public static Texture loadFromClasspath(Class<?> anchor, String path) {
