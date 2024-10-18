@@ -23,29 +23,43 @@ import org.lwjgl.opengl.GL11;
  */
 public final class Peephole extends AbstractWrapperElement {
 
-	private static int currentClipX = -1;
-	private static int currentClipY = -1;
-	private static int currentClipW = -1;
-	private static int currentClipH = -1;
+	private int innerWidthRequest = -1;
+	private int innerHeightRequest = -1;
+	private int displacementX = 0;
+	private int displacementY = 0;
+	private boolean clip = true;
 
-	private volatile int innerWidthRequest = -1;
-	private volatile int innerHeightRequest = -1;
-	private volatile int displacementX = 0;
-	private volatile int displacementY = 0;
-	private volatile boolean clip = true;
+	private static final class WorkUnitSharedState {
+		// these variables are solely used by the OpenGL thread
+		int previousClipX;
+		int previousClipY;
+		int previousClipW;
+		int previousClipH;
+	}
+	private final WorkUnitSharedState workUnitSharedState = new WorkUnitSharedState();
 
-	private volatile int previousClipX;
-	private volatile int previousClipY;
-	private volatile int previousClipW;
-	private volatile int previousClipH;
+	private static final class MyPreWorkUnit extends GlWorkUnit {
 
-	private final GlWorkUnit preClipWorkUnit = new GlWorkUnit() {
+		private final WorkUnitSharedState workUnitSharedState;
+		private final int x;
+		private final int y;
+		private final int w;
+		private final int h;
+
+		public MyPreWorkUnit(WorkUnitSharedState workUnitSharedState, int x, int y, int w, int h) {
+			this.workUnitSharedState = workUnitSharedState;
+			this.x = x;
+			this.y = y;
+			this.w = w;
+			this.h = h;
+		}
+
 		@Override
 		public void execute() {
-			previousClipX = currentClipX;
-			previousClipY = currentClipY;
-			previousClipW = currentClipW;
-			previousClipH = currentClipH;
+			workUnitSharedState.previousClipX = currentClipX;
+			workUnitSharedState.previousClipY = currentClipY;
+			workUnitSharedState.previousClipW = currentClipW;
+			workUnitSharedState.previousClipH = currentClipH;
 			currentClipX = getGui().unitsToPixelsInt(getAbsoluteX());
 			currentClipY = getGui().unitsToPixelsInt(Gui.HEIGHT_UNITS - getAbsoluteY() - getHeight());
 			currentClipW = getGui().unitsToPixelsInt(getWidth());
@@ -55,7 +69,22 @@ public final class Peephole extends AbstractWrapperElement {
 		}
 	};
 
-	private final GlWorkUnit postClipWorkUnit = new GlWorkUnit() {
+	private static final class MyPostWorkUnit extends GlWorkUnit {
+
+		private final WorkUnitSharedState workUnitSharedState;
+		private final int x;
+		private final int y;
+		private final int w;
+		private final int h;
+
+		public MyPostWorkUnit(WorkUnitSharedState workUnitSharedState, int x, int y, int w, int h) {
+			this.workUnitSharedState = workUnitSharedState;
+			this.x = x;
+			this.y = y;
+			this.w = w;
+			this.h = h;
+		}
+
 		@Override
 		public void execute() {
 			currentClipX = previousClipX;
@@ -83,6 +112,8 @@ public final class Peephole extends AbstractWrapperElement {
 
 	public void setInnerWidthRequest(int innerWidthRequest) {
 		this.innerWidthRequest = innerWidthRequest;
+		requestLayout();
+		invalidateCachedWorkUnits();
 	}
 
 	public int getInnerHeightRequest() {
@@ -91,6 +122,8 @@ public final class Peephole extends AbstractWrapperElement {
 
 	public void setInnerHeightRequest(int innerHeightRequest) {
 		this.innerHeightRequest = innerHeightRequest;
+		requestLayout();
+		invalidateCachedWorkUnits();
 	}
 
 	public int getDisplacementX() {
@@ -99,6 +132,8 @@ public final class Peephole extends AbstractWrapperElement {
 
 	public void setDisplacementX(int displacementX) {
 		this.displacementX = displacementX;
+		requestLayout();
+		invalidateCachedWorkUnits();
 	}
 
 	public int getDisplacementY() {
@@ -107,11 +142,15 @@ public final class Peephole extends AbstractWrapperElement {
 
 	public void setDisplacementY(int displacementY) {
 		this.displacementY = displacementY;
+		requestLayout();
+		invalidateCachedWorkUnits();
 	}
 
 	public void setDisplacement(int displacementX, int displacementY) {
 		this.displacementX = displacementX;
 		this.displacementY = displacementY;
+		requestLayout();
+		invalidateCachedWorkUnits();
 	}
 
 	public boolean isClip() {
@@ -120,11 +159,12 @@ public final class Peephole extends AbstractWrapperElement {
 
 	public void setClip(boolean clip) {
 		this.clip = clip;
+		invalidateCachedWorkUnits();
 	}
 
 	@Override
 	public void requestSize(final int width, final int height) {
-		requireWrappedElement();
+		invalidateCachedWorkUnits();
 		final GuiElement wrappedElement = getWrappedElement();
 		wrappedElement.requestSize(innerWidthRequest < 0 ? width : innerWidthRequest, innerHeightRequest < 0 ? height : innerHeightRequest);
 		setSize(width, height);
@@ -132,7 +172,8 @@ public final class Peephole extends AbstractWrapperElement {
 
 	@Override
 	protected void onAbsolutePositionChanged(final int absoluteX, final int absoluteY) {
-		requireWrappedElement().setAbsolutePosition(absoluteX + displacementX, absoluteY + displacementY);
+		invalidateCachedWorkUnits();
+		getWrappedElement().setAbsolutePosition(absoluteX + displacementX, absoluteY + displacementY);
 	}
 
 	@Override
@@ -145,14 +186,17 @@ public final class Peephole extends AbstractWrapperElement {
 	}
 
 	@Override
-	public void handleGraphicsFrame(GraphicsFrameContext context) {
-		if (clip) {
-			context.schedule(preClipWorkUnit);
-			super.handleGraphicsFrame(context);
-			context.schedule(postClipWorkUnit);
-		} else {
-			super.handleGraphicsFrame(context);
-		}
+	protected GlWorkUnit createPreWorkUnit() {
+		return clip
+				? new MyPreWorkUnit(workUnitSharedState, getAbsoluteX(), getAbsoluteY(), getWidth(), getHeight())
+				: GlWorkUnit.NOP_WORK_UNIT;
+	}
+
+	@Override
+	protected GlWorkUnit createPostWorkUnit() {
+		return clip
+				? new MyPostWorkUnit(workUnitSharedState, getAbsoluteX(), getAbsoluteY(), getWidth(), getHeight())
+				: GlWorkUnit.NOP_WORK_UNIT;
 	}
 
 }

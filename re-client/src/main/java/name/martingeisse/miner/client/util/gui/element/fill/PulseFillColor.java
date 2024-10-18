@@ -7,7 +7,6 @@
 package name.martingeisse.miner.client.util.gui.element.fill;
 
 import name.martingeisse.miner.client.engine.GlWorkUnit;
-import name.martingeisse.miner.client.engine.GraphicsFrameContext;
 import name.martingeisse.miner.client.util.gui.util.Color;
 import name.martingeisse.miner.client.util.gui.util.PulseFunction;
 import name.martingeisse.miner.common.util.contract.ParameterUtil;
@@ -23,18 +22,36 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public final class PulseFillColor extends AbstractFillElement {
 
-	private volatile Color color;
-	private volatile PulseFunction pulseFunction;
-	private volatile int period;
+	private Color color;
+	private PulseFunction pulseFunction;
+	private int period;
 
-	private final GlWorkUnit workUnit = new GlWorkUnit() {
+	private static final class MyWorkUnit extends GlWorkUnit {
+
+		private final int x;
+		private final int y;
+		private final int w;
+		private final int h;
+		private final Color color;
+		private final PulseFunction pulseFunction;
+		private final int period;
+
+		public MyWorkUnit(int x, int y, int w, int h, Color color, PulseFunction pulseFunction, int period) {
+			this.x = x;
+			this.y = y;
+			this.w = w;
+			this.h = h;
+			this.color = color;
+			this.pulseFunction = pulseFunction;
+			this.period = period;
+		}
+
 		@Override
 		public void execute() {
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glEnable(GL11.GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			color.glColorWithCombinedAlpha(pulseFunction.evaluate(getGui().getTimeMilliseconds(), period));
-			final int x = getAbsoluteX(), y = getAbsoluteY(), w = getWidth(), h = getHeight();
+			color.glColorWithCombinedAlpha(pulseFunction.evaluate(openglTimeMilliseconds, period));
 			GL11.glBegin(GL11.GL_TRIANGLE_FAN);
 			GL11.glVertex2i(x, y);
 			GL11.glVertex2i(x + w, y);
@@ -42,7 +59,7 @@ public final class PulseFillColor extends AbstractFillElement {
 			GL11.glVertex2i(x, y + h);
 			GL11.glEnd();
 		}
-	};
+	}
 
 	/**
 	 * Constructor.
@@ -69,6 +86,7 @@ public final class PulseFillColor extends AbstractFillElement {
 	public PulseFillColor setColor(final Color color) {
 		ParameterUtil.ensureNotNull(color, "color");
 		this.color = color;
+		invalidateWorkUnit();
 		return this;
 	}
 
@@ -88,6 +106,7 @@ public final class PulseFillColor extends AbstractFillElement {
 	public PulseFillColor setPulseFunction(final PulseFunction pulseFunction) {
 		ParameterUtil.ensureNotNull(pulseFunction, "pulseFunction");
 		this.pulseFunction = pulseFunction;
+		invalidateWorkUnit();
 		return this;
 	}
 
@@ -106,12 +125,13 @@ public final class PulseFillColor extends AbstractFillElement {
 	 */
 	public PulseFillColor setPeriod(final int period) {
 		this.period = period;
+		invalidateWorkUnit();
 		return this;
 	}
 
 	@Override
-	public void handleGraphicsFrame(GraphicsFrameContext context) {
-		context.schedule(workUnit);
+	protected GlWorkUnit createWorkUnit() {
+		return new MyWorkUnit(getAbsoluteX(), getAbsoluteY(), getWidth(), getHeight(), color, pulseFunction, period);
 	}
 
 }

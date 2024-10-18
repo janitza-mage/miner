@@ -10,6 +10,7 @@ import name.martingeisse.miner.client.engine.GlWorkUnit;
 import name.martingeisse.miner.client.engine.GraphicsFrameContext;
 import name.martingeisse.miner.client.engine.graphics.Font;
 import name.martingeisse.miner.client.util.gui.element.fill.NullElement;
+import name.martingeisse.miner.client.util.gui.util.GuiScale;
 import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import org.lwjgl.opengl.GL11;
 
@@ -19,24 +20,9 @@ import java.util.function.Consumer;
 
 public final class Gui {
 
-	/**
-	 * Total height of the screen in GUI units. This value is fixed to be resolution-independent, and the width is
-	 * determined from the aspect ratio.
-	 */
-	public static final int HEIGHT_UNITS = 100000;
-
-	/**
-	 * The "normal" grid to align things. The total height is 100 grid clicks.
-	 */
-	public static final int GRID = 1000;
-
-	/**
-	 * The "mini" grid to align things. The total height is 1000 mini-grid clicks.
-	 */
-	public static final int MINI_GRID = 100;
-
 	private final int widthPixels;
 	private final int heightPixels;
+	private final GuiScale scale;
 	private final int widthUnits;
 	private GuiElement rootElement;
 	private boolean layoutRequested;
@@ -52,14 +38,15 @@ public final class Gui {
 			GL11.glLoadIdentity();
 			GL11.glMatrixMode(GL11.GL_PROJECTION);
 			GL11.glLoadIdentity();
-			GL11.glOrtho(0, widthUnits, HEIGHT_UNITS, 0, -1, 1);
+			GL11.glOrtho(0, widthUnits, GuiScale.HEIGHT_UNITS, 0, -1, 1);
 		}
 	};
 
 	public Gui(int widthPixels, int heightPixels) {
 		this.widthPixels = widthPixels;
 		this.heightPixels = heightPixels;
-		this.widthUnits = pixelsToUnitsInt(widthPixels);
+		this.scale = new GuiScale(heightPixels);
+		this.widthUnits = scale.pixelsToUnitsInt(widthPixels);
 		this.rootElement = new NullElement();
 		this.followupLogicActions = new LinkedList<>();
 	}
@@ -73,10 +60,14 @@ public final class Gui {
 	}
 
 	/**
-	 * Note: there is no getHeightUnits method because the height is fixed at {@link #HEIGHT_UNITS}.
+	 * Note: there is no getHeightUnits method because the height is fixed at {@link GuiScale#HEIGHT_UNITS}.
 	 */
 	public int getWidthUnits() {
 		return widthUnits;
+	}
+
+	public GuiScale getScale() {
+		return scale;
 	}
 
 	public GuiElement getRootElement() {
@@ -116,54 +107,12 @@ public final class Gui {
 
 		timeMilliseconds = (int) System.currentTimeMillis();
 		if (layoutRequested) {
-			rootElement.requestSize(widthUnits, HEIGHT_UNITS);
+			rootElement.requestSize(widthUnits, GuiScale.HEIGHT_UNITS);
 			rootElement.setAbsolutePosition(0, 0);
 			layoutRequested = false;
 		}
 		context.schedule(initializeFrameWorkUnit);
 		rootElement.handleGraphicsFrame(context);
-	}
-
-	/**
-	 * Converts coordinate units to pixels.
-	 */
-	public int unitsToPixelsInt(int units) {
-		return (int) (units * (long) heightPixels / HEIGHT_UNITS);
-	}
-
-	/**
-	 * Converts pixels to coordinate units.
-	 */
-	public int pixelsToUnitsInt(int pixels) {
-		return (int) (pixels * (long) HEIGHT_UNITS / heightPixels);
-	}
-
-	/**
-	 * Converts coordinate units to pixels.
-	 */
-	public float unitsToPixelsFloat(float units) {
-		return units * heightPixels / HEIGHT_UNITS;
-	}
-
-	/**
-	 * Converts pixels to coordinate units.
-	 */
-	public float pixelsToUnitsFloat(float pixels) {
-		return pixels * HEIGHT_UNITS / heightPixels;
-	}
-
-	/**
-	 * Converts coordinate units to pixels.
-	 */
-	public double unitsToPixelsDouble(double units) {
-		return units * heightPixels / HEIGHT_UNITS;
-	}
-
-	/**
-	 * Converts pixels to coordinate units.
-	 */
-	public double pixelsToUnitsDouble(double pixels) {
-		return pixels * HEIGHT_UNITS / heightPixels;
 	}
 
 	/**

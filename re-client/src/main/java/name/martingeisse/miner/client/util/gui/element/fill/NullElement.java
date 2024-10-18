@@ -6,6 +6,7 @@
 
 package name.martingeisse.miner.client.util.gui.element.fill;
 
+import name.martingeisse.miner.client.engine.GlWorkUnit;
 import name.martingeisse.miner.client.engine.GraphicsFrameContext;
 
 /**
@@ -22,6 +23,11 @@ public final class NullElement extends AbstractFillElement {
 
 	@Override
 	public void handleGraphicsFrame(GraphicsFrameContext context) {
+	}
+
+	@Override
+	protected GlWorkUnit createWorkUnit() {
+		return GlWorkUnit.NOP_WORK_UNIT;
 	}
 
 }

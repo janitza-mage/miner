@@ -7,30 +7,29 @@
 package name.martingeisse.miner.client.util.gui.element.wrapper;
 
 import com.google.common.collect.ImmutableList;
+import name.martingeisse.miner.client.engine.GlWorkUnit;
 import name.martingeisse.miner.client.engine.GraphicsFrameContext;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiLogicFrameContext;
+import name.martingeisse.miner.client.util.gui.element.fill.NullElement;
+import name.martingeisse.miner.common.util.contract.ParameterUtil;
 
 /**
  * Base class for a GUI element that wraps a single other element.
+ * <p>
+ * The base class stores a pre/post pair of cached work units for this which get invalidated on position and size
+ * changes; subclasses should also invalidate it when needed due to other changes.
  */
 public abstract class AbstractWrapperElement extends GuiElement {
 
-	/**
-	 * the wrappedElement
-	 */
-	private volatile GuiElement wrappedElement;
+	private GuiElement wrappedElement = NullElement.instance;
+	private GlWorkUnit cachedPreWorkUnit;
+	private GlWorkUnit cachedPostWorkUnit;
 
-	/**
-	 * Constructor.
-	 */
 	public AbstractWrapperElement() {
+		this(NullElement.instance);
 	}
 
-	/**
-	 * Constructor.
-	 * @param wrappedElement the wrapped element
-	 */
 	public AbstractWrapperElement(GuiElement wrappedElement) {
 		setWrappedElement(wrappedElement);
 	}
@@ -39,8 +38,23 @@ public abstract class AbstractWrapperElement extends GuiElement {
 	 * Getter method for the wrappedElement.
 	 * @return the wrappedElement
 	 */
-	public GuiElement getWrappedElement() {
+	public final GuiElement getWrappedElement() {
 		return wrappedElement;
+	}
+
+	// there is no method to invalidate only one of the cached work units because setWrappedElement() would not know
+	// whether to use it
+	protected final void invalidateCachedWorkUnits() {
+		cachedPreWorkUnit = null;
+		cachedPostWorkUnit = null;
+	}
+
+	protected GlWorkUnit createPreWorkUnit() {
+		return GlWorkUnit.NOP_WORK_UNIT;
+	}
+
+	protected GlWorkUnit createPostWorkUnit() {
+		return GlWorkUnit.NOP_WORK_UNIT;
 	}
 
 	/**
@@ -49,31 +63,32 @@ public abstract class AbstractWrapperElement extends GuiElement {
 	 * @return this for chaining
 	 */
 	public AbstractWrapperElement setWrappedElement(GuiElement wrappedElement) {
+		ParameterUtil.ensureNotNull(wrappedElement, "wrappedElement");
+
+		this.wrappedElement.notifyRemovedFromParent();
 		this.wrappedElement = wrappedElement;
-		requireWrappedElement().notifyAddedToParent(this);
+		this.wrappedElement.notifyAddedToParent(this);
 		requestLayout();
+		invalidateCachedWorkUnits();
 		return this;
 	}
 
 	@Override
 	public void handleLogicFrame(GuiLogicFrameContext context) {
-		requireWrappedElement().handleLogicFrame(context);
+		wrappedElement.handleLogicFrame(context);
 	}
 
 	@Override
 	public void handleGraphicsFrame(GraphicsFrameContext context) {
-		requireWrappedElement().handleGraphicsFrame(context);
-	}
-
-	/**
-	 * Throws an {@link IllegalStateException} if no wrapped element is currently set.
-	 */
-	public final GuiElement requireWrappedElement() {
-		var wrappedElement = this.wrappedElement;
-		if (wrappedElement == null) {
-			throw new IllegalArgumentException(getClass().getName() + " has no wrapped element set");
+		if (cachedPreWorkUnit == null) {
+			cachedPreWorkUnit = createPreWorkUnit();
 		}
-		return wrappedElement;
+		if (cachedPostWorkUnit == null) {
+			cachedPostWorkUnit = createPostWorkUnit();
+		}
+		context.schedule(cachedPreWorkUnit);
+		wrappedElement.handleGraphicsFrame(context);
+		context.schedule(cachedPostWorkUnit);
 	}
 
 	@Override

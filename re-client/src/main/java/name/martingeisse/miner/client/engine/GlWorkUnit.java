@@ -13,6 +13,12 @@ public abstract class GlWorkUnit {
 
 	public static volatile int openglTimeMilliseconds = 0;
 
+	public static GlWorkUnit NOP_WORK_UNIT = new GlWorkUnit() {
+		@Override
+		public void execute() {
+		}
+	};
+
 	/**
 	 * Executes this work unit.
 	 */

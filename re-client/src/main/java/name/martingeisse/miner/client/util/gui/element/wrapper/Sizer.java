@@ -17,14 +17,16 @@ import name.martingeisse.miner.client.util.gui.util.AreaAlignment;
  * using an {@link AreaAlignment}.
  * <p>
  * Growing is enabled for both axes by default.
+ * <p>
+ * TODO why fill up the requested size? {@link Glue} already does that.
  */
 public final class Sizer extends AbstractWrapperElement {
 
-	private volatile int innerWidthRequest;
-	private volatile int innerHeightRequest;
-	private volatile AreaAlignment alignment;
-	private volatile boolean growWidth = true;
-	private volatile boolean growHeight = true;
+	private int innerWidthRequest;
+	private int innerHeightRequest;
+	private AreaAlignment alignment;
+	private boolean growWidth = true;
+	private boolean growHeight = true;
 
 	/**
 	 * Constructor using center alignment.

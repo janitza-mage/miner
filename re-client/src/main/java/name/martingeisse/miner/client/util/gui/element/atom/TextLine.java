@@ -127,9 +127,9 @@ public final class TextLine extends LeafElement {
 		if (effectiveFont == null || text == null) {
 			setSize(0, 0);
 		} else {
-			Gui gui = getGui();
-			int textWidth = gui.pixelsToUnitsInt(effectiveFont.getStringWidth(text));
-			int textHeight = gui.pixelsToUnitsInt(effectiveFont.getCharacterHeight());
+			var scale = getGui().getScale();
+			int textWidth = scale.pixelsToUnitsInt(effectiveFont.getStringWidth(text));
+			int textHeight = scale.pixelsToUnitsInt(effectiveFont.getCharacterHeight());
 			setSize(textWidth, textHeight);
 		}
 	}
@@ -146,9 +146,9 @@ public final class TextLine extends LeafElement {
 	@Override
 	public void handleGraphicsFrame(GraphicsFrameContext context) {
 		if (cachedWorkUnit == null) {
-			Gui gui = getGui();
-			int windowPosX = gui.unitsToPixelsInt(getAbsoluteX());
-			int windowPosY = getGui().getHeightPixels() - gui.unitsToPixelsInt(getAbsoluteY());
+			var scale = getGui().getScale();
+			int windowPosX = scale.unitsToPixelsInt(getAbsoluteX());
+			int windowPosY = getGui().getHeightPixels() - scale.unitsToPixelsInt(getAbsoluteY());
 			cachedWorkUnit = new MyWorkUnit(getEffectiveFont(), color, text, windowPosX, windowPosY);
 		}
 		context.schedule(cachedWorkUnit);

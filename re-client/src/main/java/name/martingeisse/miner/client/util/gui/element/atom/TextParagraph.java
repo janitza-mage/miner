@@ -9,7 +9,6 @@ package name.martingeisse.miner.client.util.gui.element.atom;
 import name.martingeisse.miner.client.engine.GlWorkUnit;
 import name.martingeisse.miner.client.engine.GraphicsFrameContext;
 import name.martingeisse.miner.client.engine.graphics.Font;
-import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.GuiLogicFrameContext;
 import name.martingeisse.miner.client.util.gui.util.Color;
 import name.martingeisse.miner.client.util.gui.util.LeafElement;
@@ -183,7 +182,7 @@ public final class TextParagraph extends LeafElement {
 
 	private String[] getLines(int width) {
 		if (cachedLines == null) {
-			Gui gui = getGui();
+			var scale = getGui().getScale();
 			Font effectiveFont = getEffectiveFont();
 			List<String> lines = new ArrayList<>();
 			if (effectiveFont != null && text != null) {
@@ -194,7 +193,7 @@ public final class TextParagraph extends LeafElement {
 					}
 					int previousCharacterCount = lineBuilder.length();
 					lineBuilder.append(word);
-					int newSize = gui.pixelsToUnitsInt(effectiveFont.getStringWidth(lineBuilder.toString()));
+					int newSize = scale.pixelsToUnitsInt(effectiveFont.getStringWidth(lineBuilder.toString()));
 					if (newSize > width) {
 						lineBuilder.setLength(previousCharacterCount);
 						lines.add(lineBuilder.toString());
@@ -214,10 +213,10 @@ public final class TextParagraph extends LeafElement {
 	// this may only be called after the absolute position has been set
 	private MyWorkUnit getWorkUnit(int width) {
 		if (cachedWorkUnit == null) {
-			Gui gui = getGui();
+			var scale = getGui().getScale();
 			String[] lines = getLines(width);
-			int windowPosX = gui.unitsToPixelsInt(getAbsoluteX());
-			int windowPosY = getGui().getHeightPixels() - gui.unitsToPixelsInt(getAbsoluteY());
+			int windowPosX = scale.unitsToPixelsInt(getAbsoluteX());
+			int windowPosY = getGui().getHeightPixels() - scale.unitsToPixelsInt(getAbsoluteY());
 			cachedWorkUnit = new MyWorkUnit(getEffectiveFont(), color, lines, windowPosX, windowPosY);
 		}
 		return cachedWorkUnit;
@@ -231,7 +230,7 @@ public final class TextParagraph extends LeafElement {
 	public void requestSize(final int width, final int height) {
 		cachedLines = null;
 		cachedWorkUnit = null;
-		int lineHeight = getGui().pixelsToUnitsInt(getEffectiveFont().getCharacterHeight());
+		int lineHeight = getGui().getScale().pixelsToUnitsInt(getEffectiveFont().getCharacterHeight());
 		String[] lines = getLines(width);
 		setSize(width, lineHeight * lines.length);
 	}

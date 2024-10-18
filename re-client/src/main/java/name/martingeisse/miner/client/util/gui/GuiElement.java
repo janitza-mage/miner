@@ -195,9 +195,9 @@ public abstract class GuiElement {
 		if (context.isMouseObscured()) {
 			return false;
 		}
-		var gui = getGui();
-		double x = gui.pixelsToUnitsDouble(context.getMouseX());
-		double y = gui.pixelsToUnitsDouble(context.getMouseY());
+		var scale = getGui().getScale();
+		double x = scale.pixelsToUnitsDouble(context.getMouseX());
+		double y = scale.pixelsToUnitsDouble(context.getMouseY());
 		// TODO what are the units sent by GLFW? pixels?
 		return (x >= absoluteX && x < absoluteX + getWidth() && y >= absoluteY && y < absoluteY + getHeight());
 	}

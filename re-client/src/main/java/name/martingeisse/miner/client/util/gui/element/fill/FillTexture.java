@@ -7,9 +7,8 @@
 package name.martingeisse.miner.client.util.gui.element.fill;
 
 import name.martingeisse.miner.client.engine.GlWorkUnit;
-import name.martingeisse.miner.client.engine.GraphicsFrameContext;
 import name.martingeisse.miner.client.engine.graphics.Texture;
-import name.martingeisse.miner.client.util.gui.Gui;
+import name.martingeisse.miner.client.util.gui.util.GuiScale;
 import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import org.lwjgl.opengl.GL11;
 
@@ -18,20 +17,39 @@ import org.lwjgl.opengl.GL11;
  */
 public final class FillTexture extends AbstractFillElement {
 
-	private volatile Texture texture;
-	private volatile int repetitionLengthX;
-	private volatile int repetitionLengthY;
+	private Texture texture;
+	private int repetitionLengthX;
+	private int repetitionLengthY;
 
-	private final GlWorkUnit workUnit = new GlWorkUnit() {
+	private static final class MyWorkUnit extends GlWorkUnit {
+
+		private final int x;
+		private final int y;
+		private final int w;
+		private final int h;
+		private final Texture texture;
+		private final int repetitionLengthX;
+		private final int repetitionLengthY;
+		private final GuiScale scale;
+
+		public MyWorkUnit(int x, int y, int w, int h, Texture texture, int repetitionLengthX, int repetitionLengthY, GuiScale scale) {
+			this.x = x;
+			this.y = y;
+			this.w = w;
+			this.h = h;
+			this.texture = texture;
+			this.repetitionLengthX = repetitionLengthX;
+			this.repetitionLengthY = repetitionLengthY;
+			this.scale = scale;
+		}
+
 		@Override
 		public void execute() {
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			GL11.glDisable(GL11.GL_BLEND);
 			texture.glBindTexture();
-			final int x = getAbsoluteX(), y = getAbsoluteY(), w = getWidth(), h = getHeight();
-			final Gui gui = getGui();
-			final float effectiveRepetitionLengthX = (repetitionLengthX < 1 ? gui.pixelsToUnitsInt(texture.getWidth()) : repetitionLengthX);
-			final float effectiveRepetitionLengthY = (repetitionLengthY < 1 ? gui.pixelsToUnitsInt(texture.getHeight()) : repetitionLengthY);
+			final float effectiveRepetitionLengthX = (repetitionLengthX < 1 ? scale.pixelsToUnitsInt(texture.getWidth()) : repetitionLengthX);
+			final float effectiveRepetitionLengthY = (repetitionLengthY < 1 ? scale.pixelsToUnitsInt(texture.getHeight()) : repetitionLengthY);
 			final float s = (w / effectiveRepetitionLengthX);
 			final float t = (h / effectiveRepetitionLengthY);
 
@@ -47,7 +65,7 @@ public final class FillTexture extends AbstractFillElement {
 			GL11.glVertex2i(x, y + h);
 			GL11.glEnd();
 		}
-	};
+	}
 
 	/**
 	 * Constructor.
@@ -81,6 +99,7 @@ public final class FillTexture extends AbstractFillElement {
 			throw new IllegalArgumentException("invalid x repetition length: " + repetitionLengthX);
 		}
 		this.repetitionLengthX = repetitionLengthX;
+		invalidateWorkUnit();
 		return this;
 	}
 
@@ -94,6 +113,7 @@ public final class FillTexture extends AbstractFillElement {
 			throw new IllegalArgumentException("invalid y repetition length: " + repetitionLengthY);
 		}
 		this.repetitionLengthY = repetitionLengthY;
+		invalidateWorkUnit();
 		return this;
 	}
 
@@ -125,12 +145,19 @@ public final class FillTexture extends AbstractFillElement {
 	public FillTexture setTexture(final Texture texture) {
 		ParameterUtil.ensureNotNull(texture, "texture");
 		this.texture = texture;
+		invalidateWorkUnit();
 		return this;
 	}
 
 	@Override
-	public void handleGraphicsFrame(GraphicsFrameContext context) {
-		context.schedule(workUnit);
+	protected GlWorkUnit createWorkUnit() {
+		return new MyWorkUnit(
+				getAbsoluteX(), getAbsoluteY(),
+				getWidth(), getHeight(),
+				texture,
+				repetitionLengthX, repetitionLengthY,
+				getGui().getScale()
+		);
 	}
 
 }

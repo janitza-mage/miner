@@ -7,7 +7,6 @@
 package name.martingeisse.miner.client.util.gui.element.wrapper;
 
 import name.martingeisse.miner.client.engine.GlWorkUnit;
-import name.martingeisse.miner.client.engine.GraphicsFrameContext;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.util.Color;
 import org.lwjgl.opengl.GL11;
@@ -20,13 +19,33 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public final class Box extends AbstractWrapperElement {
 
-	private final Sides margin = new Sides(this::requestLayout);
-	private final Sides border = new Sides(this::requestLayout);
-	private final Sides padding = new Sides(this::requestLayout);
-	private volatile Color borderColor = Color.BLACK;
-	private volatile Color backgroundColor = null;
+	private final MutableSides margin = new MutableSides();
+	private final MutableSides border = new MutableSides();
+	private final MutableSides padding = new MutableSides();
+	private Color borderColor = Color.BLACK;
+	private Color backgroundColor = null;
 
-	private final GlWorkUnit workUnit = new GlWorkUnit() {
+	private static final class MyPreWorkUnit extends GlWorkUnit {
+
+		private final int x;
+		private final int y;
+		private final int w;
+		private final int h;
+		private final Sides margin;
+		private final Sides border;
+		private final Color borderColor;
+		private final Color backgroundColor;
+
+		public MyPreWorkUnit(int x, int y, int w, int h, Sides margin, Sides border, Color borderColor, Color backgroundColor) {
+			this.x = x;
+			this.y = y;
+			this.w = w;
+			this.h = h;
+			this.margin = margin;
+			this.border = border;
+			this.borderColor = borderColor;
+			this.backgroundColor = backgroundColor;
+		}
 
 		@Override
 		public void execute() {
@@ -34,33 +53,29 @@ public final class Box extends AbstractWrapperElement {
 			GL11.glEnable(GL11.GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			// make sure those won't get nulled in the middle of this method
-			var borderColor = Box.this.borderColor;
-			var backgroundColor = Box.this.backgroundColor;
-
 			// draw border
 			if (borderColor != null && border.hasAny()) {
-				int x1a = getAbsoluteX() + margin.getLeft();
-				int x1b = x1a + border.getLeft();
-				int y1a = getAbsoluteY() + margin.getTop();
-				int y1b = y1a + border.getTop();
-				int x2a = getAbsoluteX() + getWidth() - margin.getRight();
-				int x2b = x2a - border.getRight();
-				int y2a = getAbsoluteY() + getHeight() - margin.getBottom();
-				int y2b = y2a - border.getBottom();
+				int x1a = x + margin.left();
+				int x1b = x1a + border.left();
+				int y1a = y + margin.top();
+				int y1b = y1a + border.top();
+				int x2a = x + w - margin.right();
+				int x2b = x2a - border.right();
+				int y2a = y + h - margin.bottom();
+				int y2b = y2a - border.bottom();
 
 				borderColor.glColor();
 				GL11.glBegin(GL11.GL_TRIANGLES);
-				if (border.getTop() > 0) {
+				if (border.top() > 0) {
 					quad(x1a, y1a, x2a, y1a, x2b, y1b, x1b, y1b);
 				}
-				if (border.getLeft() > 0) {
+				if (border.left() > 0) {
 					quad(x1a, y1a, x1b, y1b, x1b, y2b, x1a, y2a);
 				}
-				if (border.getRight() > 0) {
+				if (border.right() > 0) {
 					quad(x2a, y1a, x2a, y2a, x2b, y2b, x2b, y1b);
 				}
-				if (border.getBottom() > 0) {
+				if (border.bottom() > 0) {
 					quad(x1a, y2a, x1b, y2b, x2b, y2b, x2a, y2a);
 				}
 				GL11.glEnd();
@@ -68,14 +83,13 @@ public final class Box extends AbstractWrapperElement {
 
 			// draw background
 			if (backgroundColor != null) {
-				int x = getAbsoluteX(), y = getAbsoluteY(), w = getWidth(), h = getHeight();
 				backgroundColor.glColor();
 				GL11.glBegin(GL11.GL_TRIANGLES);
 				rectangle(
-					x + margin.getLeft() + border.getLeft(),
-					y + margin.getTop() + border.getTop(),
-					x + w - margin.getRight() - border.getRight(),
-					y + h - margin.getBottom() - border.getBottom()
+					x + margin.left() + border.left(),
+					y + margin.top() + border.top(),
+					x + w - margin.right() - border.right(),
+					y + h - margin.bottom() - border.bottom()
 				);
 				GL11.glEnd();
 			}
@@ -97,7 +111,7 @@ public final class Box extends AbstractWrapperElement {
 			GL11.glVertex2i(x3, y3);
 		}
 
-	};
+	}
 
 	/**
 	 * Constructor.
@@ -114,15 +128,15 @@ public final class Box extends AbstractWrapperElement {
 		super(wrappedElement);
 	}
 
-	public Sides getMargin() {
+	public MutableSides getMargin() {
 		return margin;
 	}
 
-	public Sides getBorder() {
+	public MutableSides getBorder() {
 		return border;
 	}
 
-	public Sides getPadding() {
+	public MutableSides getPadding() {
 		return padding;
 	}
 
@@ -132,6 +146,7 @@ public final class Box extends AbstractWrapperElement {
 
 	public void setBorderColor(Color borderColor) {
 		this.borderColor = borderColor;
+		invalidateCachedWorkUnits();
 	}
 
 	public Color getBackgroundColor() {
@@ -140,41 +155,39 @@ public final class Box extends AbstractWrapperElement {
 
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-	}
-
-	@Override
-	public void handleGraphicsFrame(GraphicsFrameContext context) {
-		context.schedule(workUnit);
-		super.handleGraphicsFrame(context);
+		invalidateCachedWorkUnits();
 	}
 
 	@Override
 	public void requestSize(int width, int height) {
+		invalidateCachedWorkUnits();
 		int horizontalExtra = margin.getLeft() + margin.getRight() + border.getLeft() + border.getRight() + padding.getLeft() + padding.getRight();
 		int verticalExtra = margin.getTop() + margin.getBottom() + border.getTop() + border.getBottom() + padding.getTop() + padding.getBottom();
 		int remainingWidth = width - horizontalExtra;
 		int remainingHeight = height - verticalExtra;
-		GuiElement wrappedElement = requireWrappedElement();
+		GuiElement wrappedElement = getWrappedElement();
 		wrappedElement.requestSize(Math.max(remainingWidth, 0), Math.max(remainingHeight, 0));
 		setSize(wrappedElement.getWidth() + horizontalExtra, wrappedElement.getHeight() + verticalExtra);
 	}
 
 	@Override
 	protected void onAbsolutePositionChanged(int absoluteX, int absoluteY) {
-		requireWrappedElement().setAbsolutePosition(
+		invalidateCachedWorkUnits();
+		getWrappedElement().setAbsolutePosition(
 			absoluteX + margin.getLeft() + border.getLeft() + padding.getLeft(),
 			absoluteY + margin.getTop() + border.getTop() + padding.getTop()
 		);
 	}
 
-	public static final class Sides {
+	@Override
+	protected GlWorkUnit createPreWorkUnit() {
+		return new MyPreWorkUnit(getAbsoluteX(), getAbsoluteY(), getWidth(), getHeight(),
+				margin.getImmutable(), border.getImmutable(), borderColor, backgroundColor);
+	}
 
-		private volatile int top, bottom, left, right;
-		private final Runnable changeCallback;
+	public final class MutableSides {
 
-		Sides(Runnable changeCallback) {
-			this.changeCallback = changeCallback;
-		}
+		private int top, bottom, left, right;
 
 		public int getTop() {
 			return top;
@@ -182,7 +195,7 @@ public final class Box extends AbstractWrapperElement {
 
 		public void setTop(int top) {
 			this.top = top;
-			changeCallback.run();
+			onChange();
 		}
 
 		public int getBottom() {
@@ -191,7 +204,7 @@ public final class Box extends AbstractWrapperElement {
 
 		public void setBottom(int bottom) {
 			this.bottom = bottom;
-			changeCallback.run();
+			onChange();
 		}
 
 		public int getLeft() {
@@ -200,7 +213,7 @@ public final class Box extends AbstractWrapperElement {
 
 		public void setLeft(int left) {
 			this.left = left;
-			changeCallback.run();
+			onChange();
 		}
 
 		public int getRight() {
@@ -209,19 +222,19 @@ public final class Box extends AbstractWrapperElement {
 
 		public void setRight(int right) {
 			this.right = right;
-			changeCallback.run();
+			onChange();
 		}
 
 		public void setVertical(int vertical) {
 			this.top = vertical;
 			this.bottom = vertical;
-			changeCallback.run();
+			onChange();
 		}
 
 		public void setHorizontal(int horizontal) {
 			this.left = horizontal;
 			this.right = horizontal;
-			changeCallback.run();
+			onChange();
 		}
 
 		public void set(int size) {
@@ -229,7 +242,7 @@ public final class Box extends AbstractWrapperElement {
 			this.bottom = size;
 			this.left = size;
 			this.right = size;
-			changeCallback.run();
+			onChange();
 		}
 
 		public void set(int vertical, int horizontal) {
@@ -237,7 +250,7 @@ public final class Box extends AbstractWrapperElement {
 			this.bottom = vertical;
 			this.left = horizontal;
 			this.right = horizontal;
-			changeCallback.run();
+			onChange();
 		}
 
 		public void set(int top, int horizontal, int bottom) {
@@ -245,16 +258,33 @@ public final class Box extends AbstractWrapperElement {
 			this.bottom = bottom;
 			this.left = horizontal;
 			this.right = horizontal;
-			changeCallback.run();
+			onChange();
 		}
 
-		public void set(int top, int left, int right, int bottom) {
+		public void set(int top, int right, int bottom, int left) {
 			this.top = top;
+			this.right = right;
 			this.bottom = bottom;
 			this.left = left;
-			this.right = right;
-			changeCallback.run();
+			onChange();
 		}
+
+		public boolean hasAny() {
+			return top > 0 || bottom > 0 || left > 0 || right > 0;
+		}
+
+		private void onChange() {
+			invalidateCachedWorkUnits();
+			requestLayout();
+		}
+
+		public Sides getImmutable() {
+			return new Sides(top, right, bottom, left);
+		}
+
+	}
+
+	public record Sides(int top, int right, int bottom, int left) {
 
 		public boolean hasAny() {
 			return top > 0 || bottom > 0 || left > 0 || right > 0;

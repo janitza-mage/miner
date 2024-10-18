@@ -13,10 +13,10 @@ import name.martingeisse.miner.client.util.gui.GuiElement;
  */
 public final class Margin extends AbstractWrapperElement {
 
-	private volatile int top;
-	private volatile int right;
-	private volatile int bottom;
-	private volatile int left;
+	private int top;
+	private int right;
+	private int bottom;
+	private int left;
 
 	/**
 	 * Constructor.
@@ -143,6 +143,7 @@ public final class Margin extends AbstractWrapperElement {
 	 */
 	public Margin setTop(int top) {
 		this.top = top;
+		requestLayout();
 		return this;
 	}
 
@@ -161,6 +162,7 @@ public final class Margin extends AbstractWrapperElement {
 	 */
 	public Margin setRight(int right) {
 		this.right = right;
+		requestLayout();
 		return this;
 	}
 
@@ -179,6 +181,7 @@ public final class Margin extends AbstractWrapperElement {
 	 */
 	public Margin setBottom(int bottom) {
 		this.bottom = bottom;
+		requestLayout();
 		return this;
 	}
 
@@ -197,22 +200,22 @@ public final class Margin extends AbstractWrapperElement {
 	 */
 	public Margin setLeft(int left) {
 		this.left = left;
+		requestLayout();
 		return this;
 	}
 
 	@Override
 	public void requestSize(int width, int height) {
-		requireWrappedElement();
 		int remainingWidth = width - left - right;
 		int remainingHeight = height - top - bottom;
-		GuiElement wrappedElement = requireWrappedElement();
+		GuiElement wrappedElement = getWrappedElement();
 		wrappedElement.requestSize(Math.max(remainingWidth, 0), Math.max(remainingHeight, 0));
 		setSize(wrappedElement.getWidth() + left + right, wrappedElement.getHeight() + top + bottom);
 	}
 
 	@Override
 	protected void onAbsolutePositionChanged(int absoluteX, int absoluteY) {
-		requireWrappedElement().setAbsolutePosition(absoluteX + left, absoluteY + top);
+		getWrappedElement().setAbsolutePosition(absoluteX + left, absoluteY + top);
 	}
 
 }

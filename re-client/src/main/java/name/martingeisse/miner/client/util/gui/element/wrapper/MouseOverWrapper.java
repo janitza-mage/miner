@@ -6,6 +6,7 @@
 
 package name.martingeisse.miner.client.util.gui.element.wrapper;
 
+import name.martingeisse.miner.client.engine.GraphicsFrameContext;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.GuiLogicFrameContext;
 
@@ -15,6 +16,8 @@ import name.martingeisse.miner.client.util.gui.GuiLogicFrameContext;
  * mouse though.
  */
 public final class MouseOverWrapper extends AbstractWrapperElement {
+
+	private boolean visible;
 
 	/**
 	 * Constructor.
@@ -33,21 +36,28 @@ public final class MouseOverWrapper extends AbstractWrapperElement {
 
 	@Override
 	public void requestSize(final int width, final int height) {
-		var wrapped = requireWrappedElement();
+		var wrapped = getWrappedElement();
 		wrapped.requestSize(width, height);
 		setSize(wrapped.getWidth(), wrapped.getHeight());
 	}
 
 	@Override
 	protected void onAbsolutePositionChanged(int absoluteX, int absoluteY) {
-		requireWrappedElement().setAbsolutePosition(absoluteX, absoluteY);
+		getWrappedElement().setAbsolutePosition(absoluteX, absoluteY);
 	}
 
 	@Override
 	public void handleLogicFrame(GuiLogicFrameContext context) {
-		if (isMouseInside(context)) {
-			requireWrappedElement().handleLogicFrame(context);
+		visible = isMouseInside(context);
+		if (visible) {
+			getWrappedElement().handleLogicFrame(context);
 		}
 	}
 
+	@Override
+	public void handleGraphicsFrame(GraphicsFrameContext context) {
+		if (visible) {
+			getWrappedElement().handleGraphicsFrame(context);
+		}
+	}
 }
