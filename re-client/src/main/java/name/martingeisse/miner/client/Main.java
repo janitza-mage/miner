@@ -1,5 +1,8 @@
 package name.martingeisse.miner.client;
 
+import name.martingeisse.gleng.Gleng;
+import name.martingeisse.gleng.GlengParameters;
+import name.martingeisse.gleng.graphics.Texture;
 import name.martingeisse.miner.client.engine.graphics.Texture;
 
 import java.nio.FloatBuffer;
@@ -20,10 +23,8 @@ public class Main {
     private static Texture texture;
 
     public static void main(String[] args) throws Exception {
-        EngineUserParameters engineUserParameters = EngineUserParameters.parseCommandLine(args,
-                new EngineUserParameters(800, 600, false)
-        );
-        EngineParameters parameters = new EngineParameters("MyIntro", null, engineUserParameters);
+        GlengParameters glengParameters = GlengParameters.from("Miner", 800, 600, false, args);
+        Gleng.run(glengParameters, );
         try (Engine engine = new Engine(parameters, args, new FrameHandler() {
 
             @Override

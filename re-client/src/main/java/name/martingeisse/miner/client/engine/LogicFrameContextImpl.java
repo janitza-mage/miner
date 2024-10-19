@@ -1,21 +1,16 @@
-package name.martingeisse.miner.client.engine.temp_old;
+package name.martingeisse.miner.client.engine;
 
-import com.google.common.util.concurrent.AtomicDouble;
+import name.martingeisse.gleng.Gleng;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 final class LogicFrameContextImpl implements LogicFrameContext {
 
     private final Engine engine;
-    private final BlockingQueue<KeyboardEvent> keyboardEventQueue = new LinkedBlockingQueue<>();
-    private final BlockingQueue<MouseButtonEvent> mouseButtonEventQueue = new LinkedBlockingQueue<>();
-    private final AtomicDouble incomingMouseX = new AtomicDouble(0);
-    private final AtomicDouble incomingMouseY = new AtomicDouble(0);
+    private final GlengCallbacksImpl glengCallbacks;
     private double timeDelta = 0;
     private boolean shutdownRequested = false;
 
@@ -33,44 +28,29 @@ final class LogicFrameContextImpl implements LogicFrameContext {
     private double previousMouseX = 0;
     private double previousMouseY = 0;
 
-    public LogicFrameContextImpl(Engine engine) {
+    public LogicFrameContextImpl(Engine engine, GlengCallbacksImpl glengCallbacks) {
         this.engine = engine;
-    }
-
-    void addKeyboardEvent(KeyboardEvent event) {
-        keyboardEventQueue.add(event);
-    }
-
-    void addMouseButtonEvent(MouseButtonEvent event) {
-        mouseButtonEventQueue.add(event);
-    }
-
-    void setIncomingMousePosition(double x, double y) {
-        incomingMouseX.set(x);
-        incomingMouseY.set(y);
+        this.glengCallbacks = glengCallbacks;
     }
 
     void processEvents() {
 
-        // fetch keyboard events
+        // fetch events
         currentKeyboardEvents.clear();
-        keyboardEventQueue.drainTo(currentKeyboardEvents);
-
-        // fetch mouse button events
         currentMouseButtonEvents.clear();
-        mouseButtonEventQueue.drainTo(currentMouseButtonEvents);
+        glengCallbacks.drainEventQueues(currentKeyboardEvents, currentMouseButtonEvents);
 
         // update mouse position
         if (mouseCursorEnabled) {
             previousMouseX = currentMouseX;
             previousMouseY = currentMouseY;
         } else {
-            glfwSetCursorPos(engine.getWindowId(), 0, 0);
+            glfwSetCursorPos(Gleng.getWindowId(), 0, 0);
             previousMouseX = 0;
             previousMouseY = 0;
         }
-        currentMouseX = incomingMouseX.get();
-        currentMouseY = incomingMouseY.get();
+        currentMouseX = glengCallbacks.getIncomingMouseX();
+        currentMouseY = glengCallbacks.getIncomingMouseY();
 
         // update key state
         System.arraycopy(currentKeyStates, 0, previousKeyStates, 0, currentKeyStates.length);
@@ -90,15 +70,14 @@ final class LogicFrameContextImpl implements LogicFrameContext {
     // general
     // ----------------------------------------------------------------------------------------------------------------
 
-
     @Override
     public int getWidth() {
-        return engine.getWidth();
+        return engine.getEngineParameters().glengParameters().width();
     }
 
     @Override
     public int getHeight() {
-        return engine.getHeight();
+        return engine.getEngineParameters().glengParameters().height();
     }
 
     void setTimeDelta(double timeDelta) {

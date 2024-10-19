@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.engine.temp_old;
+package name.martingeisse.miner.client.engine;
 
 /**
  * Represents an action that gets repeated every frame.
@@ -20,9 +20,8 @@ public interface FrameHandler {
 	void handleLogicFrame(LogicFrameContext context);
 
 	/**
-	 * Handles a graphics frame. This method draws the screen contents by passing OpenGL work units to the context
-	 * which are then drawn by the OpenGL thread.
+	 * Handles a graphics frame. This method draws the screen contents by scheduling OpenGL work units.
 	 */
-	void handleGraphicsFrame(GraphicsFrameContext context);
+	void handleGraphicsFrame();
 
 }

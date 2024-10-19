@@ -41,4 +41,11 @@ public final class Gleng {
         engine.glWorkerLoop.scheduleFrameBoundary();
     }
 
+    /**
+     * Returns the GLFW window ID.
+     */
+    public static long getWindowId() {
+        return engine.windowId;
+    }
+
 }
