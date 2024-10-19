@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util.lwjgl;
+package name.martingeisse.miner.client.engine.ray_action;
 
 import org.lwjgl.BufferUtils;
 
@@ -15,74 +15,32 @@ import static org.lwjgl.opengl.GL11.*;
 
 /**
  * This class captures the information that is needed for ray actions.
- *
- * Usage: Invoke capture() during the render process as described in
- * the method documentation, then invoke execute() at any later time
- * (typically in the same frame, but this is not a requirement) to
- * actually execute the ray action. Use release() to release the
- * captured state(). execute() will do nothing if there is no ray
- * target captured.
+ * <p>
+ * Usage: Invoke gl__Capture() from within the OpenGL thread during the render process to capture a target, then invoke
+ * execute() from the application thread to execute the action. Make sure to call gl__Capture() only when needed, and
+ * only once, since it is very expensive.
+ * <p>
+ * TODO: consider doing all calculations purely on in the application thread, without reading from the depth buffer,
+ * as this is much cheaper (even when doing the math in the application thread), avoids thread synchronization *and*
+ * solves the problem that gluUnProject is not available in LWJGL3.
  */
 public class RayActionSupport {
 
-	/**
-	 * the width
-	 */
-	private final int width;
-
-	/**
-	 * the height
-	 */
-	private final int height;
-
-	/**
-	 * the depthValueBuffer
-	 */
+	private final int framebufferWidth;
+	private final int framebufferHeight;
 	private final FloatBuffer depthValueBuffer;
-
-	/**
-	 * the viewport
-	 */
 	private final IntBuffer viewport;
-
-	/**
-	 * the modelviewTransform
-	 */
 	private final FloatBuffer modelviewTransform;
-
-	/**
-	 * the projectionTransform
-	 */
 	private final FloatBuffer projectionTransform;
-
-	/**
-	 * the objectPosition
-	 */
 	private final FloatBuffer objectPosition;
-
-	/**
-	 * the impactX
-	 */
 	private double impactX;
-
-	/**
-	 * the impactY
-	 */
 	private double impactY;
-
-	/**
-	 * the impactZ
-	 */
 	private double impactZ;
-
-	/**
-	 * the captured
-	 */
 	private boolean captured;
 
 	/**
 	 * Constructor.
-	 *
+	 * <p>
 	 * Note: The source position of the ray could actually be obtained from the
 	 * modelview matrix, just like all other projection properties are.
 	 * However, this involves *inverting* the modelview matrix, so I try
@@ -90,12 +48,12 @@ public class RayActionSupport {
 	 * origin in view space back to world space (the model transformation is
 	 * the identity).
 	 *
-	 * @param width the width of the frame buffer
-	 * @param height the height of the frame buffer
+	 * @param framebufferWidth the width of the frame buffer
+	 * @param framebufferHeight the height of the frame buffer
 	 */
-	public RayActionSupport(int width, int height) {
-		this.width = width;
-		this.height = height;
+	public RayActionSupport(int framebufferWidth, int framebufferHeight) {
+		this.framebufferWidth = framebufferWidth;
+		this.framebufferHeight = framebufferHeight;
 		this.depthValueBuffer = BufferUtils.createFloatBuffer(1);
 		this.viewport = BufferUtils.createIntBuffer(16);
 		this.modelviewTransform = BufferUtils.createFloatBuffer(16);
@@ -114,10 +72,10 @@ public class RayActionSupport {
 	 * is actually being used in this frame, because it might stall and flush
 	 * the render pipeline.
 	 */
-	public void capture() {
+	public void gl__Capture() {
 
 		// read the distance from the depth buffer
-		glReadPixels(width >> 1, height >> 1, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, depthValueBuffer);
+		glReadPixels(framebufferWidth >> 1, framebufferHeight >> 1, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, depthValueBuffer);
 		float depthBufferValue = depthValueBuffer.get(0);
 
 		// read the viewport and transform values
