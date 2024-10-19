@@ -10,7 +10,7 @@ public final class WorkUnits {
 
     private static final GlWorkUnit NOP_WORK_UNIT = new GlWorkUnit() {
         @Override
-        public void execute() {
+        public void gl__Execute() {
         }
     };
 
@@ -21,7 +21,7 @@ public final class WorkUnits {
     public static void scheduleAndForget(Runnable body) {
         new GlWorkUnit() {
             @Override
-            public void execute() {
+            public void gl__Execute() {
                 body.run();
             }
         }.schedule();
@@ -31,7 +31,7 @@ public final class WorkUnits {
         final CountDownLatch latch = new CountDownLatch(1);
         new GlWorkUnit() {
             @Override
-            public void execute() {
+            public void gl__Execute() {
                 body.run();
                 latch.countDown();
             }
@@ -48,7 +48,7 @@ public final class WorkUnits {
         final CountDownLatch latch = new CountDownLatch(1);
         new GlWorkUnit() {
             @Override
-            public void execute() {
+            public void gl__Execute() {
                 result.set(body.get());
                 latch.countDown();
             }

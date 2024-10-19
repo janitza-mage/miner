@@ -15,6 +15,7 @@ import static org.lwjgl.opengl.GL15.*;
 /**
  * Represents OpenGL-server-side VBOs.
  */
+@SuppressWarnings("IntegerMultiplicationImplicitCastToLong")
 public class OpenGlVertexBuffer extends OpenGlBuffer {
 
 	/**

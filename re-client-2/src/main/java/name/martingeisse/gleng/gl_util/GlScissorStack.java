@@ -16,13 +16,13 @@ public final class GlScissorStack {
 
     private static final Deque<Rectangle> stack = new ArrayDeque<>();
 
-    public static void push(int x, int y, int width, int height) {
+    public static void gl__Push(int x, int y, int width, int height) {
         stack.push(new Rectangle(x, y, width, height));
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         GL11.glScissor(x, y, width, height);
     }
 
-    public static void pop() {
+    public static void gl__Pop() {
         stack.pop();
         if (stack.isEmpty()) {
             GL11.glDisable(GL11.GL_SCISSOR_TEST);

@@ -4,36 +4,20 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util.lwjgl;
+package name.martingeisse.gleng.resource_node;
 
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * This class keeps a set of system resources. It also refers to a parent
- * node and child nodes in a hierarchy that can be used to dispose of
- * multiple resources at once.
+ * This class keeps a set of system resources. It also refers to a parent node and child nodes in a hierarchy that can
+ * be used to dispose of multiple resources at once.
  */
 public final class SystemResourceNode {
 
-	/**
-	 * the resources
-	 */
-	private final Set<ISystemResource> resources;
-
-	/**
-	 * the parent
-	 */
 	private final SystemResourceNode parent;
-
-	/**
-	 * the children
-	 */
 	private final Set<SystemResourceNode> children;
-
-	/**
-	 * the disposed
-	 */
+	private final Set<ISystemResource> resources;
 	private boolean disposed;
 
 	/**
@@ -45,31 +29,25 @@ public final class SystemResourceNode {
 
 	/**
 	 * Constructor for nodes with a parent.
-	 * @param parent the parent node
 	 */
 	public SystemResourceNode(SystemResourceNode parent) {
-		this.resources = new HashSet<ISystemResource>();
 		this.parent = parent;
-		this.children = new HashSet<SystemResourceNode>();
+		this.children = new HashSet<>();
+		this.resources = new HashSet<>();
 		this.disposed = false;
 		if (parent != null) {
 			parent.children.add(this);
 		}
 	}
 
-	/**
-	 * Getter method for the resources.
-	 * @return the resources
-	 */
 	public Set<ISystemResource> getResources() {
 		ensureNotDisposed();
 		return resources;
 	}
 
 	/**
-	 * Adds a resource that will be disposed of when this node is being disposed of.
-	 * This is a convenience method for {@link #getResources()}.add(resource).
-	 * @param resource the resource to add
+	 * Adds a resource that will be disposed of when this node is being disposed of. This is a convenience method for
+	 * {@link #getResources()}.add(resource).
 	 */
 	public void addResource(ISystemResource resource) {
 		ensureNotDisposed();
@@ -77,8 +55,7 @@ public final class SystemResourceNode {
 	}
 
 	/**
-	 * Disposes of this node, all its resources, and all its descendants and
-	 * their resources recursively.
+	 * Disposes of this node, all its resources, and all its descendants and their resources recursively.
 	 */
 	public void dispose() {
 		ensureNotDisposed();
@@ -96,9 +73,6 @@ public final class SystemResourceNode {
 		disposed = true;
 	}
 
-	/**
-	 *
-	 */
 	private void ensureNotDisposed() {
 		if (disposed) {
 			throw new IllegalStateException("this node has already been disposed of");

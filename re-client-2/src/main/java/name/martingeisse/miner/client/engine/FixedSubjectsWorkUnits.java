@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.gleng.work_units;
+package name.martingeisse.miner.client.engine;
 
 import name.martingeisse.gleng.GlWorkUnit;
 
@@ -75,7 +75,7 @@ public abstract class FixedSubjectsWorkUnits<T> {
 		}
 
 		@Override
-		public void execute() {
+		public void gl__Execute() {
 			handleSubject(subject);
 		}
 

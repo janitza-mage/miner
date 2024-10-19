@@ -16,7 +16,7 @@ public abstract class GlWorkUnit {
 	/**
 	 * Implementation of this work unit -- to be called from the OpenGL thread.
 	 */
-	protected abstract void execute();
+	protected abstract void gl__Execute();
 
 	/**
 	 * Override this method to return true for any work unit that can be skipped under high load.

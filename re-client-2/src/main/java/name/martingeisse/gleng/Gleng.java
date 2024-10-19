@@ -4,6 +4,10 @@ public final class Gleng {
 
     static GlengEngine engine;
 
+    /**
+     * This must be called from the main method / main thread. It eventually spawns the application thread and turns
+     * the calling thread into the OpenGL thread.
+     */
     public static void run(GlengParameters parameters, GlengCallbacks callbacks, Runnable gameMain) throws InterruptedException {
         if (engine != null) {
             throw new IllegalStateException("Gleng instance already exists");

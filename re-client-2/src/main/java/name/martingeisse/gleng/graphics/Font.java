@@ -65,7 +65,7 @@ public abstract class Font {
 	 * @param horizontalAlignment how to align the text horizontally
 	 * @param verticalAlignment how to align the text vertically
 	 */
-	public void drawText(final String s, final float zoom, final int horizontalAlignment, final int verticalAlignment) {
+	public void gl__DrawText(final String s, final float zoom, final int horizontalAlignment, final int verticalAlignment) {
 
 		// determine width and height of the string
 		int stringWidth = getStringWidth(s), height = getCharacterHeight();

@@ -8,10 +8,7 @@ package name.martingeisse.gleng.graphics;
 
 import org.lwjgl.BufferUtils;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 /**
@@ -256,19 +253,6 @@ public class FixedWidthFont extends Font {
 	@Override
 	public int getCharacterHeight() {
 		return characterHeight;
-	}
-
-	public static FixedWidthFont loadFromClasspath(Class<?> anchor, String path) {
-		BufferedImage bufferedImage;
-		try (InputStream inputStream = anchor.getResourceAsStream(path)) {
-			if (inputStream == null) {
-				throw new IOException("resource not found: " + path);
-			}
-			bufferedImage = ImageIO.read(inputStream);
-		} catch (Exception e) {
-			throw new RuntimeException("could not load texture file " + anchor + " / " + path, e);
-		}
-		return fromBufferedImage(bufferedImage);
 	}
 
 }

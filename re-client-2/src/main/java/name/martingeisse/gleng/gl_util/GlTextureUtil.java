@@ -10,7 +10,7 @@ import static org.lwjgl.opengl.GL11C.*;
 
 public final class GlTextureUtil {
 
-    public static int createTexture(BufferedImage bufferedImage) {
+    public static int gl__CreateTexture(BufferedImage bufferedImage) {
         int width = bufferedImage.getWidth();
         int height = bufferedImage.getHeight();
         ByteBuffer data = BufferUtils.createByteBuffer(width * height * 4);

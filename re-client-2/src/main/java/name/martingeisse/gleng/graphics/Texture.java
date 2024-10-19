@@ -46,7 +46,7 @@ public final class Texture {
     // ----------------------------------------------------------------------------------------------------------------
 
     public static Texture fromBufferedImage(BufferedImage bufferedImage) {
-        int id = WorkUnits.scheduleAndWait(() -> GlTextureUtil.createTexture(bufferedImage));
+        int id = WorkUnits.scheduleAndWait(() -> GlTextureUtil.gl__CreateTexture(bufferedImage));
         return new Texture(id, bufferedImage.getWidth(), bufferedImage.getHeight());
     }
 

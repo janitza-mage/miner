@@ -82,7 +82,7 @@ final class GlWorkerLoop {
 	void scheduleShutdown() {
 		queue.add(new GlWorkUnit() {
 			@Override
-			public void execute() {
+			public void gl__Execute() {
 				shutdownRequested = true;
 			}
 		});
@@ -110,7 +110,7 @@ final class GlWorkerLoop {
 		while (!shutdownRequested) {
 			GlWorkUnit workUnit = queue.take();
 			if (!wantsToSkip || !workUnit.isSkippable()) {
-				workUnit.execute();
+				workUnit.gl__Execute();
 			}
 		}
 	}
@@ -124,7 +124,7 @@ final class GlWorkerLoop {
 	 */
 	private final GlWorkUnit FRAME_BOUNDARY = new GlWorkUnit() {
 		@Override
-		public void execute() {
+		public void gl__Execute() {
 			glfwSwapBuffers(windowId);
 			wantsToSkip = (workload.decrementAndGet() >= HARD_WORKLOAD_LIMIT);
 			if (wantsToSkip) {

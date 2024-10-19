@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.gleng.work_units;
+package name.martingeisse.miner.client.engine;
 
 /**
  * Specialization of {@link FixedSubjectsWorkUnits} for enum constants.

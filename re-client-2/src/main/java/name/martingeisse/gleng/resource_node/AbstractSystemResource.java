@@ -4,29 +4,19 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util.lwjgl;
+package name.martingeisse.gleng.resource_node;
 
 /**
- * Base implementation for {@link ISystemResource} that prevents
- * double disposal.
+ * Base implementation for {@link ISystemResource} that prevents double disposal.
  */
 public abstract class AbstractSystemResource implements ISystemResource {
 
-	/**
-	 * the disposed
-	 */
 	private boolean disposed;
 
-	/**
-	 * Constructor.
-	 */
 	public AbstractSystemResource() {
 		this.disposed = false;
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.lowlevel.ISystemResource#dispose()
-	 */
 	@Override
 	public final void dispose() {
 		if (disposed) {
