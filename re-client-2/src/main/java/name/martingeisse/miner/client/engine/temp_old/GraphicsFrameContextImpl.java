@@ -1,4 +1,4 @@
-package name.martingeisse.miner.client.engine;
+package name.martingeisse.miner.client.engine.temp_old;
 
 final class GraphicsFrameContextImpl implements GraphicsFrameContext {
 

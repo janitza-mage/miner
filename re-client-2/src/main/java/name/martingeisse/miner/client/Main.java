@@ -1,6 +1,5 @@
-package name.martingeisse.miner.re_client;
+package name.martingeisse.miner.client;
 
-import name.martingeisse.miner.client.engine.*;
 import name.martingeisse.miner.client.engine.graphics.Texture;
 
 import java.nio.FloatBuffer;
@@ -16,7 +15,7 @@ import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.system.MemoryUtil.memAllocFloat;
 import static org.lwjgl.system.MemoryUtil.memFree;
 
-public class MyIntro {
+public class Main {
 
     private static Texture texture;
 
@@ -59,7 +58,7 @@ public class MyIntro {
                 public void execute() {
 
                     // load texture
-                    texture = Texture.loadFromClasspath(MyIntro.class, "/bricks1.png");
+                    texture = Texture.loadFromClasspath(Main.class, "/bricks1.png");
 
                     // create and fill JVM buffer
                     FloatBuffer buffer = memAllocFloat(3 * 2);

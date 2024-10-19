@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.engine;
+package name.martingeisse.miner.client.engine.temp_old;
 
 /**
  * Represents an action that gets repeated every frame.
