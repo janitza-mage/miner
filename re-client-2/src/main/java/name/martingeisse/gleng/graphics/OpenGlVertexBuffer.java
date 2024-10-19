@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util.lwjgl;
+package name.martingeisse.gleng.graphics;
 
 import org.lwjgl.opengl.GL15;
 
@@ -13,21 +13,20 @@ import java.nio.*;
 import static org.lwjgl.opengl.GL15.*;
 
 /**
- * Represents OpenGL-server-side VBOs.
+ * Represents OpenGL-server-side VBOs. TODO: clear up VBO vs VAO vs Vertex Buffer vs Vertex Buffer Object vs Array
+ * Buffer vs Vertex Array Object vs glBindBuffer vs glBindVertexArray vs glBindVertexBuffer vs
+ * glVertexArrayVertexBuffer vs glBindVertexBuffers vs ... (read OpenGL spec)
  */
 @SuppressWarnings("IntegerMultiplicationImplicitCastToLong")
 public class OpenGlVertexBuffer extends OpenGlBuffer {
 
-	/**
-	 * the size
-	 */
 	private long size;
 
 	/**
 	 * Binds this buffer to the GL_ARRAY_BUFFER target.
 	 */
-	public final void bind() {
-		glBindBuffer(GL_ARRAY_BUFFER, getName());
+	public final void glBindBuffer() {
+		GL15.glBindBuffer(GL_ARRAY_BUFFER, getId());
 	}
 
 	/**
@@ -36,8 +35,8 @@ public class OpenGlVertexBuffer extends OpenGlBuffer {
 	 * @param size the size of the data store in bytes
 	 * @param usage the usage mode (see glBufferData() documentation for details)
 	 */
-	public final void createDataStore(long size, int usage) {
-		bind();
+	public final void gl__CreateDataStore(long size, int usage) {
+		glBindBuffer();
 		glBufferData(GL_ARRAY_BUFFER, size, usage);
 		this.size = size;
 	}
@@ -49,8 +48,8 @@ public class OpenGlVertexBuffer extends OpenGlBuffer {
 	 * @param sourceBuffer the NIO buffer to read data from
 	 * @param usage the usage mode (see glBufferData() documentation for details)
 	 */
-	public final void createDataStore(ByteBuffer sourceBuffer, int usage) {
-		bind();
+	public final void gl__CreateDataStore(ByteBuffer sourceBuffer, int usage) {
+		glBindBuffer();
 		this.size = sourceBuffer.remaining();
 		glBufferData(GL_ARRAY_BUFFER, sourceBuffer, usage);
 	}
@@ -62,8 +61,8 @@ public class OpenGlVertexBuffer extends OpenGlBuffer {
 	 * @param sourceBuffer the NIO buffer to read data from
 	 * @param usage the usage mode (see glBufferData() documentation for details)
 	 */
-	public final void createDataStore(ShortBuffer sourceBuffer, int usage) {
-		bind();
+	public final void gl__CreateDataStore(ShortBuffer sourceBuffer, int usage) {
+		glBindBuffer();
 		this.size = sourceBuffer.remaining() * 2;
 		glBufferData(GL_ARRAY_BUFFER, sourceBuffer, usage);
 	}
@@ -75,8 +74,8 @@ public class OpenGlVertexBuffer extends OpenGlBuffer {
 	 * @param sourceBuffer the NIO buffer to read data from
 	 * @param usage the usage mode (see glBufferData() documentation for details)
 	 */
-	public final void createDataStore(IntBuffer sourceBuffer, int usage) {
-		bind();
+	public final void gl__CreateDataStore(IntBuffer sourceBuffer, int usage) {
+		glBindBuffer();
 		this.size = sourceBuffer.remaining() * 4;
 		glBufferData(GL_ARRAY_BUFFER, sourceBuffer, usage);
 	}
@@ -88,8 +87,8 @@ public class OpenGlVertexBuffer extends OpenGlBuffer {
 	 * @param sourceBuffer the NIO buffer to read data from
 	 * @param usage the usage mode (see glBufferData() documentation for details)
 	 */
-	public final void createDataStore(FloatBuffer sourceBuffer, int usage) {
-		bind();
+	public final void gl__CreateDataStore(FloatBuffer sourceBuffer, int usage) {
+		glBindBuffer();
 		this.size = sourceBuffer.remaining() * 4;
 		glBufferData(GL_ARRAY_BUFFER, sourceBuffer, usage);
 	}
@@ -101,8 +100,8 @@ public class OpenGlVertexBuffer extends OpenGlBuffer {
 	 * @param sourceBuffer the NIO buffer to read data from
 	 * @param usage the usage mode (see glBufferData() documentation for details)
 	 */
-	public final void createDataStore(DoubleBuffer sourceBuffer, int usage) {
-		bind();
+	public final void gl__CreateDataStore(DoubleBuffer sourceBuffer, int usage) {
+		glBindBuffer();
 		this.size = sourceBuffer.remaining() * 8;
 		glBufferData(GL_ARRAY_BUFFER, sourceBuffer, usage);
 	}
@@ -113,7 +112,7 @@ public class OpenGlVertexBuffer extends OpenGlBuffer {
 	 * @param readable whether the mapped buffer should be readable
 	 * @param writeable whether the mapped buffer should be writable
 	 */
-	public final void map(boolean readable, boolean writeable) {
+	public final void gl__Map(boolean readable, boolean writeable) {
 		if (!readable && !writeable) {
 			throw new IllegalArgumentException("requested buffer mapping that is neither readable nor writable");
 		}
@@ -124,7 +123,7 @@ public class OpenGlVertexBuffer extends OpenGlBuffer {
 	/**
 	 * Unmaps this buffer from main memory.
 	 */
-	public final void unmap() {
+	public final void gl__Unmap() {
 		GL15.glUnmapBuffer(GL_ARRAY_BUFFER);
 	}
 
