@@ -14,7 +14,6 @@ import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.control.Button;
 import name.martingeisse.miner.client.util.gui.control.ListView;
-import name.martingeisse.miner.client.util.gui.element.*;
 import name.martingeisse.miner.client.util.gui.element.fill.FillColor;
 import name.martingeisse.miner.client.util.gui.util.Color;
 import name.martingeisse.miner.common.network.c2s.EquipMessage;

@@ -13,7 +13,6 @@ import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.GuiElement;
 import name.martingeisse.miner.client.util.gui.control.Button;
 import name.martingeisse.miner.client.util.gui.control.ListView;
-import name.martingeisse.miner.client.util.gui.element.*;
 import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.logic.CraftingFormula;
 import name.martingeisse.miner.common.network.c2s.ApplyFormula;

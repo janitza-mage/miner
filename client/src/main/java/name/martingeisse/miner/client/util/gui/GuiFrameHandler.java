@@ -6,12 +6,12 @@
 
 package name.martingeisse.miner.client.util.gui;
 
+import name.martingeisse.miner.client.engine.FrameHandler;
 import name.martingeisse.miner.client.engine.GraphicsFrameContext;
 import name.martingeisse.miner.client.engine.LogicFrameContext;
-import name.martingeisse.miner.client.util.frame.AbstractFrameHandler;
 import name.martingeisse.miner.common.util.contract.ParameterUtil;
 
-public final class GuiFrameHandler extends AbstractFrameHandler {
+public final class GuiFrameHandler implements FrameHandler {
 
 	private final Gui gui;
 	private boolean enableGui;
