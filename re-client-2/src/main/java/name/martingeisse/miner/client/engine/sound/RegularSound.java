@@ -4,40 +4,26 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util.lwjgl;
+package name.martingeisse.miner.client.engine.sound;
 
-import name.martingeisse.miner.client.engine.sound.SoundTemplate;
+import name.martingeisse.gleng.sound.SoundTemplate;
 
 /**
- * Helper class to play a sound regularly, possibly under
- * specific conditions. Time is measured in milliseconds.
- *
- * If a single step of time skips more than one interval,
- * the sound is still played only once since playing it
+ * Helper class to play a sound regularly, possibly under specific conditions. Time is measured in milliseconds.
+ * <p>
+ * If a single step of time skips more than one interval, the sound is still played only once since playing it
  * multiple times would only make it louder.
  */
 public final class RegularSound {
 
-	/**
-	 * the audio
-	 */
 	private final SoundTemplate soundTemplate;
-
-	/**
-	 * the interval
-	 */
 	private final long interval;
-
-	/**
-	 * the lastPlayed
-	 */
 	private long lastPlayed;
 
 	/**
 	 * Constructor.
 	 * @param soundTemplate the sound to play
-	 * @param interval the time (in milliseconds) between two
-	 * occurences of the sound
+	 * @param interval the time (in milliseconds) between two occurences of the sound
 	 */
 	public RegularSound(SoundTemplate soundTemplate, long interval) {
 		this.soundTemplate = soundTemplate;
@@ -46,8 +32,7 @@ public final class RegularSound {
 	}
 
 	/**
-	 * Adds the time since the last call to the internal time
-	 * counters, possibly playing the sound.
+	 * Adds the time since the last call to the internal time counters, possibly playing the sound.
 	 */
 	public void handleActiveTime() {
 		long now = System.currentTimeMillis();
