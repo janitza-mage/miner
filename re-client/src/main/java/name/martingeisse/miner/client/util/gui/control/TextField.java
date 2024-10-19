@@ -18,7 +18,7 @@ import name.martingeisse.miner.client.util.gui.element.fill.FillColor;
 import name.martingeisse.miner.client.util.gui.element.atom.TextLine;
 import name.martingeisse.miner.client.util.gui.util.AreaAlignment;
 import name.martingeisse.miner.client.util.gui.util.Color;
-import name.martingeisse.miner.client.util.lwjgl.Font;
+import name.martingeisse.miner.client.util.ray_action.Font;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
