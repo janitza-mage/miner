@@ -1,7 +1,10 @@
 package name.martingeisse.gleng.sound;
 
-import javax.sound.sampled.*;
-import java.io.IOException;
+import name.martingeisse.gleng.util.GlengResourceUtil;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import java.io.InputStream;
 
 /**
@@ -29,18 +32,23 @@ public final class SoundTemplate implements AutoCloseable {
         clip.close();
     }
 
+    // ----------------------------------------------------------------------------------------------------------------
+    // factory methods
+    // ----------------------------------------------------------------------------------------------------------------
+
+    public static SoundTemplate loadFromClasspath(String path) {
+        return GlengResourceUtil.loadClasspathResource("sound", path, SoundTemplate::load);
+    }
+
     public static SoundTemplate loadFromClasspath(Class<?> anchor, String path) {
-        try (InputStream inputStream = anchor.getResourceAsStream(path)) {
-            if (inputStream == null) {
-                throw new IOException("resource not found: " + path);
-            }
-            try (AudioInputStream ais = AudioSystem.getAudioInputStream(inputStream)) {
-                Clip clip = AudioSystem.getClip();
-                clip.open(ais);
-                return new SoundTemplate(clip);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("could not load sound file " + anchor + " / " + path, e);
+        return GlengResourceUtil.loadClasspathResource("sound", anchor, path, SoundTemplate::load);
+    }
+
+    private static SoundTemplate load(InputStream inputStream) throws Exception {
+        try (AudioInputStream ais = AudioSystem.getAudioInputStream(inputStream)) {
+            Clip clip = AudioSystem.getClip();
+            clip.open(ais);
+            return new SoundTemplate(clip);
         }
     }
 

@@ -85,7 +85,9 @@ public final class OtherPlayerVisualTemplate extends AbstractSingleWorkUnitVisua
 		GL11.glPixelTransferf(GL11.GL_RED_BIAS, 1.0f);
 		GL11.glPixelTransferf(GL11.GL_GREEN_BIAS, 1.0f);
 		GL11.glPixelTransferf(GL11.GL_BLUE_BIAS, 1.0f);
-		resources.drawText(name, (float) zoom);
+		glColor4ub((byte) 255, (byte) 255, (byte) 255, (byte) 255);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		MinerResources.getInstance().drawText(name, (float)zoom, Font.ALIGN_CENTER, Font.ALIGN_CENTER);
 		GL11.glPixelTransferf(GL11.GL_RED_BIAS, 0.0f);
 		GL11.glPixelTransferf(GL11.GL_GREEN_BIAS, 0.0f);
 		GL11.glPixelTransferf(GL11.GL_BLUE_BIAS, 0.0f);

@@ -19,47 +19,47 @@ public final class CubeTypes {
 	 * names of the texture files for cubes
 	 */
 	public static final String[] CUBE_TEXTURE_FILENAMES = {
-		"invalid.png", // 0
-		"stone.png",
-		"dirt.png",
-		"grass.png",
-		"grass-side.png", // 4
-		"pattern.png",
-		"leaves.png",
-		"wood.png",
-		"wood-circular.png", // 8
-		"wood-bars.png",
-		"water.png",
-		"sand.png",
-		"lava.png", // 12
-		"gravel.png",
-		"stone-and-gold.png",
-		"stone-and-coal.png",
-		"snow.png", // 16
-		"sandstone-block.png",
-		"sandstone-bricks.png",
-		"dead-shrub.png",
-		"tile.png", // 20
-		"tile-half-height.png",
-		"four-tiles.png",
-		"workbench-side.png",
-		"workbench-top.png", // 24
-		"furnace-front.png",
-		"furnace-side.png",
-		"furnace-top.png",
+		"/invalid.png", // 0
+		"/stone.png",
+		"/dirt.png",
+		"/grass.png",
+		"/grass-side.png", // 4
+		"/pattern.png",
+		"/leaves.png",
+		"/wood.png",
+		"/wood-circular.png", // 8
+		"/wood-bars.png",
+		"/water.png",
+		"/sand.png",
+		"/lava.png", // 12
+		"/gravel.png",
+		"/stone-and-gold.png",
+		"/stone-and-coal.png",
+		"/snow.png", // 16
+		"/sandstone-block.png",
+		"/sandstone-bricks.png",
+		"/dead-shrub.png",
+		"/tile.png", // 20
+		"/tile-half-height.png",
+		"/four-tiles.png",
+		"/workbench-side.png",
+		"/workbench-top.png", // 24
+		"/furnace-front.png",
+		"/furnace-side.png",
+		"/furnace-top.png",
 
-//		"bricks1.png",
-//		"bricks1-mossy.png", // 4
-//		"ice.png",
-//		"sandstone-block.png",
-//		"sandstone-bricks.png",
-//		"sponge.png",
-//		"stone-and-diamond.png",
-//		"stone-and-emerald.png",
-//		"stone-and-ruby.png", // 16
-//		"stone-and-sapphire.png",
-//		"tile.png",
-//		"wood.png",
+//		"/bricks1.png",
+//		"/bricks1-mossy.png", // 4
+//		"/ice.png",
+//		"/sandstone-block.png",
+//		"/sandstone-bricks.png",
+//		"/sponge.png",
+//		"/stone-and-diamond.png",
+//		"/stone-and-emerald.png",
+//		"/stone-and-ruby.png", // 16
+//		"/stone-and-sapphire.png",
+//		"/tile.png",
+//		"/wood.png",
 	};
 
 	/**

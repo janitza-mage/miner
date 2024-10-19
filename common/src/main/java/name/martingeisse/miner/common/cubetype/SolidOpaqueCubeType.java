@@ -12,7 +12,7 @@ import java.util.Arrays;
 
 /**
  * Cube type that is used for the typical "solid opaque" cube, like dirt, stone etc.
- *
+ * <p>
  * This type *cannot* be used for transparent cubes like glass!
  */
 public class SolidOpaqueCubeType extends CubeType {
@@ -75,7 +75,10 @@ public class SolidOpaqueCubeType extends CubeType {
 	@Override
 	public String getDisplayName() {
 		if (cachedDisplayName == null) {
-			cachedDisplayName = CubeTypes.CUBE_TEXTURE_FILENAMES[cubeFaceTextureIndices[0]].replace(".png", "");
+			String path = CubeTypes.CUBE_TEXTURE_FILENAMES[cubeFaceTextureIndices[0]];
+			String filename = path.substring(path.lastIndexOf('/') + 1);
+			int dotIndex = filename.lastIndexOf('.');
+			cachedDisplayName = dotIndex < 0 ? filename : filename.substring(0, dotIndex);
 		}
 		return cachedDisplayName;
 	}

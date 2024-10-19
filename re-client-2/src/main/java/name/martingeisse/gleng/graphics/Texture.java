@@ -1,13 +1,12 @@
 package name.martingeisse.gleng.graphics;
 
 import name.martingeisse.gleng.gl_util.GlTextureUtil;
+import name.martingeisse.gleng.util.GlengResourceUtil;
 import name.martingeisse.gleng.work_units.WorkUnits;
 import org.lwjgl.opengl.GL11C;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 
 import static org.lwjgl.opengl.GL11C.GL_TEXTURE_2D;
 
@@ -51,17 +50,12 @@ public final class Texture {
         return new Texture(id, bufferedImage.getWidth(), bufferedImage.getHeight());
     }
 
+    public static Texture loadFromClasspath(String path) {
+        return GlengResourceUtil.loadClasspathResource("texture", path, in -> fromBufferedImage(ImageIO.read(in)));
+    }
+
     public static Texture loadFromClasspath(Class<?> anchor, String path) {
-        BufferedImage bufferedImage;
-        try (InputStream inputStream = anchor.getResourceAsStream(path)) {
-            if (inputStream == null) {
-                throw new IOException("resource not found: " + path);
-            }
-            bufferedImage = ImageIO.read(inputStream);
-        } catch (Exception e) {
-            throw new RuntimeException("could not load texture file " + anchor + " / " + path, e);
-        }
-        return fromBufferedImage(bufferedImage);
+        return GlengResourceUtil.loadClasspathResource("texture", anchor, path, in -> fromBufferedImage(ImageIO.read(in)));
     }
 
 }
