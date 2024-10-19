@@ -11,7 +11,7 @@ import name.martingeisse.miner.client.util.frame.AbstractFrameHandler;
 import name.martingeisse.miner.client.util.frame.BreakFrameLoopException;
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
-import name.martingeisse.miner.client.util.lwjgl.Font;
+import name.martingeisse.miner.client.util.ray_action.Font;
 import org.apache.log4j.Logger;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;

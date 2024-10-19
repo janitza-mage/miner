@@ -10,7 +10,7 @@ import name.martingeisse.miner.client.util.glworker.EnumWorkUnits;
 import name.martingeisse.miner.client.util.glworker.FixedSubjectsWorkUnits;
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
-import name.martingeisse.miner.client.util.lwjgl.StackdTexture;
+import name.martingeisse.miner.client.util.ray_action.StackdTexture;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.TextureImpl;

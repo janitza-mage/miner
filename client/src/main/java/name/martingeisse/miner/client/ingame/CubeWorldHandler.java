@@ -23,7 +23,6 @@ import name.martingeisse.miner.client.util.frame.FrameDurationSensor;
 import name.martingeisse.miner.client.util.frame.IFrameHandler;
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
-import name.martingeisse.miner.client.util.lwjgl.*;
 import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.collision.SingleCubeCollider;
 import name.martingeisse.miner.common.cubetype.CubeType;

@@ -21,7 +21,7 @@ import name.martingeisse.miner.client.util.frame.HandlerList;
 import name.martingeisse.miner.client.util.gui.Gui;
 import name.martingeisse.miner.client.util.gui.GuiFrameHandler;
 import name.martingeisse.miner.client.util.gui.control.Page;
-import name.martingeisse.miner.client.util.lwjgl.MouseUtil;
+import name.martingeisse.miner.client.util.ray_action.MouseUtil;
 import name.martingeisse.miner.common.logic.EquipmentSlot;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.c2s.ResumePlayer;

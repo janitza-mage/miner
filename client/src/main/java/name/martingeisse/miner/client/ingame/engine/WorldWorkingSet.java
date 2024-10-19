@@ -6,7 +6,7 @@
 
 package name.martingeisse.miner.client.ingame.engine;
 
-import name.martingeisse.miner.client.util.lwjgl.SystemResourceNode;
+import name.martingeisse.miner.client.util.ray_action.SystemResourceNode;
 import name.martingeisse.miner.common.collision.CompositeCollider;
 import name.martingeisse.miner.common.collision.IAxisAlignedCollider;
 import name.martingeisse.miner.common.section.SectionId;

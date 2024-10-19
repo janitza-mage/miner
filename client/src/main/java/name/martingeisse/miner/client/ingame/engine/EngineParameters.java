@@ -6,7 +6,7 @@
 
 package name.martingeisse.miner.client.ingame.engine;
 
-import name.martingeisse.miner.client.util.lwjgl.StackdTexture;
+import name.martingeisse.miner.client.util.ray_action.StackdTexture;
 
 import java.util.Arrays;
 

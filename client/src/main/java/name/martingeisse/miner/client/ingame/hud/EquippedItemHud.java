@@ -12,7 +12,7 @@ import name.martingeisse.miner.client.ingame.logic.InventorySlot;
 import name.martingeisse.miner.client.util.frame.AbstractFrameHandler;
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
-import name.martingeisse.miner.client.util.lwjgl.Font;
+import name.martingeisse.miner.client.util.ray_action.Font;
 import name.martingeisse.miner.common.logic.EquipmentSlot;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;

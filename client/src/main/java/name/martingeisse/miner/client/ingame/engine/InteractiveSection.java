@@ -9,7 +9,7 @@ package name.martingeisse.miner.client.ingame.engine;
 import name.martingeisse.miner.client.ingame.engine.prepare.EmptyWrapPlane;
 import name.martingeisse.miner.client.ingame.engine.prepare.IWrapPlane;
 import name.martingeisse.miner.client.ingame.engine.prepare.MeshBuilder;
-import name.martingeisse.miner.client.util.lwjgl.SystemResourceNode;
+import name.martingeisse.miner.client.util.ray_action.SystemResourceNode;
 import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.collision.IAxisAlignedCollider;
 import name.martingeisse.miner.common.collision.SectionCollider;

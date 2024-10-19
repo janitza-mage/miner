@@ -10,7 +10,7 @@ import name.martingeisse.miner.client.MinerResources;
 import name.martingeisse.miner.client.ingame.player.Player;
 import name.martingeisse.miner.client.ingame.player.PlayerProxy;
 import name.martingeisse.miner.client.util.glworker.AbstractSingleWorkUnitVisualTemplate;
-import name.martingeisse.miner.client.util.lwjgl.GlUtil;
+import name.martingeisse.miner.client.util.ray_action.GlUtil;
 import org.lwjgl.opengl.GL11;
 
 import static org.lwjgl.opengl.GL11.*;

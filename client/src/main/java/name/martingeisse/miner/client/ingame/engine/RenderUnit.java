@@ -8,7 +8,7 @@ package name.martingeisse.miner.client.ingame.engine;
 
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
-import name.martingeisse.miner.client.util.lwjgl.OpenGlVertexBuffer;
+import name.martingeisse.miner.client.util.ray_action.OpenGlVertexBuffer;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.RectangularRegion;
 

@@ -14,7 +14,7 @@ import name.martingeisse.miner.client.util.gui.element.*;
 import name.martingeisse.miner.client.util.gui.element.fill.FillColor;
 import name.martingeisse.miner.client.util.gui.element.text.TextParagraph;
 import name.martingeisse.miner.client.util.gui.util.Color;
-import name.martingeisse.miner.client.util.lwjgl.MouseUtil;
+import name.martingeisse.miner.client.util.ray_action.MouseUtil;
 import name.martingeisse.miner.common.network.c2s.request.DeletePlayerRequest;
 import name.martingeisse.miner.common.network.s2c.response.OkayResponse;
 

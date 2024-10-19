@@ -9,7 +9,7 @@ package name.martingeisse.miner.client.ingame.hud;
 import name.martingeisse.miner.client.util.frame.AbstractFrameHandler;
 import name.martingeisse.miner.client.util.glworker.GlWorkUnit;
 import name.martingeisse.miner.client.util.glworker.GlWorkerLoop;
-import name.martingeisse.miner.client.util.lwjgl.StackdTexture;
+import name.martingeisse.miner.client.util.ray_action.StackdTexture;
 import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 
