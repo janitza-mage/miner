@@ -1,0 +1,46 @@
+Datentypen:
+int = 32-bit, int64 = 64-bit
+char = 8 bits
+fixed = 16.16
+sizei = 32 bits, "Non-negative binary integer size"
+enum = 32 bits
+bitfield = 32 bits
+half, float, double: 16-, 32-, 64-bit FP
+clampf, clampd: float/double clamped to [0,1]
+sync: sync object handle (pointer)
+sizeiptr, intptr: pointers, aber unklar ob sich der Datentyp auf den Pointer selbst oder das Ziel bezieht.
+	Wenn es das Ziel wäre, müsste es ja auch floatptr und doubleptr geben, tut es aber nicht.
+	aber intptr ist "signed integer", was bei Pointern auch keinen Sinn macht... mal weiterlesen.
+
+
+setting internal state:
+boolean: zero->false, nonzero->true ("zero" gilt auch für floating-point)
+int, enum: false->0, true->1, float->rounded, overflow->undefined
+float: false->0, true->1, int->conv
+
+getting internal state
+get boolean: zero->false, nonzero->true
+get unsigned integer: negative clamped to zero
+get integer: zero->0, true->1, float->round; Ausnahmen (z.B. RGB-Werte -- INT entry table 18.2)
+get float: false->0, true->0
+get bitmask returns signed
+
+"""
+Implementations normally perform computations in floating-point, and must meet the range and precision requirements
+defined under ”Floating-Point Computation” below.
+These requirements only apply to computations performed in GL operations outside of shader execution, such as texture
+image specification and sampling, and per-fragment operations. Range and precision requirements during shader
+execution differ and are specified by the OpenGL Shading Language Specification.
+"""
+
+"normalized" integer representation, typischerweise "normalized fixed-point":
+    unsigned normalized: [0,1], dargestellt als [0,2^n-1].
+        (das -1 im Nenner der Formel in der Spec sort dafür, dass z.B. bei RGB-Werten 255<->1.0 und nicht etwas weniger)
+    signed normalized: [-1,1], dargestellt als [-2^(n-1),2^(n-1)-1]
+        wieder so, dass (2^(n-1)-1) <-> 1.0 und negativ entsprechend; der negativste Wert ist gleichbedeutend mit
+            dem zweitnegativsten durch ein "max" in der Formel
+    beim zurück konvertieren float -> normalized wird der Floatwert vorher clamped
+
+
+
+

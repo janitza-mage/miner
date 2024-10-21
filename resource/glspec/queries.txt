@@ -1,0 +1,5 @@
+
+Query Object: z.B. Anzahl Primitives abfragen, Anzahl Fragements abfragen usw.
+
+sicher interessant für Performance-Analysen
+

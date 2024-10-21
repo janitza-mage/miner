@@ -1,0 +1,33 @@
+compat: "State table entries which are optional are typeset against a gray background"
+
+GL Standards
+- OpenGL Core
+- OpenGL Compatibility
+- OpenGL ES
+- WebGL (ähnlich OpenGL ES)
+
+Shading Languages
+- OpenGL Shading Language
+- OpenGL ES Shading Language
+- SPIR-V
+
+GLX = X window binding, gibts aber auch für Windows / MacOSX
+WGL = Windows binding
+MacOSX Window System Binding
+EGL = OpenGL ES auf Mobile/Embedded
+
+glGetError() -> error code; returns first occurred error; darf sich auch mehrere merken und die nacheinander returnen
+	Table 2.3 zeigt die Error Codes (sind gar nicht viele; im wesentlichen betrifft das doe grob falsche Verwendung)
+		INVALID_ENUM: Dieser Wert darf hier NIE übergeben werden
+		INVALID_OPERATION: Dieser Wert darf AKTUELL hier nicht übergeben werden
+		INVALID_VALUE: number out of range
+	nur bei "out of memory" ist der state danach undefined
+	ansonsten hat der fehlerhafte Befehl keine Seiteneffekte (auch nicht auf return-by-pointer-arrays)
+		und returned 0 (außer wo anders beschrieben)
+
+"no error mode" -> undefined behavior statt Errors
+
+glGen* -- generates NAMES, not OBJECTS
+glBind* -- binding an object generates it
+glDelete* -- e.g. glDeleteBuffers -- löscht Objekte (falls vorhanden) und gibt die Namen frei (falls vergeben)
+

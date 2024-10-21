@@ -1,0 +1,12 @@
+• glBegin, glEnd
+    erste Vermutung: zugunsten von Vertex Arrays
+• gl*Draw*
+• glAccum (see section 17.4.5)
+    deprecated; erste Vermutung: zugunsten von Framebuffer Objects
+• glBitmap (see section 14.8)
+    deprecated zugunsten axis-aligned quads, da glBitmap die Pixel aus Client-Memory liest
+• glCopyPixels (see section 18.3)
+    deprecated; vermutlich geht das mit FBOs einheitlicher
+• glDrawPixels (see section 18.1)
+    siehe glBitmap; mir ist nicht mal klar, was der Untersc
+• glEvalMesh1 and EvalMesh2 (see section 21.1)

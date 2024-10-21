@@ -1,0 +1,11 @@
+
+Texture Object: enthält mehrere Texture Images
+
+Texture Image: Array von Texels
+
+Sampler: Zugriff eines Shaders auf eine Texture
+
+"""
+Sampler and texture objects may be bound together so that the sampler object state is used by shaders when sampling
+the texture, overriding equivalent state in the texture object
+"""

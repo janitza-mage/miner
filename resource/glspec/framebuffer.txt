@@ -1,0 +1,25 @@
+Framebuffers:
+There are two classes of framebuffers: a window system-provided framebuffer
+associated with a context when the context is made current, and application-created
+framebuffers. The window system-provided framebuffer is referred to as the de-
+fault framebuffer. Application-created framebuffers, referred to as framebuffer ob-
+jects, may be created as desired, A context may be associated with two frame-
+buffers, one for each of reading and drawing operations. The default framebuffer
+and framebuffer objects are distinguished primarily by the interfaces for configur-
+ing and managing their state.
+
+
+
+"GL commands performing rendering into a framebuffer are sometimes treated specially by other GL operations such as
+conditional rendering (see section 10.9). Such commands are called rendering commands, and include":
+• glBlitFramebuffer (see section 18.3.2)
+• glClear (see section 17.4.3)
+• glClearBuffer* (see section 17.4.3.1)
+• glDispatchCompute* (see section 19)
+
+
+
+Renderbuffer: single image. Color Buffer ist ein RB; Depth Buffer ist ein anderer RB.
+
+Framebuffer: Mehrere Renderbuffers; ein Color Buffer, ein Depth Buffer, ein Stencil Buffer. RB ist "attached" an FB.
+

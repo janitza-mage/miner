@@ -1,0 +1,26 @@
+"queries and pixel read operations return state consistent with complete execution of all
+previously invoked GL commands, except where explicitly specified otherwise"
+
+"Even if the command requires a pointer to data, those data are interpreted when the call is made, and any subsequent
+changes to the data have no effect on the GL (unless the same pointer is used in a subsequent command)"
+
+"A server may maintain a number of GL contexts, each of which is an encapsulation of current GL state and objects. A client may choose to be
+made current to any one of these contexts."
+
+"lost" context = context ist kaputt, man muss einen neuen erstellen.
+    durch GetGraphicsResetStatus() erkennen
+        NO_ERROR
+        GUILTY_CONTEXT_RESET: ist weg; wurde durch diesen Kontext ausgelöst
+        INNOCENT_CONTEXT_RESET: ist weg; wurde von woanders (anderer Context oder sonstwas) ausgelöst
+        UNKNOWN_CONTEXT_RESET: ist weg; Ursache unbekannt
+    durch GetGraphicsResetStatus() zurücksetzen
+        solange aufrufen, bis NO_ERROR zurückkommt -- ansonsten resettet er noch
+    GetIntegerv(RESET_NOTIFICATION_STRATEGY)
+        NO_RESET_NOTIFICATION -> returned immer NO_ERROR
+        LOSE_CONTEXT_ON_RESET: Reset kann passieren, wie oben beschrieben
+
+glFlush(): "all commands complete in finite time"
+glFinish() = flush & wait (until written to framebuffer)
+
+
+Sync Object: can be tested or waited

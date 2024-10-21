@@ -1,0 +1,6 @@
+
+Vertex Array Object: Gruppe von Sets von Vertex Attributes, jedes davon ein eigener Buffer
+- Input für den Vertex Shader
+
+
+

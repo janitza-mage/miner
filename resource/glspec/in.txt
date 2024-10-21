@@ -1,0 +1,20 @@
+
+
+
+
+Compat: "pixel rectangle" als Rendering-Primitive gibt es nur in der Compat
+
+
+
+
+
+
+
+
+
+
+s.19, 2.3.1.1
+
+
+
+

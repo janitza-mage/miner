@@ -1,0 +1,5 @@
+
+Transform Feedback Object: Kann Ausgabe-Vertices nach der Transform Stage abfangen
+- dazu "transform feedback mode"
+
+

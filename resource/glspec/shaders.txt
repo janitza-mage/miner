@@ -1,0 +1,10 @@
+
+Shader Object: Einzelprogramm
+
+Program Object: Gruppe von mehreren Shaders -> "executable"
+
+Program Pipeline Object: Gruppe von Program Objects; flexibler
+
+
+
+
