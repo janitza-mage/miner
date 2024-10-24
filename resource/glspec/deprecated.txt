@@ -1,12 +1,26 @@
-• glBegin, glEnd
+Funktionen:
+* glBegin, glEnd
     erste Vermutung: zugunsten von Vertex Arrays
-• gl*Draw*
-• glAccum (see section 17.4.5)
+* gl*Draw*
+* glAccum (see section 17.4.5)
     deprecated; erste Vermutung: zugunsten von Framebuffer Objects
-• glBitmap (see section 14.8)
+* glBitmap (see section 14.8)
     deprecated zugunsten axis-aligned quads, da glBitmap die Pixel aus Client-Memory liest
-• glCopyPixels (see section 18.3)
+* glCopyPixels (see section 18.3)
     deprecated; vermutlich geht das mit FBOs einheitlicher
-• glDrawPixels (see section 18.1)
+* glDrawPixels (see section 18.1)
     siehe glBitmap; mir ist nicht mal klar, was der Untersc
-• glEvalMesh1 and EvalMesh2 (see section 21.1)
+* glEvalMesh1 and EvalMesh2 (see section 21.1)
+
+
+Features:
+* display lists
+    haben nicht viel gebracht außer Komplexität
+* Data in Client Memory (statt in Buffers)
+* "pixel rectangle" als Rendering-Primitive
+* Hardware Lighting; aber Hardware Transformation gibt es noch. Vermutlich ist Lighting dann in einem Shader oder so
+* Splines (vermutlich jetzt Geometry Shader)
+
+
+Arrays: Vertex A, Normal A, Color A, Index A, Texture Coordinate As, Edge Flag A, Secondary Color A, Fog Coord A
+zugunsten von Vertex Attribute Arrays

@@ -6,5 +6,5 @@ Program Object: Gruppe von mehreren Shaders -> "executable"
 Program Pipeline Object: Gruppe von Program Objects; flexibler
 
 
-
+TODO TODO TODO: s.86-176
 

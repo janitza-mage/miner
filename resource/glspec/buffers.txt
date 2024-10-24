@@ -1,0 +1,161 @@
+glGenBuffers() reserviert IDs
+glCreateBuffers() reserviert IDs und erstellt Buffer-Objekte
+glDeleteBuffers() löscht Buffer-Objekte
+- unmapped auch, falls gemapped
+glIsBuffer() prüft ob es die ID gibt
+
+glBindBuffer(target, id): bindet Buffer und erstellt ihn dafür ggf.
+    Man *kann* das Target wohl nachträglich ändern, aber mit Einschränkungen (z.B. schlechte Performance):
+    https://community.khronos.org/t/binding-the-same-buffer-object-to-a-different-target/72056
+    -> gibt auch glaube ich keinen Grund, das zu tun, sondern dient nur dem Verständnis der API
+    """
+    The specification states that an implementation may optimise storage according to the first target to which the
+    buffer is bound, so you shouldn’t “recycle” buffers simply to avoid deleting and creating buffers.
+    """
+
+Buffer Binding Targets: Table 6.1, s.61
+Buffer Parameters: Table 6.2, s. 61
+Flags (BUFFER_STORAGE_FLAGS): s.66
+    DYNAMIC_STORAGE_BIT: Kann nachträglich vom Client aus per glBufferSubData() Daten übertragen (sonst nur server-to-server)
+    MAP_READ_BIT, MAP_WRITE_BIT: Erlaubt, den Buffer in den Client zu mappen
+    MAP_PERSISTENT_BIT: Buffer kann vom Server verwendet werden, während er gemapped ist (nur mit MAP_READ/WRITE)
+    MAP_COHERENT_BIT: Wenn mit glMap(Named)?BufferRange gemappt, ist der Zugriff "kohärent" (hat was damit zu tun,
+        dass Änderungen automatisch synchronisiert werden; ansonsten nur auf Anfrage -> s.66) (nur mit MAP_PERSISTENT)
+    CLIENT_STORAGE_BIT: Hint, ob der Buffer im Client liegen soll. Ist umstritten, weil es nur ein "Hint" ist;
+        die andren Flags schränken ein, was man mit dem Buffer machen kann, und sind deshalb aus Sicht des Servers
+        zuverlässig.
+Bei glBufferData wird ein anderes Flags-Feld benutzt (BUFFER_USAGE), was aber "schlechter" ist
+    (weniger Bedeutung in den Flags, abgesehen davon dass die Parameter mutable sind)
+
+
+Indexed Targets:
+- Geht für ATOMIC_COUNTER_BUFFER, SHADER_STORAGE_BUFFER, TRANSFORM_FEEDBACK_BUFFER, UNIFORM_BUFFER.
+- Funktionen: glBindBufferRange, glBindBufferBase
+- glBindBuffer usw. benutzen einen "general bind point" ohne Index
+- "Both commands bind the buffer object named by buffer to both the general binding point, and to the binding
+    point in the array given by index."
+- glBindBufferBase: binds the entire buffer (passt sich dynamisch an, wenn sich die Buffergröße ändert)
+- glBindBufferRange: binds a subrange of the buffer
+- Zugriffe werden immer auf die Buffergröße limitiert
+- glBindBuffersBase, glBindBuffersRange: mehrere Buffers / Ranges an mehrere fortlaufenen Indizes binden,
+    aber verändert NICHT den general bind point und "buffers will not be created if they do not exist.".
+    buffers=NULL für unbind.
+    Fehler lassen den einzelnen Bind Point unverändert, aber die anderen sind nicht betroffen.
+- unklar: kann man Subranges auch ohne indizes bzw. mit DSA benutzen?
+
+
+Storage:
+- gl(Named)?BufferStorage legen einen festen Speicher an, der nicht mehr de/re-allocated werden kann. glBufferData
+    legt einen Bereich an, der de/re-allocated werden kann. In beiden Fällen kann der Speicher-INHALT gemäß
+    den angegebenen Flags geändert werden.
+- glBufferStorage(target, ...) und glNamedBufferStorage(buffer, ...)
+    Params: (target/buffer, sizeInBytes, dataFromClientOrNull, flags)
+    """
+    The data store of the buffer object is allocated as a result of these commands, and cannot be de-allocated until
+    the buffer is deleted with a call to DeleteBuffers. Such a store may not be re-allocated through further calls to
+    *BufferStorage or BufferData.
+    """
+    falls mapped, wird unmapped
+- gl(Named)BufferData(target/name, size, data|NULL, usage)
+    alte Variante für mutable storage Parameter
+- die Anmerkung bei BindBuffer (ohne Range), "wenn sich die Größe ändert", geht dann vermutlich nur bei glBufferData
+
+gl(Named)?BufferSubData(target/buffer, offset, size, data)
+    Kopiert Daten vom Client in den Buffer
+    nur mit DYNAMIC_STORAGE_BIT (aber glCopyBufferSubData=server-to-server-copy und glClearBufferSubData geht immer)
+        (bzw. nach glBufferData geht, also mutable storage, geht es immer, sonst könnte man es dort gar nicht benutzen)
+    range muss komplett im Buffer liegen, sonst Fehler
+    muss ungemappt oder MAP_PERSISTENT_BIT sein
+
+glClear(Named)?BufferSubData(target/buffer, internalformat, offset, size, format, type, data)
+    internalformat betrifft den Buffer, format und type die Quelldaten
+    alle definierten Conversions sind möglich, anders als bei glClearTexImageSubData
+    offset/size in bytes, nicht internalformat-Einheiten; offset und size müssen multiple von internalformatSize sein
+    range muss komplett in Buffer sein; ungemapped oder MAP_PERSISTENT_BIT
+    data enthält 1-4 components; NULL entspricht nur Nullen.
+    Table 8.24 zeigt die möglichen internalformats und wie viele Komponenten sie benutzen
+    8.4.4 beschreibt format und type
+glClear(Named)?BufferData
+    ist das gleiche ohne range
+
+glMap(Named)?BufferRange(target/buffer, offset, length, access) -> ptr
+    wartet erst, bis die vorherigen GL-Befehle abgearbeitet sind, außer wenn MAP_UNSYNCHRONIZED_BIT gesetzt ist
+    offset/length in bytes; access bits u.a.: read/write/persistent/coherent
+        length=0 ist nicht erlaubt
+        Buffer darf noch nicht gemapped sein
+    Returnwert darf nicht selbst wieder an GL-Funktionen gegeben werden
+    MAP_INVALIDATE_RANGE_BIT: vorheriger Inhalt darf verworfen werden
+        unklar, warum sich das nicht automatisch aus WRITE ohne READ ergibt, bzw. wann man WRITE ohne READ und
+        ohne INVALIDATE benutzen sollte
+    MAP_INVALIDATE_BUFFER_BIT: genauso, aber für den ganzen Buffer
+    MAP_FLUSH_EXPLICIT_BIT: Änderungen werden erst durch glFlushMappedBufferRange() oder unmap sichtbar
+    MAP_UNSYNCHRONIZED_BIT: direkt mappen, auch wenn die vorherigen Befehle noch nicht abgearbeitet sind
+        geht nicht mit READ zusammen
+    Usage-Fehler erzeugen keinen GL-Fehler, aber undefined behavior
+    returned NULL bei Fehlern.
+glMap(Named)?Buffer(target/buffer, access) = ganzer buffer; access sind nicht die Flags sondern nur
+    READ_ONLY, WRITE_ONLY, READ_WRITE (die anderen Flags kann man so nicht angeben)
+
+"""
+DO NOT USE mapping without persistently mapped buffers! This is a big performance trap, because of needed GPU/CPU
+synchronization.
+"""
+->
+Man lässt den Buffer dann über viele Frames hinweg mapped. Wenn man ihn "mittendrin" mapped, müssen ja erst die
+vorherigen Befehle abgearbeitet werden. Und die GPU muss danach mit den Befehlen warten, bis die CPU fertig ist
+und unmapped hat.
+
+Tip: mehrere Buffers rotieren. Das kann ggf. die Performance verbessern.
+
+glFlushMapped(Named?)BufferRange(target/buffer, offset, length)
+    flushed Änderungen; offset/length in bytes, relativ zur gemappedten Range
+    bei COHERENT nicht nötig
+
+glUnmap(Named)?Buffer(target/buffer)
+    returns TRUE normalerweise, FALSE wenn der Buffer-Inhalt corrupted wurde (das kann vom System ausgehen)
+    solche corruption kann nur entstehen, solange ein Buffer gemappt ist
+
+"Robust buffer access can be enabled by creating a context with robust access enabled through the window system binding
+APIs."
+
+glInvalidateBufferSubData(buffer, offset, length), glInvalidateBufferData(buffer)
+    geht nur "named"; offset/length in bytes
+    macht die Daten in dieser Range undefined
+    muss unmapped oder PERSISTENT sein
+    Zweck:
+    1. Speicher freigebbar machen, der jetzt aktuell nicht benötigt wird
+    2. Synchronisierung für glBufferData oder Mapping vermeiden: erst invalidate, dann map -- dann kann ein neuer
+        Speicherbereich allocated und mapped werden, und der alte Bereich kann im Hintergrund für queued operations
+        benutzt und später freigegeben werden -- d.h. das upload/map muss nicht warten, bis diese queued ops fertig sind
+
+glCopy(Named)?BufferSubData(readTarget/Buffer, writeTarget/Buffer, readOffset, writeOffset, size)
+    buffer-to-buffer-copy (rein server-seitig)
+    alle targets gehen, aber COPY_READ_BUFFER und WRITE_BUFFER sind extra dafür vorgesehen, so dass man andere
+        Targets nicht dafür unbinden muss
+    kopieren innerhalb desselben Buffers ist erlaubt, solange sich die Ranges nicht überlappen
+    beide müssen unmapped oder PERSISTENT sein
+
+get information:
+    void glGetBufferParameteriv(enum target, enum pname, int *data);
+    void glGetBufferParameteri64v(enum target, enum pname, int64 *data );
+    void glGetNamedBufferParameteriv(uint buffer, enum pname, int *data );
+    void glGetNamedBufferParameteri64v(uint buffer, enum pname, int64 *data );
+    abfragbare Variablen siehe Table 6.2, ausgenommen BUFFER_MAP_POINTER
+
+glGet(Named)?BufferSubData(target/buffer, offset, size, void *data)
+    muss unmapped oder PERSISTENT sein
+
+glGet(Named)?BufferPointerv(target/buffer, BUFFER_MAP_POINTER, void **params);
+    Holt den Zeiger zum gemappten Speicher, oder NULL falls nicht gemappt
+
+abfragbare GL-Parameter per glGetIntegeriv() siehe Table 6.5, s.84
+    das betrifft aber alles nur die Bindings, also uninteressant für DSA
+
+
+
+
+
+
+
+
+

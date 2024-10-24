@@ -1,4 +1,16 @@
 
+Wahrscheinlich ist es einfacher, hier nur die Core-Spec zu lernen. Und es ist auch unabhängig von den restlichen Dokus.
+
+
+###############################################################
+
+
+
+
+
+
+
+
 Texture Object: enthält mehrere Texture Images
 
 Texture Image: Array von Texels
@@ -8,4 +20,42 @@ Sampler: Zugriff eines Shaders auf eine Texture
 """
 Sampler and texture objects may be bound together so that the sampler object state is used by shaders when sampling
 the texture, overriding equivalent state in the texture object
+"""
+
+
+Terminologie:
+- Pixel Rectangle
+- Texture Image
+    1-, 2- oder 3-dimensionales Texel-Array
+    "Each image consists of one or more layers."
+- Texture
+    können 1..3-dimensional sein und dann sind ihre Texture Images es auch
+    "One- and two-dimensional array textures are arrays of one- or two-dimensional images."
+- 2d Multisample Texture: 2d Texture mit mehreren Samples pro Texel
+- 2d Multisample Array Texture: 2d Array Texture mit mehreren Samples pro Texel
+- Layer
+- Sampler
+- Internal Format
+- Internal Data Type
+- Cube map: special two-dimensional array texture with six layers that represent the faces of a cube.
+
+??? TODO ??? cube map hat "6 layers", ist aber eine 2d-array-texture, hat also potennziell mehrere images die
+    jeweils aus potenziell mehreren layers bestehen. Wie viele Images? Und insgesamt 6 layers, oder 6 layers pro image?
+"A cube map array is a collection of cube map layers stored as a two-dimensional array texture."
+-> Was ist dann der Unterschied zwischen einer Cube Map und einem Cube Map Array?
+"""
+When accessing a cube map array, the texture coordinates s, t, and r are
+applied similarly as cube maps while the last texture coordinate q is used as the in-
+dex of one of the cube map slices.
+"""
+
+"""
+Rectangle textures are special two-dimensional
+textures consisting of only a single image and accessed using unnormalized coor-
+dinates.
+"""
+
+"""
+Buffer textures are special one-dimensional textures whose texture images
+are stored in separate buffer objects.
 """

@@ -30,4 +30,23 @@ glGetError() -> error code; returns first occurred error; darf sich auch mehrere
 glGen* -- generates NAMES, not OBJECTS
 glBind* -- binding an object generates it
 glDelete* -- e.g. glDeleteBuffers -- löscht Objekte (falls vorhanden) und gibt die Namen frei (falls vergeben)
+delete --> unbind from all bind points
+
+
+s. 36: Grobschaubild von ganz OpenGL
+
+
+
+glGen* vs. glCreate*
+https://stackoverflow.com/questions/31841494/difference-in-glgenbuffers-and-glcreatebuffers
+https://www.gamedev.net/forums/topic/676113-glgen-vs-glcreate/
+https://registry.khronos.org/OpenGL/extensions/ARB/ARB_direct_state_access.txt
+- glGen ist älter, glCreate ist neuer
+- Shader haben nur glCreate
+- glGen reserviert nur den Namen; erzeugt wird beim ersten Bind. glCreate ist für Direct State Access, wo es gar kein
+    bind mehr gibt, d.h. mit glGen würde es nicht funktionieren.
+- man kann bind auch ohne glGen benutzen und einfach selbst IDs zuordnen
+- man sollte die beiden nicht vermischen. Entweder gen/bind oder create/DSA
+- DSA hat den Vorteil, dass kein State mitentscheidet, welches Objekt gerade bearbeitet wird. Das ist einfacher und
+    die verschiedenen Programmteile stören sich weniger gegenseitig.
 

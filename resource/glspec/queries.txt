@@ -3,3 +3,50 @@ Query Object: z.B. Anzahl Primitives abfragen, Anzahl Fragements abfragen usw.
 
 sicher interessant für Performance-Analysen
 
+Targets:
+- PRIMITIVES_GENERATED: # primitives processed (max. MAX_VERTEX_STREAMS active queries)
+- TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN: # primitives written to buffer (max. MAX_VERTEX_STREAMS active queries)
+- TRANSFORM_FEEDBACK_OVERFLOW, TRANSFORM_FEEDBACK_STREAM_OVERFLOW: ob overflow passiert
+- SAMPLES_PASSED, ANY_SAMPLES_PASSED or ANY_SAMPLES_PASSED_CONSERVATIVE: # fragments / samples that pass the depth
+    test; at most one query
+    - Note that occlusion query objects specified by either of the two targets ANY_SAMPLES_PASSED or
+        ANY_SAMPLES_PASSED_CONSERVATIVE may be reused for either target in future queries.
+    - Objects specified with target SAMPLES_PASSED may only be reused for that target.
+- TIME_ELAPSED
+- TIMESTAMP
+- VERTICES_SUBMITTED, PRIMITIVES_SUBMITTED
+- VERTEX_SHADER_INVOCATIONS
+- TESS_CONTROL_SHADER_PATCHES and TESS_EVALUATION_SHADER_INVOCATIONS
+- GEOMETRY_SHADER_INVOCATIONS and GEOMETRY_SHADER_PRIMITIVES_EMITTED
+- CLIPPING_INPUT_PRIMITIVES and CLIPPING_OUTPUT_PRIMITIVES
+- FRAGMENT_SHADER_INVOCATIONS
+- COMPUTE_SHADER_INVOCATIONS
+
+Funktionen:
+- glGenQueries(n, outPtr) erzeugt IDs
+- glCreateQueries(target, n, outPtr) erzeugt IDs und Query-Objekte
+    initial state: available (QUERY_RESULT_AVAILABLE = TRUE)
+- glDeleteQueries
+    evtl. nicht sofort gelöscht, wenn noch in Verwendung
+- glBeginQueryIndexed(target, index, id)
+    queries[target][index] = id; // Je Target gibt es ein Array von aktiven Queries.
+- glBeginQuery(target, id) -> glBeginQueryIndexed(target, 0, id)
+- glEndQueryIndexed(target, index)
+    schaltet Query aus. Danach (mit Zeitverzögerung) liegt das Ergebnis vor.
+- glEndQuery(target) -> glEndQueryIndexed(target, 0)
+- glIsQuery(id) // prüft ob ID valid
+- glGetQueryIndexediv // s.48
+    CURRENT_QUERY -> aktuelle ID
+    QUERY_COUNTER_BITS -> Anzahl Ergebnisbits
+    glGetQueryiv() -> index 0
+- glGetQueryObject*() // s.50
+    Ergebnisse können in einen Buffer oder in Client-Speicher laufen
+- glQueryCounter(id, TIMESTAMP) -> fragt die aktuelle Zeit ab
+
+
+
+
+
+
+
+Evtl kann je Typ nur 1 Query aktiv sein, das ist gerade noch unklar.

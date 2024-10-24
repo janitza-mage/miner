@@ -24,3 +24,34 @@ glFinish() = flush & wait (until written to framebuffer)
 
 
 Sync Object: can be tested or waited
+- können signaled oder unsignaled sein
+- "Fence" = explizit durch einen gl-Aufruf getriggertes Sync-Objekt; wird dann getriggert, wenn dieser Befehl durch
+    die Pipeline gelaufen ist
+    - "all effects on client state, server state and frame buffer realized"
+    - glFenceSync(condition, flags): erzeugt das Sync-Objekt, legt den Trigger in die Pipeline und returned die ID
+        condition: muss SYNC_GPU_COMMANDS_COMPLETE sein
+        flags: muss 0 sein
+- glGetSynciv(): Sync-Objekt-Status abfragen
+- glDeleteSync(): Sync-Objekt löschen; wird evtl. verzögert gelöscht, wenn noch in Verwendung
+- glClientWaitSync(sync, flags, timeout): Wartet bis triggered und returned erst dann (oder timeout, int64 nanoseconds
+    echt gerundet auf verfügbare Genauigkeit). Returned direkt wenn schon signaled.
+    Returned: ALREADY_SIGNALED, TIMEOUT_EXPIRED, CONDITION_SATISFIED (gewartet und signaled); WAIT_FAILED bei Fehlern
+    timeout=0 um das signaled-Flag zu testen
+    Flags:
+    - SYNC_FLUSH_COMMANDS_BIT: Wenn unsignaled und selber Context, dann als wäre glFlush() aufgerufen worden
+    ACHTUNG: man *muss* SYNC_FLUSH_COMMANDS_BIT setzen oder glFlush() aufrufen, weil ansonsten der Fence-Befehl
+        noch clientseitig in der Command Queue festhängen kann und dann wegen dem Sync dort bleibt -> Deadlock.
+- glWaitSync(): returned direkt; Server blocked bis signaled; timeout muss TIMEOUT_IGNORED sein (Timeout ist immer
+    implementation-defined, GetInteger64v(MAX_SERVER_WAIT_TIMEOUT)). Es lässt sich nicht feststellen, ob timeout oder
+    signaled.
+    Flags muss 0 sein.
+    Ein glWaitSync() PLUS ein glClientWaitSync() können auf dasselbe Sync-Objekt warten PLUS weitere glWaitSync()
+    in der Command Queue sein, die dann später drankommen und direkt fertig sind.
+- glGetSynciv(): Eigenschaften abfragen (s.42), aber aktuell nicht viel interessantes außer ob schon signaled, was
+    genauso mit timeout=0 geht.
+- glIsSync() ob die ID benutzt wird
+
+
+"""
+If a feedback loop is setup between rendering and transform feedback (see section 13.3.3), results will be undefined.
+"""

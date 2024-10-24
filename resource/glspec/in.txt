@@ -1,20 +1,9 @@
 
+Shared Objects and Multiple Contexts (s.53 - s.59). tl;dr:
+- Garbage Collection; Objekt lebt weiter bis die letzte Referenz weg ist
+- Sync Objects arbeiten Context-übergreifend
+- es gibt Data Races; bind (attach) zum data-sync (re-attach von attached objects geht auch)
 
 
 
-Compat: "pixel rectangle" als Rendering-Primitive gibt es nur in der Compat
-
-
-
-
-
-
-
-
-
-
-s.19, 2.3.1.1
-
-
-
-
+s. 79, 6.4
