@@ -1,9 +1,208 @@
 
 Shader Object: Einzelprogramm
-
 Program Object: Gruppe von mehreren Shaders -> "executable"
-
 Program Pipeline Object: Gruppe von Program Objects; flexibler
+
+Prozess Variante 1:
+- load source code into a shader object
+- compile
+Prozess Variante 2 (geht falls NUM_SHADER_BINARY_FORMATS > 0):
+- load SPIR-V code into a shader object
+- specialize
+Danach:
+- attach to program object
+- link program object -> erzeugt executable code aus allen Shader Objects an diesem Program Object
+Alternativ
+load pre-compiled binary code directly into program
+
+
+shader stage / shader type: Stage der Pipeline zu der der Shader gehört
+
+
+Current Program Object für eine Stage: PO ist "bound to that stage".
+Active Program Object für eine Stage: PO ist current UND enthält einen Shader dieses Typs
+Unified PO: Selbes PO für alle stages
+Separable PO: unterschiedliche POs für unterschiedliche stages
+"The set of separable program objects current for all stages are collected in a program pipeline object that must be bound for use."
+
+
+Stages:
+- vertex
+- tessellation control
+- tessellation evaluation
+- geometry
+- fragment
+- compute
+
+Variable types:
+- uniform: constant during program execution
+- buffer: stored in buffer; can be written; persistent across multiple invocations
+- subroutine uniform: "similar to uniforms but are context state, rather than program object state"
+- samplers: uniforms used for texturing
+- images: indentify level of a texture to access
+- output
+
+#
+# über Source Code
+#
+
+glCreateShader(type) -> ID
+    type: VERTEX_SHADER, TESS_CONTROL_SHADER, TESS_EVALUATION_SHADER, GEOMETRY_SHADER, FRAGMENT_SHADER, COMPUTE_SHADER
+glShaderSource(shader, count, strings, lengths)
+    setzt den Source Code; count ist die Anzahl Strings; lengths ein Array von Längen; negative Länge = null-terminiert,
+    längen-Array=NULL -> alle Strings null-terminiert
+    Falls schon mit einem SPIR_V-Binary verknüpft -> wird getrennt
+glCompileShader(shader)
+    GetShaderiv mit COMPILE_STATUS liefert TRUE / FALSE, je nachdem ob errors
+"Changing the source code of a shader object with ShaderSource does not change its compile status or the compiled shader code."
+glReleaseShaderCompiler() -> HINT, dass keine Shaders mehr compiled werden
+glGetShaderPrecisionFormat(): Liefert Infos über nummerische Genauigkeit
+glDeleteShader(shader)
+    ggf. wird erst später wirklich geöscht, falls noch in einem Program in Verwendung (GetShaderiv mit DELETE_STATUS)
+glIsShader(shader)
+
+#
+# über Precompiled Binaries
+#
+
+glShaderBinary(shaderCount, shaderArray, binaryformat, binaryPointer, binaryLengthInBytes)
+    vordefiniert: binaryformat = SHADER_BINARY_FORMAT_SPIR_V
+    setzt den Compile-Status aller Shader auf FALSE
+    Bei Fehlschlag ist der State des Shaders trotzdem kaputt
+    glLinkProgram kann (impl.specific) fordern, dass alle Shader Binaries eines Programs zusammen compiled+optimized wurden
+glSpecializeShader(shader, entryPointUtf8NameNullterminated, numSpecConstants, constantIndexArray, constantValueArray)
+    muss vor dem Linken passieren. Ans Program attachen geht aber schon vorher, nur vor dem Linken müssen alle specialized sein.
+    man kann nur 1x specializen. Um zu re-specializen, muss zuerst mit glShaderBinary das Binary neu geladen werden
+        (d.h. dass die Implementierung das Roh-Binary mit dem Specializen verwerfen darf)
+    Wählt Entry-Point; wählt Werte für die Specialization Constants
+    Entry Point muss als OpEntryPoint im SPIR-V-Modul deklariert sein
+    constantValueArray ist formal ein Array von int32, aber wird in die entsprechenden Typen *bitcasted*
+    nicht angegebene SpecConsts behalten ihren Defaultwert
+    setzt Compile-Status auf TRUE falls erfolgreich
+glShaderInfoLog()
+
+Informationen über die unterstützten Formate: NUM_SHADER_BINARY_FORMATS, SHADER_BINARY_FORMATS.
+
+"An INVALID_OPERATION error is generated if binaryformat is not SHADER_BINARY_FORMAT_SPIR_V and more than one of the
+handles in shaders refers to the same type of shader object. "
+
+#
+# Programs
+#
+
+glCreateProgram() -> ID
+glAttachShader(program, shader)
+glDetachShader(program, shader)
+glLinkProgram(program)
+    GetProgramiv mit LINK_STATUS liefert TRUE / FALSE, je nachdem ob errors
+    s.95+ sind Gründe, warum das Linken failen kann.
+        1+ Shader sind nicht compiled / specialized
+        zu viele "active uniform or active sampler variables"
+        tesselation control: program ist separable oder vertex shader vorhanden; EINEINDEUTIG(output patch vertex count)
+        tesselation evaluation: program ist separable oder vertex shader vorhanden; EINEINDEUTIG(primitive mode); EINDEUTIG(spacing, vertex order, point mode)
+        geometry: program ist separable oder vertex shader vorhanden; EINEINDEUTIG(input primitive type, output primitive type, max output vertex count)
+        compute shader dürfen nicht mit nicht-compute-shadern gelinked werden
+        -- Dabei heißt EINDEUTIG(x): Der Wert x muss nicht definiert sein, aber falls er in
+            mehreren Shadern definiert ist, muss er überall den gleichen Wert haben.
+        -- Dabei heißt EINEINDEUTIG(x): Der Wert x muss in mind. einem Shader definiert sein, und falls er in
+            mehreren Shadern definiert ist, muss er überall den gleichen Wert haben.
+
+
+"Multiple shader objects of the same type may be attached to a single program object, and a single shader object may be
+attached to more than one program object."
+-> aber nur ein Shader kann eine main()-Funktion haben. Also ist das wie mehrere Source-Files.
+
+"When program objects which have been linked successfully are used for rendering operations, they may access GL state
+and interface with other stages of the GL pipeline through active variables and active interface blocks."
+Infos dazu abfragen funktioniert nur nach erfolgreichem Linken zuverlässig, bei Fehlern muss man halt sehen was man
+bekommt, aber es kann helfen, den Fehler zu verstehen. Ohne das Linken auch nur zu versuchen kommt leere Info.
+
+glGetProgramInfoLog -> liefert mehr Infos zum Linken
+
+glUseProgram(program) -> Program wird Teil des Rendering State für alle Stages; as hat Vorrang vor einer Program Pipeline.
+Das Program heißt "active" für eine Stage, wenn es code für diese Stage enthält
+
+Ohne Vertex Shader / Fragment Shader:
+- compat: fixed-function
+- core: undefined output, but not an error
+Ohne compute: Aufruf ist ein Fehler
+Ohne die anderen: jeweils no-op
+
+Alles Rumbasteln an einem Program oder dessen Shaders hat keinen Einfluss auf den Executable Code, solange nicht gelinkt
+wird. Erfolgreiches Linken ersetzt das Programm; wenn es aktiv wird, wird es damit sofort wirksam. Es nimmt das Programm
+auch raus, wo der neue Code keine Wirkung mehr hat. Erfolgloses linken lässt den alten Code im Rendering State; erst
+mit glUse* wird der ersetzt.
+
+glProgramParameteri(program, pname, value) setzt Steuerparameter; werden erst mit glLinkProgram / glProgramBinary wirksam):
+- PROGRAM_SEPARABLE (TRUE / FALSE)
+- PROGRAM_BINARY_RETRIEVABLE_HINT (TRUE / FALSE): Hint, ob das Binary später abgefragt wird
+
+glDeleteProgram(program): löscht ggf. verzögert falls noch in Verwendung; Shaders werden detached
+glIsProgram(program)
+
+glCreateShaderProgramv(type, count, strings) -> ID (s.100)
+    Führt alle Schritte für ein separable 1-Shader-Program durch, von source code bis Link. Detached und löscht den
+    Shader danach, aber über das Program bleibt er in Verwendung und wird dann später mit dem Programm automatisch
+    zusammen gelöscht.
+    -> ist aber halt für Source Code, nicht für SPIR-V.
+
+
+#
+# Program Interfaces
+#
+
+s. 101+ beschreibt die möglichen Interfaces (TODO unklar was man damit machen kann)
+und wie sie von der Anwendung bekannt werden können.
+Unklar, ob man das wirklich braucht. Vielleicht, um aus dem Programm heraus einzelne Variablen zu lesen/schreiben,
+aber das klingt nach viel sync-overhead und macht man wahrscheinlich lieber anders.
+
+glGetProgramInterfaceiv(...) (s.106) fragt interfaces ab (eine Art Reflection)
+glGetProgramResourceIndex(..) (s.108)
+glGetProgramResourceName(...) (s.108)
+glGetProgramResourceiv((..) (s.109)
+glGetProgramResourceLocation(..) (s.119)
+GetProgramResourceLocation(..) (s.119)
+
+
+#
+# Program Pipeline Objects
+#
+
+void glGenProgramPipelines(GLsizei n, GLuint *pipelines) -> Reserviert IDs für n Pipeline-Objekte
+void glDeleteProgramPipelines(GLsizei n, const GLuint *pipelines) -> Löscht n Pipeline-Objekte
+    werden gelöscht und ggf. unbound
+boolean glIsProgramPipeline(pipeline)
+void glCreateProgramPipelines(n, *pipelines)
+    --> hier wird trotz DSA noch das bin() gebraucht, weil die Pipeline dadurch verwendet wird
+glBindProgramPipeline(pipeline) -> Pipeline wird verwendet, außer durch glUseProgram() übersteuert.
+glUseProgramStages(pipeline, stagesBitfield, program)
+    verknüpft ein Program mit der Pipeline und verwendet es für die angegebenen Stages
+        (unklar: nur für die, für die auch Code vorliegt? Spezi klingt nach: nein, auch die anderen, außer
+        es liegt nirgendwo Code vor, dann für keine)
+    ALL_SHADER_BITS = alle Stages
+    Pipeline wird erzeugt, wenn nicht vorhanden (nur Name reserviert)
+glActiveShaderProgram(pipeline, program)
+    setzt "active program used for uniform updates" (TODO)
+
+
+...
+
+"Generate your shaders. That's what pretty much all 3D engines and game engines do."
+
+"You can use multiple shaders, but to switch between them can be quite costly so the recommended practise is to draw
+every object of a shader, then switch to the next shader and draw all the objects using that one and so on.
+To switch between shaders, you call glUseProgram()."
+
+"""
+Your render pass should go:
+foreach shader
+    set shader
+    foreach material using that shader
+        set uniforms, textures
+        foreach object using that material
+             draw
+"""
+
 
 
 TODO TODO TODO: s.86-176

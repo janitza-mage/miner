@@ -50,3 +50,8 @@ https://registry.khronos.org/OpenGL/extensions/ARB/ARB_direct_state_access.txt
 - DSA hat den Vorteil, dass kein State mitentscheidet, welches Objekt gerade bearbeitet wird. Das ist einfacher und
     die verschiedenen Programmteile stören sich weniger gegenseitig.
 
+
+Ob Objekte, die noch verwendet werden, wenn sie gelöscht werden, danach nicht mehr verwendet werden oder verzögert
+gelöscht werden, ist je Objekttyp unterschiedlich. Es ist klar definiert, aber schwer den Überblick zu behalten.
+Am besten, ich nehme i.A. Objekte aus der Verwendung, bevor ich sie lösche, und verlasse mich nur in Ausnahmen
+(z.B. Optimierungen) auf das spezifizierte Verhalten.
