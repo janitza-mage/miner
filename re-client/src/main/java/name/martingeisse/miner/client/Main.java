@@ -16,6 +16,7 @@ import name.martingeisse.miner.client.engine.gui.element.collection.OverlayStack
 import name.martingeisse.miner.client.engine.gui.element.collection.VerticalLayout;
 import name.martingeisse.miner.client.engine.gui.element.fill.FillTexture;
 import name.martingeisse.miner.client.engine.gui.element.fill.PulseFillColor;
+import name.martingeisse.miner.client.engine.gui.element.wrapper.ThickBorder;
 import name.martingeisse.miner.client.engine.gui.element.wrapper.ThinBorder;
 import name.martingeisse.miner.client.engine.gui.util.AreaAlignment;
 import name.martingeisse.miner.client.engine.gui.util.GuiScale;
@@ -62,7 +63,9 @@ public class Main {
         layout.setAlignment(HorizontalAlignment.LEFT);
         layout.addElement(new Spacer(GuiScale.GRID * 10));
         layout.addElement(new TextLine().setText("Hello"));
-        layout.addElement(new ThinBorder(new TextLine().setText("worldddd")));
+        layout.addElement(new ThickBorder(new TextLine().setText("worldddd")).setThickness(GuiScale.GRID * 2));
+        layout.addElement(new TextLine().setText("again"));
+        layout.addElement(new TextLine().setText("again"));
 
         var stack = new OverlayStack();
         stack.setAlignment(AreaAlignment.TOP_LEFT);
