@@ -4,14 +4,13 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util.gui.element.atom;
+package name.martingeisse.miner.client.engine.gui.element.atom;
 
-import name.martingeisse.miner.client.engine.GlWorkUnit;
-import name.martingeisse.miner.client.engine.GraphicsFrameContext;
-import name.martingeisse.miner.client.engine.graphics.Font;
-import name.martingeisse.miner.client.util.gui.GuiLogicFrameContext;
-import name.martingeisse.miner.client.util.gui.util.Color;
-import name.martingeisse.miner.client.util.gui.util.LeafElement;
+import name.martingeisse.gleng.GlWorkUnit;
+import name.martingeisse.gleng.graphics.Font;
+import name.martingeisse.miner.client.engine.gui.GuiLogicFrameContext;
+import name.martingeisse.miner.client.engine.gui.util.Color;
+import name.martingeisse.miner.client.engine.gui.util.LeafElement;
 import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.opengl.GL11;
@@ -53,7 +52,7 @@ public final class TextParagraph extends LeafElement {
 		}
 
 		@Override
-		public void execute() {
+		protected void gl__Execute() {
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -71,7 +70,7 @@ public final class TextParagraph extends LeafElement {
 			int i = 0;
 			for (String line : lines) {
 				glWindowPos2i(windowPosX, windowPosY - i * lineHeight);
-				font.drawText(line, 1.0f, Font.ALIGN_LEFT, Font.ALIGN_TOP);
+				font.gl__DrawText(line, 1.0f, Font.ALIGN_LEFT, Font.ALIGN_TOP);
 				i++;
 			}
 		}
@@ -245,8 +244,8 @@ public final class TextParagraph extends LeafElement {
 	}
 
 	@Override
-	public void handleGraphicsFrame(GraphicsFrameContext context) {
-		context.schedule(getWorkUnit(getWidth()));
+	public void handleGraphicsFrame() {
+		getWorkUnit(getWidth()).schedule();
 	}
 
 }

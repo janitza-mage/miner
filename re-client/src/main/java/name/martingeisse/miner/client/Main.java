@@ -10,6 +10,7 @@ import name.martingeisse.miner.client.engine.*;
 import name.martingeisse.miner.client.engine.gui.Gui;
 import name.martingeisse.miner.client.engine.gui.GuiFrameHandler;
 import name.martingeisse.miner.client.engine.gui.element.atom.TextLine;
+import name.martingeisse.miner.client.engine.gui.element.atom.TextParagraph;
 import name.martingeisse.miner.client.engine.gui.element.fill.FillTexture;
 import name.martingeisse.miner.client.engine.gui.element.fill.PulseFillColor;
 import name.martingeisse.miner.client.engine.gui.util.GuiScale;
@@ -50,7 +51,7 @@ public class Main {
         gui.setDefaultFont(new FixedWidthFont(GlengImageResourceUtil.loadClasspathImageResource("/font.png"), 8, 16));
 
         // var texture = Texture.loadFromClasspath(TriangleMain.class, "/bricks1.png");
-        gui.setRootElement(new TextLine().setText("Hello World!"));
+        gui.setRootElement(new TextParagraph().setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec mauris metus, iaculis id purus sed, consequat placerat orci. Nulla eu condimentum sapien, ut consequat est. Aliquam hendrerit volutpat ligula, at tincidunt justo ullamcorper a. Nulla feugiat, nisl nec commodo venenatis, quam lorem tincidunt metus, in pharetra nunc ligula a lorem. Etiam pellentesque augue erat, in venenatis tellus laoreet non. Nulla facilisi. Aliquam nec dui vel orci aliquam feugiat. Vestibulum sed sapien accumsan, scelerisque nulla quis, consequat quam. Nulla commodo est non eros interdum malesuada."));
     }
 
     private static final GlWorkUnit clearScreenWorkUnit = new GlWorkUnit() {
