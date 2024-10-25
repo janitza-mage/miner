@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util.gui.util;
+package name.martingeisse.miner.client.engine.gui.util;
 
 /**
  * A function that returns a value in the range 0..255 for an input

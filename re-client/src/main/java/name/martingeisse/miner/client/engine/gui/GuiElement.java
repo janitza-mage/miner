@@ -4,10 +4,9 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util.gui;
+package name.martingeisse.miner.client.engine.gui;
 
 import com.google.common.collect.ImmutableList;
-import name.martingeisse.miner.client.engine.GraphicsFrameContext;
 import name.martingeisse.miner.common.util.contract.ParameterUtil;
 
 /**
@@ -207,7 +206,7 @@ public abstract class GuiElement {
 	// region input, logic and drawing
 
 	public abstract void handleLogicFrame(GuiLogicFrameContext context);
-	public abstract void handleGraphicsFrame(GraphicsFrameContext context);
+	public abstract void handleGraphicsFrame();
 
 	// endregion
 

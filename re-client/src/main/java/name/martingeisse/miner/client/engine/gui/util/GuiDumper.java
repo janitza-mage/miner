@@ -2,10 +2,10 @@
  * Copyright (c) 2018 Martin Geisse
  * This file is distributed under the terms of the MIT license.
  */
-package name.martingeisse.miner.client.util.gui.util;
+package name.martingeisse.miner.client.engine.gui.util;
 
-import name.martingeisse.miner.client.util.gui.Gui;
-import name.martingeisse.miner.client.util.gui.GuiElement;
+import name.martingeisse.miner.client.engine.gui.Gui;
+import name.martingeisse.miner.client.engine.gui.GuiElement;
 
 /**
  *

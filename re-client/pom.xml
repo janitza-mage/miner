@@ -2,7 +2,7 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>name.martingeisse</groupId>
-    <artifactId>miner-client-2</artifactId>
+    <artifactId>miner-client</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Miner Game Client (TODO Remake, 2nd attempt)</name>
 
@@ -73,8 +73,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>name.martingeisse.miner.client.tools.KeyboardCodePrinter</mainClass>
-                    <!-- <mainClass>name.martingeisse.miner.in.vulkan.ClearScreenDemo</mainClass> -->
+                    <mainClass>name.martingeisse.miner.client.Main</mainClass>
                 </configuration>
             </plugin>
         </plugins>
@@ -218,9 +217,6 @@
             <version>${lwjgl.version}</version>
             <classifier>natives-${platform}</classifier>
         </dependency>
-
-
-
 
     </dependencies>
 </project>

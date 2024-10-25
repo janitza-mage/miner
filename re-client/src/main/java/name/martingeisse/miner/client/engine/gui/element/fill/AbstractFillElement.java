@@ -4,12 +4,11 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util.gui.element.fill;
+package name.martingeisse.miner.client.engine.gui.element.fill;
 
-import name.martingeisse.miner.client.engine.GlWorkUnit;
-import name.martingeisse.miner.client.engine.GraphicsFrameContext;
-import name.martingeisse.miner.client.util.gui.GuiLogicFrameContext;
-import name.martingeisse.miner.client.util.gui.util.LeafElement;
+import name.martingeisse.gleng.GlWorkUnit;
+import name.martingeisse.miner.client.engine.gui.GuiLogicFrameContext;
+import name.martingeisse.miner.client.engine.gui.util.LeafElement;
 
 /**
  * Base class for elements that do not have any children and just fill their available area with some graphic effect.
@@ -43,11 +42,11 @@ public abstract class AbstractFillElement extends LeafElement {
 	protected abstract GlWorkUnit createWorkUnit();
 
 	@Override
-	public void handleGraphicsFrame(GraphicsFrameContext context) {
+	public void handleGraphicsFrame() {
 		if (cachedWorkUnit == null) {
 			cachedWorkUnit = createWorkUnit();
 		}
-		context.schedule(cachedWorkUnit);
+		cachedWorkUnit.schedule();
 	}
 
 }

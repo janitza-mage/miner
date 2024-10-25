@@ -1,4 +1,4 @@
-package name.martingeisse.miner.client.util.gui;
+package name.martingeisse.miner.client.engine.gui;
 
 import name.martingeisse.miner.client.engine.FrameHandler;
 import name.martingeisse.miner.client.engine.KeyboardEvent;

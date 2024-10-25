@@ -4,10 +4,9 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util.gui;
+package name.martingeisse.miner.client.engine.gui;
 
 import name.martingeisse.miner.client.engine.FrameHandler;
-import name.martingeisse.miner.client.engine.GraphicsFrameContext;
 import name.martingeisse.miner.client.engine.LogicFrameContext;
 import name.martingeisse.miner.common.util.contract.ParameterUtil;
 
@@ -34,11 +33,9 @@ public final class GuiFrameHandler implements FrameHandler {
 	}
 
 	@Override
-	public void handleGraphicsFrame(GraphicsFrameContext context) {
-		ParameterUtil.ensureNotNull(context, "context");
-
+	public void handleGraphicsFrame() {
 		if (enableGui) {
-			gui.handleGraphicsFrame(context);
+			gui.handleGraphicsFrame();
 		}
 	}
 

@@ -4,13 +4,12 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util.gui;
+package name.martingeisse.miner.client.engine.gui;
 
-import name.martingeisse.miner.client.engine.GlWorkUnit;
-import name.martingeisse.miner.client.engine.GraphicsFrameContext;
-import name.martingeisse.miner.client.engine.graphics.Font;
-import name.martingeisse.miner.client.util.gui.element.fill.NullElement;
-import name.martingeisse.miner.client.util.gui.util.GuiScale;
+import name.martingeisse.gleng.GlWorkUnit;
+import name.martingeisse.gleng.graphics.Font;
+import name.martingeisse.miner.client.engine.gui.element.fill.NullElement;
+import name.martingeisse.miner.client.engine.gui.util.GuiScale;
 import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import org.lwjgl.opengl.GL11;
 
@@ -33,7 +32,7 @@ public final class Gui {
 
 	private final GlWorkUnit initializeFrameWorkUnit = new GlWorkUnit() {
 		@Override
-		public void execute() {
+		protected void gl__Execute() {
 			GL11.glMatrixMode(GL11.GL_MODELVIEW);
 			GL11.glLoadIdentity();
 			GL11.glMatrixMode(GL11.GL_PROJECTION);
@@ -102,17 +101,15 @@ public final class Gui {
 		rootElement.handleLogicFrame(context);
 	}
 
-	public void handleGraphicsFrame(GraphicsFrameContext context) {
-		ParameterUtil.ensureNotNull(context, "context");
-
+	public void handleGraphicsFrame() {
 		timeMilliseconds = (int) System.currentTimeMillis();
 		if (layoutRequested) {
 			rootElement.requestSize(widthUnits, GuiScale.HEIGHT_UNITS);
 			rootElement.setAbsolutePosition(0, 0);
 			layoutRequested = false;
 		}
-		context.schedule(initializeFrameWorkUnit);
-		rootElement.handleGraphicsFrame(context);
+		initializeFrameWorkUnit.schedule();
+		rootElement.handleGraphicsFrame();
 	}
 
 	/**

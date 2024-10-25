@@ -1,4 +1,4 @@
-package name.martingeisse.miner.client.util.gui.util;
+package name.martingeisse.miner.client.engine.gui.util;
 
 public record GuiScale(int heightPixels) {
 

@@ -1,7 +1,7 @@
-package name.martingeisse.miner.client.util.gui.util;
+package name.martingeisse.miner.client.engine.gui.util;
 
 import com.google.common.collect.ImmutableList;
-import name.martingeisse.miner.client.util.gui.GuiElement;
+import name.martingeisse.miner.client.engine.gui.GuiElement;
 
 /**
  * This class makes it easier to implement leaf elements by implementing all children-related methods as no-ops.

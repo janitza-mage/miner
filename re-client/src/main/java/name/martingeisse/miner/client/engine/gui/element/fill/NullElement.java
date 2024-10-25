@@ -4,10 +4,10 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util.gui.element.fill;
+package name.martingeisse.miner.client.engine.gui.element.fill;
 
-import name.martingeisse.miner.client.engine.GlWorkUnit;
-import name.martingeisse.miner.client.engine.GraphicsFrameContext;
+import name.martingeisse.gleng.GlWorkUnit;
+import name.martingeisse.gleng.work_units.WorkUnits;
 
 /**
  * An invisible element that does nothing. This can be used as a
@@ -22,12 +22,12 @@ public final class NullElement extends AbstractFillElement {
 	public static final NullElement instance = new NullElement();
 
 	@Override
-	public void handleGraphicsFrame(GraphicsFrameContext context) {
+	public void handleGraphicsFrame() {
 	}
 
 	@Override
 	protected GlWorkUnit createWorkUnit() {
-		return GlWorkUnit.NOP_WORK_UNIT;
+		return WorkUnits.nop();
 	}
 
 }

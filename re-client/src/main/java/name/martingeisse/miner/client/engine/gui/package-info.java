@@ -14,4 +14,4 @@
  * The GUI uses an integer coordinate system where the total height of the GUI is a hundred thousand units, and the
  * total width a determined such that a unit has the same length along either axis.
  */
-package name.martingeisse.miner.client.util.gui;
+package name.martingeisse.miner.client.engine.gui;

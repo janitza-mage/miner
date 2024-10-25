@@ -4,7 +4,7 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util.gui;
+package name.martingeisse.miner.client.engine.gui;
 
 /**
  * This interface is implemented by GUI elements that can have input focus.
