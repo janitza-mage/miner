@@ -4,10 +4,10 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util.gui.element.collection;
+package name.martingeisse.miner.client.engine.gui.element.collection;
 
-import name.martingeisse.miner.client.util.gui.GuiElement;
-import name.martingeisse.miner.client.util.gui.util.AreaAlignment;
+import name.martingeisse.miner.client.engine.gui.GuiElement;
+import name.martingeisse.miner.client.engine.gui.util.AreaAlignment;
 import name.martingeisse.miner.common.util.contract.ParameterUtil;
 
 /**

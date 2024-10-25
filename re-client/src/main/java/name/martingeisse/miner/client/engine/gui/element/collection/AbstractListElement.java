@@ -4,12 +4,11 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util.gui.element.collection;
+package name.martingeisse.miner.client.engine.gui.element.collection;
 
 import com.google.common.collect.ImmutableList;
-import name.martingeisse.miner.client.engine.GraphicsFrameContext;
-import name.martingeisse.miner.client.util.gui.GuiElement;
-import name.martingeisse.miner.client.util.gui.GuiLogicFrameContext;
+import name.martingeisse.miner.client.engine.gui.GuiElement;
+import name.martingeisse.miner.client.engine.gui.GuiLogicFrameContext;
 import name.martingeisse.miner.common.util.contract.ParameterUtil;
 
 import java.util.ArrayList;
@@ -81,7 +80,9 @@ public abstract class AbstractListElement extends GuiElement {
 	 * automatically.
 	 */
 	public final void clearElements() {
-		TODO notify
+		for (GuiElement element : getWrappedElements()) {
+			element.notifyRemovedFromParent();
+		}
 		wrappedElements.clear();
 		requestLayout();
 	}
@@ -94,9 +95,9 @@ public abstract class AbstractListElement extends GuiElement {
 	}
 
 	@Override
-	public void handleGraphicsFrame(GraphicsFrameContext context) {
+	public void handleGraphicsFrame() {
 		for (GuiElement element : getWrappedElements()) {
-			element.handleGraphicsFrame(context);
+			element.handleGraphicsFrame();
 		}
 	}
 

@@ -4,36 +4,36 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util.gui.element.collection;
+package name.martingeisse.miner.client.engine.gui.element.collection;
 
-import name.martingeisse.miner.client.util.gui.Gui;
-import name.martingeisse.miner.client.util.gui.GuiElement;
-import name.martingeisse.miner.client.util.gui.util.HorizontalAlignment;
+import name.martingeisse.miner.client.engine.gui.GuiElement;
+import name.martingeisse.miner.client.engine.gui.util.GuiScale;
+import name.martingeisse.miner.client.engine.gui.util.VerticalAlignment;
 import name.martingeisse.miner.common.util.contract.ParameterUtil;
 
 /**
- * This layout arranges its elements vertically, then aligns
- * them horizontally using the specified alignment.
+ * This layout arranges its elements horizontally, then aligns
+ * them vertically using the specified alignment.
  */
-public final class VerticalLayout extends AbstractListElement {
+public final class HorizontalLayout extends AbstractListElement {
 
 	/**
 	 * the alignment
 	 */
-	private HorizontalAlignment alignment;
+	private VerticalAlignment alignment;
 
 	/**
 	 * Constructor.
 	 */
-	public VerticalLayout() {
-		this.alignment = HorizontalAlignment.CENTER;
+	public HorizontalLayout() {
+		this.alignment = VerticalAlignment.CENTER;
 	}
 
 	/**
 	 * Getter method for the alignment.
 	 * @return the alignment
 	 */
-	public HorizontalAlignment getAlignment() {
+	public VerticalAlignment getAlignment() {
 		return alignment;
 	}
 
@@ -42,7 +42,7 @@ public final class VerticalLayout extends AbstractListElement {
 	 * @param alignment the alignment to set
 	 * @return this for chaining
 	 */
-	public VerticalLayout setAlignment(HorizontalAlignment alignment) {
+	public HorizontalLayout setAlignment(VerticalAlignment alignment) {
 		ParameterUtil.ensureNotNull(alignment, "alignment");
 		this.alignment = alignment;
 		return this;
@@ -53,11 +53,11 @@ public final class VerticalLayout extends AbstractListElement {
 	 */
 	@Override
 	public void requestSize(int width, int height) {
-		int requiredWidth = width, requiredHeight = 0;
+		int requiredWidth = 0, requiredHeight = height;
 		for (GuiElement element : getWrappedElements()) {
-			element.requestSize(width, Gui.GRID);
-			requiredWidth = Math.max(requiredWidth, element.getWidth());
-			requiredHeight += element.getHeight();
+			element.requestSize(GuiScale.GRID, height);
+			requiredWidth += element.getWidth();
+			requiredHeight = Math.max(requiredHeight, element.getHeight());
 		}
 		setSize(requiredWidth, requiredHeight);
 	}
@@ -67,10 +67,10 @@ public final class VerticalLayout extends AbstractListElement {
 	 */
 	@Override
 	protected void onAbsolutePositionChanged(int absoluteX, int absoluteY) {
-		int width = getWidth();
+		int height = getHeight();
 		for (GuiElement element : getWrappedElements()) {
-			element.setAbsolutePosition(absoluteX + alignment.alignSpan(width, element.getWidth()), absoluteY);
-			absoluteY += element.getHeight();
+			element.setAbsolutePosition(absoluteX, absoluteY + alignment.alignSpan(height, element.getHeight()));
+			absoluteX += element.getWidth();
 		}
 	}
 
