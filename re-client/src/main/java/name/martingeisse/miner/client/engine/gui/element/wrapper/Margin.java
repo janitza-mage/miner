@@ -4,9 +4,9 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util.gui.element.wrapper;
+package name.martingeisse.miner.client.engine.gui.element.wrapper;
 
-import name.martingeisse.miner.client.util.gui.GuiElement;
+import name.martingeisse.miner.client.engine.gui.GuiElement;
 
 /**
  * This element adds a margin around another element.
