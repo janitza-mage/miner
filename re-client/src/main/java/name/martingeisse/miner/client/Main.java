@@ -1,14 +1,16 @@
 package name.martingeisse.miner.client;
 
+import name.martingeisse.gleng.GlWorkUnit;
 import name.martingeisse.gleng.Gleng;
 import name.martingeisse.gleng.GlengParameters;
-import name.martingeisse.miner.client.engine.Engine;
-import name.martingeisse.miner.client.engine.EngineParameters;
-import name.martingeisse.miner.client.engine.GlengCallbacksImpl;
+import name.martingeisse.gleng.graphics.Texture;
+import name.martingeisse.miner.client.engine.*;
 import name.martingeisse.miner.client.engine.gui.Gui;
 import name.martingeisse.miner.client.engine.gui.GuiFrameHandler;
-import name.martingeisse.miner.client.engine.gui.element.fill.FillColor;
-import name.martingeisse.miner.client.engine.gui.util.Color;
+import name.martingeisse.miner.client.engine.gui.element.fill.FillTexture;
+import name.martingeisse.miner.client.engine.gui.element.fill.PulseFillColor;
+import name.martingeisse.miner.client.engine.gui.util.GuiScale;
+import org.lwjgl.opengl.GL11;
 
 public class Main {
 
@@ -16,16 +18,41 @@ public class Main {
         GlengParameters glengParameters = GlengParameters.from("Miner", 800, 600, false, args);
         GlengCallbacksImpl glengCallbacks = new GlengCallbacksImpl();
         Gleng.run(glengParameters, glengCallbacks, () -> {
+
             GuiFrameHandler guiFrameHandler = new GuiFrameHandler(800, 600);
             initializeGui(guiFrameHandler.getGui());
+
+            var myFrameHandler = new FrameHandler() {
+
+                @Override
+                public void handleLogicFrame(LogicFrameContext context) {
+                    guiFrameHandler.handleLogicFrame(context);
+                }
+
+                @Override
+                public void handleGraphicsFrame() {
+                    clearScreenWorkUnit.schedule();
+                    guiFrameHandler.handleGraphicsFrame();
+                }
+
+            };
+
             var engineParameters = new EngineParameters(glengParameters, null);
-            Engine engine = new Engine(engineParameters, glengCallbacks, guiFrameHandler);
+            Engine engine = new Engine(engineParameters, glengCallbacks, myFrameHandler);
             engine.executeFrameLoop();
         });
     }
 
     private static void initializeGui(Gui gui) {
-        gui.setRootElement(new FillColor(Color.CYAN));
+        var texture = Texture.loadFromClasspath(TriangleMain.class, "/bricks1.png");
+        gui.setRootElement(new PulseFillColor());
     }
 
+    private static final GlWorkUnit clearScreenWorkUnit = new GlWorkUnit() {
+        @Override
+        protected void gl__Execute() {
+            GL11.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+        }
+    };
 }

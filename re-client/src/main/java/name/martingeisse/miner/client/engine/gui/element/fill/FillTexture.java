@@ -4,11 +4,11 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util.gui.element.fill;
+package name.martingeisse.miner.client.engine.gui.element.fill;
 
-import name.martingeisse.miner.client.engine.GlWorkUnit;
-import name.martingeisse.miner.client.engine.graphics.Texture;
-import name.martingeisse.miner.client.util.gui.util.GuiScale;
+import name.martingeisse.gleng.GlWorkUnit;
+import name.martingeisse.gleng.graphics.Texture;
+import name.martingeisse.miner.client.engine.gui.util.GuiScale;
 import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import org.lwjgl.opengl.GL11;
 
@@ -44,7 +44,7 @@ public final class FillTexture extends AbstractFillElement {
 		}
 
 		@Override
-		public void execute() {
+		protected void gl__Execute() {
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			GL11.glDisable(GL11.GL_BLEND);
 			texture.glBindTexture();

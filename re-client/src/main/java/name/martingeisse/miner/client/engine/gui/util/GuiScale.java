@@ -6,7 +6,7 @@ public record GuiScale(int heightPixels) {
      * Total height of the screen in GUI units. This value is fixed to be resolution-independent, and the width is
      * determined from the aspect ratio.
      */
-    public static final int HEIGHT_UNITS = 100000;
+    public static final int HEIGHT_UNITS = 100_000;
 
     /**
      * The "normal" grid to align things. The total height is 100 grid clicks.
