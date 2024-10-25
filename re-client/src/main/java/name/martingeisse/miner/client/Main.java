@@ -9,12 +9,14 @@ import name.martingeisse.gleng.util.GlengImageResourceUtil;
 import name.martingeisse.miner.client.engine.*;
 import name.martingeisse.miner.client.engine.gui.Gui;
 import name.martingeisse.miner.client.engine.gui.GuiFrameHandler;
+import name.martingeisse.miner.client.engine.gui.element.atom.Spacer;
 import name.martingeisse.miner.client.engine.gui.element.atom.TextLine;
 import name.martingeisse.miner.client.engine.gui.element.atom.TextParagraph;
 import name.martingeisse.miner.client.engine.gui.element.collection.OverlayStack;
 import name.martingeisse.miner.client.engine.gui.element.collection.VerticalLayout;
 import name.martingeisse.miner.client.engine.gui.element.fill.FillTexture;
 import name.martingeisse.miner.client.engine.gui.element.fill.PulseFillColor;
+import name.martingeisse.miner.client.engine.gui.element.wrapper.ThinBorder;
 import name.martingeisse.miner.client.engine.gui.util.AreaAlignment;
 import name.martingeisse.miner.client.engine.gui.util.GuiScale;
 import name.martingeisse.miner.client.engine.gui.util.HorizontalAlignment;
@@ -58,8 +60,9 @@ public class Main {
 
         var layout = new VerticalLayout();
         layout.setAlignment(HorizontalAlignment.LEFT);
+        layout.addElement(new Spacer(GuiScale.GRID * 10));
         layout.addElement(new TextLine().setText("Hello"));
-        layout.addElement(new TextLine().setText("worldddd"));
+        layout.addElement(new ThinBorder(new TextLine().setText("worldddd")));
 
         var stack = new OverlayStack();
         stack.setAlignment(AreaAlignment.TOP_LEFT);

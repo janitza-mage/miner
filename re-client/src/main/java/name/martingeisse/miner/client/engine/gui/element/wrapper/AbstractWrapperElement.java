@@ -4,14 +4,14 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util.gui.element.wrapper;
+package name.martingeisse.miner.client.engine.gui.element.wrapper;
 
 import com.google.common.collect.ImmutableList;
-import name.martingeisse.miner.client.engine.GlWorkUnit;
-import name.martingeisse.miner.client.engine.GraphicsFrameContext;
-import name.martingeisse.miner.client.util.gui.GuiElement;
-import name.martingeisse.miner.client.util.gui.GuiLogicFrameContext;
-import name.martingeisse.miner.client.util.gui.element.fill.NullElement;
+import name.martingeisse.gleng.GlWorkUnit;
+import name.martingeisse.gleng.work_units.WorkUnits;
+import name.martingeisse.miner.client.engine.gui.GuiElement;
+import name.martingeisse.miner.client.engine.gui.GuiLogicFrameContext;
+import name.martingeisse.miner.client.engine.gui.element.fill.NullElement;
 import name.martingeisse.miner.common.util.contract.ParameterUtil;
 
 /**
@@ -50,11 +50,11 @@ public abstract class AbstractWrapperElement extends GuiElement {
 	}
 
 	protected GlWorkUnit createPreWorkUnit() {
-		return GlWorkUnit.NOP_WORK_UNIT;
+		return WorkUnits.nop();
 	}
 
 	protected GlWorkUnit createPostWorkUnit() {
-		return GlWorkUnit.NOP_WORK_UNIT;
+		return WorkUnits.nop();
 	}
 
 	/**
@@ -79,16 +79,16 @@ public abstract class AbstractWrapperElement extends GuiElement {
 	}
 
 	@Override
-	public void handleGraphicsFrame(GraphicsFrameContext context) {
+	public void handleGraphicsFrame() {
 		if (cachedPreWorkUnit == null) {
 			cachedPreWorkUnit = createPreWorkUnit();
 		}
 		if (cachedPostWorkUnit == null) {
 			cachedPostWorkUnit = createPostWorkUnit();
 		}
-		context.schedule(cachedPreWorkUnit);
-		wrappedElement.handleGraphicsFrame(context);
-		context.schedule(cachedPostWorkUnit);
+		cachedPreWorkUnit.schedule();
+		wrappedElement.handleGraphicsFrame();
+		cachedPostWorkUnit.schedule();
 	}
 
 	@Override

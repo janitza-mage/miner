@@ -4,11 +4,10 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util.gui.element.atom;
+package name.martingeisse.miner.client.engine.gui.element.atom;
 
-import name.martingeisse.miner.client.engine.GraphicsFrameContext;
-import name.martingeisse.miner.client.util.gui.GuiLogicFrameContext;
-import name.martingeisse.miner.client.util.gui.util.LeafElement;
+import name.martingeisse.miner.client.engine.gui.GuiLogicFrameContext;
+import name.martingeisse.miner.client.engine.gui.util.LeafElement;
 
 /**
  * A simple invisible element with fixed size that is meant to take up space.
@@ -38,7 +37,7 @@ public final class Spacer extends LeafElement {
 	}
 
 	@Override
-	public void handleGraphicsFrame(GraphicsFrameContext context) {
+	public void handleGraphicsFrame() {
 	}
 
 }
