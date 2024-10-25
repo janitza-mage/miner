@@ -4,15 +4,14 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util.gui.element.atom;
+package name.martingeisse.miner.client.engine.gui.element.atom;
 
-import name.martingeisse.miner.client.engine.GlWorkUnit;
-import name.martingeisse.miner.client.engine.GraphicsFrameContext;
-import name.martingeisse.miner.client.engine.graphics.Font;
-import name.martingeisse.miner.client.util.gui.Gui;
-import name.martingeisse.miner.client.util.gui.GuiLogicFrameContext;
-import name.martingeisse.miner.client.util.gui.util.Color;
-import name.martingeisse.miner.client.util.gui.util.LeafElement;
+import name.martingeisse.gleng.GlWorkUnit;
+import name.martingeisse.gleng.graphics.Font;
+import name.martingeisse.miner.client.engine.gui.Gui;
+import name.martingeisse.miner.client.engine.gui.GuiLogicFrameContext;
+import name.martingeisse.miner.client.engine.gui.util.Color;
+import name.martingeisse.miner.client.engine.gui.util.LeafElement;
 import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import org.lwjgl.opengl.GL11;
 
@@ -49,7 +48,7 @@ public final class TextLine extends LeafElement {
 		}
 
 		@Override
-		public void execute() {
+		protected void gl__Execute() {
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -63,7 +62,7 @@ public final class TextLine extends LeafElement {
 			GL11.glPixelTransferf(GL11.GL_ALPHA_BIAS, 0.0f);
 			// TODO scale font so text doesn't become smaller with higher resolution
 			glWindowPos2i(windowPosX, windowPosY);
-			font.drawText(text, 1.0f, Font.ALIGN_LEFT, Font.ALIGN_TOP);
+			font.gl__DrawText(text, 1.0f, Font.ALIGN_LEFT, Font.ALIGN_TOP);
 		}
 	}
 
@@ -144,14 +143,14 @@ public final class TextLine extends LeafElement {
 	}
 
 	@Override
-	public void handleGraphicsFrame(GraphicsFrameContext context) {
+	public void handleGraphicsFrame() {
 		if (cachedWorkUnit == null) {
 			var scale = getGui().getScale();
 			int windowPosX = scale.unitsToPixelsInt(getAbsoluteX());
 			int windowPosY = getGui().getHeightPixels() - scale.unitsToPixelsInt(getAbsoluteY());
 			cachedWorkUnit = new MyWorkUnit(getEffectiveFont(), color, text, windowPosX, windowPosY);
 		}
-		context.schedule(cachedWorkUnit);
+		cachedWorkUnit.schedule();
 	}
 
 }

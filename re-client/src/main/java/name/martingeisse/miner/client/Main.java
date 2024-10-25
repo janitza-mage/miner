@@ -3,10 +3,13 @@ package name.martingeisse.miner.client;
 import name.martingeisse.gleng.GlWorkUnit;
 import name.martingeisse.gleng.Gleng;
 import name.martingeisse.gleng.GlengParameters;
+import name.martingeisse.gleng.graphics.FixedWidthFont;
 import name.martingeisse.gleng.graphics.Texture;
+import name.martingeisse.gleng.util.GlengImageResourceUtil;
 import name.martingeisse.miner.client.engine.*;
 import name.martingeisse.miner.client.engine.gui.Gui;
 import name.martingeisse.miner.client.engine.gui.GuiFrameHandler;
+import name.martingeisse.miner.client.engine.gui.element.atom.TextLine;
 import name.martingeisse.miner.client.engine.gui.element.fill.FillTexture;
 import name.martingeisse.miner.client.engine.gui.element.fill.PulseFillColor;
 import name.martingeisse.miner.client.engine.gui.util.GuiScale;
@@ -44,8 +47,10 @@ public class Main {
     }
 
     private static void initializeGui(Gui gui) {
-        var texture = Texture.loadFromClasspath(TriangleMain.class, "/bricks1.png");
-        gui.setRootElement(new PulseFillColor());
+        gui.setDefaultFont(new FixedWidthFont(GlengImageResourceUtil.loadClasspathImageResource("/font.png"), 8, 16));
+
+        // var texture = Texture.loadFromClasspath(TriangleMain.class, "/bricks1.png");
+        gui.setRootElement(new TextLine().setText("Hello World!"));
     }
 
     private static final GlWorkUnit clearScreenWorkUnit = new GlWorkUnit() {

@@ -32,7 +32,7 @@ public class MinerResources {
 
 		// load special textures
 		clouds = Texture.loadFromClasspath("/clouds.png");
-		font = new FixedWidthFont(GlengImageResourceUtil.loadClasspathImageResource("font.png"), 8, 16);
+		font = new FixedWidthFont(GlengImageResourceUtil.loadClasspathImageResource("/font.png"), 8, 16);
 
 		// load sounds
 		footstep = SoundTemplate.loadFromClasspath("/footstep-1.ogg");
