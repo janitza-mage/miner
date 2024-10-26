@@ -10,7 +10,6 @@ import name.martingeisse.gleng.GlWorkUnit;
 import name.martingeisse.miner.client.engine.gui.GuiElement;
 import name.martingeisse.miner.client.engine.gui.element.fill.NullElement;
 import name.martingeisse.miner.client.engine.gui.util.Color;
-import name.martingeisse.miner.client.engine.gui.util.GuiScale;
 import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import org.lwjgl.opengl.GL11;
 

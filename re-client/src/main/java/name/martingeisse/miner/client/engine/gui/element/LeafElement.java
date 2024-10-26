@@ -1,4 +1,4 @@
-package name.martingeisse.miner.client.engine.gui.util;
+package name.martingeisse.miner.client.engine.gui.element;
 
 import com.google.common.collect.ImmutableList;
 import name.martingeisse.miner.client.engine.gui.GuiElement;

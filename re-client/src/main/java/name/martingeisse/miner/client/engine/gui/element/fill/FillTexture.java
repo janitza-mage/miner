@@ -8,7 +8,6 @@ package name.martingeisse.miner.client.engine.gui.element.fill;
 
 import name.martingeisse.gleng.GlWorkUnit;
 import name.martingeisse.gleng.graphics.Texture;
-import name.martingeisse.miner.client.engine.gui.util.GuiScale;
 import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import org.lwjgl.opengl.GL11;
 

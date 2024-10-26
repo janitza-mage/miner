@@ -7,7 +7,6 @@
 package name.martingeisse.miner.client.engine.gui.element.collection;
 
 import name.martingeisse.miner.client.engine.gui.GuiElement;
-import name.martingeisse.miner.client.engine.gui.util.GuiScale;
 import name.martingeisse.miner.client.engine.gui.util.VerticalAlignment;
 import name.martingeisse.miner.common.util.contract.ParameterUtil;
 

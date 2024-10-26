@@ -7,7 +7,7 @@
 package name.martingeisse.miner.client.engine.gui.element.atom;
 
 import name.martingeisse.miner.client.engine.gui.GuiLogicFrameContext;
-import name.martingeisse.miner.client.engine.gui.util.LeafElement;
+import name.martingeisse.miner.client.engine.gui.element.LeafElement;
 
 /**
  * A simple invisible element with fixed size that is meant to take up space.

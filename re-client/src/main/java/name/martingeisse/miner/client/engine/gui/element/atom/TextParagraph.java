@@ -10,7 +10,7 @@ import name.martingeisse.gleng.GlWorkUnit;
 import name.martingeisse.gleng.graphics.Font;
 import name.martingeisse.miner.client.engine.gui.GuiLogicFrameContext;
 import name.martingeisse.miner.client.engine.gui.util.Color;
-import name.martingeisse.miner.client.engine.gui.util.LeafElement;
+import name.martingeisse.miner.client.engine.gui.element.LeafElement;
 import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.opengl.GL11;

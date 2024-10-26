@@ -8,7 +8,7 @@ package name.martingeisse.miner.client.engine.gui.element.fill;
 
 import name.martingeisse.gleng.GlWorkUnit;
 import name.martingeisse.miner.client.engine.gui.GuiLogicFrameContext;
-import name.martingeisse.miner.client.engine.gui.util.LeafElement;
+import name.martingeisse.miner.client.engine.gui.element.LeafElement;
 
 /**
  * Base class for elements that do not have any children and just fill their available area with some graphic effect.
