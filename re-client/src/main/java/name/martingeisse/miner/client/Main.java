@@ -9,15 +9,13 @@ import name.martingeisse.gleng.util.GlengImageResourceUtil;
 import name.martingeisse.miner.client.engine.*;
 import name.martingeisse.miner.client.engine.gui.Gui;
 import name.martingeisse.miner.client.engine.gui.GuiFrameHandler;
+import name.martingeisse.miner.client.engine.gui.control.TextField;
 import name.martingeisse.miner.client.engine.gui.element.atom.Spacer;
 import name.martingeisse.miner.client.engine.gui.element.atom.TextLine;
-import name.martingeisse.miner.client.engine.gui.element.atom.TextParagraph;
 import name.martingeisse.miner.client.engine.gui.element.collection.OverlayStack;
 import name.martingeisse.miner.client.engine.gui.element.collection.VerticalLayout;
 import name.martingeisse.miner.client.engine.gui.element.fill.FillTexture;
-import name.martingeisse.miner.client.engine.gui.element.fill.PulseFillColor;
 import name.martingeisse.miner.client.engine.gui.element.wrapper.ThickBorder;
-import name.martingeisse.miner.client.engine.gui.element.wrapper.ThinBorder;
 import name.martingeisse.miner.client.engine.gui.util.AreaAlignment;
 import name.martingeisse.miner.client.engine.gui.util.GuiScale;
 import name.martingeisse.miner.client.engine.gui.util.HorizontalAlignment;
@@ -65,7 +63,9 @@ public class Main {
         layout.addElement(new TextLine().setText("Hello"));
         layout.addElement(new ThickBorder(new TextLine().setText("worldddd")).setThickness(GuiScale.GRID * 2));
         layout.addElement(new TextLine().setText("again"));
+        layout.addElement(new TextField().setValue("editable text field one"));
         layout.addElement(new TextLine().setText("again"));
+        layout.addElement(new TextField().setValue("editable text field two"));
 
         var stack = new OverlayStack();
         stack.setAlignment(AreaAlignment.TOP_LEFT);

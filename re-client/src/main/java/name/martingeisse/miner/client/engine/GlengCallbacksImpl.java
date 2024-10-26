@@ -16,7 +16,15 @@ public final class GlengCallbacksImpl implements GlengCallbacks {
 
     @Override
     public void onKeyEvent(int key, int scancode, int action, int mods) {
-        keyboardEventQueue.add(new KeyboardEvent(key, scancode, action, mods));
+        KeyboardEvent.Type type = KeyboardEvent.Type.fromGlfwAction(action);
+        if (type != null) {
+            keyboardEventQueue.add(new KeyboardEvent(type, key, mods));
+        }
+    }
+
+    @Override
+    public void onCharEvent(int codePoint) {
+        keyboardEventQueue.add(new KeyboardEvent(KeyboardEvent.Type.CHARACTER, codePoint, 0));
     }
 
     @Override

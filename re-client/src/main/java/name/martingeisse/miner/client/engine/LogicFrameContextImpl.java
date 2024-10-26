@@ -55,7 +55,11 @@ final class LogicFrameContextImpl implements LogicFrameContext {
         // update key state
         System.arraycopy(currentKeyStates, 0, previousKeyStates, 0, currentKeyStates.length);
         for (KeyboardEvent event : currentKeyboardEvents) {
-            currentKeyStates[event.key()] = (event.action() == GLFW_PRESS || event.action() == GLFW_REPEAT);
+            if (event.type() == KeyboardEvent.Type.KEY_DOWN) {
+                currentKeyStates[event.codeOrCharacter()] = true;
+            } else if (event.type() == KeyboardEvent.Type.KEY_UP) {
+                currentKeyStates[event.codeOrCharacter()] = false;
+            }
         }
 
         // update mouse button state
