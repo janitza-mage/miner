@@ -54,7 +54,7 @@ public final class VerticalLayout extends AbstractListElement {
 	public void requestSize(int width, int height) {
 		int requiredWidth = width, requiredHeight = 0;
 		for (GuiElement element : getWrappedElements()) {
-			element.requestSize(width, GuiScale.GRID);
+			element.requestSize(width, 0);
 			requiredWidth = Math.max(requiredWidth, element.getWidth());
 			requiredHeight += element.getHeight();
 		}

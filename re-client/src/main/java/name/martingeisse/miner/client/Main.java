@@ -15,7 +15,7 @@ import name.martingeisse.miner.client.engine.gui.element.atom.TextLine;
 import name.martingeisse.miner.client.engine.gui.element.collection.OverlayStack;
 import name.martingeisse.miner.client.engine.gui.element.collection.VerticalLayout;
 import name.martingeisse.miner.client.engine.gui.element.fill.FillTexture;
-import name.martingeisse.miner.client.engine.gui.element.wrapper.ThickBorder;
+import name.martingeisse.miner.client.engine.gui.element.wrapper.Border;
 import name.martingeisse.miner.client.engine.gui.util.AreaAlignment;
 import name.martingeisse.miner.client.engine.gui.util.HorizontalAlignment;
 import org.lwjgl.opengl.GL11;
@@ -58,9 +58,9 @@ public class Main {
 
         var layout = new VerticalLayout();
         layout.setAlignment(HorizontalAlignment.LEFT);
-        layout.addElement(new Spacer(GuiScale.GRID * 10));
+        layout.addElement(new Spacer(20));
         layout.addElement(new TextLine().setText("Hello"));
-        layout.addElement(new ThickBorder(new TextLine().setText("worldddd")).setThickness(GuiScale.GRID * 2));
+        layout.addElement(new Border(new TextLine().setText("worldddd")).setThickness(5));
         layout.addElement(new TextLine().setText("again"));
         layout.addElement(new TextField().setValue("editable text field one"));
         layout.addElement(new TextLine().setText("again"));

@@ -181,7 +181,6 @@ public final class TextParagraph extends LeafElement {
 
 	private String[] getLines(int width) {
 		if (cachedLines == null) {
-			var scale = getGui().getScale();
 			Font effectiveFont = getEffectiveFont();
 			List<String> lines = new ArrayList<>();
 			if (effectiveFont != null && text != null) {
@@ -192,7 +191,7 @@ public final class TextParagraph extends LeafElement {
 					}
 					int previousCharacterCount = lineBuilder.length();
 					lineBuilder.append(word);
-					int newSize = scale.pixelsToUnitsInt(effectiveFont.getStringWidth(lineBuilder.toString()));
+					int newSize = effectiveFont.getStringWidth(lineBuilder.toString());
 					if (newSize > width) {
 						lineBuilder.setLength(previousCharacterCount);
 						lines.add(lineBuilder.toString());
@@ -212,10 +211,9 @@ public final class TextParagraph extends LeafElement {
 	// this may only be called after the absolute position has been set
 	private MyWorkUnit getWorkUnit(int width) {
 		if (cachedWorkUnit == null) {
-			var scale = getGui().getScale();
 			String[] lines = getLines(width);
-			int windowPosX = scale.unitsToPixelsInt(getAbsoluteX());
-			int windowPosY = getGui().getHeightPixels() - scale.unitsToPixelsInt(getAbsoluteY());
+			int windowPosX = getAbsoluteX();
+			int windowPosY = getGui().getHeight() - getAbsoluteY();
 			cachedWorkUnit = new MyWorkUnit(getEffectiveFont(), color, lines, windowPosX, windowPosY);
 		}
 		return cachedWorkUnit;
@@ -229,7 +227,7 @@ public final class TextParagraph extends LeafElement {
 	public void requestSize(final int width, final int height) {
 		cachedLines = null;
 		cachedWorkUnit = null;
-		int lineHeight = getGui().getScale().pixelsToUnitsInt(getEffectiveFont().getCharacterHeight());
+		int lineHeight = getEffectiveFont().getCharacterHeight();
 		String[] lines = getLines(width);
 		setSize(width, lineHeight * lines.length);
 	}

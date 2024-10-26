@@ -54,7 +54,7 @@ public final class HorizontalLayout extends AbstractListElement {
 	public void requestSize(int width, int height) {
 		int requiredWidth = 0, requiredHeight = height;
 		for (GuiElement element : getWrappedElements()) {
-			element.requestSize(GuiScale.GRID, height);
+			element.requestSize(0, height);
 			requiredWidth += element.getWidth();
 			requiredHeight = Math.max(requiredHeight, element.getHeight());
 		}

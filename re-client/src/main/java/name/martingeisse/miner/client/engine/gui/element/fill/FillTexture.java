@@ -29,9 +29,8 @@ public final class FillTexture extends AbstractFillElement {
 		private final Texture texture;
 		private final int repetitionLengthX;
 		private final int repetitionLengthY;
-		private final GuiScale scale;
 
-		public MyWorkUnit(int x, int y, int w, int h, Texture texture, int repetitionLengthX, int repetitionLengthY, GuiScale scale) {
+		public MyWorkUnit(int x, int y, int w, int h, Texture texture, int repetitionLengthX, int repetitionLengthY) {
 			this.x = x;
 			this.y = y;
 			this.w = w;
@@ -39,7 +38,6 @@ public final class FillTexture extends AbstractFillElement {
 			this.texture = texture;
 			this.repetitionLengthX = repetitionLengthX;
 			this.repetitionLengthY = repetitionLengthY;
-			this.scale = scale;
 		}
 
 		@Override
@@ -47,8 +45,8 @@ public final class FillTexture extends AbstractFillElement {
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			GL11.glDisable(GL11.GL_BLEND);
 			texture.glBindTexture();
-			final float effectiveRepetitionLengthX = (repetitionLengthX < 1 ? scale.pixelsToUnitsInt(texture.getWidth()) : repetitionLengthX);
-			final float effectiveRepetitionLengthY = (repetitionLengthY < 1 ? scale.pixelsToUnitsInt(texture.getHeight()) : repetitionLengthY);
+			final float effectiveRepetitionLengthX = (repetitionLengthX < 1 ? texture.getWidth() : repetitionLengthX);
+			final float effectiveRepetitionLengthY = (repetitionLengthY < 1 ? texture.getHeight() : repetitionLengthY);
 			final float s = (w / effectiveRepetitionLengthX);
 			final float t = (h / effectiveRepetitionLengthY);
 
@@ -154,8 +152,7 @@ public final class FillTexture extends AbstractFillElement {
 				getAbsoluteX(), getAbsoluteY(),
 				getWidth(), getHeight(),
 				texture,
-				repetitionLengthX, repetitionLengthY,
-				getGui().getScale()
+				repetitionLengthX, repetitionLengthY
 		);
 	}
 

@@ -14,11 +14,9 @@ import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import org.lwjgl.opengl.GL11;
 
 /**
- * Adds a border around an element without displacing / shrinking that element. Such borders are "thin" in that they
- * are assumed to be so thin that their thickness does not affect layout, and the border actually gets drawn over the
- * wrapped element.
+ * Adds a border around an element that displaces that element and takes up space itself during layout.
  */
-public final class ThinBorder extends AbstractWrapperElement {
+public final class Border extends AbstractWrapperElement {
 
 	private Color color;
 	private int thickness;
@@ -46,21 +44,26 @@ public final class ThinBorder extends AbstractWrapperElement {
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glDisable(GL11.GL_BLEND);
 			color.glColor();
-			GL11.glLineWidth(thickness);
-			GL11.glBegin(GL11.GL_LINE_STRIP);
-			GL11.glVertex2i(x, y);
-			GL11.glVertex2i(x + w, y);
-			GL11.glVertex2i(x + w, y + h);
-			GL11.glVertex2i(x, y + h);
-			GL11.glVertex2i(x, y);
+			GL11.glBegin(GL11.GL_QUADS);
+			quad(x, y, x + w, y + thickness); // top
+			quad(x, y + h - thickness, x + w, y + h); // bottom
+			quad(x, y, x + thickness, y + h); // left
+			quad(x + w - thickness, y, x + w, y + h); // right
 			GL11.glEnd();
+		}
+
+		private void quad(int x1, int y1, int x2, int y2) {
+			GL11.glVertex2i(x1, y1);
+			GL11.glVertex2i(x2, y1);
+			GL11.glVertex2i(x2, y2);
+			GL11.glVertex2i(x1, y2);
 		}
 	}
 
 	/**
 	 * Constructor.
 	 */
-	public ThinBorder() {
+	public Border() {
 		this(NullElement.instance);
 	}
 
@@ -68,7 +71,7 @@ public final class ThinBorder extends AbstractWrapperElement {
 	 * Constructor.
 	 * @param wrappedElement the wrapped element
 	 */
-	public ThinBorder(GuiElement wrappedElement) {
+	public Border(GuiElement wrappedElement) {
 		super(wrappedElement);
 		this.color = Color.WHITE;
 		this.thickness = 1;
@@ -87,7 +90,7 @@ public final class ThinBorder extends AbstractWrapperElement {
 	 * @param color the color to set
 	 * @return this for chaining
 	 */
-	public ThinBorder setColor(Color color) {
+	public Border setColor(Color color) {
 		ParameterUtil.ensureNotNull(color, "color");
 		this.color = color;
 		invalidateCachedWorkUnits();
@@ -107,22 +110,24 @@ public final class ThinBorder extends AbstractWrapperElement {
 	 * @param thickness the thickness to set
 	 * @return this for chaining
 	 */
-	public ThinBorder setThickness(int thickness) {
+	public Border setThickness(int thickness) {
 		this.thickness = thickness;
+		requestLayout();
 		invalidateCachedWorkUnits();
 		return this;
 	}
 
 	@Override
 	public void requestSize(int width, int height) {
-		getWrappedElement().requestSize(width, height);
-		setSize(getWrappedElement().getWidth(), getWrappedElement().getHeight());
+		int borderSpace = 2 * thickness;
+		getWrappedElement().requestSize(width - borderSpace, height - borderSpace);
+		setSize(getWrappedElement().getWidth() + borderSpace, getWrappedElement().getHeight() + borderSpace);
 		invalidateCachedWorkUnits();
 	}
 
 	@Override
 	protected void onAbsolutePositionChanged(int absoluteX, int absoluteY) {
-		getWrappedElement().setAbsolutePosition(absoluteX, absoluteY);
+		getWrappedElement().setAbsolutePosition(absoluteX + thickness, absoluteY + thickness);
 		invalidateCachedWorkUnits();
 	}
 
@@ -130,5 +135,4 @@ public final class ThinBorder extends AbstractWrapperElement {
 	protected GlWorkUnit createPostWorkUnit() {
 		return new MyWorkUnit(getAbsoluteX(), getAbsoluteY(), getWidth(), getHeight(), color, thickness);
 	}
-
 }
