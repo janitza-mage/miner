@@ -7,6 +7,8 @@ public interface GlengCallbacks {
 
     void onKeyEvent(int key, int scancode, int action, int mods);
 
+    void onCharEvent(int codePoint);
+
     void onMousePositionEvent(double x, double y);
 
     void onMouseButtonEvent(int button, int action, int mods);

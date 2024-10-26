@@ -49,6 +49,9 @@ final class GlengEngine implements AutoCloseable {
         closeables.add(glfwSetKeyCallback(windowId, (long windowId, int key, int scancode, int action, int mods) -> {
             callbacks.onKeyEvent(key, scancode, action, mods);
         }));
+        closeables.add(glfwSetCharCallback(windowId, (long windowId, int codePoint) -> {
+            callbacks.onCharEvent(codePoint);
+        }));
         closeables.add(glfwSetCursorPosCallback(windowId, (long windowId, double x, double y) -> {
             callbacks.onMousePositionEvent(x, y);
         }));

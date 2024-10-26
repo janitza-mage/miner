@@ -165,4 +165,12 @@ public abstract class Font {
 	 */
 	public abstract int getCharacterHeight();
 
+	/**
+	 * Maps an x pixel position to a character position in a string.
+	 * @param text the string
+	 * @param x the x pixel position, relative to the start of the string
+	 * @return the number of characters in the string that a completely left of the x position
+	 */
+	public abstract int mapPosition(String text, int x);
+
 }

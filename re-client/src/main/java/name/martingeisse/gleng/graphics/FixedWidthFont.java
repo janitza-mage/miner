@@ -255,4 +255,9 @@ public class FixedWidthFont extends Font {
 		return characterHeight;
 	}
 
+	@Override
+	public int mapPosition(String text, int x) {
+		return Math.max(0, Math.min(text.length(), x / characterWidth));
+	}
+
 }
