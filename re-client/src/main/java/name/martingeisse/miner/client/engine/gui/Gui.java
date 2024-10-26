@@ -9,7 +9,6 @@ package name.martingeisse.miner.client.engine.gui;
 import name.martingeisse.gleng.GlWorkUnit;
 import name.martingeisse.gleng.graphics.Font;
 import name.martingeisse.miner.client.engine.gui.element.fill.NullElement;
-import name.martingeisse.miner.client.engine.gui.util.GuiScale;
 import name.martingeisse.miner.common.util.contract.ParameterUtil;
 import org.lwjgl.opengl.GL11;
 
@@ -17,12 +16,15 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.function.Consumer;
 
+/**
+ * The GUI currently uses pixels as unit. I intended to use virtual units, with a fixed number of units corresponding
+ * to the screen height, but things are missing for that, for example the ability to draw text at a specific size
+ * instead of its natural size in pixels, zoomed by a fixed factor.
+ */
 public final class Gui {
 
-	private final int widthPixels;
-	private final int heightPixels;
-	private final GuiScale scale;
-	private final int widthUnits;
+	private final int width;
+	private final int height;
 	private GuiElement rootElement;
 	private boolean layoutRequested;
 	private int timeMilliseconds;
@@ -37,36 +39,23 @@ public final class Gui {
 			GL11.glLoadIdentity();
 			GL11.glMatrixMode(GL11.GL_PROJECTION);
 			GL11.glLoadIdentity();
-			GL11.glOrtho(0, widthUnits, GuiScale.HEIGHT_UNITS, 0, -1, 1);
+			GL11.glOrtho(0, width, height, 0, -1, 1);
 		}
 	};
 
-	public Gui(int widthPixels, int heightPixels) {
-		this.widthPixels = widthPixels;
-		this.heightPixels = heightPixels;
-		this.scale = new GuiScale(heightPixels);
-		this.widthUnits = scale.pixelsToUnitsInt(widthPixels);
+	public Gui(int width, int height) {
+		this.width = width;
+		this.height = height;
 		this.rootElement = new NullElement();
 		this.followupLogicActions = new LinkedList<>();
 	}
 
-	public int getWidthPixels() {
-		return widthPixels;
+	public int getWidth() {
+		return width;
 	}
 
-	public int getHeightPixels() {
-		return heightPixels;
-	}
-
-	/**
-	 * Note: there is no getHeightUnits method because the height is fixed at {@link GuiScale#HEIGHT_UNITS}.
-	 */
-	public int getWidthUnits() {
-		return widthUnits;
-	}
-
-	public GuiScale getScale() {
-		return scale;
+	public int getHeight() {
+		return height;
 	}
 
 	public GuiElement getRootElement() {
@@ -104,7 +93,7 @@ public final class Gui {
 	public void handleGraphicsFrame() {
 		timeMilliseconds = (int) System.currentTimeMillis();
 		if (layoutRequested) {
-			rootElement.requestSize(widthUnits, GuiScale.HEIGHT_UNITS);
+			rootElement.requestSize(width, height);
 			rootElement.setAbsolutePosition(0, 0);
 			layoutRequested = false;
 		}

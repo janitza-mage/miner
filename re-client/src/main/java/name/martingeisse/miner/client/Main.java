@@ -17,7 +17,6 @@ import name.martingeisse.miner.client.engine.gui.element.collection.VerticalLayo
 import name.martingeisse.miner.client.engine.gui.element.fill.FillTexture;
 import name.martingeisse.miner.client.engine.gui.element.wrapper.ThickBorder;
 import name.martingeisse.miner.client.engine.gui.util.AreaAlignment;
-import name.martingeisse.miner.client.engine.gui.util.GuiScale;
 import name.martingeisse.miner.client.engine.gui.util.HorizontalAlignment;
 import org.lwjgl.opengl.GL11;
 
