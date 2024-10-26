@@ -43,10 +43,16 @@ public abstract class AbstractFillElement extends LeafElement {
 
 	@Override
 	public void handleGraphicsFrame() {
-		if (cachedWorkUnit == null) {
-			cachedWorkUnit = createWorkUnit();
+		if (shouldDraw()) {
+			if (cachedWorkUnit == null) {
+				cachedWorkUnit = createWorkUnit();
+			}
+			cachedWorkUnit.schedule();
 		}
-		cachedWorkUnit.schedule();
+	}
+
+	protected boolean shouldDraw() {
+		return true;
 	}
 
 }

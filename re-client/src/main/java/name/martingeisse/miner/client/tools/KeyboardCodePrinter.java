@@ -27,11 +27,16 @@ public final class KeyboardCodePrinter {
 			@Override
 			public void onKeyEvent(int key, int scancode, int action, int mods) {
 				if (action == GLFW_PRESS) {
-					System.out.println(key);
+					System.out.println("key: " + key);
 					if (key == GLFW_KEY_ESCAPE) {
 						shutdown = true;
 					}
 				}
+			}
+
+			@Override
+			public void onCharEvent(int codePoint) {
+				System.out.println("char: " + codePoint);
 			}
 
 			@Override
