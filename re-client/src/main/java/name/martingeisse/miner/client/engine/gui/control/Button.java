@@ -4,20 +4,19 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util.gui.control;
+package name.martingeisse.miner.client.engine.gui.control;
 
-import name.martingeisse.miner.client.util.gui.Gui;
-import name.martingeisse.miner.client.util.gui.GuiElement;
-import name.martingeisse.miner.client.util.gui.GuiLogicFrameContext;
-import name.martingeisse.miner.client.util.gui.element.collection.OverlayStack;
-import name.martingeisse.miner.client.util.gui.element.fill.NullElement;
-import name.martingeisse.miner.client.util.gui.element.fill.PulseFillColor;
-import name.martingeisse.miner.client.util.gui.element.atom.TextLine;
-import name.martingeisse.miner.client.util.gui.element.wrapper.Margin;
-import name.martingeisse.miner.client.util.gui.element.wrapper.MouseOverWrapper;
-import name.martingeisse.miner.client.util.gui.element.wrapper.ThinBorder;
-import name.martingeisse.miner.client.util.gui.util.Color;
-import name.martingeisse.miner.client.util.gui.util.PulseFunction;
+import name.martingeisse.miner.client.engine.gui.GuiElement;
+import name.martingeisse.miner.client.engine.gui.GuiLogicFrameContext;
+import name.martingeisse.miner.client.engine.gui.element.atom.TextLine;
+import name.martingeisse.miner.client.engine.gui.element.collection.OverlayStack;
+import name.martingeisse.miner.client.engine.gui.element.fill.NullElement;
+import name.martingeisse.miner.client.engine.gui.element.fill.PulseFillColor;
+import name.martingeisse.miner.client.engine.gui.element.wrapper.Border;
+import name.martingeisse.miner.client.engine.gui.element.wrapper.Margin;
+import name.martingeisse.miner.client.engine.gui.element.wrapper.MouseOverWrapper;
+import name.martingeisse.miner.client.engine.gui.util.Color;
+import name.martingeisse.miner.client.engine.gui.util.PulseFunction;
 import org.lwjgl.glfw.GLFW;
 
 /**
@@ -25,37 +24,28 @@ import org.lwjgl.glfw.GLFW;
  */
 public abstract class Button extends Control {
 
-	/**
-	 * the textLine
-	 */
 	private final TextLine textLine;
-
-	/**
-	 * the margin
-	 */
 	private final Margin margin;
-
-	/**
-	 * the stack
-	 */
 	private final OverlayStack stack;
+	private final Border border;
 
-	/**
-	 * the border
-	 */
-	private final ThinBorder border;
-
-	/**
-	 * Constructor.
-	 */
 	public Button() {
 		textLine = new TextLine();
-		margin = new Margin(textLine, Gui.GRID);
+		margin = new Margin(textLine, 1);
 		stack = new OverlayStack();
 		stack.addElement(NullElement.instance);
 		stack.addElement(margin);
-		border = new ThinBorder(stack);
+		border = new Border(stack);
 		setControlRootElement(border);
+	}
+
+	public Button(String text) {
+		this();
+		setText(text);
+	}
+
+	public void setText(String text) {
+		textLine.setText(text);
 	}
 
 	/**
@@ -78,7 +68,7 @@ public abstract class Button extends Control {
 	 * Getter method for the border.
 	 * @return the border
 	 */
-	public ThinBorder getBorder() {
+	public Border getBorder() {
 		return border;
 	}
 
@@ -94,8 +84,9 @@ public abstract class Button extends Control {
 	 * Setter method for the backgroundElement.
 	 * @param backgroundElement the backgroundElement to set
 	 */
-	public void setBackgroundElement(GuiElement backgroundElement) {
+	public Button setBackgroundElement(GuiElement backgroundElement) {
 		stack.replaceElement(0, backgroundElement);
+		return this;
 	}
 
 	/**

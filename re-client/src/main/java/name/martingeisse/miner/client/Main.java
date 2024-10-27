@@ -9,14 +9,17 @@ import name.martingeisse.gleng.util.GlengImageResourceUtil;
 import name.martingeisse.miner.client.engine.*;
 import name.martingeisse.miner.client.engine.gui.Gui;
 import name.martingeisse.miner.client.engine.gui.GuiFrameHandler;
+import name.martingeisse.miner.client.engine.gui.control.Button;
 import name.martingeisse.miner.client.engine.gui.control.TextField;
 import name.martingeisse.miner.client.engine.gui.element.atom.Spacer;
 import name.martingeisse.miner.client.engine.gui.element.atom.TextLine;
 import name.martingeisse.miner.client.engine.gui.element.collection.OverlayStack;
 import name.martingeisse.miner.client.engine.gui.element.collection.VerticalLayout;
+import name.martingeisse.miner.client.engine.gui.element.fill.FillColor;
 import name.martingeisse.miner.client.engine.gui.element.fill.FillTexture;
 import name.martingeisse.miner.client.engine.gui.element.wrapper.Border;
 import name.martingeisse.miner.client.engine.gui.util.AreaAlignment;
+import name.martingeisse.miner.client.engine.gui.util.Color;
 import name.martingeisse.miner.client.engine.gui.util.HorizontalAlignment;
 import org.lwjgl.opengl.GL11;
 
@@ -64,6 +67,12 @@ public class Main {
         layout.addElement(new TextLine().setText("again"));
         layout.addElement(new TextField().setValue("editable text field one"));
         layout.addElement(new TextLine().setText("again"));
+        layout.addElement(new Button("click me") {
+            @Override
+            protected void onClick() {
+                System.out.println("clicked");
+            }
+        }.setBackgroundElement(new FillColor(Color.RED)));
         layout.addElement(new TextField().setValue("editable text field two"));
 
         var stack = new OverlayStack();

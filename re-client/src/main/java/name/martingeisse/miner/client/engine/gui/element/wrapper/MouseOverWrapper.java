@@ -4,11 +4,10 @@
  * This file is distributed under the terms of the MIT license.
  */
 
-package name.martingeisse.miner.client.util.gui.element.wrapper;
+package name.martingeisse.miner.client.engine.gui.element.wrapper;
 
-import name.martingeisse.miner.client.engine.GraphicsFrameContext;
-import name.martingeisse.miner.client.util.gui.GuiElement;
-import name.martingeisse.miner.client.util.gui.GuiLogicFrameContext;
+import name.martingeisse.miner.client.engine.gui.GuiElement;
+import name.martingeisse.miner.client.engine.gui.GuiLogicFrameContext;
 
 /**
  * This element is only visible and only accepts elements when
@@ -55,9 +54,9 @@ public final class MouseOverWrapper extends AbstractWrapperElement {
 	}
 
 	@Override
-	public void handleGraphicsFrame(GraphicsFrameContext context) {
+	public void handleGraphicsFrame() {
 		if (visible) {
-			getWrappedElement().handleGraphicsFrame(context);
+			getWrappedElement().handleGraphicsFrame();
 		}
 	}
 }
