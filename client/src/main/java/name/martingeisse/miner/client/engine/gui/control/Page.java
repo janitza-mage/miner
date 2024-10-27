@@ -15,14 +15,11 @@ import name.martingeisse.miner.client.util.gui.util.Color;
 import org.apache.log4j.Logger;
 
 /**
- * This element shows a main element over a background filler, and
- * optionally a popup element that can be added/removed/exchanged
- * at runtime.
+ * This element shows a main element over a background filler, and optionally a popup element that can be
+ * added/removed/exchanged at runtime.
  *
- * Pages all to catch all exceptions that occur during event handling
- * in the enclosed elements. These exceptions are passed to
- * {@link #onException(Throwable)}. The default behavior is to catch
- * and log the exceptions.
+ * Pages try to catch all exceptions that occur during event handling in the enclosed elements. These exceptions are
+ * passed to {@link #onException(Throwable)}. The default behavior is to catch and log the exceptions.
  *
  * To support all this, subclasses that want to override
  * {@link #handleInput(GuiEvent)} must override {@link #handlePageEvent(GuiEvent)}
@@ -34,19 +31,9 @@ import org.apache.log4j.Logger;
  */
 public class Page extends Control {
 
-	/**
-	 * the logger
-	 */
 	private static Logger logger = Logger.getLogger(Page.class);
-
-	/**
-	 * the DARK_OVERLAY
-	 */
 	private static final Color DARK_OVERLAY = new Color(0, 0, 0, 192);
 
-	/**
-	 * the attached
-	 */
 	private boolean attached = false;
 
 	/**
@@ -70,38 +57,29 @@ public class Page extends Control {
 	 * @param popupElement the popup element to use, or null for none
 	 */
 	public final void setPopupElement(final GuiElement popupElement) {
-		getGui().addFollowupLogicAction(new Runnable() {
-			@Override
-			public void run() {
-				if (hasPopup()) {
-					if (popupElement == null) {
-						getStack().removeElement(3);
-					} else {
-						getStack().replaceElement(3, popupElement);
-					}
+		getGui().addFollowupLogicAction(() -> {
+			if (hasPopup()) {
+				if (popupElement == null) {
+					getStack().removeElement(3);
 				} else {
-					if (popupElement == null) {
-						// nothing to do
-					} else {
-						getStack().addElement(popupElement);
-					}
+					getStack().replaceElement(3, popupElement);
 				}
-				FillColor fillColor = (FillColor) getStack().getWrappedElements().get(2);
-				fillColor.setColor(popupElement == null ? Color.TRANSPARENT : DARK_OVERLAY);
+			} else {
+				if (popupElement == null) {
+					// nothing to do
+				} else {
+					getStack().addElement(popupElement);
+				}
 			}
+			FillColor fillColor = (FillColor) getStack().getWrappedElements().get(2);
+			fillColor.setColor(popupElement == null ? Color.TRANSPARENT : DARK_OVERLAY);
 		});
 	}
 
-	/**
-	 *
-	 */
 	private OverlayStack getStack() {
 		return (OverlayStack) getControlRootElement();
 	}
 
-	/**
-	 *
-	 */
 	private boolean hasPopup() {
 		return getStack().getWrappedElements().size() > 3;
 	}
@@ -115,9 +93,6 @@ public class Page extends Control {
 		return (stack.getWrappedElements().size() > 3 ? stack.getWrappedElements().get(3) : null);
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.client.gui.control.Control#handleEvent(name.martingeisse.stackd.client.gui.GuiEvent)
-	 */
 	@Override
 	public final void handleInput(GuiEvent event) {
 		try {
