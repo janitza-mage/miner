@@ -11,18 +11,10 @@ import name.martingeisse.miner.common.util.PerlinNoise;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
-import java.io.File;
 import java.io.FileOutputStream;
 
-/**
- *
- */
 public class WorldGenTest {
 
-	/**
-	 * @param args ...
-	 * @throws Exception ... 
-	 */
 	public static void main(String[] args) throws Exception {
 
 		// height field parameters
@@ -65,7 +57,7 @@ public class WorldGenTest {
 				raster.setSample(x, y, 3, 255);
 			}
 		}
-		try (FileOutputStream fileOutputStream = new FileOutputStream(new File("world.png"))) {
+		try (FileOutputStream fileOutputStream = new FileOutputStream("world.png")) {
 			ImageIO.write(bufferedImage, "png", fileOutputStream);
 		}
 
