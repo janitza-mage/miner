@@ -70,7 +70,7 @@
                             <includes>.*</includes>
                             <schemata>
                                 <schema>
-                                    <inputSchema>PUBLIC</inputSchema>
+                                    <inputSchema>miner</inputSchema>
                                 </schema>
                             </schemata>
                         </database>
