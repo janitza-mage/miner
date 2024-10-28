@@ -37,6 +37,112 @@
                     <mainClass>name.martingeisse.miner.server.Main</mainClass>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen-maven</artifactId>
+                <version>3.19.9</version>
+
+                <!-- Manage the plugin's dependencies. -->
+                <dependencies>
+                    <dependency>
+                        <groupId>org.postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>42.7.4</version>
+                    </dependency>
+                </dependencies>
+
+                <!-- Specify the plugin configuration.
+                     The configuration format is the same as for the standalone code generator -->
+                <configuration>
+
+                    <!-- JDBC connection parameters -->
+                    <jdbc>
+                        <driver>org.hsqldb.jdbc.JDBCDriver</driver>
+                        <url>jdbc:postgresql://localhost/miner</url>
+                        <user>postgres</user>
+                        <password>postgres</password>
+                    </jdbc>
+
+                    <!-- Generator parameters -->
+                    <generator>
+                        <database>
+                            <name>org.jooq.meta.postgres.PostgresDatabase</name>
+                            <includes>.*</includes>
+                            <schemata>
+                                <schema>
+                                    <inputSchema>PUBLIC</inputSchema>
+                                </schema>
+                            </schemata>
+                        </database>
+
+                        <!-- Generation flags: See advanced configuration properties -->
+                        <generate/>
+
+                        <strategy>
+                            <name>name.martingeisse.miner.server.jooq_config.MyDatabaseStrategy</name>
+                            <java>
+                                package name.martingeisse.miner.server.jooq_config;
+
+                                import static org.jooq.impl.DSL.*;
+                                import org.jooq.*;
+                                import org.jooq.Record;
+                                import org.jooq.impl.*;
+                                import org.jooq.codegen.DefaultGeneratorStrategy;
+                                import org.jooq.meta.Definition;
+                                import org.jooq.meta.hsqldb.HSQLDBTableDefinition;
+
+                                public class MyDatabaseStrategy extends DefaultGeneratorStrategy {
+
+                                    @Override
+                                    public String getJavaIdentifier(Definition definition) {
+                                        return org.jooq.tools.StringUtils.toLC(definition.getOutputName());
+                                    }
+
+                                    @Override
+                                    public String getJavaSetterName(Definition definition, Mode mode) {
+                                        return "set" + org.jooq.tools.StringUtils.toUC(definition.getOutputName());
+                                    }
+
+                                    @Override
+                                    public String getJavaGetterName(Definition definition, Mode mode) {
+                                        return "get" + org.jooq.tools.StringUtils.toUC(definition.getOutputName());
+                                    }
+
+                                    @Override
+                                    public String getJavaMethodName(Definition definition, Mode mode) {
+                                        return "call" + org.jooq.tools.StringUtils.toUC(definition.getOutputName());
+                                    }
+
+                                    @Override
+                                    public String getJavaClassName(Definition definition, Mode mode) {
+                                        return switch (mode) {
+                                            case DEFAULT -> definition.getOutputName() + "Table";
+                                            case RECORD -> definition.getOutputName() + "Row";
+                                            case POJO -> definition.getOutputName() + "JooqPojo";
+                                            case INTERFACE -> definition.getOutputName() + "JooqInterface";
+                                            case DAO -> definition.getOutputName() + "JooqDao";
+                                            case PATH -> definition.getOutputName() + "JooqPath";
+                                            default -> definition.getOutputName() + "JooqSwitchDefault";
+                                        };
+                                    }
+
+                                    @Override
+                                    public String getJavaMemberName(Definition definition, Mode mode) {
+                                        return definition.getOutputName();
+                                    }
+
+                                }
+                            </java>
+                        </strategy>
+
+                        <target>
+                            <packageName>name.martingeisse.miner.server.jooq</packageName>
+                            <directory>src/main/java</directory>
+                        </target>
+                    </generator>
+
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -49,5 +155,31 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
+        <!-- jOOQ -->
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq</artifactId>
+            <version>3.19.9</version>
+        </dependency>
+        <!-- this should go into the plugin dependencies, but for some reason it has to be here. Lukas from JOOQ is currently investigating this. -->
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-meta</artifactId>
+            <version>3.19.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-codegen</artifactId>
+            <version>3.19.9</version>
+        </dependency>
+
+        <!-- others -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.4</version>
+        </dependency>
+
     </dependencies>
+
 </project>
