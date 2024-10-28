@@ -57,7 +57,7 @@
 
                     <!-- JDBC connection parameters -->
                     <jdbc>
-                        <driver>org.hsqldb.jdbc.JDBCDriver</driver>
+                        <driver>org.postgresql.Driver</driver>
                         <url>jdbc:postgresql://localhost/miner</url>
                         <user>postgres</user>
                         <password>postgres</password>
@@ -89,7 +89,7 @@
                                 import org.jooq.impl.*;
                                 import org.jooq.codegen.DefaultGeneratorStrategy;
                                 import org.jooq.meta.Definition;
-                                import org.jooq.meta.hsqldb.HSQLDBTableDefinition;
+                                import org.jooq.meta.postgres.PostgresDatabase;
 
                                 public class MyDatabaseStrategy extends DefaultGeneratorStrategy {
 

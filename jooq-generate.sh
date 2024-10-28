@@ -1,1 +1,1 @@
-mvn -pl impl org.jooq:jooq-codegen-maven:generate
+mvn -pl re-server org.jooq:jooq-codegen-maven:generate
