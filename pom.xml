@@ -8,8 +8,9 @@
     <name>Miner Game Parent Package</name>
 
     <modules>
-        <module>re-client</module>
         <module>common</module>
+        <module>re-client</module>
+        <module>re-server</module>
     </modules>
 
 </project>
