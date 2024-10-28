@@ -35,29 +35,8 @@ public class Main {
 	 */
 	public static void main(final String[] args) throws Exception {
 
-		// parse the command line
-		if (args.length == 0) {
-			Configuration.initializeFromClasspathConfig();
-		} else if (args.length == 1) {
-			Configuration.initializeFromConfigFile(new File(args[0]));
-		} else {
-			System.err.println("usage: Main [config.properties]");
-			System.exit(1);
-		}
-
 		// initialize task system
 		TaskSystem.initialize();
-
-		// initialize SQL database
-		Databases.main = new PostgresService();
-		Databases.main.setPostgresHost("localhost");
-		Databases.main.setPostgresDatabaseName("miner");
-		Databases.main.setPostgresUser("postgres");
-		Databases.main.setPostgresPassword("postgres");
-
-		// initialize Cassandra database
-		Databases.cassandraCluster = Cluster.builder().addContactPoint("localhost").build();
-		Databases.world = Databases.cassandraCluster.connect("miner");
 
 		// initialize network server
 		StackdServer server = new StackdServer();
