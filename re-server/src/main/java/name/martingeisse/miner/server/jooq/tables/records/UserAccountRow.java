@@ -49,15 +49,15 @@ public class UserAccountRow extends UpdatableRecordImpl<UserAccountRow> {
     /**
      * Setter for <code>miner.UserAccount.passwordHash</code>.
      */
-    public void setPasswordHash(String value) {
+    public void setPasswordHash(byte[] value) {
         set(2, value);
     }
 
     /**
      * Getter for <code>miner.UserAccount.passwordHash</code>.
      */
-    public String getPasswordHash() {
-        return (String) get(2);
+    public byte[] getPasswordHash() {
+        return (byte[]) get(2);
     }
 
     /**
@@ -97,7 +97,7 @@ public class UserAccountRow extends UpdatableRecordImpl<UserAccountRow> {
     /**
      * Create a detached, initialised UserAccountRow
      */
-    public UserAccountRow(Long id, String username, String passwordHash, Boolean deleted) {
+    public UserAccountRow(Long id, String username, byte[] passwordHash, Boolean deleted) {
         super(UserAccountTable.userAccount);
 
         setId(id);

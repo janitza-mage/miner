@@ -6,6 +6,14 @@ CREATE SCHEMA "miner";
 -- - structure
 -- -------------------------------------------------------------------------
 
+-- world data
+-- --------------------------
+
+CREATE TABLE "miner"."SectionData" (
+    "id" character varying(255) NOT NULL PRIMARY KEY,
+    "data" bytea NOT NULL
+);
+
 
 -- user account data
 -- --------------------------
@@ -13,7 +21,7 @@ CREATE SCHEMA "miner";
 CREATE TABLE "miner"."UserAccount" (
 	"id" bigserial NOT NULL PRIMARY KEY,
 	"username" character varying(255) NOT NULL CHECK ("username" != ''),
-	"passwordHash" character varying(255) NOT NULL,
+	"passwordHash" bytea NOT NULL,
 	"deleted" boolean NOT NULL DEFAULT false
 );
 
@@ -50,26 +58,3 @@ CREATE TABLE "miner"."PlayerInventorySlot" (
 	"equipped" boolean NOT NULL
 );
 CREATE INDEX "PlayerInventorySlot_main" ON "miner"."PlayerInventorySlot" ("playerId", "id");
-
-
-
--- -------------------------------------------------------------------------
--- - data
--- -------------------------------------------------------------------------
-
-
--- users, players and related data
--- --------------------------
-
-INSERT INTO "miner"."UserAccount" ("username", "passwordHash") VALUES
-('martin', '$2a$12$.5KM.jQ/TnPn7bMET7.lO.CnGxUzssEr8w590eYQYl8XRkui2OCg6');
-
-INSERT INTO	"miner"."Player" ("userAccountId", "name", "faction", "coins") VALUES
-(1, 'Big Boss', 0, 123);
-
-
-
-
--- -------------------------------------------------------------------------
--- - constraints
--- -------------------------------------------------------------------------

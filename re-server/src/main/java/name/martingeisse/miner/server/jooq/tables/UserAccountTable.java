@@ -71,7 +71,7 @@ public class UserAccountTable extends TableImpl<UserAccountRow> {
     /**
      * The column <code>miner.UserAccount.passwordHash</code>.
      */
-    public final TableField<UserAccountRow, String> passwordHash = createField(DSL.name("passwordHash"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+    public final TableField<UserAccountRow, byte[]> passwordHash = createField(DSL.name("passwordHash"), SQLDataType.BLOB.nullable(false), this, "");
 
     /**
      * The column <code>miner.UserAccount.deleted</code>.
