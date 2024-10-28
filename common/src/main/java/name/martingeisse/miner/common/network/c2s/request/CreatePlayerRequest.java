@@ -4,10 +4,11 @@
  */
 package name.martingeisse.miner.common.network.c2s.request;
 
-import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.Faction;
 import name.martingeisse.miner.common.network.BufferUtil;
 import name.martingeisse.miner.common.network.MessageDecodingException;
+
+import java.nio.ByteBuffer;
 
 /**
  *
@@ -36,13 +37,13 @@ public final class CreatePlayerRequest extends Request {
 	}
 
 	@Override
-	protected void encodeBody(ByteBuf buffer) {
-		buffer.writeInt(faction.ordinal());
+	protected void encodeBody(ByteBuffer buffer) {
+		buffer.putInt(faction.ordinal());
 		BufferUtil.encodeString(name, buffer);
 	}
 
-	public static CreatePlayerRequest decodeBody(ByteBuf buffer) throws MessageDecodingException {
-		return new CreatePlayerRequest(Faction.values()[buffer.readInt()], BufferUtil.decodeString(buffer));
+	public static CreatePlayerRequest decodeBody(ByteBuffer buffer) throws MessageDecodingException {
+		return new CreatePlayerRequest(Faction.values()[buffer.getInt()], BufferUtil.decodeString(buffer));
 	}
 
 }

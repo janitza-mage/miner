@@ -1,9 +1,10 @@
 package name.martingeisse.miner.common.network.s2c;
 
-import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
 import name.martingeisse.miner.common.section.SectionId;
+
+import java.nio.ByteBuffer;
 
 /**
  * Sent by the server when a section gets modified. Clients that are close enough to be interested in the update would
@@ -30,11 +31,11 @@ public final class SingleSectionModificationEvent extends Message {
 	}
 
 	@Override
-	protected void encodeBody(ByteBuf buffer) {
+	protected void encodeBody(ByteBuffer buffer) {
 		sectionId.encode(buffer);
 	}
 
-	public static SingleSectionModificationEvent decodeBody(ByteBuf buffer) throws MessageDecodingException {
+	public static SingleSectionModificationEvent decodeBody(ByteBuffer buffer) throws MessageDecodingException {
 		return new SingleSectionModificationEvent(SectionId.decode(buffer));
 	}
 

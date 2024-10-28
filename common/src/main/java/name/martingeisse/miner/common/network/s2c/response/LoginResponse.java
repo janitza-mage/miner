@@ -5,12 +5,13 @@
 package name.martingeisse.miner.common.network.s2c.response;
 
 import com.google.common.collect.ImmutableList;
-import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.Faction;
 import name.martingeisse.miner.common.network.BufferUtil;
 import name.martingeisse.miner.common.network.MessageDecodingException;
 import name.martingeisse.miner.common.network.c2s.request.LoginRequest;
 import name.martingeisse.miner.common.network.s2c.PlayerListUpdate;
+
+import java.nio.ByteBuffer;
 
 /**
  * A response to {@link LoginRequest}. Contains the players for this user account. Not to be confused with
@@ -34,11 +35,11 @@ public final class LoginResponse extends Response {
 	}
 
 	@Override
-	protected void encodeBody(ByteBuf buffer) {
+	protected void encodeBody(ByteBuffer buffer) {
 		BufferUtil.encodeList(elements, Element::encode, buffer);
 	}
 
-	public static LoginResponse decodeBody(ByteBuf buffer) throws MessageDecodingException {
+	public static LoginResponse decodeBody(ByteBuffer buffer) throws MessageDecodingException {
 		return new LoginResponse(BufferUtil.decodeList(Element::decode, buffer));
 	}
 
@@ -72,15 +73,15 @@ public final class LoginResponse extends Response {
 			return coins;
 		}
 
-		public void encode(ByteBuf buffer) {
-			buffer.writeLong(id);
+		public void encode(ByteBuffer buffer) {
+			buffer.putLong(id);
 			BufferUtil.encodeString(name, buffer);
-			buffer.writeInt(faction.ordinal());
-			buffer.writeLong(coins);
+			buffer.putInt(faction.ordinal());
+			buffer.putLong(coins);
 		}
 
-		public static Element decode(ByteBuf buffer) {
-			return new Element(buffer.readLong(), BufferUtil.decodeString(buffer), Faction.values()[buffer.readInt()], buffer.readLong());
+		public static Element decode(ByteBuffer buffer) {
+			return new Element(buffer.getLong(), BufferUtil.decodeString(buffer), Faction.values()[buffer.getInt()], buffer.getLong());
 		}
 
 	}

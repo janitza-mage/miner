@@ -86,38 +86,6 @@
             <version>1.2.17</version>
         </dependency>
 
-        <!--
-            networking
-            We include each Netty module manually since netty-all copies all classes instead
-            of referencing the other modules, so we would end up with duplicate classes.
-            TODO: netty-resolver? netty-resolver-dns?
-        -->
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-handler</artifactId>
-            <version>4.0.56.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-buffer</artifactId>
-            <version>4.0.56.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-transport</artifactId>
-            <version>4.0.56.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-common</artifactId>
-            <version>4.0.56.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec</artifactId>
-            <version>4.0.56.Final</version>
-        </dependency>
-
     </dependencies>
 
 </project>

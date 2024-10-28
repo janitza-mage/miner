@@ -6,7 +6,7 @@
 
 package name.martingeisse.miner.common.geometry.vector;
 
-import io.netty.buffer.ByteBuf;
+import java.nio.ByteBuffer;
 
 /**
  *
@@ -21,10 +21,10 @@ public abstract class ReadableVector3i {
 
 	public abstract Vector3i freeze();
 
-	public final void encode(ByteBuf buffer) {
-		buffer.writeInt(getX());
-		buffer.writeInt(getY());
-		buffer.writeInt(getZ());
+	public final void encode(ByteBuffer buffer) {
+		buffer.putInt(getX());
+		buffer.putInt(getY());
+		buffer.putInt(getZ());
 	}
 
 	public static final int ENCODED_SIZE = 12;

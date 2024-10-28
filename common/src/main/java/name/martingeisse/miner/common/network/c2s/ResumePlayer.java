@@ -4,9 +4,10 @@
  */
 package name.martingeisse.miner.common.network.c2s;
 
-import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
+
+import java.nio.ByteBuffer;
 
 /**
  *
@@ -29,12 +30,12 @@ public final class ResumePlayer extends Message {
 	}
 
 	@Override
-	protected void encodeBody(ByteBuf buffer) {
-		buffer.writeLong(id);
+	protected void encodeBody(ByteBuffer buffer) {
+		buffer.putLong(id);
 	}
 
-	public static ResumePlayer decodeBody(ByteBuf buffer) throws MessageDecodingException {
-		return new ResumePlayer(buffer.readLong());
+	public static ResumePlayer decodeBody(ByteBuffer buffer) throws MessageDecodingException {
+		return new ResumePlayer(buffer.getLong());
 	}
 
 }

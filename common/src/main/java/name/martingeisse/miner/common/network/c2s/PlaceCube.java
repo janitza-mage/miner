@@ -1,11 +1,12 @@
 package name.martingeisse.miner.common.network.c2s;
 
-import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.vector.Vector3i;
 import name.martingeisse.miner.common.logic.EquipmentSlot;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
+
+import java.nio.ByteBuffer;
 
 /**
  * Places the currently equipped inventory item for {@link EquipmentSlot#HAND} as a cube in the world.
@@ -37,13 +38,13 @@ public final class PlaceCube extends Message {
 	}
 
 	@Override
-	protected void encodeBody(ByteBuf buffer) {
+	protected void encodeBody(ByteBuffer buffer) {
 		position.encode(buffer);
-		buffer.writeByte((byte) direction.ordinal());
+		buffer.putByte((byte) direction.ordinal());
 	}
 
-	public static PlaceCube decodeBody(ByteBuf buffer) throws MessageDecodingException {
-		return new PlaceCube(Vector3i.decode(buffer), AxisAlignedDirection.values()[buffer.readByte()]);
+	public static PlaceCube decodeBody(ByteBuffer buffer) throws MessageDecodingException {
+		return new PlaceCube(Vector3i.decode(buffer), AxisAlignedDirection.values()[buffer.getByte()]);
 	}
 
 }

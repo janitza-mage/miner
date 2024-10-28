@@ -4,8 +4,9 @@
  */
 package name.martingeisse.miner.common.network.s2c.response;
 
-import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.network.MessageDecodingException;
+
+import java.nio.ByteBuffer;
 
 /**
  * General-purpose response for request messages that use a request-response scheme but don't have any data to
@@ -19,10 +20,10 @@ public final class OkayResponse extends Response {
 	}
 
 	@Override
-	protected void encodeBody(ByteBuf buffer) {
+	protected void encodeBody(ByteBuffer buffer) {
 	}
 
-	public static OkayResponse decodeBody(ByteBuf buffer) throws MessageDecodingException {
+	public static OkayResponse decodeBody(ByteBuffer buffer) throws MessageDecodingException {
 		return new OkayResponse();
 	}
 

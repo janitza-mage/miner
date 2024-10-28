@@ -18,17 +18,11 @@ public class EmptyCollider implements IAxisAlignedCollider {
 	 */
 	public static final EmptyCollider instance = new EmptyCollider();
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.common.collision.IAxisAlignedCollidingObject#getCurrentCollider()
-	 */
 	@Override
 	public IAxisAlignedCollider getCurrentCollider() {
 		return this;
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.common.collision.IAxisAlignedCollider#collides(name.martingeisse.stackd.common.geometry.RectangularRegion)
-	 */
 	@Override
 	public boolean collides(RectangularRegion region) {
 		return false;

@@ -4,9 +4,10 @@
  */
 package name.martingeisse.miner.common.network.s2c;
 
-import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
+
+import java.nio.ByteBuffer;
 
 /**
  *
@@ -29,12 +30,12 @@ public final class UpdateCoins extends Message {
 	}
 
 	@Override
-	protected void encodeBody(ByteBuf buffer) {
-		buffer.writeLong(coins);
+	protected void encodeBody(ByteBuffer buffer) {
+		buffer.putLong(coins);
 	}
 
-	public static UpdateCoins decodeBody(ByteBuf buffer) throws MessageDecodingException {
-		return new UpdateCoins(buffer.readLong());
+	public static UpdateCoins decodeBody(ByteBuffer buffer) throws MessageDecodingException {
+		return new UpdateCoins(buffer.getLong());
 	}
 
 }

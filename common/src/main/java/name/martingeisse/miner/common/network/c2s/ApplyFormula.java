@@ -4,10 +4,11 @@
  */
 package name.martingeisse.miner.common.network.c2s;
 
-import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.logic.CraftingFormula;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
+
+import java.nio.ByteBuffer;
 
 /**
  *
@@ -30,12 +31,12 @@ public final class ApplyFormula extends Message {
 	}
 
 	@Override
-	protected void encodeBody(ByteBuf buffer) {
-		buffer.writeInt(formula.ordinal());
+	protected void encodeBody(ByteBuffer buffer) {
+		buffer.putInt(formula.ordinal());
 	}
 
-	public static ApplyFormula decodeBody(ByteBuf buffer) throws MessageDecodingException {
-		return new ApplyFormula(CraftingFormula.ALL.get(buffer.readInt()));
+	public static ApplyFormula decodeBody(ByteBuffer buffer) throws MessageDecodingException {
+		return new ApplyFormula(CraftingFormula.ALL.get(buffer.getInt()));
 	}
 
 }

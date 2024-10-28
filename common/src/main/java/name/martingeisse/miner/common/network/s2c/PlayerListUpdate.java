@@ -5,13 +5,14 @@
 package name.martingeisse.miner.common.network.s2c;
 
 import com.google.common.collect.ImmutableList;
-import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.geometry.angle.EulerAngles;
 import name.martingeisse.miner.common.geometry.vector.Vector3d;
 import name.martingeisse.miner.common.network.BufferUtil;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
 import name.martingeisse.miner.common.network.s2c.response.LoginResponse;
+
+import java.nio.ByteBuffer;
 
 /**
  * Sends an update for the list of players currently playing. Not to be confused with {@link LoginResponse} which
@@ -35,11 +36,11 @@ public final class PlayerListUpdate extends Message {
 	}
 
 	@Override
-	protected void encodeBody(ByteBuf buffer) {
+	protected void encodeBody(ByteBuffer buffer) {
 		BufferUtil.encodeList(elements, Element::encode, buffer);
 	}
 
-	public static PlayerListUpdate decodeBody(ByteBuf buffer) throws MessageDecodingException {
+	public static PlayerListUpdate decodeBody(ByteBuffer buffer) throws MessageDecodingException {
 		return new PlayerListUpdate(BufferUtil.decodeList(Element::decode, buffer));
 	}
 
@@ -67,13 +68,13 @@ public final class PlayerListUpdate extends Message {
 			return name;
 		}
 
-		public void encode(ByteBuf buffer) {
+		public void encode(ByteBuffer buffer) {
 			position.encode(buffer);
 			angles.encode(buffer);
 			BufferUtil.encodeString(name, buffer);
 		}
 
-		public static Element decode(ByteBuf buffer) {
+		public static Element decode(ByteBuffer buffer) {
 			return new Element(Vector3d.decode(buffer), EulerAngles.decode(buffer), BufferUtil.decodeString(buffer));
 		}
 

@@ -4,10 +4,11 @@
  */
 package name.martingeisse.miner.common.network.c2s;
 
-import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
 import name.martingeisse.miner.common.section.SectionId;
+
+import java.nio.ByteBuffer;
 
 /**
  * TODO rename to make clear that this message does not follow the typical request/response pattern.
@@ -30,11 +31,11 @@ public final class InteractiveSectionDataRequest extends Message {
 	}
 
 	@Override
-	protected void encodeBody(ByteBuf buffer) {
+	protected void encodeBody(ByteBuffer buffer) {
 		sectionId.encode(buffer);
 	}
 
-	public static InteractiveSectionDataRequest decodeBody(ByteBuf buffer) throws MessageDecodingException {
+	public static InteractiveSectionDataRequest decodeBody(ByteBuffer buffer) throws MessageDecodingException {
 		return new InteractiveSectionDataRequest(SectionId.decode(buffer));
 	}
 

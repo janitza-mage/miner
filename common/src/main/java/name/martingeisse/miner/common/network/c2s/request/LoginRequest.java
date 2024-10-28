@@ -4,9 +4,10 @@
  */
 package name.martingeisse.miner.common.network.c2s.request;
 
-import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.network.BufferUtil;
 import name.martingeisse.miner.common.network.MessageDecodingException;
+
+import java.nio.ByteBuffer;
 
 /**
  * TODO encrypt the stream OR this message OR authenticate using challenge-response, but DON'T send unencrypted
@@ -36,12 +37,12 @@ public final class LoginRequest extends Request {
 	}
 
 	@Override
-	protected void encodeBody(ByteBuf buffer) {
+	protected void encodeBody(ByteBuffer buffer) {
 		BufferUtil.encodeString(username, buffer);
 		BufferUtil.encodeString(password, buffer);
 	}
 
-	public static LoginRequest decodeBody(ByteBuf buffer) throws MessageDecodingException {
+	public static LoginRequest decodeBody(ByteBuffer buffer) throws MessageDecodingException {
 		return new LoginRequest(BufferUtil.decodeString(buffer), BufferUtil.decodeString(buffer));
 	}
 

@@ -15,11 +15,11 @@ import java.util.Collection;
  * This class is used for collider hierarchies. It stores a collection of
  * objects, each of which has a collider. This collider reports a collision if
  * at least one of the contained colliders does.
- *
+ * <p>
  * This class does not store the colliders directly, but rather a collection
  * of {@link IAxisAlignedCollidingObject}s. This allows the contained objects
  * to switch colliders without changing the collection stored in this class.
- *
+ * <p>
  * The collection stored in this class can be shared with other objects if needed.
  */
 public final class CompositeCollider implements IAxisAlignedCollider {
@@ -33,7 +33,7 @@ public final class CompositeCollider implements IAxisAlignedCollider {
 	 * Constructor. This constructor creates an internal list of colliders.
 	 */
 	public CompositeCollider() {
-		this(new ArrayList<IAxisAlignedCollidingObject>());
+		this(new ArrayList<>());
 	}
 
 	/**
@@ -54,17 +54,11 @@ public final class CompositeCollider implements IAxisAlignedCollider {
 		return collidingObjects;
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.common.collision.IAxisAlignedCollidingObject#getCurrentCollider()
-	 */
 	@Override
 	public IAxisAlignedCollider getCurrentCollider() {
 		return this;
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.common.collision.IAxisAlignedCollider#collides(name.martingeisse.stackd.common.geometry.RectangularRegion)
-	 */
 	@Override
 	public boolean collides(RectangularRegion region) {
 		for (IAxisAlignedCollidingObject collidingObject : collidingObjects) {

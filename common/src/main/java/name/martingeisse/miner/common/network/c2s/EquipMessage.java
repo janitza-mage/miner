@@ -4,9 +4,10 @@
  */
 package name.martingeisse.miner.common.network.c2s;
 
-import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
+
+import java.nio.ByteBuffer;
 
 /**
  *
@@ -35,13 +36,13 @@ public final class EquipMessage extends Message {
 	}
 
 	@Override
-	protected void encodeBody(ByteBuf buffer) {
-		buffer.writeLong(inventorySlotId);
-		buffer.writeBoolean(unequip);
+	protected void encodeBody(ByteBuffer buffer) {
+		buffer.putLong(inventorySlotId);
+		buffer.putBoolean(unequip);
 	}
 
-	public static EquipMessage decodeBody(ByteBuf buffer) throws MessageDecodingException {
-		return new EquipMessage(buffer.readLong(), buffer.readBoolean());
+	public static EquipMessage decodeBody(ByteBuffer buffer) throws MessageDecodingException {
+		return new EquipMessage(buffer.getLong(), buffer.getBoolean());
 	}
 
 }

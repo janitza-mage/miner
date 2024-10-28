@@ -4,10 +4,10 @@
  */
 package name.martingeisse.miner.common.network.s2c;
 
-import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
 
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -31,11 +31,11 @@ public final class FlashMessage extends Message {
 	}
 
 	@Override
-	protected void encodeBody(ByteBuf buffer) {
-		buffer.writeBytes(text.getBytes(StandardCharsets.UTF_8));
+	protected void encodeBody(ByteBuffer buffer) {
+		buffer.putBytes(text.getBytes(StandardCharsets.UTF_8));
 	}
 
-	public static FlashMessage decodeBody(ByteBuf buffer) throws MessageDecodingException {
+	public static FlashMessage decodeBody(ByteBuffer buffer) throws MessageDecodingException {
 		byte[] binary = new byte[buffer.readableBytes()];
 		buffer.readBytes(binary);
 		String text = new String(binary, StandardCharsets.UTF_8); // replaces broken characters

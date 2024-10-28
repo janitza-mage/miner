@@ -6,7 +6,7 @@
 
 package name.martingeisse.miner.common.geometry.angle;
 
-import io.netty.buffer.ByteBuf;
+import java.nio.ByteBuffer;
 
 /**
  * Euler angles (actually, nautical angles), expressed as a horizontal angle (yaw),
@@ -25,10 +25,10 @@ public abstract class ReadableEulerAngles {
 	 */
 	public abstract EulerAngles freeze();
 
-	public final void encode(ByteBuf buffer) {
-		buffer.writeDouble(getHorizontalAngle());
-		buffer.writeDouble(getVerticalAngle());
-		buffer.writeDouble(getRollAngle());
+	public final void encode(ByteBuffer buffer) {
+		buffer.putDouble(getHorizontalAngle());
+		buffer.putDouble(getVerticalAngle());
+		buffer.putDouble(getRollAngle());
 	}
 
 	public static final int ENCODED_SIZE = 24;

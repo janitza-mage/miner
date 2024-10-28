@@ -1,12 +1,13 @@
 package name.martingeisse.miner.common.network.s2c;
 
 import com.google.common.collect.ImmutableList;
-import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.cubetype.CubeType;
 import name.martingeisse.miner.common.cubetype.CubeTypes;
 import name.martingeisse.miner.common.network.BufferUtil;
 import name.martingeisse.miner.common.network.Message;
 import name.martingeisse.miner.common.network.MessageDecodingException;
+
+import java.nio.ByteBuffer;
 
 /**
  *
@@ -29,11 +30,11 @@ public final class UpdateInventory extends Message {
 	}
 
 	@Override
-	protected void encodeBody(ByteBuf buffer) {
+	protected void encodeBody(ByteBuffer buffer) {
 		BufferUtil.encodeList(elements, Element::encode, buffer);
 	}
 
-	public static UpdateInventory decodeBody(ByteBuf buffer) throws MessageDecodingException {
+	public static UpdateInventory decodeBody(ByteBuffer buffer) throws MessageDecodingException {
 		return new UpdateInventory(BufferUtil.decodeList(Element::decode, buffer));
 	}
 
@@ -67,15 +68,15 @@ public final class UpdateInventory extends Message {
 			return equipped;
 		}
 
-		public void encode(ByteBuf buffer) {
-			buffer.writeLong(id);
-			buffer.writeInt(type.getIndex());
-			buffer.writeInt(quantity);
-			buffer.writeBoolean(equipped);
+		public void encode(ByteBuffer buffer) {
+			buffer.putLong(id);
+			buffer.putInt(type.getIndex());
+			buffer.putInt(quantity);
+			buffer.putBoolean(equipped);
 		}
 
-		public static Element decode(ByteBuf buffer) {
-			return new Element(buffer.readLong(), CubeTypes.CUBE_TYPES[buffer.readInt()], buffer.readInt(), buffer.readBoolean());
+		public static Element decode(ByteBuffer buffer) {
+			return new Element(buffer.getLong(), CubeTypes.CUBE_TYPES[buffer.getInt()], buffer.getInt(), buffer.getBoolean());
 		}
 
 	}

@@ -4,8 +4,9 @@
  */
 package name.martingeisse.miner.common.network.c2s.request;
 
-import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.network.MessageDecodingException;
+
+import java.nio.ByteBuffer;
 
 /**
  *
@@ -28,12 +29,12 @@ public final class DeletePlayerRequest extends Request {
 	}
 
 	@Override
-	protected void encodeBody(ByteBuf buffer) {
-		buffer.writeLong(id);
+	protected void encodeBody(ByteBuffer buffer) {
+		buffer.putLong(id);
 	}
 
-	public static DeletePlayerRequest decodeBody(ByteBuf buffer) throws MessageDecodingException {
-		return new DeletePlayerRequest(buffer.readLong());
+	public static DeletePlayerRequest decodeBody(ByteBuffer buffer) throws MessageDecodingException {
+		return new DeletePlayerRequest(buffer.getLong());
 	}
 
 }

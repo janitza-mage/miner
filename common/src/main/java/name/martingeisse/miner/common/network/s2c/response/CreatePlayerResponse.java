@@ -4,8 +4,9 @@
  */
 package name.martingeisse.miner.common.network.s2c.response;
 
-import io.netty.buffer.ByteBuf;
 import name.martingeisse.miner.common.network.MessageDecodingException;
+
+import java.nio.ByteBuffer;
 
 /**
  *
@@ -28,11 +29,11 @@ public final class CreatePlayerResponse extends Response {
 	}
 
 	@Override
-	protected void encodeBody(ByteBuf buffer) {
+	protected void encodeBody(ByteBuffer buffer) {
 		playerData.encode(buffer);
 	}
 
-	public static CreatePlayerResponse decodeBody(ByteBuf buffer) throws MessageDecodingException {
+	public static CreatePlayerResponse decodeBody(ByteBuffer buffer) throws MessageDecodingException {
 		return new CreatePlayerResponse(LoginResponse.Element.decode(buffer));
 	}
 

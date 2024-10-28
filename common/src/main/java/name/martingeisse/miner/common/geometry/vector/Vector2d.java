@@ -6,8 +6,9 @@
 
 package name.martingeisse.miner.common.geometry.vector;
 
-import io.netty.buffer.ByteBuf;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import java.nio.ByteBuffer;
 
 /**
  * Value-object implementation of {@link ReadableVector2d}.
@@ -22,8 +23,8 @@ public final class Vector2d extends ReadableVector2d {
 		this.y = y;
 	}
 
-	public static Vector2d decode(ByteBuf buffer) {
-		return new Vector2d(buffer.readDouble(), buffer.readDouble());
+	public static Vector2d decode(ByteBuffer buffer) {
+		return new Vector2d(buffer.getDouble(), buffer.getDouble());
 	}
 
 	@Override

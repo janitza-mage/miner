@@ -11,10 +11,10 @@ import name.martingeisse.miner.common.geometry.RectangularRegion;
 /**
  * A collider that represents any object that has axis-aligned features,
  * with detail coordinate precision.
- *
+ * <p>
  * The typical use for a collider is to represent world cubes, including
  * detailed features of all cube types.
- *
+ * <p>
  * The {@link #getCurrentCollider()} method of this object must return
  * this collider itself.
  */
@@ -23,7 +23,7 @@ public interface IAxisAlignedCollider extends IAxisAlignedCollidingObject {
 	/**
 	 * Checks for collisions, i.e. returns true if any part of this collider
 	 * is in the specified region.
-	 *
+	 * <p>
 	 * This method uses detail coordinates.
 	 *
 	 * @param detailCoordinateRegion the region to check, expressed in detail coordinates
