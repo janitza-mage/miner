@@ -46,9 +46,8 @@ public final class Vector3i extends ReadableVector3i {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof Vector3i) {
-			Vector3i otherVector = (Vector3i) other;
-			return (x == otherVector.x && y == otherVector.y && z == otherVector.z);
+		if (other instanceof Vector3i otherVector) {
+            return (x == otherVector.x && y == otherVector.y && z == otherVector.z);
 		} else {
 			return false;
 		}

@@ -159,24 +159,13 @@ public class StairsCubeType extends CubeType {
 		if (startY < 4) {
 			return true;
 		}
-		switch (upstairsDirection) {
-
-			case NEGATIVE_X:
-				return (startX < 4);
-
-			case POSITIVE_X:
-				return (endX > 4);
-
-			case NEGATIVE_Z:
-				return (startZ < 4);
-
-			case POSITIVE_Z:
-				return (endZ > 4);
-
-			default:
-				return false;
-
-		}
+        return switch (upstairsDirection) {
+            case NEGATIVE_X -> (startX < 4);
+            case POSITIVE_X -> (endX > 4);
+            case NEGATIVE_Z -> (startZ < 4);
+            case POSITIVE_Z -> (endZ > 4);
+            default -> false;
+        };
 	}
 
 }

@@ -8,6 +8,8 @@ package name.martingeisse.miner.common.geometry;
 
 import name.martingeisse.miner.common.geometry.vector.Vector3i;
 
+import java.util.Arrays;
+
 /**
  * Specifies the size of a cluster. Clusters must have a
  * power-of-two size (represented by this class), the same
@@ -73,9 +75,8 @@ public final class ClusterSize implements Comparable<ClusterSize> {
 	 */
 	@Override
 	public boolean equals(final Object o) {
-		if (o instanceof ClusterSize) {
-			final ClusterSize other = (ClusterSize) o;
-			return shiftBits == other.shiftBits;
+		if (o instanceof ClusterSize other) {
+            return shiftBits == other.shiftBits;
 		}
 		return false;
 	}
@@ -220,7 +221,7 @@ public final class ClusterSize implements Comparable<ClusterSize> {
 			result[i] = zDirection;
 			i++;
 		}
-		return result;
+		return Arrays.copyOf(result, i);
 
 	}
 

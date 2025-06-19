@@ -204,12 +204,12 @@ public final class RectangularRegion {
 	 * @return the extended region
 	 */
 	public RectangularRegion getExtended(RectangularRegion anchor, boolean negativeX, boolean positiveX, boolean negativeY, boolean positiveY, boolean negativeZ, boolean positiveZ) {
-		int resultStartX = negativeX ? (startX < anchor.startX ? startX : anchor.startX) : startX;
-		int resultStartY = negativeY ? (startY < anchor.startY ? startY : anchor.startY) : startY;
-		int resultStartZ = negativeZ ? (startZ < anchor.startZ ? startZ : anchor.startZ) : startZ;
-		int resultEndX = positiveX ? (endX > anchor.endX ? endX : anchor.endX) : endX;
-		int resultEndY = positiveY ? (endY > anchor.endY ? endY : anchor.endY) : endY;
-		int resultEndZ = positiveZ ? (endZ > anchor.endZ ? endZ : anchor.endZ) : endZ;
+		int resultStartX = negativeX ? Math.min(startX, anchor.startX) : startX;
+		int resultStartY = negativeY ? Math.min(startY, anchor.startY) : startY;
+		int resultStartZ = negativeZ ? Math.min(startZ, anchor.startZ) : startZ;
+		int resultEndX = positiveX ? Math.max(endX, anchor.endX) : endX;
+		int resultEndY = positiveY ? Math.max(endY, anchor.endY) : endY;
+		int resultEndZ = positiveZ ? Math.max(endZ, anchor.endZ) : endZ;
 		return new RectangularRegion(resultStartX, resultStartY, resultStartZ, resultEndX, resultEndY, resultEndZ);
 	}
 
@@ -221,12 +221,12 @@ public final class RectangularRegion {
 	 * @return the union
 	 */
 	public RectangularRegion getUnion(RectangularRegion other) {
-		int resultStartX = (startX < other.startX ? startX : other.startX);
-		int resultStartY = (startY < other.startY ? startY : other.startY);
-		int resultStartZ = (startZ < other.startZ ? startZ : other.startZ);
-		int resultEndX = (endX > other.endX ? endX : other.endX);
-		int resultEndY = (endY > other.endY ? endY : other.endY);
-		int resultEndZ = (endZ > other.endZ ? endZ : other.endZ);
+		int resultStartX = Math.min(startX, other.startX);
+		int resultStartY = Math.min(startY, other.startY);
+		int resultStartZ = Math.min(startZ, other.startZ);
+		int resultEndX = Math.max(endX, other.endX);
+		int resultEndY = Math.max(endY, other.endY);
+		int resultEndZ = Math.max(endZ, other.endZ);
 		return new RectangularRegion(resultStartX, resultStartY, resultStartZ, resultEndX, resultEndY, resultEndZ);
 	}
 
@@ -237,12 +237,12 @@ public final class RectangularRegion {
 	 * @return the intersection
 	 */
 	public RectangularRegion getIntersection(RectangularRegion other) {
-		int resultStartX = (startX > other.startX ? startX : other.startX);
-		int resultStartY = (startY > other.startY ? startY : other.startY);
-		int resultStartZ = (startZ > other.startZ ? startZ : other.startZ);
-		int resultEndX = (endX < other.endX ? endX : other.endX);
-		int resultEndY = (endY < other.endY ? endY : other.endY);
-		int resultEndZ = (endZ < other.endZ ? endZ : other.endZ);
+		int resultStartX = Math.max(startX, other.startX);
+		int resultStartY = Math.max(startY, other.startY);
+		int resultStartZ = Math.max(startZ, other.startZ);
+		int resultEndX = Math.min(endX, other.endX);
+		int resultEndY = Math.min(endY, other.endY);
+		int resultEndZ = Math.min(endZ, other.endZ);
 		return new RectangularRegion(resultStartX, resultStartY, resultStartZ, resultEndX, resultEndY, resultEndZ);
 	}
 

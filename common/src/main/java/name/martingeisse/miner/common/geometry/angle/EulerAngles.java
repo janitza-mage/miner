@@ -46,9 +46,8 @@ public final class EulerAngles extends ReadableEulerAngles {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof EulerAngles) {
-			EulerAngles otherAngles = (EulerAngles) other;
-			return (horizontalAngle == otherAngles.horizontalAngle && verticalAngle == otherAngles.verticalAngle && rollAngle == otherAngles.rollAngle);
+		if (other instanceof EulerAngles otherAngles) {
+            return (horizontalAngle == otherAngles.horizontalAngle && verticalAngle == otherAngles.verticalAngle && rollAngle == otherAngles.rollAngle);
 		} else {
 			return false;
 		}

@@ -39,9 +39,8 @@ public final class Vector2i extends ReadableVector2i {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof Vector2i) {
-			Vector2i otherVector = (Vector2i) other;
-			return (x == otherVector.x && y == otherVector.y);
+		if (other instanceof Vector2i otherVector) {
+            return (x == otherVector.x && y == otherVector.y);
 		} else {
 			return false;
 		}

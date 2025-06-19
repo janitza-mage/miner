@@ -22,14 +22,14 @@ public interface IEditAccessHost {
 	 * @param z the z coordinate of the position
 	 * @return true if inside, false if outside
 	 */
-	public boolean containsPosition(int x, int y, int z);
+	boolean containsPosition(int x, int y, int z);
 
 	/**
 	 * Obtains a {@link RectangularRegion} for the whole edit region.
 	 *
 	 * @return a region for the whole edit region
 	 */
-	public RectangularRegion getRegion();
+	RectangularRegion getRegion();
 
 	/**
 	 * Returns the cube value for the specified position.
@@ -39,7 +39,7 @@ public interface IEditAccessHost {
 	 * @param z the z position
 	 * @return the cube value
 	 */
-	public byte getCube(int x, int y, int z);
+	byte getCube(int x, int y, int z);
 
 	/**
 	 * Sets the cube value for the specified position.
@@ -49,6 +49,6 @@ public interface IEditAccessHost {
 	 * @param z the z position
 	 * @param value the cube value to set
 	 */
-	public void setCube(int x, int y, int z, byte value);
+	void setCube(int x, int y, int z, byte value);
 
 }

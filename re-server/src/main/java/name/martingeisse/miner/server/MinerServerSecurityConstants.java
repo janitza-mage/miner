@@ -11,6 +11,7 @@ package name.martingeisse.miner.server;
  */
 public class MinerServerSecurityConstants {
 
+	// TODO store securely
 	public static final String SECURITY_TOKEN_SECRET = "qwiuofghiuqwhqipuwhfiuqoghfiuoqwhfiuqwbfhowquizgbfhuqhfgiuqghio";
 	public static final int ACCOUNT_ACCESS_TOKEN_MAX_AGE_SECONDS = 5 * 60;
 	public static final int ACCOUNT_ACCESS_TOKEN_MAX_AGE_MILLISECONDS = 1000 * ACCOUNT_ACCESS_TOKEN_MAX_AGE_SECONDS;

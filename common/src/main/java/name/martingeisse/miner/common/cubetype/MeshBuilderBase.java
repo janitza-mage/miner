@@ -6,6 +6,7 @@
 
 package name.martingeisse.miner.common.cubetype;
 
+import name.martingeisse.miner.common.Constants;
 import name.martingeisse.miner.common.geometry.AxisAlignedDirection;
 import name.martingeisse.miner.common.geometry.RectangularRegion;
 
@@ -18,7 +19,7 @@ import java.util.List;
  * referring to client-only OpenGL code. The actual mesh builder class on the client does
  * the actual OpenGL handling.
  *
- * The methods in this class use detail coordinates, with {@link StackdConstants#GEOMETRY_DETAIL_FACTOR}
+ * The methods in this class use detail coordinates, with {@link Constants#GEOMETRY_DETAIL_FACTOR}
  * units per cube.
  */
 public class MeshBuilderBase {
@@ -31,7 +32,7 @@ public class MeshBuilderBase {
 	/**
 	 * the triangles
 	 */
-	private List<Triangle> triangles;
+	private final List<Triangle> triangles;
 
 	/**
 	 * Constructor.
@@ -68,7 +69,7 @@ public class MeshBuilderBase {
 	/**
 	 * Adds a one-sided triangle.
 	 *
-	 * This method uses detail coordinates, with {@link StackdConstants#GEOMETRY_DETAIL_FACTOR} units per cube.
+	 * This method uses detail coordinates, with {@link Constants#GEOMETRY_DETAIL_FACTOR} units per cube.
 	 *
 	 * @param textureIndex the texture index
 	 * @param textureCoordinateGenerationDirection the direction used to set up texture coordinate generation
@@ -105,7 +106,7 @@ public class MeshBuilderBase {
 	/**
 	 * Adds a two-sided triangle.
 	 *
-	 * This method uses detail coordinates, with {@link StackdConstants#GEOMETRY_DETAIL_FACTOR} units per cube.
+	 * This method uses detail coordinates, with {@link Constants#GEOMETRY_DETAIL_FACTOR} units per cube.
 	 *
 	 * @param textureIndex the texture index
 	 * @param textureCoordinateGenerationDirection the direction used to set up texture coordinate generation
@@ -130,7 +131,7 @@ public class MeshBuilderBase {
 	 * If you are looking straight at the quad, i.e. the quad's facing direction is pointing towards you,
 	 * then the "first" direction should be to the right and the "second" direction should be upwards.
 	 *
-	 * This method uses detail coordinates, with {@link StackdConstants#GEOMETRY_DETAIL_FACTOR} units per cube.
+	 * This method uses detail coordinates, with {@link Constants#GEOMETRY_DETAIL_FACTOR} units per cube.
 	 *
 	 * @param textureIndex the texture index
 	 * @param textureCoordinateGenerationDirection the direction used to set up texture coordinate generation
@@ -153,7 +154,7 @@ public class MeshBuilderBase {
 	/**
 	 * Adds a two-sided parallelogram quad.
 	 *
-	 * This method uses detail coordinates, with {@link StackdConstants#GEOMETRY_DETAIL_FACTOR} units per cube.
+	 * This method uses detail coordinates, with {@link Constants#GEOMETRY_DETAIL_FACTOR} units per cube.
 	 *
 	 * @param textureIndex the texture index
 	 * @param textureCoordinateGenerationDirection the direction used to set up texture coordinate generation
@@ -178,7 +179,7 @@ public class MeshBuilderBase {
 	 * to be omitted. The order of the texture indices is the natural {@link AxisAlignedDirection}
 	 * order.
 	 *
-	 * This method uses detail coordinates, with {@link StackdConstants#GEOMETRY_DETAIL_FACTOR} units per cube.
+	 * This method uses detail coordinates, with {@link Constants#GEOMETRY_DETAIL_FACTOR} units per cube.
 	 *
 	 * @param x1 the min x coordinate
 	 * @param y1 the min y coordinate
@@ -210,7 +211,7 @@ public class MeshBuilderBase {
 	 * things like grass in a simple way. The X fills a rectangular region with the specified
 	 * min/max coordinates.
 	 *
-	 * This method uses detail coordinates, with {@link StackdConstants#GEOMETRY_DETAIL_FACTOR} units per cube.
+	 * This method uses detail coordinates, with {@link Constants#GEOMETRY_DETAIL_FACTOR} units per cube.
 	 *
 	 * @param x1 the min x coordinate
 	 * @param y1 the min y coordinate

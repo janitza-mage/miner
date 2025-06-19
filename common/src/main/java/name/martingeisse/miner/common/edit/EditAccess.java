@@ -67,7 +67,7 @@ public final class EditAccess {
 	 * @param z the z position
 	 * @return the cube type
 	 */
-	public final byte getCubeSafe(int x, int y, int z) {
+	public byte getCubeSafe(int x, int y, int z) {
 		if (host.containsPosition(x, y, z)) {
 			return host.getCube(x, y, z);
 		} else {
@@ -95,7 +95,7 @@ public final class EditAccess {
 	 * @param z the z position
 	 * @param value the cube value to set
 	 */
-	public final void setCubeSafe(int x, int y, int z, byte value) {
+	public void setCubeSafe(int x, int y, int z, byte value) {
 		if (host.containsPosition(x, y, z)) {
 			host.setCube(x, y, z, value);
 		}
