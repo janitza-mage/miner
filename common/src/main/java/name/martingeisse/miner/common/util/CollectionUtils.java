@@ -14,7 +14,7 @@ public final class CollectionUtils {
 	}
 
 	public static <A, B> List<B> map(Iterable<A> source, Function<A, B> mapper) {
-		List<B> result = new ArrayList<B>();
+		List<B> result = new ArrayList<>();
 		for (A element : source) {
 			result.add(mapper.apply(element));
 		}
@@ -33,12 +33,8 @@ public final class CollectionUtils {
 		Map<B, List<A>> rawGroups = new HashMap<>();
 		for (A element : source) {
 			B key = keyMapper.apply(element);
-			List<A> rawGroup = rawGroups.get(key);
-			if (rawGroup == null) {
-				rawGroup = new ArrayList<>();
-				rawGroups.put(key, rawGroup);
-			}
-			rawGroup.add(element);
+            List<A> rawGroup = rawGroups.computeIfAbsent(key, k -> new ArrayList<>());
+            rawGroup.add(element);
 		}
 		List<C> result = new ArrayList<>();
 		for (Map.Entry<B, List<A>> entry : rawGroups.entrySet()) {

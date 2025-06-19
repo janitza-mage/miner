@@ -38,12 +38,10 @@ public class HmacUtil {
 			final Mac mac = Mac.getInstance(algorithm);
 			mac.init(new SecretKeySpec(secret, algorithm));
 			return mac.doFinal(payload);
-		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException(e);
-		} catch (InvalidKeyException e) {
+		} catch (NoSuchAlgorithmException | InvalidKeyException e) {
 			throw new RuntimeException(e);
 		}
-	}
+    }
 
 	/**
 	 * Generates a HMAC, assuming UTF-8 encoding for all strings.

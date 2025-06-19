@@ -14,7 +14,7 @@ public abstract class AbstractTextLineWrapper {
 	/**
 	 * the words
 	 */
-	private String[] words;
+	private final String[] words;
 
 	/**
 	 * the wordsDone

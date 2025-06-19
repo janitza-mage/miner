@@ -20,12 +20,12 @@ public abstract class AbstractMappedComparator<T, M extends Comparable<? super M
 	/**
 	 * the nullToOther
 	 */
-	private int nullToOther;
+	private final int nullToOther;
 
 	/**
 	 * the reverse
 	 */
-	private boolean reverse;
+	private final boolean reverse;
 
 	/**
 	 * Constructor.

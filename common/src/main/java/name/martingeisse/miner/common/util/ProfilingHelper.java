@@ -21,7 +21,7 @@ public class ProfilingHelper {
 	/**
 	 * the logger
 	 */
-	private static Logger logger = Logger.getLogger(ProfilingHelper.class);
+	private static final Logger logger = Logger.getLogger(ProfilingHelper.class);
 
 	/**
 	 * the startTime

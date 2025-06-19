@@ -17,7 +17,7 @@ public final class ThreadUtil {
 	/**
 	 * the logger
 	 */
-	private static Logger logger = Logger.getLogger(ThreadUtil.class);
+	private static final Logger logger = Logger.getLogger(ThreadUtil.class);
 
 	/**
 	 * Prevent instantiation.

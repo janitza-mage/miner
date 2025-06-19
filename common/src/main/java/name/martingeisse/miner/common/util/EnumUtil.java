@@ -7,6 +7,7 @@
 package name.martingeisse.miner.common.util;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -26,11 +27,9 @@ public class EnumUtil {
 	 * @return all possible values of the enum type, as returned by its values()
 	 * method, but as a newly created List instead of an array.
 	 */
-	public static final <T extends Enum<T>> List<T> getValuesAsList(Class<T> enumClass) {
-		ArrayList<T> result = new ArrayList<T>();
-		for (T value : enumClass.getEnumConstants()) {
-			result.add(value);
-		}
+	public static <T extends Enum<T>> List<T> getValuesAsList(Class<T> enumClass) {
+		ArrayList<T> result = new ArrayList<>();
+        Collections.addAll(result, enumClass.getEnumConstants());
 		return result;
 	}
 
@@ -43,14 +42,12 @@ public class EnumUtil {
 	 * @param defaultValue the default value to use if none of the constants matches or if s is null
 	 * @return the matching constant or the default value
 	 */
-	public static final <T extends Enum<T>> T fromString(Class<T> enumClass, String s, T defaultValue) {
+	public static <T extends Enum<T>> T fromString(Class<T> enumClass, String s, T defaultValue) {
 		try {
 			return Enum.valueOf(enumClass, s);
-		} catch (IllegalArgumentException e) {
-			return defaultValue;
-		} catch (NullPointerException e) {
+		} catch (IllegalArgumentException | NullPointerException e) {
 			return defaultValue;
 		}
-	}
+    }
 
 }

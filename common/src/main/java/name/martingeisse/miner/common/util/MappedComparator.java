@@ -32,7 +32,7 @@ public class MappedComparator<A, B> implements Comparator<A> {
 	 * @param mapper the mapper function
 	 * @return the comparator
 	 */
-	public static final <A, B extends Comparable<B>> Comparator<A> of(Function<A, B> mapper) {
+	public static <A, B extends Comparable<B>> Comparator<A> of(Function<A, B> mapper) {
 		return of(mapper, (x, y) -> x.compareTo(y));
 	}
 
@@ -44,7 +44,7 @@ public class MappedComparator<A, B> implements Comparator<A> {
 	 * @param comparator the second comparator to use on the mapped values
 	 * @return the newly created comparator
 	 */
-	public static final <A, B> Comparator<A> of(Function<A, B> mapper, Comparator<B> comparator) {
+	public static <A, B> Comparator<A> of(Function<A, B> mapper, Comparator<B> comparator) {
 		return new MappedComparator<>(mapper, comparator);
 	}
 

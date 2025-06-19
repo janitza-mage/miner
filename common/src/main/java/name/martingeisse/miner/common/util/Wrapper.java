@@ -6,6 +6,8 @@
 
 package name.martingeisse.miner.common.util;
 
+import java.util.Objects;
+
 /**
  * A simple class that contains a reference to another object. This
  * is useful whenever a nullable reference must be stored in a
@@ -57,9 +59,8 @@ public final class Wrapper<T> {
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
-		} else if (obj instanceof Wrapper<?>) {
-			Wrapper<?> other = (Wrapper<?>) obj;
-			return (value == other.value ? true : value == null ? false : value.equals(other.value));
+		} else if (obj instanceof Wrapper<?> other) {
+            return Objects.equals(value, other.value);
 		} else {
 			return false;
 		}
@@ -87,7 +88,7 @@ public final class Wrapper<T> {
 	 * @return the wrapper
 	 */
 	public static <T> Wrapper<T> of(T value) {
-		return new Wrapper<T>(value);
+		return new Wrapper<>(value);
 	}
 
 }

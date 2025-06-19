@@ -41,6 +41,4 @@ public class SemaphoreWithPublicReducePermits extends Semaphore {
 		super.reducePermits(reduction);
 	}
 
-	;
-
 }

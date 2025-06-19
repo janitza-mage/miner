@@ -31,7 +31,7 @@ public class Constants {
 	/**
 	 * Whenever "detailed" coordinates are needed, fixed-point numbers
 	 * are used that are represented using integers. Each cube, whose normal
-	 * size is 1, is {@link #GEOMETRY_DETAIL_FACTOR} units wide in detail
+	 * size is 1, is GEOMETRY_DETAIL_FACTOR units wide in detail
 	 * coordinates.
 	 * <p>
 	 * Detail coordinates are only used in exceptional cases, so whenever

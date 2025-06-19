@@ -22,7 +22,7 @@ public final class CompressionUtil {
 	 * the logger
 	 */
 	@SuppressWarnings("unused")
-	private static Logger logger = Logger.getLogger(CompressionUtil.class);
+	private static final Logger logger = Logger.getLogger(CompressionUtil.class);
 
 	/**
 	 * Prevent instantiation.
@@ -50,8 +50,7 @@ public final class CompressionUtil {
 			int n = deflater.deflate(buffer);
 			byteArrayOutputStream.write(buffer, 0, n);
 		}
-		byte[] result = byteArrayOutputStream.toByteArray();
-		return result;
+        return byteArrayOutputStream.toByteArray();
 	}
 
 	/**

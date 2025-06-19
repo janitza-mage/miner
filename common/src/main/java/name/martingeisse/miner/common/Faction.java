@@ -40,7 +40,7 @@ public enum Faction {
 	 * Constructor.
 	 * @param displayName the displayed name
 	 */
-	private Faction(final String displayName) {
+	Faction(final String displayName) {
 		this.displayName = displayName;
 	}
 
