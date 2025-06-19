@@ -53,12 +53,8 @@ public class RawCubes extends Cubes {
 
 	@Override
 	protected void compressToStreamInternal(final ClusterSize clusterSize, final OutputStream stream) throws IOException {
-
-		// TODO try uniform
-		// write cubes
 		stream.write(1);
 		stream.write(CompressionUtil.deflate(cubes, COMPRESSION_DICTIONARY));
-
 	}
 
 	/**
@@ -104,13 +100,13 @@ public class RawCubes extends Cubes {
 		// as the number of different cube types
 		final boolean[] usedFlags = new boolean[256];
 		int usedCount = 0;
-		for (int i = 0; i < cubes.length; i++) {
-			final int cubeTypeIndex = (cubes[i] & 0xff);
-			if (!usedFlags[cubeTypeIndex]) {
-				usedFlags[cubeTypeIndex] = true;
-				usedCount++;
-			}
-		}
+        for (byte cube : cubes) {
+            final int cubeTypeIndex = (cube & 0xff);
+            if (!usedFlags[cubeTypeIndex]) {
+                usedFlags[cubeTypeIndex] = true;
+                usedCount++;
+            }
+        }
 
 		// build the result array
 		final byte[] result = new byte[usedCount];
