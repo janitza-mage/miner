@@ -19,14 +19,7 @@ import java.io.OutputStream;
 public abstract class Cubes {
 
 	/**
-	 * This cubes object is guaranteed to be immutable, so it can be used for uninitialized
-	 * new sections. Any modification will result in a new {@link Cubes} being built.
-	 */
-	public static final Cubes UNINITIALIZED = new UniformCubes((byte) 0);
-
-	/**
-	 * Constructor. Made package-private since this class hierarchy is
-	 * not extensible.
+	 * Constructor. Made package-private since this class hierarchy is not extensible.
 	 */
 	Cubes() {
 	}

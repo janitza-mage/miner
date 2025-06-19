@@ -18,9 +18,8 @@ import java.io.OutputStream;
  */
 public final class UniformCubes extends Cubes {
 
-	/**
-	 * the cubeType
-	 */
+	public static final Cubes EMPTY = new UniformCubes((byte) 0);
+
 	private final byte cubeType;
 
 	/**
@@ -102,8 +101,7 @@ public final class UniformCubes extends Cubes {
 		if (value == cubeType) {
 			return this;
 		}
-		final RawCubes newData = RawCubes.buildUniform(clusterSize, cubeType);
-		return newData.setCubeRelative(clusterSize, x, y, z, value);
+		return convertToRawCubes(clusterSize).setCubeRelative(clusterSize, x, y, z, value);
 	}
 
 	@Override
