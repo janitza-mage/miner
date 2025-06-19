@@ -41,29 +41,16 @@ public class RawCubes extends Cubes {
 		COMPRESSION_DICTIONARY = s.toByteArray();
 	}
 
-	/**
-	 * the cubes
-	 */
 	private final byte[] cubes;
 
-	/**
-	 * Constructor.
-	 */
 	private RawCubes(final byte[] cubes) {
 		this.cubes = cubes;
 	}
 
-	/**
-	 * Getter method for the cubes.
-	 * @return the cubes
-	 */
 	public byte[] getCubes() {
 		return cubes;
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.common.cubes.Cubes#compressToStreamInternal(name.martingeisse.stackd.common.geometry.ClusterSize, java.io.OutputStream)
-	 */
 	@Override
 	protected void compressToStreamInternal(final ClusterSize clusterSize, final OutputStream stream) throws IOException {
 
@@ -110,9 +97,6 @@ public class RawCubes extends Cubes {
 		return new RawCubes(cubes);
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.common.cubes.Cubes#getCubeTypeIndicesUsed()
-	 */
 	@Override
 	public byte[] getCubeTypeIndicesUsed() {
 
@@ -141,26 +125,17 @@ public class RawCubes extends Cubes {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.common.cubes.Cubes#getCubeRelative(name.martingeisse.stackd.common.geometry.ClusterSize, int, int, int)
-	 */
 	@Override
 	public byte getCubeRelative(final ClusterSize clusterSize, final int x, final int y, final int z) {
 		return cubes[getRelativeCubeIndex(clusterSize, x, y, z)];
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.common.cubes.Cubes#setCubeRelative(name.martingeisse.stackd.common.geometry.ClusterSize, int, int, int, byte)
-	 */
 	@Override
 	public Cubes setCubeRelative(final ClusterSize clusterSize, final int x, final int y, final int z, final byte value) {
 		cubes[getRelativeCubeIndex(clusterSize, x, y, z)] = value;
 		return this;
 	}
 
-	/**
-	 *
-	 */
 	final int getRelativeCubeIndex(final ClusterSize clusterSize, final int x, final int y, final int z) {
 		final int size = clusterSize.getSize();
 		if (x < 0 || y < 0 || z < 0 || x >= size || y >= size || z >= size) {
@@ -169,17 +144,11 @@ public class RawCubes extends Cubes {
 		return (x * size + y) * size + z;
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.common.cubes.Cubes#convertToRawCubes(name.martingeisse.stackd.common.geometry.ClusterSize)
-	 */
 	@Override
 	public RawCubes convertToRawCubes(ClusterSize clusterSize) {
 		return this;
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.common.cubes.Cubes#clone()
-	 */
 	@Override
 	public RawCubes clone() {
 		return new RawCubes(Arrays.copyOf(cubes, cubes.length));

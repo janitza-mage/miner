@@ -39,9 +39,6 @@ public final class UniformCubes extends Cubes {
 		return cubeType;
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.common.cubes.Cubes#compressToStreamInternal(name.martingeisse.stackd.common.geometry.ClusterSize, java.io.OutputStream)
-	 */
 	@Override
 	protected void compressToStreamInternal(final ClusterSize clusterSize, final OutputStream stream) throws IOException {
 		// do not write anything if cubeType is 0 because "uniform" and "type 0" are implicit
@@ -80,9 +77,6 @@ public final class UniformCubes extends Cubes {
 		return new UniformCubes(cubes[0]);
 	}
 
-	/**
-	 *
-	 */
 	private static boolean isUniform(final byte[] array) {
 		final byte value = array[0];
 		for (final byte otherValue : array) {
@@ -93,25 +87,16 @@ public final class UniformCubes extends Cubes {
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.common.cubes.Cubes#getCubeTypeIndicesUsed()
-	 */
 	@Override
 	public byte[] getCubeTypeIndicesUsed() {
 		return new byte[]{cubeType};
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.common.cubes.Cubes#getCubeRelative(name.martingeisse.stackd.common.geometry.ClusterSize, int, int, int)
-	 */
 	@Override
 	public byte getCubeRelative(final ClusterSize clusterSize, final int x, final int y, final int z) {
 		return cubeType;
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.common.cubes.Cubes#setCubeRelative(name.martingeisse.stackd.common.geometry.ClusterSize, int, int, int, byte)
-	 */
 	@Override
 	public Cubes setCubeRelative(final ClusterSize clusterSize, final int x, final int y, final int z, final byte value) {
 		if (value == cubeType) {
@@ -121,17 +106,11 @@ public final class UniformCubes extends Cubes {
 		return newData.setCubeRelative(clusterSize, x, y, z, value);
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.common.cubes.Cubes#convertToRawCubes(name.martingeisse.stackd.common.geometry.ClusterSize)
-	 */
 	@Override
 	public RawCubes convertToRawCubes(final ClusterSize clusterSize) {
 		return RawCubes.buildUniform(clusterSize, cubeType);
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.common.cubes.Cubes#clone()
-	 */
 	@Override
 	public UniformCubes clone() {
 		return new UniformCubes(cubeType);

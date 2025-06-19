@@ -17,6 +17,6 @@ public interface IAxisAlignedCollidingObject {
 	 * Returns the currently used collider.
 	 * @return the collider
 	 */
-	public IAxisAlignedCollider getCurrentCollider();
+	IAxisAlignedCollider getCurrentCollider();
 
 }

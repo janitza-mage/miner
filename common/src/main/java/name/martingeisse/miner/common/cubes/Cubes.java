@@ -14,8 +14,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Base class for cube matrix implementations. This class also provides
- * (de-)serialization to/from byte arrays.
+ * Base class for cube matrix implementations. This class also provides (de-)serialization to/from byte arrays.
  */
 public abstract class Cubes {
 
@@ -88,18 +87,11 @@ public abstract class Cubes {
 			throw new IllegalArgumentException("compressedData argument cannot be null");
 		}
 		final int compressionSchemeCode = (compressedData.length > 0 ? compressedData[0] : 0);
-		switch (compressionSchemeCode) {
-
-			case 0:
-				return UniformCubes.decompress(clusterSize, compressedData);
-
-			case 1:
-				return RawCubes.decompress(clusterSize, compressedData);
-
-			default:
-				throw new RuntimeException("unknown compression scheme code: " + compressionSchemeCode);
-
-		}
+        return switch (compressionSchemeCode) {
+            case 0 -> UniformCubes.decompress(clusterSize, compressedData);
+            case 1 -> RawCubes.decompress(clusterSize, compressedData);
+            default -> throw new RuntimeException("unknown compression scheme code: " + compressionSchemeCode);
+        };
 	}
 
 	/**
@@ -197,9 +189,6 @@ public abstract class Cubes {
 	 */
 	public abstract RawCubes convertToRawCubes(ClusterSize clusterSize);
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#clone()
-	 */
 	@Override
 	public abstract Cubes clone();
 

@@ -14,11 +14,11 @@ import name.martingeisse.miner.common.section.SectionId;
 
 /**
  * A collider for the array of cubes of a section.
- *
+ * <p>
  * This collider is backed by an array that stores a cube type index for each cube in the array. An additional table of
  * cube types looks up the collider logic for individual types. This table allows to decouple cube type indices from
  * the global table of cube types.
- *
+ * <p>
  * The collider's size is specified as a {@link ClusterSize} and its
  * position in space is specified by a {@link SectionId} measured in
  * cluster-size units.
