@@ -156,9 +156,8 @@ public final class SectionId {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof SectionId) {
-			SectionId other = (SectionId) obj;
-			return (x == other.x && y == other.y && z == other.z);
+		if (obj instanceof SectionId other) {
+            return (x == other.x && y == other.y && z == other.z);
 		}
 		return false;
 	}
@@ -190,7 +189,7 @@ public final class SectionId {
 		return new SectionId(x + direction.getSignX(), y + direction.getSignY(), z + direction.getSignZ());
 	}
 
-	public final void encode(ByteBuffer buffer) {
+	public void encode(ByteBuffer buffer) {
 		buffer.putInt(getX());
 		buffer.putInt(getY());
 		buffer.putInt(getZ());

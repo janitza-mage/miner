@@ -21,7 +21,7 @@ public final class ParallelGoal extends Goal {
 	/**
 	 * the subgoalTasks
 	 */
-	private ArrayList<Task> subgoalTasks = new ArrayList<Task>();
+	private ArrayList<Task> subgoalTasks = new ArrayList<>();
 
 	/**
 	 * Adds a subgoal to this goal.

@@ -55,8 +55,9 @@ public final class TaskBarrier extends Task {
 	 * @param timeUnit the time unit
 	 * @throws InterruptedException if interrupted while waiting
 	 */
-	public void await(long timeout, TimeUnit timeUnit) throws InterruptedException {
-		latch.await(timeout, timeUnit);
-	}
+	// TODO commented out because the result is not passed on -- this does not seem right, but currently I cannot determine callers
+//	public void await(long timeout, TimeUnit timeUnit) throws InterruptedException {
+//		latch.await(timeout, timeUnit);
+//	}
 
 }

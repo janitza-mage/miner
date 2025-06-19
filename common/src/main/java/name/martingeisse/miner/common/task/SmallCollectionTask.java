@@ -68,11 +68,11 @@ public abstract class SmallCollectionTask<T> extends TaskArray {
 	 * @param elements the elements to handle
 	 */
 	public SmallCollectionTask(final Iterator<T> elements) {
-		final ArrayList<Task> taskList = new ArrayList<Task>();
+		final ArrayList<Task> taskList = new ArrayList<>();
 		while (elements.hasNext()) {
 			taskList.add(new ElementTask(elements.next()));
 		}
-		super.setTasks(taskList.toArray(new Task[taskList.size()]));
+		super.setTasks(taskList.toArray(new Task[0]));
 	}
 
 	/* (non-Javadoc)

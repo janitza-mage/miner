@@ -53,8 +53,6 @@ public final class SectionDataId {
 			int z = Integer.parseInt(idTextSegments[2]);
 			type = SectionDataType.valueOf(idTextSegments[3]);
 			sectionId = new SectionId(x, y, z);
-		} catch (final NumberFormatException e) {
-			throw new IllegalArgumentException("invalid SectionDataId: " + identifierText);
 		} catch (final IllegalArgumentException e) {
 			throw new IllegalArgumentException("invalid SectionDataId: " + identifierText);
 		}
@@ -100,9 +98,8 @@ public final class SectionDataId {
 	public boolean equals(Object obj) {
 		if (obj == this) {
 			return true;
-		} else if (obj instanceof SectionDataId) {
-			SectionDataId other = (SectionDataId) obj;
-			return (other.type == this.type && other.sectionId.equals(this.sectionId));
+		} else if (obj instanceof SectionDataId other) {
+            return (other.type == this.type && other.sectionId.equals(this.sectionId));
 		} else {
 			return false;
 		}

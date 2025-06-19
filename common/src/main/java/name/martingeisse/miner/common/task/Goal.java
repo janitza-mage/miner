@@ -154,9 +154,10 @@ public abstract class Goal implements ITaskLike {
 	 * @param timeUnit the time unit
 	 * @throws InterruptedException if interrupted while waiting
 	 */
-	public final void await(long timeout, TimeUnit timeUnit) throws InterruptedException {
-		pendingLifecycleEvents.tryAcquire(timeout, timeUnit);
-	}
+	// TODO commented out because the result is not passed on -- this does not seem right, but currently I cannot determine callers
+//	public final void await(long timeout, TimeUnit timeUnit) throws InterruptedException {
+//		pendingLifecycleEvents.tryAcquire(timeout, timeUnit);
+//	}
 
 	/**
 	 *

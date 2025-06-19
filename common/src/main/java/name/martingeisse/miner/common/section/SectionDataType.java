@@ -41,7 +41,7 @@ public enum SectionDataType {
 	/**
 	 * Constructor.
 	 */
-	private SectionDataType() {
+	SectionDataType() {
 		this.storageId = name().toLowerCase().replace('_', '-');
 	}
 
