@@ -22,11 +22,6 @@ public final class SingleCubeCollider implements IAxisAlignedCollider {
 	}
 
 	@Override
-	public IAxisAlignedCollider getCurrentCollider() {
-		return this;
-	}
-
-	@Override
 	public boolean collides(final RectangularRegion detailCoordinateRegion) {
 		return detailCoordinateRegion.divideAndRoundToOuter(Constants.GEOMETRY_DETAIL_CLUSTER_SIZE).contains(position);
 	}

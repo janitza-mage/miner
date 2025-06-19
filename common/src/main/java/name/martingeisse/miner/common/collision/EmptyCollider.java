@@ -18,10 +18,6 @@ public class EmptyCollider implements IAxisAlignedCollider {
 	 */
 	public static final EmptyCollider instance = new EmptyCollider();
 
-	@Override
-	public IAxisAlignedCollider getCurrentCollider() {
-		return this;
-	}
 
 	@Override
 	public boolean collides(RectangularRegion region) {

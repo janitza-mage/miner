@@ -25,19 +25,8 @@ import name.martingeisse.miner.common.section.SectionId;
  */
 public final class SectionCollider implements IAxisAlignedCollider {
 
-	/**
-	 * the region
-	 */
 	private final RectangularRegion region;
-
-	/**
-	 * the cubes
-	 */
 	private final byte[] cubes;
-
-	/**
-	 * the cubeTypes
-	 */
 	private final CubeType[] cubeTypes;
 
 	/**
@@ -52,17 +41,6 @@ public final class SectionCollider implements IAxisAlignedCollider {
 		this.cubeTypes = cubeTypes;
 	}
 
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.common.collision.ICubeCollidingObject#getCurrentCollider()
-	 */
-	@Override
-	public IAxisAlignedCollider getCurrentCollider() {
-		return this;
-	}
-
-	/* (non-Javadoc)
-	 * @see name.martingeisse.stackd.common.collision.ICubeCollider#collides(name.martingeisse.stackd.common.geometry.RectangularRegion)
-	 */
 	@Override
 	public boolean collides(final RectangularRegion detailCoordinateRegion) {
 

@@ -55,11 +55,6 @@ public final class CompositeCollider implements IAxisAlignedCollider {
 	}
 
 	@Override
-	public IAxisAlignedCollider getCurrentCollider() {
-		return this;
-	}
-
-	@Override
 	public boolean collides(RectangularRegion region) {
 		for (IAxisAlignedCollidingObject collidingObject : collidingObjects) {
 			if (collidingObject.getCurrentCollider().collides(region)) {

@@ -29,6 +29,11 @@ public interface IAxisAlignedCollider extends IAxisAlignedCollidingObject {
 	 * @param detailCoordinateRegion the region to check, expressed in detail coordinates
 	 * @return true if there is any collision, false if not
 	 */
-	public boolean collides(RectangularRegion detailCoordinateRegion);
+	boolean collides(RectangularRegion detailCoordinateRegion);
+
+	@Override
+	default IAxisAlignedCollider getCurrentCollider() {
+		return this;
+	}
 
 }
